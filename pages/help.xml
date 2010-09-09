@@ -1,0 +1,159 @@
+<helpDefinition>
+  <title>EC-LabManager - Help</title>
+  <componentContainer>
+	<LINK REL="StyleSheet" HREF="../../plugins/EC-LabManager/pluginhelp.css" TYPE="text/css" MEDIA="screen"/>
+	<div class="help" >
+    
+    <h1 class="help">EC-LabManager</h1>
+
+    <h2 class="help">Overview</h2>
+		<p class="help">
+		The EC-LabManager plugin allows users to manage VMware Lab Manager configurations. The plugin provides two prescriptive actions (Provision and Cleanup) and a more generic interface for executing Lab Manager API commands.
+		</p>
+	
+    <h2 class="help">Configuration</h2>
+		<p class="help">
+		The plugin allows users to store connection configurations in the plugin project.
+		</p>
+		
+		<p class="help">
+		To manage your Lab Manager configurations, go to Administration > Plugins and click the Configure link for EC-LabManager.
+		</p>
+	
+		<p class="help">
+		Configurations have the following properties:
+		<ul class="help">
+			<li>Configuration name - The name of the configuration.</li>
+			<li>Lab Manager server - The hostname or IP address of the Lab Manager server.</li>
+			<li>Lab Manager port - The port number for the Lab Manager server.</li>
+			<li>Credential - Username and password for the Lab Manager server.</li>
+		</ul>
+		</p>
+		
+	<h2 class="help">Using the Plugin</h2>
+		<p class="help">
+		When creating a procedure, do the following:
+		<ol class="help">
+			<li>Click <b>Add Step</b> on the <b>Steps</b> panel.</li>
+			<li>Select the Subprocedure category.</li>
+			<li>In the Project field, select EC-LabManager.</li>
+			<li>In the Procedure field, select the procedure you wish to execute: Provision, Cleanup or Command.</li>
+			<li>Click OK.</li>
+		</ol>
+		</p>
+		
+		<p class="help">
+		Depending on the subprocedure you select, an editor is displayed.
+		</p>
+		
+		<p class="help">
+		The following fields are available for the Provision procedure:
+		<ul class="help">
+			<li>connection_config - The name of the configuration that holds all connection information for Lab Manager (created on the Configure page).</li>
+			<li>labmanager_config - The configuration in the Lab Manager library to provision.</li>
+			<li>labmanager_createresource - Option to create the resource in ElectricCommander server.</li>
+			<li>labmanager_fencedmode - Network deployment option for VMs.</li>
+			<li>labmanager_newconfig - The name to use for the newly checked out configuration. If blank, a name is automatically created.</li>
+			<li>labmanager_org - The Lab Manager organization.</li>
+			<li>labmanager_pools - The ElectricCommander resource pool names to be associated with the machines in this configuration if resources are created.</li>
+			<li>labmanager_workspace - The ElectricCommander workspace the resource should use.</li>
+			<li>results - The ElectricCommander location to store properties. Do not end the path with slash. Default is '/myJob/LabManager/deployed_configs'. (See Results Explanation)</li>
+			<li>tag - The unique tag for this provision to keep it separate from other provisions stored in the same results area. Default value is $[jobStepId].</li>
+		</ul>
+		</p>
+		
+		<p class="help">
+		The following fields are available for the Cleanup procedure:
+		<ul class="help">
+			<li>connection_config - The name of the configuration that holds all connection information for Lab Manager (created in Configure page).</li>
+			<li>labmanager_org - The Lab Manager organization.</li>
+			<li>results - The ElectricCommander location to get properties. Do not end the path with slash. Default is '/myJob/LabManager/deployed_configs'. (See Results Explanation)</li>
+			<li>save_configuration_name - Name of the saved configuration. If blank, the configuration will not be saved.</li>
+			<li>tag - The unique tag for this provision to keep it separate from other provisions stored in the same results area. Default value is $[jobStepId].</li>
+		</ul>
+		</p>
+		
+		<p class="help">
+		The following fields are available for the Command procedure:
+		<ul class="help">
+			<li>connection_config - The name of the configuration that holds all connection information for Lab Manager (created in Configure page).</li>
+			<li>labmanager_cmd - The Lab Manager API command to run.</li>
+			<li>labmanager_cmdargs - Arguments to the Lab Manager command. Each argument must be entered as name=value with multiple arguments separated by spaces.</li>
+			<li>labmanager_org - The Lab Manager organization.</li>
+		</ul>
+		</p>
+	
+	<h2 class="help">Results Explanation</h2>
+		<p class="help">
+		Provision and Cleanup procedures need to set and get properties on the ElectricCommander server. Users can set the location where they want properties to be stored and retrieved by specifying the location in the 'results' field. If the 'results' field is blank, the default location in the job is used: /myJob/LabManager/deployed_configs.
+		</p>
+		
+		<p class="help">
+		Tha 'tag' parameter in the Provision and Cleanup subprocedures is used to match provision/cleanup pairs. When provision is executed, required properties will be stored in &lt;results>/&lt;tag&gt;. When cleanup is executed, properties will be retrieved from &lt;results>/&lt;tag&gt;.
+		</p>
+		
+	<h2 class="help">Example</h2>
+		<p class="help">
+		You want to provision a machine, then do something with that machine, and finally clean up the machine.
+		</p>
+		
+		<p class="help">
+		<ol class="help">
+			<li>Provision a machine:</li>
+				<ol>
+					<li>Create a subprocedure step for Provision (as explained in Using the Plugin).</li>
+					<li>Fill in parameters with the following information:</li>
+						<ul>
+							<li>labmanager_config: config</li>
+							<li>labmanager_createresource: check</li>
+							<li>labmanager_fencedmode: Fenced - Allow IN and OUT</li>
+							<li>labmanager_newconfig: test_config</li>
+							<li>labmanager_org: default</li>
+							<li>labmanager_pools: test_pools</li>
+							<li>labmanager_workspace: test_workspace</li>
+							<li>results: /project/EC-LabManager-1.0.0.0/results</li>
+							<li>tag: test_tag</li>
+						</ul>
+					<li>Run subprocedure.</li>
+				</ol>
+			
+			
+			<li>Do something with that machine:</li>
+				<p>
+				After you provision the machine, you may want to get information from the results of step 1. For example, you may want to get the following information about one resource: machineName, machineID, hostName, externalIP, internalIP. 
+				</p>
+				<p>
+				To get this information, you must go to the specified location on the ElectricCommander server (location specified results field). In this example the location is:
+				<br/>
+				/project/EC-LabManager-1.0.0.0/results
+				</p>
+				<p>
+				In that location you will find a nested sheet with the name specified in the tag field. In this example the name of the nested sheet is /test_tag.
+				</p>
+				<p>
+				There you will find information about the provisioned configuration and a nested sheet with information for the resources. Go to /resources and you will find one nested sheet per resource. Go to the one you want to get the information, for example /test_config-1. There you will find the required information.
+				</p>
+			
+			<li>Clean up the machine:</li>
+				<ol>
+					<li>Create a subprocedure step for Cleanup (as explained in Using the Plugin).</li>
+					<li>Fill in the parameters with the following information:</li>
+						<ul>
+							<li>labmanager_config: config</li>
+							<li>labmanager_org: default</li>
+							<li>results: /project/EC-LabManager-1.0.0.0/results</li>
+							<li>save_configuration_name: test_config_backup</li>
+							<li>tag: test_tag</li>
+						</ul>
+					<li>Run subprocedure.</li>
+				</ol>
+				
+		</ol>
+		</p>
+	
+	<h2 class="help">Additional Information</h2>
+		<ul class="help">
+			<li><a href="http://www.vmware.com/products/labmanager/">VMWare Lab Manager home page</a></li>
+		</ul>
+	</div>  </componentContainer>
+</helpDefinition>

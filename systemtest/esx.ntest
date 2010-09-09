@@ -1,0 +1,191 @@
+# -*-Perl-*-
+
+# esx.ntest -
+#
+# Exercise basic components of EC-ESX plugin
+#
+# Copyright (c) 2005-2010 Electric Cloud, Inc.
+# All rights reserved
+
+use strict;
+use warnings;
+use ECTest;
+
+initCommander();
+
+$::gPlugin_name   = $::ENV{PLUGIN_NAME};
+$::gPlugin_key    = $::gPlugin_name;
+$::gPlugin_key    =~ s/-[^-]+$//;
+$::gPlugin_driver = $::gPlugin_key;
+$::gPlugin_driver =~ s/-/::/g;
+
+# win/lin matches the chronic3 procedure platform property
+$::gPlatform       = "lin";
+if ($^O eq "MSWin32") {
+    $::gPlatform = "win";
+}
+
+# from initCommander
+$::N = $adminSession;
+my $xpath = $::N->getPlugin($::gPlugin_key);
+$::gPlugin_name = $xpath->findvalue('//pluginName')->value;
+$::gPlugin_ver = $xpath->findvalue('//pluginVersion')->value;
+$::gCreatePrivateDirs = 1;
+
+# triggers fake data
+$::gRunTestUseFakeOutput = 1;
+
+ntest "check-components-present", {}, sub {
+    # Check that the plugin contains required components
+
+    my $xpath;
+    $xpath = $::N->getSteps("$::gPlugin_name","CreateConfiguration");
+    assertOK($xpath,"CreateConfiguration");
+    assertEq("CreateConfiguration", $xpath->findvalue("//step[1]/stepName"), "step 1 is CreateConfiguration");
+    assertEq("CreateAndAttachCredential", $xpath->findvalue("//step[2]/stepName"), "step 2 is CreateAndAttachCredential");
+
+    $xpath = $::N->getSteps("$::gPlugin_name","DeleteConfiguration");
+    assertOK($xpath,"DeleteConfiguration");
+    assertEq("DeleteConfiguration", $xpath->findvalue("//step[1]/stepName"), "step 1 is DeleteConfiguration");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","Create");
+    assertOK($xpath,"Create");
+    assertEq("Create", $xpath->findvalue("//step[1]/stepName"), "step 1 is Create");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","Clone");
+    assertOK($xpath,"Clone");
+    assertEq("Clone", $xpath->findvalue("//step[1]/stepName"), "step 1 is Clone");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","Relocate");
+    assertOK($xpath,"Relocate");
+    assertEq("Relocate", $xpath->findvalue("//step[1]/stepName"), "step 1 is Relocate");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","Cleanup");
+    assertOK($xpath,"Cleanup");
+    assertEq("Cleanup", $xpath->findvalue("//step[1]/stepName"), "step 1 is Cleanup");
+};
+
+ntest "Eval ESX Driver", {}, sub {
+    use ElectricCommander::PropMod;
+
+    # Load perl code from running Commander
+    ElectricCommander::PropMod::loadPerlCodeFromProperty($::N,"/projects/$::gPlugin_name/esx_driver/ESX");
+    my $gd = new ESX();
+};
+
+ntest "setup-create configuration", {}, sub {
+    my $xpath = $::N->runProcedure("$::gPlugin_name", 
+        { procedureName => "CreateConfiguration",
+          pollInterval  => '0.2',
+          timeout       => 600,
+          actualParameter => [ 
+            { actualParameterName => 'config', value => "test" }, 
+            { actualParameterName => 'esx_url', value => "https://localhost" }, 
+            { actualParameterName => 'credential', value => "test" }, 
+          ],
+          credential => [ 
+            { credentialName => 'test', userName => "qa", password => "qa", },
+          ],
+        });
+
+    assertOK($xpath, "run create configuration procedure");
+    # make sure it finished
+    my $jobId = 0;
+    my $status = "";
+    assertDef($xpath, "runProcedure finished without a timeout");
+    if ($xpath) {
+        $jobId  = $xpath->findvalue("//jobId");
+        $status = $xpath->findvalue("//status");
+
+        assertTrue($jobId && int($jobId) > 0,'valid job id');
+        assertEq('completed',$status,"job $jobId complete");
+
+        #abort if job did not finish
+        if ($status ne "completed") {
+            assertOK($::N->abortJob($jobId, {force => 1}));
+        }
+    }
+
+    # examine log files
+    $xpath = $::N->getJobDetails($jobId);
+
+    writeFile("$::gCurrentTestDir/createConfiguration.log","====Job Details====\n$xpath->{_xml}\n");
+
+    # check that the config and credential exist
+    $xpath = $::N->getProperty("/projects/$::gPlugin_name/esx_cfgs/test/esx_url");
+    assertEq("https://localhost",$xpath->findvalue("//value")->string_value,"seerver url");
+    $xpath = $::N->getCredential("$::gPlugin_name","test");
+    assertEq("qa",$xpath->findvalue("//userName")->string_value, 'Credential user');
+};
+
+# Create virtual machine
+ntest "create vm", {}, sub {
+    my $opts;
+    $opts->{esx_vmname} = "test_vm";
+    $opts->{esx_vmhost} = "test_host";
+    
+    my $gd = new ESX($opts);
+    my $out = $gd->create();
+    
+    my $expectedOutput;
+    $expectedOutput .= "Creating virtual machine 'test_vm' ...";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Successfully created virtual machine: 'test_vm' under host test_host";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Powering on virtual machine 'test_vm' ...";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Successfully powered on virtual machine: 'test_vm'";
+    assertEq($expectedOutput, $out, "output");
+};
+
+# Clone virtual machine
+ntest "clone vm", {}, sub {
+    my $opts;
+    $opts->{esx_vmname} = "test_vm";
+    $opts->{esx_vmname_destination} = "test_vm_destination";
+    $opts->{esx_operation} = 'clone';
+    
+    my $gd = new ESX($opts);
+    my $out = $gd->clone_relocate();
+    
+    my $expectedOutput;
+    $expectedOutput .= "Cloning virtual machine 'test_vm' ...";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Clone 'test_vm_destination' of virtual machine 'test_vm' successfully created";
+    assertEq($expectedOutput, $out, "output");
+};
+
+# Relocate virtual machine
+ntest "relocate vm", {}, sub {
+    my $opts;
+    $opts->{esx_vmname} = "test_vm";
+    $opts->{esx_operation} = 'relocate';
+    
+    my $gd = new ESX($opts);
+    my $out = $gd->clone_relocate();
+    
+    my $expectedOutput;
+    $expectedOutput .= "Relocating virtual machine 'test_vm' ...";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Virtual machine 'test_vm' successfully relocated";
+    assertEq($expectedOutput, $out, "output");
+};
+
+# Cleanup virtual machine
+ntest "cleanup vm", {}, sub {
+    my $opts;
+    $opts->{esx_vmname} = "test_vm";
+    
+    my $gd = new ESX($opts);
+    my $out = $gd->cleanup();
+    
+    my $expectedOutput;
+    $expectedOutput .= "Powering off virtual machine 'test_vm' ...";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Successfully powered off virtual machine: 'test_vm'";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Destroying virtual machine 'test_vm' ...";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Virtual machine 'test_vm' successfully destroyed";
+    assertEq($expectedOutput, $out, "output");
+};
