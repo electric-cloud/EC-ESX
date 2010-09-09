@@ -443,7 +443,7 @@
         <formalParameterName>connection_config</formalParameterName>
         <defaultValue></defaultValue>
         <description>The name of the configuration which holds the connection information for ESX server.</description>
-        <required>0</required>
+        <required>1</required>
         <type>entry</type>
       </formalParameter>
 	  <formalParameter>
@@ -649,7 +649,7 @@
         <formalParameterName>connection_config</formalParameterName>
         <defaultValue></defaultValue>
         <description>The name of the configuration which holds the connection information for ESX server.</description>
-        <required>0</required>
+        <required>1</required>
         <type>entry</type>
       </formalParameter>
 	  <formalParameter>
@@ -796,7 +796,7 @@
         <formalParameterName>connection_config</formalParameterName>
         <defaultValue></defaultValue>
         <description>The name of the configuration which holds the connection information for ESX server.</description>
-        <required>0</required>
+        <required>1</required>
         <type>entry</type>
       </formalParameter>
 	  <formalParameter>
@@ -941,7 +941,7 @@
         <formalParameterName>connection_config</formalParameterName>
         <defaultValue></defaultValue>
         <description>The name of the configuration which holds the connection information for ESX server.</description>
-        <required>0</required>
+        <required>1</required>
         <type>entry</type>
       </formalParameter>
 	  <formalParameter>
