@@ -11,8 +11,7 @@ $opts->{esx_vmname} = "$[esx_vmname]";
 $opts->{esx_vmname_destination} = "$[esx_vmname_destination]";
 $opts->{esx_vmhost_destination} = "$[esx_vmhost_destination]";
 $opts->{esx_datastore} = "$[esx_datastore]";
-$opts->{esx_operation} = "clone";
-$opts->{exitcode} = 0;
+$opts->{esx_operation} = 'clone';
 
 $[/myProject/procedure_helpers/preamble]
 

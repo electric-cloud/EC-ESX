@@ -189,3 +189,24 @@ ntest "cleanup vm", {}, sub {
     $expectedOutput .= "Virtual machine 'test_vm' successfully destroyed";
     assertEq($expectedOutput, $out, "output");
 };
+
+# Revert virtual machine
+ntest "revert vm", {}, sub {
+    my $opts;
+    $opts->{esx_vmname} = "test_vm";
+    $opts->{esx_vmhost} = "test_host";
+    $opts->{esx_snapshotname} = "snapshot1";
+    
+    my $gd = new ESX($opts);
+    my $out = $gd->revert();
+    
+    my $expectedOutput;
+    $expectedOutput .= "Reverting virtual machine 'test_vm' to snapshot snapshot1...";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Revert to snapshot snapshot1 for virtual machine 'test_vm' completed successfully under host test_host";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Powering on virtual machine 'test_vm' ...";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Successfully powered on virtual machine: 'test_vm'";
+    assertEq($expectedOutput, $out, "output");
+};

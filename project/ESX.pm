@@ -24,8 +24,14 @@ use constant {
 	SUCCESS => 0,
 	ERROR   => 1,
 	
-	DEFAULT_DEBUG    => 1,
-	DEFAULT_SDK_PATH => 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib',
+	DEFAULT_DEBUG         => 1,
+	DEFAULT_SDK_PATH      => 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib',
+	DEFAULT_GUESTID       => 'winXPProGuest',
+	DEFAULT_DISKSIZE      => 4096,
+	DEFAULT_MEMORY        => 256,
+	DEFAULT_NUM_CPUS      => 1,
+	DEFAULT_NIC_POWERON   => 1,
+	DEFAULT_NUMBER_OF_VMS => 1,
 };
 
 ################################
@@ -56,7 +62,29 @@ sub new {
 ################################
 sub initialize {
 	my ($self) = @_;
+	
+	# Set defaults 
 	$self->opts->{Debug} = DEFAULT_DEBUG;
+	$self->opts->{exitcode} = SUCCESS;
+	
+	if(defined($self->opts->{esx_guestid}) && $self->opts->{esx_guestid} eq "") {
+		$self->opts->{esx_guestid} = DEFAULT_GUESTID;
+	}
+	if(defined($self->opts->{esx_disksize}) && $self->opts->{esx_disksize} eq "") {
+		$self->opts->{esx_disksize} = DEFAULT_DISKSIZE;
+	}
+	if(defined($self->opts->{esx_memory}) && $self->opts->{esx_memory} eq "") {
+		$self->opts->{esx_memory} = DEFAULT_MEMORY;
+	}
+	if(defined($self->opts->{esx_num_cpus}) && $self->opts->{esx_num_cpus} eq "") {
+		$self->opts->{esx_num_cpus} = DEFAULT_NUM_CPUS;
+	}
+	if(defined($self->opts->{esx_nic_poweron}) && $self->opts->{esx_nic_poweron} eq "") {
+		$self->opts->{esx_nic_poweron} = DEFAULT_NIC_POWERON;
+	}
+	if(defined($self->opts->{esx_number_of_vms}) && $self->opts->{esx_number_of_vms} eq "") {
+		$self->opts->{esx_number_of_vms} = DEFAULT_NUMBER_OF_VMS;
+	}
 	
 	# Add specified or default location to @INC array
 	if(defined($self->opts->{sdk_installation_path}) && $self->opts->{sdk_installation_path} ne '') {
@@ -213,6 +241,8 @@ sub create_vm {
 
 	my $ds_name = $self->opts->{esx_datastore};
 	my %ds_info = $self->get_datastore($host_view, $ds_name);
+	
+	if ($self->opts->{exitcode}) { return; }
 
 	if ( $ds_info{mor} eq 0 ) {
 		if ( $ds_info{name} eq 'datastore_error' ) {
@@ -564,8 +594,8 @@ sub cleanup_vm {
 		$self->debugMsg (1, "Destroying up virtual machine '$vm_name' ...");
 		
 		my $vm_views = Vim::find_entity_views(
-			view_type => "VirtualMachine",
-			filter => { "config.name" => $vm_name });
+			view_type => 'VirtualMachine',
+			filter => { 'config.name' => $vm_name });
 	
 		foreach (@$vm_views) {
 			eval {
@@ -580,6 +610,132 @@ sub cleanup_vm {
 			}
 		}
 	}
+}
+
+################################
+# revert - Connect, call revert_vm, and disconnect from ESX server
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+sub revert {
+	my ($self) = @_;
+	
+	if ($::gRunTestUseFakeOutput) {
+		# Create and return fake output
+		my $out = "";
+		$out .= "Reverting virtual machine '" . $self->opts->{esx_vmname} . "' to snapshot ".$self->opts->{esx_snapshotname}."...";
+		$out .= "\n";
+		$out .= "Revert to snapshot ".$self->opts->{esx_snapshotname}." for virtual machine '" . $self->opts->{esx_vmname}."' completed successfully under host ".$self->opts->{esx_vmhost};
+		$out .= "\n";
+		$out .= "Powering on virtual machine '".$self->opts->{esx_vmname}."' ...";
+		$out .= "\n";
+		$out .= "Successfully powered on virtual machine: '".$self->opts->{esx_vmname}."'";
+		return $out;
+	}
+	
+	$self->initialize();
+	$self->login();
+	$self->revert_vm();
+	$self->logout();
+}
+
+################################
+# revert_vm - Revert a virtual machine to a specified snapshot
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+sub revert_vm {
+	my ($self) = @_;
+
+	my $vm_view = Vim::find_entity_view(
+		view_type => 'VirtualMachine',
+		filter    => { 'name' => $self->opts->{esx_vmname} }
+	);
+	
+	if ( !$vm_view ) {
+		$self->debugMsg( 0, 'Virtual machine \''.$self->opts->{esx_vmname} .'\' not found' );
+		$self->opts->{exitcode} = ERROR;
+		return;
+	}
+	
+	my $mor_host = $vm_view->runtime->host;
+	my $hostname = Vim::get_view( mo_ref => $mor_host )->name;
+	my $ref      = undef;
+	my $nRefs    = 0;
+
+	if ( defined $vm_view->snapshot ) {
+		( $ref, $nRefs ) =
+		  $self->find_snapshot_name( $vm_view->snapshot->rootSnapshotList, $self->opts->{esx_snapshotname} );
+	}
+	if ( defined $ref && $nRefs == 1 ) {
+		$self->debugMsg (1, 'Reverting virtual machine \'' .	$self->opts->{esx_vmname} .
+							'\' to snapshot ' . $self->opts->{esx_snapshotname}.'...');
+		my $snapshot = Vim::get_view( mo_ref => $ref->snapshot );
+		eval {
+			$snapshot->RevertToSnapshot();
+			$self->debugMsg( 0, 'Revert to snapshot ' . $self->opts->{esx_snapshotname}
+				  			. ' for virtual machine \'' . $vm_view->name
+				  			. '\' completed successfully under host ' . $hostname);
+		};
+        if ($@) {
+            if ( ref($@) eq 'SoapFault' ) {
+                if ( ref( $@->detail ) eq 'InvalidState' ) {
+                    $self->debugMsg(0, 'Operation cannot be performed in the current state of the virtual machine');
+                }
+                elsif ( ref( $@->detail ) eq 'NotSupported' ) {
+                    $self->debugMsg( 0,'Host product does not support snapshots.' );
+                }
+                elsif ( ref( $@->detail ) eq 'InvalidPowerState' ) {
+                    $self->debugMsg(0, 'Operation cannot be performed in the current power state of the virtual machine.');
+                }
+                elsif ( ref( $@->detail ) eq 'InsufficientResourcesFault' )
+                {
+                    $self->debugMsg( 0, 'Operation would violate a resource usage policy.');
+                }
+                elsif ( ref( $@->detail ) eq 'HostNotConnected' ) {
+                    $self->debugMsg( 0, 'Host not connected.');
+                }
+                else {
+                    $self->debugMsg( 0, 'Fault: ' . $@);
+                }
+            }
+            else {
+                $self->debugMsg( 0, 'Fault: ' . $@);
+            }
+            $self->opts->{exitcode} = ERROR;
+			return;
+        }
+        # If specified, power on the virtual machine
+        if(defined($self->opts->{esx_poweron_vm}) && $self->opts->{esx_poweron_vm} ne "0") {
+        	$self->poweron_vm();	
+        }
+    }
+    else {
+        if ( $nRefs > 1 ) {
+            $self->debugMsg( 0, 'More than one snapshot exits with name' . 
+            		$self->opts->{esx_snapshotname} . ' in virtual machine \'' . 
+            		$vm_view->name . '\' under host ' . $hostname);
+            $self->opts->{exitcode} = ERROR;
+			return;
+        }
+        if ( $nRefs == 0 ) {
+            $self->debugMsg( 0, 'Snapshot not found with name ' . 
+            		$self->opts->{esx_snapshotname} . ' in virtual machine \'' . 
+            		$vm_view->name . '\' under host ' . $hostname);
+            $self->opts->{exitcode} = ERROR;
+			return;
+        }
+    }
 }
 
 # -------------------------------------------------------------------------
@@ -617,15 +773,15 @@ sub poweron_vm {
 	};
 	if ($@) { 
 	    if (ref($@) eq 'SoapFault') {
-	        $self->debugMsg (0, "Error powering on '" . $self->opts->{esx_vmname} . "': ");
+	        $self->debugMsg (0, 'Error powering on \'' . $self->opts->{esx_vmname} . '\': ');
 	        if (ref($@->detail) eq 'NotSupported') {
-	            $self->debugMsg(0,"Virtual machine is marked as a template ");
+	            $self->debugMsg(0,'Virtual machine is marked as a template ');
 	        }
 	        elsif (ref($@->detail) eq 'InvalidPowerState') {
-	            $self->debugMsg(0, "The attempted operation cannot be performed in the current state" );
+	            $self->debugMsg(0, 'The attempted operation cannot be performed in the current state');
 	        }
 	        elsif (ref($@->detail) eq 'InvalidState') {
-	            $self->debugMsg(0,"Current State of the virtual machine is not supported for this operation");
+	            $self->debugMsg(0,'Current State of the virtual machine is not supported for this operation');
 	        }
 	        else {
 	            $self->debugMsg(0, "VM '"  .$self->opts->{esx_vmname}.
@@ -674,16 +830,16 @@ sub poweroff_vm {
 	    if (ref($@) eq 'SoapFault') {
 	        if (ref($@->detail) eq 'InvalidPowerState') {
 	        	# VM was already powered off, no error
-	        	$self->debugMsg(0,"Virtual machine already powered off");
+	        	$self->debugMsg(0,'Virtual machine already powered off');
 	        	return;
 	        }
 	        
-	        $self->debugMsg (0, "Error powering off '" . $self->opts->{esx_vmname} . "': ");
+	        $self->debugMsg (0, 'Error powering off \'' . $self->opts->{esx_vmname} . '\': ');
 	        if (ref($@->detail) eq 'InvalidState') {
-	            $self->debugMsg(0,"Current State of the virtual machine is not supported for this operation");
+	            $self->debugMsg(0,'Current State of the virtual machine is not supported for this operation');
 	        }
 	        elsif(ref($@->detail) eq 'NotSupported') {
-	            $self->debugMsg(0,"Virtual machine is marked as template");
+	            $self->debugMsg(0,'Virtual machine is marked as template');
 	        }
 	        else {
 	            $self->debugMsg(0, "VM '"  .$self->opts->{esx_vmname}. "' can't be powered off \n"
@@ -894,6 +1050,37 @@ sub get_datastore {
 	}
 
 	return ( name => $name, mor => $mor );
+}
+
+################################
+# find_snapshot_name - Find a snapshot with the specified name
+#
+# Arguments:
+#   tree - snapshot tree
+#   name - snapshot name
+#
+# Returns:
+#   ref - reference to the snapshot
+#   count - 0 if not found & 1 if it's a duplicate
+#
+# Notes:
+#	Specified snapshot name must be unique
+#
+################################
+sub find_snapshot_name {
+   my ( $self, $tree, $name ) = @_;
+   my $ref = undef;
+   my $count = 0;
+   foreach my $node (@$tree) {
+      if ($node->name eq $name) {
+         $ref = $node;
+         $count++;
+      }
+      my ($subRef, $subCount) = $self->find_snapshot_name($node->childSnapshotList, $name);
+      $count = $count + $subCount;
+      $ref = $subRef if ($subCount);
+   }
+   return ($ref, $count);
 }
 
 ###############################

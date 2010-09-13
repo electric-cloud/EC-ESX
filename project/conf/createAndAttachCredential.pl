@@ -42,23 +42,28 @@ $errors .= $ec->checkAllErrors($xpath);
 
 # Attach credential to steps that will need it
 $xpath = $ec->attachCredential($projName, $credName,
-    {procedureName => "Create",
-     stepName => "Create"});
+    {procedureName => 'Create',
+     stepName => 'Create'});
 $errors .= $ec->checkAllErrors($xpath);
 
 $xpath = $ec->attachCredential($projName, $credName,
-    {procedureName => "Clone",
-     stepName => "Clone"});
+    {procedureName => 'Clone',
+     stepName => 'Clone'});
 $errors .= $ec->checkAllErrors($xpath);
 
 $xpath = $ec->attachCredential($projName, $credName,
-    {procedureName => "Relocate",
-     stepName => "Relocate"});
+    {procedureName => 'Relocate',
+     stepName => 'Relocate'});
 $errors .= $ec->checkAllErrors($xpath);
 
 $xpath = $ec->attachCredential($projName, $credName,
-    {procedureName => "Cleanup",
-     stepName => "Cleanup"});
+    {procedureName => 'Cleanup',
+     stepName => 'Cleanup'});
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential($projName, $credName,
+    {procedureName => 'Revert',
+     stepName => 'Revert'});
 $errors .= $ec->checkAllErrors($xpath);
 
 if ("$errors" ne "") {
@@ -66,7 +71,7 @@ if ("$errors" ne "") {
     # Cleanup the partially created configuration we just created
     $ec->deleteProperty($configPath);
     $ec->deleteCredential($projName, $credName);
-    my $errMsg = "Error creating configuration credential: " . $errors;
+    my $errMsg = 'Error creating configuration credential: ' . $errors;
     $ec->setProperty("/myJob/configError", $errMsg);
     print $errMsg;
     exit ERROR;

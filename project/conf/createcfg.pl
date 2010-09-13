@@ -12,7 +12,7 @@ use constant {
 
 my $opts;
 
-my $PLUGIN_NAME = "EC-ESX";
+my $PLUGIN_NAME = 'EC-ESX';
 
 if (!defined $PLUGIN_NAME) {
     print "PLUGIN_NAME must be defined\n";

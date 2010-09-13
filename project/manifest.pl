@@ -13,6 +13,7 @@
  ['//procedure[procedureName="Clone"]/step[stepName="Clone"]/command' , 'vm/clone.pl'],
  ['//procedure[procedureName="Relocate"]/step[stepName="Relocate"]/command' , 'vm/relocate.pl'],
  ['//procedure[procedureName="Cleanup"]/step[stepName="Cleanup"]/command' , 'vm/cleanup.pl'],
+ ['//procedure[procedureName="Revert"]/step[stepName="Revert"]/command' , 'vm/revert.pl'],
 
  ['//property[propertyName="ec_setup"]/value', 'ec_setup.pl'],
 );

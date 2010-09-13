@@ -53,29 +53,33 @@ if ($upgradeAction eq "upgrade") {
                 $batch->createAclEntry("user", "project: $pluginName", {
                     projectName => $pluginName,
                     credentialName => $cred,
-                    readPrivilege => "allow",
-                    modifyPrivilege => "allow",
-                    executePrivilege => "allow",
-                    changePermissionsPrivilege => "allow"
+                    readPrivilege => 'allow',
+                    modifyPrivilege => 'allow',
+                    executePrivilege => 'allow',
+                    changePermissionsPrivilege => 'allow'
                 });
             }
 
             # Attach the credential to the appropriate steps
             $batch->attachCredential("\$[/plugins/$pluginName/project]", $cred, {
-                procedureName => "Create",
-                stepName => "Create"
+                procedureName => 'Create',
+                stepName => 'Create'
             });
 			$batch->attachCredential("\$[/plugins/$pluginName/project]", $cred, {
-                procedureName => "Clone",
-                stepName => "Clone"
+                procedureName => 'Clone',
+                stepName => 'Clone'
             });
 			$batch->attachCredential("\$[/plugins/$pluginName/project]", $cred, {
-                procedureName => "Relocate",
-                stepName => "Relocate"
+                procedureName => 'Relocate',
+                stepName => 'Relocate'
             });
 			$batch->attachCredential("\$[/plugins/$pluginName/project]", $cred, {
-                procedureName => "Cleanup",
-                stepName => "Cleanup"
+                procedureName => 'Cleanup',
+                stepName => 'Cleanup'
+            });
+            $batch->attachCredential("\$[/plugins/$pluginName/project]", $cred, {
+                procedureName => 'Revert',
+                stepName => 'Revert'
             });
         }
     }
