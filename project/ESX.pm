@@ -501,18 +501,18 @@ sub clone_relocate_vm {
 			 $self->debugMsg(0, 'Failed to access the virtual machine files');
 		  }
 		  elsif (ref($@->detail) eq 'InvalidState') {
-			 $self->debugMsg(0,'The operation is not allowed in the current state.');
+			 $self->debugMsg(0,'The operation is not allowed in the current state');
 		  }
 		  elsif (ref($@->detail) eq 'NotSupported') {
 			 $self->debugMsg(0,'Operation is not supported by the current agent');
 		  }
 		  elsif (ref($@->detail) eq 'VmConfigFault') {
 			 $self->debugMsg(0,
-			 'Virtual machine is not compatible with the destination host.');
+			 'Virtual machine is not compatible with the destination host');
 		  }
 		  elsif (ref($@->detail) eq 'InvalidPowerState') {
 			 $self->debugMsg(0,
-			 'The attempted operation cannot be performed in the current state.');
+			 'The attempted operation cannot be performed in the current state');
 		  }
 		  elsif (ref($@->detail) eq 'DuplicateName') {
 			 $self->debugMsg(0,
@@ -542,7 +542,7 @@ sub clone_relocate_vm {
 }
 
 ################################
-# clenaup - Connect, call cleanup_vm, and disconnect from ESX server
+# cleanup - Connect, call cleanup_vm, and disconnect from ESX server
 #
 # Arguments:
 #   -
@@ -693,17 +693,17 @@ sub revert_vm {
                     $self->debugMsg(0, 'Operation cannot be performed in the current state of the virtual machine');
                 }
                 elsif ( ref( $@->detail ) eq 'NotSupported' ) {
-                    $self->debugMsg( 0,'Host product does not support snapshots.' );
+                    $self->debugMsg( 0,'Host product does not support snapshots' );
                 }
                 elsif ( ref( $@->detail ) eq 'InvalidPowerState' ) {
-                    $self->debugMsg(0, 'Operation cannot be performed in the current power state of the virtual machine.');
+                    $self->debugMsg(0, 'Operation cannot be performed in the current power state of the virtual machine');
                 }
                 elsif ( ref( $@->detail ) eq 'InsufficientResourcesFault' )
                 {
-                    $self->debugMsg( 0, 'Operation would violate a resource usage policy.');
+                    $self->debugMsg( 0, 'Operation would violate a resource usage policy');
                 }
                 elsif ( ref( $@->detail ) eq 'HostNotConnected' ) {
-                    $self->debugMsg( 0, 'Host not connected.');
+                    $self->debugMsg( 0, 'Host not connected');
                 }
                 else {
                     $self->debugMsg( 0, 'Fault: ' . $@);
@@ -722,7 +722,7 @@ sub revert_vm {
     }
     else {
         if ( $nRefs > 1 ) {
-            $self->debugMsg( 0, 'More than one snapshot exits with name' . 
+            $self->debugMsg( 0, 'More than one snapshot exits with name ' . 
             		$self->opts->{esx_snapshotname} . ' in virtual machine \'' . 
             		$vm_view->name . '\' under host ' . $hostname);
             $self->opts->{exitcode} = ERROR;
@@ -735,6 +735,103 @@ sub revert_vm {
             $self->opts->{exitcode} = ERROR;
 			return;
         }
+    }
+}
+
+################################
+# snapshot - Connect, call snapshot_vm, and disconnect from ESX server
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+sub snapshot {
+	my ($self) = @_;
+	
+	if ($::gRunTestUseFakeOutput) {
+		# Create and return fake output
+		my $out = "";
+		$out .= "Creating snapshot " . $self->opts->{esx_snapshotname} . " for virtual machine '".$self->opts->{esx_vmname}."'...";
+		$out .= "\n";
+		$out .= "Snapshot ".$self->opts->{esx_snapshotname}." completed for virtual machine '" . $self->opts->{esx_vmname}."' under host ".$self->opts->{esx_vmhost};
+		return $out;
+	}
+	
+	$self->initialize();
+	$self->login();
+	$self->snapshot_vm();
+	$self->logout();
+}
+
+################################
+# snapshot_vm - Create a snapshot for the specified virtual machine
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+sub snapshot_vm {
+	my ($self) = @_;
+
+	$self->debugMsg (1, 'Creating snapshot ' . $self->opts->{esx_snapshotname}.' for virtual machine \'' .	$self->opts->{esx_vmname} .'\'...');
+
+	my $vm_view = Vim::find_entity_view(
+		view_type => 'VirtualMachine',
+		filter    => { 'name' => $self->opts->{esx_vmname} }
+	);
+	
+	if ( !$vm_view ) {
+		$self->debugMsg( 0, 'Virtual machine \''.$self->opts->{esx_vmname} .'\' not found' );
+		$self->opts->{exitcode} = ERROR;
+		return;
+	}
+	
+	my $mor_host = $vm_view->runtime->host;
+	my $hostname = Vim::get_view( mo_ref => $mor_host )->name;
+	
+	eval {
+	    $vm_view->CreateSnapshot(name => $self->opts->{esx_snapshotname},
+	        description => 'Snapshot created for virtual machine: '.$self->opts->{esx_vmname},
+	        memory => 0,
+	        quiesce => 0);
+	    $self->debugMsg( 0, 'Snapshot ' . $self->opts->{esx_snapshotname}
+				  			. ' completed for virtual machine \'' . $vm_view->name
+				  			. '\' under host ' . $hostname);
+	};
+	if ($@) {
+		$self->debugMsg(0, 'Error creating snapshot of virtual machine: ' . $self->opts->{esx_vmname});
+		if ( ref($@) eq 'SoapFault' ) {
+            if ( ref( $@->detail ) eq 'InvalidName' ) {
+                $self->debugMsg( 0,'Specified snapshot name is invalid' );
+            }
+            elsif ( ref( $@->detail ) eq 'InvalidState' ) {
+                $self->debugMsg(0, 'Operation cannot be performed in the current state of the virtual machine');
+            }
+            elsif ( ref( $@->detail ) eq 'InvalidPowerState' ) {
+                $self->debugMsg(0, 'Operation cannot be performed in the current power state of the virtual machine');
+            }
+            elsif ( ref( $@->detail ) eq 'HostNotConnected' )
+            {
+                $self->debugMsg( 0, 'Unable to communicate with the remote host since it is disconnected');
+            }
+            elsif ( ref( $@->detail ) eq 'NotSupported' ) {
+                $self->debugMsg( 0, 'Host does not support snapshots');
+            }
+            else {
+                $self->debugMsg( 0, 'Fault: ' . $@);
+            }
+        }
+        else {
+            $self->debugMsg( 0, 'Fault: ' . $@);
+        }
+        $self->opts->{exitcode} = ERROR;
+        return;
     }
 }
 
@@ -766,7 +863,7 @@ sub poweron_vm {
 		return;
 	}
 	
-	$self->debugMsg (1, 'Powering on virtual machine \'' . $self->opts->{esx_vmname} . '\' ...');
+	$self->debugMsg (1, 'Powering on virtual machine \'' . $self->opts->{esx_vmname} . '\'...');
 	eval {
 		$vm_view->PowerOnVM();
 		$self->debugMsg( 0, 'Successfully powered on virtual machine: \'' . $self->opts->{esx_vmname}.'\'');
@@ -821,7 +918,7 @@ sub poweroff_vm {
 		return;
 	}
 	
-	$self->debugMsg (1, 'Powering off virtual machine \'' . $self->opts->{esx_vmname} . '\' ...');
+	$self->debugMsg (1, 'Powering off virtual machine \'' . $self->opts->{esx_vmname} . '\'...');
 	eval {
 		$vm_view->PowerOffVM();
 		$self->debugMsg( 0, 'Successfully powered off virtual machine: \'' . $self->opts->{esx_vmname}.'\'');

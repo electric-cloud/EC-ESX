@@ -81,6 +81,10 @@ if ($upgradeAction eq "upgrade") {
                 procedureName => 'Revert',
                 stepName => 'Revert'
             });
+            $batch->attachCredential("\$[/plugins/$pluginName/project]", $cred, {
+                procedureName => 'Snapshot',
+                stepName => 'Snapshot'
+            });
         }
     }
 }

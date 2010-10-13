@@ -2,6 +2,7 @@
 
 exec "$COMMANDER_HOME/bin/ec-perl" -x "$0" "${@}"
 
+################################
 #!perl
 # esx.cgi -
 #
@@ -14,6 +15,7 @@ exec "$COMMANDER_HOME/bin/ec-perl" -x "$0" "${@}"
 #
 # Copyright (c) 2007-2009 Electric Cloud, Inc.
 # All rights reserved
+################################
 
 use strict;
 use warnings;
@@ -26,8 +28,8 @@ use ElectricCommander::PropDB;
 use CGI qw(:standard);
 
 use constant {
-	SUCCESS => 0,
-	ERROR   => 1,
+    SUCCESS => 0,
+    ERROR   => 1,
 };
 
 # used for output redirection
@@ -36,12 +38,17 @@ $::tmpErr = "";
 $::oldout;
 $::olderr;
 
-#-------------------------------------------------------------------------
-# main
+################################
+# main - Main program for the application.
 #
-#      Main program for the application.
-#-------------------------------------------------------------------------
-
+# Arguments:
+#   -
+#
+# Returns:
+#   0 - Success
+#   1 - Error
+#
+################################
 sub main() {
 
     ## globals
@@ -72,11 +79,17 @@ sub main() {
 }
 
 
-#############################################
-# getCfgList
+################################
+# getCfgList - Return the list of configurations from ESX
 #
-# Return the list of configurations from ESX
-#############################################
+# Arguments:
+#   -
+#
+# Returns:
+#   0 - Success
+#   1 - Error
+#
+################################
 sub getCfgList {
 
     my $gcfg = new ElectricCommander::PropDB($::ec,"/projects/@PLUGIN_NAME@/esx_cfgs");
@@ -86,23 +99,29 @@ sub getCfgList {
     my $xml = "";
     $xml .= "<cfgs>\n";
     foreach my $cfg (keys  %cfgs) {
-		my $url = $gcfg->getCol("$cfg/esx_url");
+        my $url = $gcfg->getCol("$cfg/esx_url");
         $xml .= "  <cfg>\n";
         $xml .= "     <name>$cfg</name>\n";
         $xml .= "     <url>" . xmlQuote($url) . "</url>\n";
         $xml .= "  </cfg>\n";
     }
     $xml .= "</cfgs>\n";
-	
+    
     printXML($xml);
     exit SUCCESS;
 }
 
-##############################################
-# retError
+################################
+# retError - Return an error message
 #
-# return an error message
-##############################################
+# Arguments:
+#   msg - Message to return
+#
+# Returns:
+#   0 - Success
+#   1 - Error
+#
+################################
 sub retError {
     my ($msg) = @_;
 
@@ -110,11 +129,16 @@ sub retError {
     exit ERROR;
 }
 
-##############################################
-# printXML
+################################
+# printXML - Print the XML block, add stdout, stderr
 #
-# print the XML block, add stdout, stderr
-##############################################
+# Arguments:
+#   xml - xml string to print
+#
+# Returns:
+#   -
+#
+################################
 sub printXML {
     my ($xml) = @_;
 
@@ -128,14 +152,16 @@ sub printXML {
     print "</response>";
 }
 
-
-##############################################
-# saveOutErr
+################################
+# saveOutErr - Redirect stdout/stderr to files so that any spurious output from commands does not end up on the return to the cgi caller
 #
-# redirect stdout/stderr to files so that any
-# spurious output from commands does not 
-# end up on the return to the cgi caller
-##############################################
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
 sub saveOutErr {
     # temporarily save STDOUT/STDERR to files
     open $::oldout, ">&STDOUT"  or die "Can't dup STDOUT: $!";
@@ -147,12 +173,17 @@ sub saveOutErr {
 
 }
 
-##############################################
-# retrieveOutErr
+################################
+# retrieveOutErr - Reset stdout/sterr back to normal and return the contents of the temp files
 #
-# reset stdout/sterr back to normal and 
-# return the contents of the temp files
-##############################################
+# Arguments:
+#   -
+#
+# Returns:
+#   tmpOut - Content of out file
+#   tmpErr - Content of error file
+#
+################################
 sub retrieveOutErr {
     # reconnect to normal STDOUT/STDERR
     open STDOUT, ">&", $::oldout or die "can't reinstate $!";
@@ -160,23 +191,16 @@ sub retrieveOutErr {
     return ($::tmpOut, $::tmpErr);
 }
 
-#-------------------------------------------------------------------------
-# xmlQuote
-#
-#      Quote special characters such as & to generate well-formed XML
-#      character data.
-#
-# Results:
-#      The return value is identical to $string except that &, <, and >,
-#      have been translated to &amp;, &lt;, and &gt;, respectively.
-#
-# Side Effects:
-#      None.
+################################
+# xmlQuote - Quote special characters such as & to generate well-formed XML character data.
 #
 # Arguments:
-#      string -        String whose contents should be quoted.
-#-------------------------------------------------------------------------
-
+#   string - String whose contents should be quoted.
+#
+# Returns:
+#   string - Quoted string
+#
+################################
 sub xmlQuote($) {
     my ($string) = @_;
 

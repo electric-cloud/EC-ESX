@@ -1,11 +1,13 @@
 # -*-Perl-*-
 
-# esx.ntest -
+###############################
+# esx.ntest
 #
 # Exercise basic components of EC-ESX plugin
 #
 # Copyright (c) 2005-2010 Electric Cloud, Inc.
 # All rights reserved
+###############################
 
 use strict;
 use warnings;
@@ -35,9 +37,17 @@ $::gCreatePrivateDirs = 1;
 # triggers fake data
 $::gRunTestUseFakeOutput = 1;
 
+################################
+# check-components-present - Check that the plugin contains required components
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
 ntest "check-components-present", {}, sub {
-    # Check that the plugin contains required components
-
     my $xpath;
     $xpath = $::N->getSteps("$::gPlugin_name","CreateConfiguration");
     assertOK($xpath,"CreateConfiguration");
@@ -63,8 +73,26 @@ ntest "check-components-present", {}, sub {
     $xpath = $::N->getSteps("$::gPlugin_name","Cleanup");
     assertOK($xpath,"Cleanup");
     assertEq("Cleanup", $xpath->findvalue("//step[1]/stepName"), "step 1 is Cleanup");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","Revert");
+    assertOK($xpath,"Revert");
+    assertEq("Revert", $xpath->findvalue("//step[1]/stepName"), "step 1 is Revert");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","Snapshot");
+    assertOK($xpath,"Snapshot");
+    assertEq("Snapshot", $xpath->findvalue("//step[1]/stepName"), "step 1 is Snapshot");
 };
 
+################################
+# Eval ESX Driver - Test loading ESX driver
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
 ntest "Eval ESX Driver", {}, sub {
     use ElectricCommander::PropMod;
 
@@ -73,6 +101,16 @@ ntest "Eval ESX Driver", {}, sub {
     my $gd = new ESX();
 };
 
+################################
+# setup-create configuration - Test creating a configuration
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
 ntest "setup-create configuration", {}, sub {
     my $xpath = $::N->runProcedure("$::gPlugin_name", 
         { procedureName => "CreateConfiguration",
@@ -118,7 +156,16 @@ ntest "setup-create configuration", {}, sub {
     assertEq("qa",$xpath->findvalue("//userName")->string_value, 'Credential user');
 };
 
-# Create virtual machine
+################################
+# create vm - Create virtual machine
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
 ntest "create vm", {}, sub {
     my $opts;
     $opts->{esx_vmname} = "test_vm";
@@ -138,7 +185,16 @@ ntest "create vm", {}, sub {
     assertEq($expectedOutput, $out, "output");
 };
 
-# Clone virtual machine
+################################
+# clone vm - Clone virtual machine
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
 ntest "clone vm", {}, sub {
     my $opts;
     $opts->{esx_vmname} = "test_vm";
@@ -155,7 +211,16 @@ ntest "clone vm", {}, sub {
     assertEq($expectedOutput, $out, "output");
 };
 
-# Relocate virtual machine
+################################
+# relocate vm - Relocate virtual machine
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
 ntest "relocate vm", {}, sub {
     my $opts;
     $opts->{esx_vmname} = "test_vm";
@@ -171,7 +236,16 @@ ntest "relocate vm", {}, sub {
     assertEq($expectedOutput, $out, "output");
 };
 
-# Cleanup virtual machine
+################################
+# cleanup vm - Cleanup virtual machine
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
 ntest "cleanup vm", {}, sub {
     my $opts;
     $opts->{esx_vmname} = "test_vm";
@@ -190,7 +264,16 @@ ntest "cleanup vm", {}, sub {
     assertEq($expectedOutput, $out, "output");
 };
 
-# Revert virtual machine
+################################
+# revert vm - Revert virtual machine
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
 ntest "revert vm", {}, sub {
     my $opts;
     $opts->{esx_vmname} = "test_vm";
@@ -208,5 +291,31 @@ ntest "revert vm", {}, sub {
     $expectedOutput .= "Powering on virtual machine 'test_vm' ...";
     $expectedOutput .= "\n";
     $expectedOutput .= "Successfully powered on virtual machine: 'test_vm'";
+    assertEq($expectedOutput, $out, "output");
+};
+
+################################
+# snapshot vm - Create a snapshot of a virtual machine
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+ntest "snapshot vm", {}, sub {
+    my $opts;
+    $opts->{esx_vmname} = "test_vm";
+    $opts->{esx_vmhost} = "test_host";
+    $opts->{esx_snapshotname} = "snapshot1";
+    
+    my $gd = new ESX($opts);
+    my $out = $gd->snapshot();
+    
+    my $expectedOutput;
+    $expectedOutput .= "Creating snapshot snapshot1 for virtual machine 'test_vm'...";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Snapshot snapshot1 completed for virtual machine 'test_vm' under host test_host";
     assertEq($expectedOutput, $out, "output");
 };

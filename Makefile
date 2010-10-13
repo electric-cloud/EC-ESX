@@ -4,6 +4,8 @@ SRCTOP=..
 
 include $(SRCTOP)/build/vars.mak
 
+PLUGIN_PATCH_LEVEL=1.1.0
+
 gwtmodules := esx/ConfigurationManagement
 
 build: buildJavaPlugin
@@ -25,4 +27,3 @@ mysystemtest-run:
 		--target $(TEST_SERVER) $(NTESTARGS) $(NTESTFILES)
 
 include $(SRCTOP)/build/rules.mak
-

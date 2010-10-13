@@ -20,7 +20,7 @@ if (!defined $PLUGIN_NAME) {
     exit ERROR;
 }
 
-## get an EC object
+# get an EC object
 my $ec = new ElectricCommander();
 $ec->abortOnError(0);
 

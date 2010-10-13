@@ -37,9 +37,7 @@ print "\n";
 
 $N->login('admin','changeme');
 
-## re-install dependencies to make sure state is clean
-
-## install this plugin
+# Uninstall this plugin
 print "Uninstalling $plugin_key\n";
 $N->uninstallPlugin($plugin_name);
 my $msg = $N->getError();
@@ -49,6 +47,7 @@ if ($msg ne "") {
     exit 1;
 }
 
+# Install this plugin
 print "Installing $::ENV{PLUGINS_ARTIFACTS}/$plugin_key/$plugin_key.jar\n";
 my $xpath = $N->installPlugin("$::ENV{PLUGINS_ARTIFACTS}/$plugin_key/$plugin_key.jar");
 $msg = $N->getError();
@@ -58,6 +57,8 @@ if ($msg ne "") {
     exit 1;
 }
 $plugin_name = $xpath->findvalue('//plugin/pluginName')->value;
+
+# Promote this plugin
 $N->promotePlugin("$plugin_name");
 $msg = $N->getError();
 if ($msg ne "") {

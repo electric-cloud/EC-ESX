@@ -16,14 +16,14 @@ my $PLUGIN_NAME = 'EC-ESX';
 
 if (!defined $PLUGIN_NAME) {
     print "PLUGIN_NAME must be defined\n";
-    exit 1;
+    exit ERROR;
 }
 
-## get an EC object
+# get an EC object
 my $ec = new ElectricCommander();
 $ec->abortOnError(0);
 
-## load option list from procedure parameters
+# load option list from procedure parameters
 my $x = $ec->getJobDetails($ENV{COMMANDER_JOBID});
 my $nodeset = $x->find("//actualParameter");
 foreach my $node ($nodeset->get_nodelist) {

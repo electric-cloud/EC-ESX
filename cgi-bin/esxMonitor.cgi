@@ -4,15 +4,13 @@ exec "$COMMANDER_HOME/bin/ec-perl" -x "$0" "${@}"
 
 #!perl
 
-###############################################################################
-# 
+################################
 # monitorJob.cgi
 #
 # Monitors a job: waits for it to complete and reports on its success or
 # failure.
 #
-###############################################################################
-
+################################
 use warnings;
 use strict;
 use ElectricCommander;
@@ -20,18 +18,23 @@ use XML::XPath;
 use CGI;
 
 use constant {
-	SUCCESS => 0,
-	ERROR   => 1,
+    SUCCESS => 0,
+    ERROR   => 1,
 };
 
 
 my $gTimeout = 20;
 
-# -----------------------------------------------------------------------------
-# main
+################################
+# main - Main program for the application.
 #
-# -----------------------------------------------------------------------------
-
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
 sub main {
 
     # Get CGI args
@@ -77,12 +80,18 @@ sub main {
     reportSuccess($cgi);
 }
 
-# -----------------------------------------------------------------------------
-# abortJobAndReportError
+################################
+# abortJobAndReportError - Abort the job and report the timeout error.
 #
-#   Abort the job and report the timeout error.
-# -----------------------------------------------------------------------------
-
+# Arguments:
+#   cgi   
+#   ec    - ElectricCommander instance
+#   jobId - int identifier for the job 
+#
+# Returns:
+#   -
+#
+################################
 sub abortJobAndReportError($$$) {
     my ($cgi, $ec, $jobId) = @_;
     
@@ -111,12 +120,18 @@ sub abortJobAndReportError($$$) {
     reportError($cgi, $errMsg . "\nJob successfully aborted");
 }
 
-# -----------------------------------------------------------------------------
-# reportJobErrors
+################################
+# reportJobErrors - Look for errors in the job to report.
 #
-#   Look for errors in the job to report.
-# -----------------------------------------------------------------------------
-
+# Arguments:
+#   cgi   
+#   ec    - ElectricCommander instance
+#   jobId - int identifier for the job 
+#
+# Returns:
+#   -
+#
+################################
 sub reportJobErrors($$$) {
     my ($cgi, $ec, $jobId) = @_;
     
@@ -145,12 +160,18 @@ sub reportJobErrors($$$) {
     reportError($cgi, "Configuration creation failed");
 }
 
-# -----------------------------------------------------------------------------
-# reportError
+################################
+# reportError - Print the error message and exit.
 #
-#   Print the error message and exit.
-# -----------------------------------------------------------------------------
-
+# Arguments:
+#   cgi   
+#   error - string to print
+#
+# Returns:
+#   0 - Success
+#   1 - Error
+#
+################################
 sub reportError($$) {
     my ($cgi, $error) = @_;
     
@@ -159,12 +180,16 @@ sub reportError($$) {
     exit ERROR;
 }
 
-# -----------------------------------------------------------------------------
-# reportSuccess
+################################
+# reportSuccess - Report success.
 #
-#   Report success.
-# -----------------------------------------------------------------------------
-
+# Arguments:
+#   cgi   
+#
+# Returns:
+#   -
+#
+################################
 sub reportSuccess($) {
     my ($cgi) = @_;
     
