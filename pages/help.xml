@@ -8,7 +8,7 @@
 
     <h2 class="help">Overview</h2>
 		<p class="help">
-        The EC-ESX plugin allows users to manipulate virtual machines on ESX servers. The plugin provides five actions to perform on virtual machines: create, clone, relocate, cleanup, and revert. The plugin uses <a href="http://communities.vmware.com/community/developer/forums/vsphere_sdk_perl">vSphere SDK for Perl</a> to accomplish these tasks, which means that you must install the SDK.
+        The EC-ESX plugin allows users to manipulate virtual machines on ESX servers. The plugin provides the following actions to perform on virtual machines: cleanup, clone, create, relocate,  revert, and snapshot. The plugin uses <a href="http://communities.vmware.com/community/developer/forums/vsphere_sdk_perl">vSphere SDK for Perl</a> to accomplish these tasks, which means that you must install the SDK.
 		</p>
 	
     <h2 class="help">Configuration</h2>
@@ -17,7 +17,7 @@
 		</p>
 		
 		<p class="help">
-		To manage your ESX configurations, go to Administration > Plugins and click the EC-ESX <b>Configure</b> link.
+		To manage your ESX configuration, go to Administration > Plugins and click the EC-ESX <b>Configure</b> link.
 		</p>
 	
 		<p class="help">
@@ -39,14 +39,36 @@
 		<ol>
 			<li>Click <b>Add Step</b> on the <b>Steps</b> panel.</li>
 			<li>Select the Subprocedure category.</li>
-			<li>In the Project field, select EC-ESX.</li>
-			<li>In the Procedure field, select the procedure you wish to execute: Create, Clone, Relocate Cleanup or Revert.</li>
+			<li>In the Project field, select <b>EC-ESX</b>.</li>
+			<li>In the Procedure field, select the procedure you wish to execute: Cleanup, Clone, Create, Relocate, Revert, or Snapshot.</li>
 			<li>Click <b>OK</b>.</li>
 		</ol>
 		</p>
 		
 		<p class="help">
 		The subprocedure you select determines which fields are available.
+		</p>		
+
+        	<p class="help">
+		The following fields are available for Cleanup:
+		<ul>
+			<li>connection_config - The name of the configuration that holds connection information for the ESX server (created on the Configure page).</li>
+			<li>esx_vmname - Name of the virtual machine to cleanup.</li>
+            		<li>esx_save_vm - If unselected, the virtual machine will be destroyed.</li>
+            		<li>sdk_installation_path - Absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
+		</ul>
+		</p>
+		
+		<p class="help">
+		The following fields are available for Clone:
+		<ul>
+			<li>connection_config - The name of the configuration that holds connection information for the ESX server (created on the Configure page).</li>
+			<li>esx_vmname - Name of the virtual machine whose clone is to be created.</li>
+			<li>esx_datastore - Name of the datastore. Default value is the datastore with the most free space.</li>
+			<li>esx_vmname_destination - Name of the clone virtual machine that will be created.</li>
+			<li>esx_vmhost_destination - Target host for the new virtual machine.</li>
+            		<li>sdk_installation_path - Absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
+		</ul>
 		</p>
 		
 		<p class="help">
@@ -62,24 +84,12 @@
 			<li>esx_disksize - Capacity of the virtual disk (in KB). Default value is 4096.</li>
 			<li>esx_memory - Size of virtual machine's memory (in MB). Default value is 256.</li>
 			<li>esx_num_cpus - Number of virtual processors in a virtual machine. Default value is 1.</li>
-            <li>esx_nic_network - Network name. Default value is any accessible network.</li>
-            <li>esx_nic_poweron - Flag to specify whether or not to connect the device when the virtual machine starts. Default value is 1.</li>
-            <li>sdk_installation_path - Absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
+            		<li>esx_nic_network - Network name. Default value is any accessible network.</li>
+            		<li>esx_nic_poweron - Flag to specify whether or not to connect the device when the virtual machine starts. Default value is 1.</li>
+            		<li>sdk_installation_path - Absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
 		</p>
-		
-		<p class="help">
-		The following fields are available for Clone:
-		<ul>
-			<li>connection_config - The name of the configuration that holds connection information for the ESX server (created on the Configure page).</li>
-			<li>esx_vmname - Name of the virtual machine whose clone is to be created.</li>
-			<li>esx_datastore - Name of the datastore. Default value is the datastore with the most free space.</li>
-			<li>esx_vmname_destination - Name of the clone virtual machine that will be created.</li>
-			<li>esx_vmhost_destination - Target host for the new virtual machine.</li>
-            <li>sdk_installation_path - Absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
-		</ul>
-		</p>
-		
+				
 		<p class="help">
 		The following fields are available for Relocate:
 		<ul>
@@ -87,35 +97,44 @@
 			<li>esx_vmname - Name of the virtual machine to be relocated.</li>
 			<li>esx_datastore - Name of the datastore. Default value is the datastore with the most free space.</li>
 			<li>esx_vmhost_destination - Target host for the virtual machine.</li>
-            <li>sdk_installation_path - Absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
+            		<li>sdk_installation_path - Absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
-		</p>
+		</p>      
+
         
-        <p class="help">
-		The following fields are available for Cleanup:
-		<ul>
-			<li>connection_config - The name of the configuration that holds connection information for the ESX server (created on the Configure page).</li>
-			<li>esx_vmname - Name of the virtual machine to cleanup.</li>
-            <li>esx_save_vm - If unselected, the virtual machine will be destroyed.</li>
-            <li>sdk_installation_path - Absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
-		</ul>
-		</p>
-        
-        <p class="help">
+        	<p class="help">
 		The following fields are available for Revert:
 		<ul>
 			<li>connection_config - The name of the configuration that holds connection information for the ESX server (created on the Configure page).</li>
 			<li>esx_vmname - Name of the source virtual machine.</li>
-            <li>esx_snapshotname - Name of snapshot to revert to.</li>
-            <li>sdk_installation_path - Absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
+            		<li>esx_snapshotname - Name of snapshot to revert to.</li>
+            		<li>sdk_installation_path - Absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
 		</p>
+		
+		<p class="help">
+		The following fields are available for Snapshot:
+                <ul>
+                    	<li>connection_config - The name of the configuration that holds connection information for the ESX server (created on the Configure page).</li>
+                    	<li>esx_vmname - Name of the virtual machine whose snapshot is to be created.</li>
+                    	<li>esx_snapshotname - Name of the snapshot to be created.</li>
+                    	<li>sdk_installation_path - Absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
+                </ul>
+                </p>
 	
 	<h2 class="help">Additional Information</h2>
 		<ul>
 			<li><a href="http://www.vmware.com/products/vsphere/esxi-and-esx/index.html">VMWare ESX home page</a></li>
-            <li><a href="http://communities.vmware.com/community/developer/forums/vsphere_sdk_perl">vSphere SDK for Perl home page</a></li>
-            <li><a href="http://www.vmware.com/support/developer/viperltoolkit/">vSphere SDK for Perl documentation page</a></li>            
+            		<li><a href="http://communities.vmware.com/community/developer/forums/vsphere_sdk_perl">vSphere SDK for Perl home page</a></li>
+            		<li><a href="http://www.vmware.com/support/developer/viperltoolkit/">vSphere SDK for Perl documentation page</a></li>            
 		</ul>
+        
+    <h2 class="help">Release Notes</h2>
+        <h3 class="help">EC-ESX-1.1.0.0</h3>
+        <p class="help">
+        Added the Snapshot subprodecure.
+        </p>              
+		
+        
 	</div>  </componentContainer>
 </helpDefinition>
