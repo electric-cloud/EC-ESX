@@ -9,10 +9,8 @@
 
 package ecplugins.esx.client;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.http.client.Request;
@@ -23,21 +21,20 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.xml.client.Node;
 
 import com.electriccloud.commander.gwt.client.FormBase;
+import com.electriccloud.commander.gwt.client.legacyrequests.CommanderError;
 import com.electriccloud.commander.gwt.client.legacyrequests.RunProcedureRequest;
 import com.electriccloud.commander.gwt.client.protocol.xml.CommanderRequestCallback;
 import com.electriccloud.commander.gwt.client.requests.CgiRequestProxy;
 import com.electriccloud.commander.gwt.client.requests.FormBuilderLoader;
-import com.electriccloud.commander.gwt.client.responses.CommanderError;
 import com.electriccloud.commander.gwt.client.ui.CredentialEditor;
 import com.electriccloud.commander.gwt.client.ui.FormBuilder;
 import com.electriccloud.commander.gwt.client.ui.FormTable;
 import com.electriccloud.commander.gwt.client.ui.SimpleErrorBox;
 import com.electriccloud.commander.gwt.client.util.CommanderUrlBuilder;
 
+import static com.electriccloud.commander.gwt.client.ComponentBaseFactory.getPluginName;
 import static com.electriccloud.commander.gwt.client.util.CommanderUrlBuilder.createPageUrl;
 import static com.electriccloud.commander.gwt.client.util.CommanderUrlBuilder.createUrl;
-
-import static com.electriccloud.commander.gwt.client.ComponentBaseFactory.getPluginName;
 
 /**
  * Create ESX Configuration.
@@ -76,7 +73,7 @@ public class CreateConfiguration
         FormBuilderLoader loader = new FormBuilderLoader(fb, this);
 
         loader.setCustomEditorPath("/plugins/EC-ESX"
-            + "/project/ui_forms/ESXCreateConfigForm");
+                + "/project/ui_forms/ESXCreateConfigForm");
         loader.load();
         clearStatus();
     }
@@ -95,15 +92,18 @@ public class CreateConfiguration
         }
 
         // Build runProcedure request
-        RunProcedureRequest request = new RunProcedureRequest(
+        RunProcedureRequest request          = new RunProcedureRequest(
                 "/plugins/EC-ESX/project", "CreateConfiguration");
-        Map<String, String> params  = fb.getValues();
+        Map<String, String> params           = fb.getValues();
         Collection<String>  credentialParams = fb.getCredentialIds();
 
         for (String paramName : params.keySet()) {
+
             if (credentialParams.contains(paramName)) {
                 CredentialEditor credential = fb.getCredential(paramName);
-                request.addCredentialParameter(paramName, credential.getUsername(), credential.getPassword());
+
+                request.addCredentialParameter(paramName,
+                    credential.getUsername(), credential.getPassword());
             }
             else {
                 request.addActualParameter(paramName, params.get(paramName));
@@ -124,7 +124,7 @@ public class CreateConfiguration
                     if (getLog().isDebugEnabled()) {
                         getLog().debug(
                             "Commander runProcedure request returned: "
-                            + responseNode);
+                                + responseNode);
                     }
 
                     waitForJob(getNodeValueByName(responseNode, "jobId"));
@@ -180,10 +180,10 @@ public class CreateConfiguration
                         else {
                             SimpleErrorBox      error      = new SimpleErrorBox(
                                     "Error occurred during configuration creation: "
-                                    + responseString);
+                                        + responseString);
                             CommanderUrlBuilder urlBuilder = createUrl(
-                                    "jobDetails.php")
-                                    .setParameter("jobId", jobId);
+                                    "jobDetails.php").setParameter("jobId",
+                                    jobId);
 
                             error.add(
                                 new Anchor("(See job for details)",
