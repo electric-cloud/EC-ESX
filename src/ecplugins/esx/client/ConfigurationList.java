@@ -20,14 +20,13 @@ import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.xml.client.Node;
 
 import com.electriccloud.commander.gwt.client.ChainedCallback;
 import com.electriccloud.commander.gwt.client.ListBase;
-import com.electriccloud.commander.gwt.client.legacyrequests.CommanderError;
-import com.electriccloud.commander.gwt.client.legacyrequests.RunProcedureRequest;
-import com.electriccloud.commander.gwt.client.protocol.xml.CommanderRequestCallback;
 import com.electriccloud.commander.gwt.client.requests.CgiRequestProxy;
+import com.electriccloud.commander.gwt.client.requests.RunProcedureRequest;
+import com.electriccloud.commander.gwt.client.responses.DefaultRunProcedureResponseCallback;
+import com.electriccloud.commander.gwt.client.responses.RunProcedureResponse;
 import com.electriccloud.commander.gwt.client.ui.ListTable;
 import com.electriccloud.commander.gwt.client.ui.SimpleErrorBox;
 import com.electriccloud.commander.gwt.client.util.CommanderUrlBuilder;
@@ -90,32 +89,28 @@ public class ConfigurationList
         clearErrorMessages();
 
         // Build runProcedure request
-        RunProcedureRequest request = new RunProcedureRequest(
-                "/plugins/EC-ESX/project", "DeleteConfiguration");
+        RunProcedureRequest request = getRequestFactory()
+                .createRunProcedureRequest();
 
+        request.setProjectName("/plugins/EC-ESX/project");
+        request.setProcedureName("DeleteConfiguration");
         request.addActualParameter("config", configName);
-
-        // Launch the procedure
-        registerCallback(request.getRequestId(),
-            new CommanderRequestCallback() {
-                @Override public void handleError(Node responseNode)
-                {
-                    addErrorMessage(new CommanderError(responseNode));
-                }
-
-                @Override public void handleResponse(Node responseNode)
+        request.setCallback(new DefaultRunProcedureResponseCallback(this) {
+                @Override public void handleResponse(
+                        RunProcedureResponse response)
                 {
 
                     if (getLog().isDebugEnabled()) {
                         getLog().debug(
-                            "Commander runProcedure request returned: "
-                                + responseNode);
+                            "Commander runProcedure request returned job id: "
+                                + response.getJobId());
                     }
 
-                    waitForJob(getNodeValueByName(responseNode, "jobId"));
+                    waitForJob(response.getJobId());
                 }
             });
 
+        // Launch the procedure
         if (getLog().isDebugEnabled()) {
             getLog().debug("Issuing Commander request: " + request);
         }

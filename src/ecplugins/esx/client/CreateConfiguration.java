@@ -18,14 +18,13 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.xml.client.Node;
 
 import com.electriccloud.commander.gwt.client.FormBase;
-import com.electriccloud.commander.gwt.client.legacyrequests.CommanderError;
-import com.electriccloud.commander.gwt.client.legacyrequests.RunProcedureRequest;
-import com.electriccloud.commander.gwt.client.protocol.xml.CommanderRequestCallback;
 import com.electriccloud.commander.gwt.client.requests.CgiRequestProxy;
 import com.electriccloud.commander.gwt.client.requests.FormBuilderLoader;
+import com.electriccloud.commander.gwt.client.requests.RunProcedureRequest;
+import com.electriccloud.commander.gwt.client.responses.DefaultRunProcedureResponseCallback;
+import com.electriccloud.commander.gwt.client.responses.RunProcedureResponse;
 import com.electriccloud.commander.gwt.client.ui.CredentialEditor;
 import com.electriccloud.commander.gwt.client.ui.FormBuilder;
 import com.electriccloud.commander.gwt.client.ui.FormTable;
@@ -92,8 +91,12 @@ public class CreateConfiguration
         }
 
         // Build runProcedure request
-        RunProcedureRequest request          = new RunProcedureRequest(
-                "/plugins/EC-ESX/project", "CreateConfiguration");
+        RunProcedureRequest request = getRequestFactory()
+                .createRunProcedureRequest();
+
+        request.setProjectName("/plugins/EC-ESX/project");
+        request.setProcedureName("CreateConfiguration");
+
         Map<String, String> params           = fb.getValues();
         Collection<String>  credentialParams = fb.getCredentialIds();
 
@@ -110,24 +113,18 @@ public class CreateConfiguration
             }
         }
 
-        // Launch the procedure
-        registerCallback(request.getRequestId(),
-            new CommanderRequestCallback() {
-                @Override public void handleError(Node responseNode)
-                {
-                    addErrorMessage(new CommanderError(responseNode));
-                }
-
-                @Override public void handleResponse(Node responseNode)
+        request.setCallback(new DefaultRunProcedureResponseCallback(this) {
+                @Override public void handleResponse(
+                        RunProcedureResponse response)
                 {
 
                     if (getLog().isDebugEnabled()) {
                         getLog().debug(
-                            "Commander runProcedure request returned: "
-                                + responseNode);
+                            "Commander runProcedure request returned job id: "
+                                + response.getJobId());
                     }
 
-                    waitForJob(getNodeValueByName(responseNode, "jobId"));
+                    waitForJob(response.getJobId());
                 }
             });
 

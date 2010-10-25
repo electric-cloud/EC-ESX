@@ -12,13 +12,13 @@ package ecplugins.esx.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.JavaScriptObject;
 
+import com.electriccloud.commander.gwt.client.BrowserContext;
 import com.electriccloud.commander.gwt.client.ComponentBase;
 import com.electriccloud.commander.gwt.client.ComponentBaseFactory;
 import com.electriccloud.commander.gwt.client.FormBase;
 import com.electriccloud.commander.gwt.client.PropertySheetEditor;
 
 import static com.electriccloud.commander.gwt.client.util.CommanderUrlBuilder.createPageUrl;
-
 
 public class ConfigurationManagementFactory
     extends ComponentBaseFactory
@@ -27,7 +27,9 @@ public class ConfigurationManagementFactory
 
     //~ Methods ----------------------------------------------------------------
 
-    @Override public void onCommanderInit(String divId, JavaScriptObject jso)
+    @Override public void onCommanderInit(
+            String           divId,
+            JavaScriptObject jso)
     {
         String        panel     = getParameter(jso, "panel");
         ComponentBase component;
@@ -36,19 +38,19 @@ public class ConfigurationManagementFactory
             component = new CreateConfiguration();
         }
         else if ("edit".equals(panel)) {
-            String configName    = getGetParameter("configName");
+            String configName    = BrowserContext.getInstance()
+                                                 .getGetParameter("configName");
             String propSheetPath = "/plugins/" + getPluginName()
-                + "/project/esx_cfgs/" + configName;
+                    + "/project/esx_cfgs/" + configName;
             String formXmlPath   = "/plugins/" + getPluginName()
-                + "/project/ui_forms/ESXEditConfigForm";
+                    + "/project/ui_forms/ESXEditConfigForm";
 
             component = new PropertySheetEditor("ecgc",
-                    "Edit ESX Configuration", configName,
-                    propSheetPath, formXmlPath, getPluginName());
+                    "Edit ESX Configuration", configName, propSheetPath,
+                    formXmlPath, getPluginName());
 
             ((FormBase) component).setDefaultRedirectToUrl(createPageUrl(
-                    getPluginName(), "configurations")
-                    .buildString());
+                    getPluginName(), "configurations").buildString());
         }
         else {
 
