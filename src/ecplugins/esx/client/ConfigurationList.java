@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import com.electriccloud.commander.gwt.client.ChainedCallback;
+import com.electriccloud.commander.gwt.client.DialogClickHandler;
 import com.electriccloud.commander.gwt.client.ListBase;
 import com.electriccloud.commander.gwt.client.requests.CgiRequestProxy;
 import com.electriccloud.commander.gwt.client.requests.RunProcedureRequest;
@@ -148,7 +149,7 @@ public class ConfigurationList
 
             // "Delete" link
             Anchor             deleteConfigLink = new Anchor("Delete");
-            DeleteClickHandler dch              = new DeleteClickHandler(
+            DialogClickHandler dch              = new DialogClickHandler(
                     new DeleteConfirmationDialog(configName,
                         "Are you sure you want to delete the ESX configuration '"
                             + configName + "'?") {
