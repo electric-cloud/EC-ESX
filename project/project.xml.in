@@ -434,6 +434,41 @@
                     </property>
                   </propertySheet>
                 </property>
+                <property>
+                  <propertyName>esx_vm_poweron</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+					<property>
+                      <propertyName>checkedValue</propertyName>
+                      <expandable>1</expandable>
+                      <value>1</value>
+                    </property>
+                    <property>
+                      <propertyName>uncheckedValue</propertyName>
+                      <expandable>1</expandable>
+                      <value>0</value>
+                    </property>
+                    <property>
+                      <propertyName>initiallyChecked</propertyName>
+                      <expandable>1</expandable>
+                      <value>0</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_timeout</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
               </propertySheet>
             </property>
           </propertySheet>
@@ -519,17 +554,66 @@
 	  <formalParameter>
         <formalParameterName>esx_nic_poweron</formalParameterName>
 		<defaultValue></defaultValue>
-        <description>Flag to specify whether or not to connect the device when the virtual machine starts. Default: 1.</description>
+        <description>Flag to specify whether or not to connect the device when the virtual machine starts. Default: 0.</description>
+        <required>0</required>
+        <type>checkbox</type>
+      </formalParameter>
+      <formalParameter>
+        <formalParameterName>esx_vm_poweron</formalParameterName>
+		<defaultValue></defaultValue>
+        <description>Flag to specify whether or not to power on the created virtual machine(s). Default: 0.</description>
         <required>0</required>
         <type>checkbox</type>
       </formalParameter>
 	  <formalParameter>
         <formalParameterName>esx_number_of_vms</formalParameterName>
         <defaultValue>1</defaultValue>
-        <description>Number of virtual machines to create. Default: 1.</description>
+        <description>Number of virtual machines to create. If more than one, a suffix (_#) is added to vm names. Default: 1.</description>
         <required>0</required>
         <type>entry</type>
       </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_timeout</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Timeout for the step execution in minutes. Blank means no timeout.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <step>
+        <stepName>SetTimelimit</stepName>
+        <alwaysRun>0</alwaysRun>
+        <broadcast>0</broadcast>
+        <command></command>
+        <condition></condition>
+        <description>Set the timelimit for the next step</description>
+        <errorHandling>failProcedure</errorHandling>
+        <exclusive>0</exclusive>
+        <logFileName></logFileName>
+        <parallel>0</parallel>
+        <postProcessor>postp</postProcessor>
+        <releaseExclusive>0</releaseExclusive>
+        <resourceName>local</resourceName>
+        <retries>0</retries>
+        <shell>ec-perl</shell>
+        <timeLimit></timeLimit>
+        <timeLimitUnits>minutes</timeLimitUnits>
+        <workingDirectory></workingDirectory>
+        <workspaceName></workspaceName>
+        <procedureName>Create</procedureName>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+          <property>
+            <propertyName>ec_customEditorData</propertyName>
+            <propertySheet>
+              <property>
+                <propertyName>formType</propertyName>
+                <expandable>1</expandable>
+                <value>command</value>
+              </property>
+            </propertySheet>
+          </property>
+        </propertySheet>
+      </step>
       <step>
         <stepName>Create</stepName>
         <alwaysRun>0</alwaysRun>
@@ -546,7 +630,7 @@
         <resourceName>local</resourceName>
         <retries>0</retries>
         <shell>ec-perl</shell>
-        <timeLimit>5</timeLimit>
+        <timeLimit>$[/myCall/esx_timelimit]</timeLimit>
         <timeLimitUnits>minutes</timeLimitUnits>
         <workingDirectory></workingDirectory>
         <workspaceName></workspaceName>
@@ -640,6 +724,26 @@
                     </property>
                   </propertySheet>
                 </property>
+				<property>
+                  <propertyName>esx_number_of_clones</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_timeout</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
               </propertySheet>
             </property>
           </propertySheet>
@@ -687,6 +791,55 @@
         <required>0</required>
         <type>entry</type>
       </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_number_of_clones</formalParameterName>
+        <defaultValue>1</defaultValue>
+        <description>Number of clones to be created. If more than one, a suffix (_#) is added to cloned vm names. Default: 1.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_timeout</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Timeout for the step execution in minutes. Blank means no timeout.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <step>
+        <stepName>SetTimelimit</stepName>
+        <alwaysRun>0</alwaysRun>
+        <broadcast>0</broadcast>
+        <command></command>
+        <condition></condition>
+        <description>Set the timelimit for the next step</description>
+        <errorHandling>failProcedure</errorHandling>
+        <exclusive>0</exclusive>
+        <logFileName></logFileName>
+        <parallel>0</parallel>
+        <postProcessor>postp</postProcessor>
+        <releaseExclusive>0</releaseExclusive>
+        <resourceName>local</resourceName>
+        <retries>0</retries>
+        <shell>ec-perl</shell>
+        <timeLimit></timeLimit>
+        <timeLimitUnits>minutes</timeLimitUnits>
+        <workingDirectory></workingDirectory>
+        <workspaceName></workspaceName>
+        <procedureName>Clone</procedureName>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+          <property>
+            <propertyName>ec_customEditorData</propertyName>
+            <propertySheet>
+              <property>
+                <propertyName>formType</propertyName>
+                <expandable>1</expandable>
+                <value>command</value>
+              </property>
+            </propertySheet>
+          </property>
+        </propertySheet>
+      </step>
       <step>
         <stepName>Clone</stepName>
         <alwaysRun>0</alwaysRun>
@@ -703,7 +856,7 @@
         <resourceName>local</resourceName>
         <retries>0</retries>
         <shell>ec-perl</shell>
-        <timeLimit>5</timeLimit>
+        <timeLimit>$[/myCall/esx_timelimit]</timeLimit>
         <timeLimitUnits>minutes</timeLimitUnits>
         <workingDirectory></workingDirectory>
         <workspaceName></workspaceName>
@@ -787,6 +940,26 @@
                     </property>
                   </propertySheet>
                 </property>
+				<property>
+                  <propertyName>esx_number_of_vms</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_timeout</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
               </propertySheet>
             </property>
           </propertySheet>
@@ -827,6 +1000,55 @@
         <required>1</required>
         <type>entry</type>
       </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_number_of_vms</formalParameterName>
+        <defaultValue>1</defaultValue>
+        <description>Number of virtual machines to be relocated. If more than one, a suffix (_#) is added to vm names. Default: 1.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_timeout</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Timeout for the step execution in minutes. Blank means no timeout.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <step>
+        <stepName>SetTimelimit</stepName>
+        <alwaysRun>0</alwaysRun>
+        <broadcast>0</broadcast>
+        <command></command>
+        <condition></condition>
+        <description>Set the timelimit for the next step</description>
+        <errorHandling>failProcedure</errorHandling>
+        <exclusive>0</exclusive>
+        <logFileName></logFileName>
+        <parallel>0</parallel>
+        <postProcessor>postp</postProcessor>
+        <releaseExclusive>0</releaseExclusive>
+        <resourceName>local</resourceName>
+        <retries>0</retries>
+        <shell>ec-perl</shell>
+        <timeLimit></timeLimit>
+        <timeLimitUnits>minutes</timeLimitUnits>
+        <workingDirectory></workingDirectory>
+        <workspaceName></workspaceName>
+        <procedureName>Relocate</procedureName>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+          <property>
+            <propertyName>ec_customEditorData</propertyName>
+            <propertySheet>
+              <property>
+                <propertyName>formType</propertyName>
+                <expandable>1</expandable>
+                <value>command</value>
+              </property>
+            </propertySheet>
+          </property>
+        </propertySheet>
+      </step>
       <step>
         <stepName>Relocate</stepName>
         <alwaysRun>0</alwaysRun>
@@ -843,7 +1065,7 @@
         <resourceName>local</resourceName>
         <retries>0</retries>
         <shell>ec-perl</shell>
-        <timeLimit>5</timeLimit>
+        <timeLimit>$[/myCall/esx_timelimit]</timeLimit>
         <timeLimitUnits>minutes</timeLimitUnits>
         <workingDirectory></workingDirectory>
         <workspaceName></workspaceName>
@@ -908,7 +1130,17 @@
                   </propertySheet>
                 </property>
                 <property>
-                  <propertyName>esx_save_vm</propertyName>
+                  <propertyName>esx_number_of_vms</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+                <property>
+                  <propertyName>esx_delete_vm</propertyName>
                   <propertySheet>
                     <property>
                       <propertyName>formType</propertyName>
@@ -929,6 +1161,16 @@
                       <propertyName>initiallyChecked</propertyName>
                       <expandable>1</expandable>
                       <value>0</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_timeout</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
                     </property>
                   </propertySheet>
                 </property>
@@ -959,12 +1201,61 @@
         <type>entry</type>
       </formalParameter>
       <formalParameter>
-        <formalParameterName>esx_save_vm</formalParameterName>
+        <formalParameterName>esx_number_of_vms</formalParameterName>
+        <defaultValue>1</defaultValue>
+        <description>Number of virtual machines to cleanup. If more than one, a suffix (_#) is added to vm names. Default: 1.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+      <formalParameter>
+        <formalParameterName>esx_delete_vm</formalParameterName>
         <defaultValue></defaultValue>
-        <description>If not checked, the virtual machine will be destroyed.</description>
+        <description>If checked, the virtual machine will be destroyed.</description>
         <required>0</required>
         <type>checkbox</type>
       </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_timeout</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Timeout for the step execution in minutes. Blank means no timeout.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <step>
+        <stepName>SetTimelimit</stepName>
+        <alwaysRun>0</alwaysRun>
+        <broadcast>0</broadcast>
+        <command></command>
+        <condition></condition>
+        <description>Set the timelimit for the next step</description>
+        <errorHandling>failProcedure</errorHandling>
+        <exclusive>0</exclusive>
+        <logFileName></logFileName>
+        <parallel>0</parallel>
+        <postProcessor>postp</postProcessor>
+        <releaseExclusive>0</releaseExclusive>
+        <resourceName>local</resourceName>
+        <retries>0</retries>
+        <shell>ec-perl</shell>
+        <timeLimit></timeLimit>
+        <timeLimitUnits>minutes</timeLimitUnits>
+        <workingDirectory></workingDirectory>
+        <workspaceName></workspaceName>
+        <procedureName>Cleanup</procedureName>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+          <property>
+            <propertyName>ec_customEditorData</propertyName>
+            <propertySheet>
+              <property>
+                <propertyName>formType</propertyName>
+                <expandable>1</expandable>
+                <value>command</value>
+              </property>
+            </propertySheet>
+          </property>
+        </propertySheet>
+      </step>
       <step>
         <stepName>Cleanup</stepName>
         <alwaysRun>0</alwaysRun>
@@ -981,7 +1272,7 @@
         <resourceName>local</resourceName>
         <retries>0</retries>
         <shell>ec-perl</shell>
-        <timeLimit>5</timeLimit>
+        <timeLimit>$[/myCall/esx_timelimit]</timeLimit>
         <timeLimitUnits>minutes</timeLimitUnits>
         <workingDirectory></workingDirectory>
         <workspaceName></workspaceName>
@@ -1080,6 +1371,26 @@
                     </property>
                   </propertySheet>
                 </property>
+				<property>
+                  <propertyName>esx_number_of_vms</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_timeout</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
               </propertySheet>
             </property>
           </propertySheet>
@@ -1120,6 +1431,55 @@
         <required>0</required>
         <type>checkbox</type>
       </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_number_of_vms</formalParameterName>
+        <defaultValue>1</defaultValue>
+        <description>Number of virtual machines to revert. If more than one, a suffix (_#) is added to vm and snapshot names. Default: 1.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_timeout</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Timeout for the step execution in minutes. Blank means no timeout.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <step>
+        <stepName>SetTimelimit</stepName>
+        <alwaysRun>0</alwaysRun>
+        <broadcast>0</broadcast>
+        <command></command>
+        <condition></condition>
+        <description>Set the timelimit for the next step</description>
+        <errorHandling>failProcedure</errorHandling>
+        <exclusive>0</exclusive>
+        <logFileName></logFileName>
+        <parallel>0</parallel>
+        <postProcessor>postp</postProcessor>
+        <releaseExclusive>0</releaseExclusive>
+        <resourceName>local</resourceName>
+        <retries>0</retries>
+        <shell>ec-perl</shell>
+        <timeLimit></timeLimit>
+        <timeLimitUnits>minutes</timeLimitUnits>
+        <workingDirectory></workingDirectory>
+        <workspaceName></workspaceName>
+        <procedureName>Revert</procedureName>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+          <property>
+            <propertyName>ec_customEditorData</propertyName>
+            <propertySheet>
+              <property>
+                <propertyName>formType</propertyName>
+                <expandable>1</expandable>
+                <value>command</value>
+              </property>
+            </propertySheet>
+          </property>
+        </propertySheet>
+      </step>
       <step>
         <stepName>Revert</stepName>
         <alwaysRun>0</alwaysRun>
@@ -1136,7 +1496,7 @@
         <resourceName>local</resourceName>
         <retries>0</retries>
         <shell>ec-perl</shell>
-        <timeLimit>5</timeLimit>
+        <timeLimit>$[/myCall/esx_timelimit]</timeLimit>
         <timeLimitUnits>minutes</timeLimitUnits>
         <workingDirectory></workingDirectory>
         <workspaceName></workspaceName>
@@ -1210,6 +1570,26 @@
                     </property>
                   </propertySheet>
                 </property>
+				<property>
+                  <propertyName>esx_number_of_vms</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_timeout</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
               </propertySheet>
             </property>
           </propertySheet>
@@ -1243,6 +1623,55 @@
         <required>1</required>
         <type>entry</type>
       </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_number_of_vms</formalParameterName>
+        <defaultValue>1</defaultValue>
+        <description>Number of virtual machines to snapshot. If more than one, a suffix (_#) is added to vm and snapshot names. Default: 1.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_timeout</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Timeout for the step execution in minutes. Blank means no timeout.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <step>
+        <stepName>SetTimelimit</stepName>
+        <alwaysRun>0</alwaysRun>
+        <broadcast>0</broadcast>
+        <command></command>
+        <condition></condition>
+        <description>Set the timelimit for the next step</description>
+        <errorHandling>failProcedure</errorHandling>
+        <exclusive>0</exclusive>
+        <logFileName></logFileName>
+        <parallel>0</parallel>
+        <postProcessor>postp</postProcessor>
+        <releaseExclusive>0</releaseExclusive>
+        <resourceName>local</resourceName>
+        <retries>0</retries>
+        <shell>ec-perl</shell>
+        <timeLimit></timeLimit>
+        <timeLimitUnits>minutes</timeLimitUnits>
+        <workingDirectory></workingDirectory>
+        <workspaceName></workspaceName>
+        <procedureName>Snapshot</procedureName>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+          <property>
+            <propertyName>ec_customEditorData</propertyName>
+            <propertySheet>
+              <property>
+                <propertyName>formType</propertyName>
+                <expandable>1</expandable>
+                <value>command</value>
+              </property>
+            </propertySheet>
+          </property>
+        </propertySheet>
+      </step>
       <step>
         <stepName>Snapshot</stepName>
         <alwaysRun>0</alwaysRun>
@@ -1259,11 +1688,1679 @@
         <resourceName>local</resourceName>
         <retries>0</retries>
         <shell>ec-perl</shell>
-        <timeLimit>5</timeLimit>
+        <timeLimit>$[/myCall/esx_timelimit]</timeLimit>
         <timeLimitUnits>minutes</timeLimitUnits>
         <workingDirectory></workingDirectory>
         <workspaceName></workspaceName>
         <procedureName>Snapshot</procedureName>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+          <property>
+            <propertyName>ec_customEditorData</propertyName>
+            <propertySheet>
+              <property>
+                <propertyName>formType</propertyName>
+                <expandable>1</expandable>
+                <value>command</value>
+              </property>
+            </propertySheet>
+          </property>
+        </propertySheet>
+      </step>
+    </procedure>
+    <procedure>
+      <procedureName>PowerOn</procedureName>
+      <description>Power on a virtual machine</description>
+      <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+      <resourceName></resourceName>
+      <workspaceName></workspaceName>
+      <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+      <propertySheet>
+        <property>
+          <propertyName>ec_customEditorData</propertyName>
+          <propertySheet>
+            <property>
+              <propertyName>parameters</propertyName>
+              <propertySheet>
+                <property>
+                  <propertyName>connection_config</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>sdk_installation_path</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_vmname</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_properties_location</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+                <property>
+                  <propertyName>esx_create_resources</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+					<property>
+                      <propertyName>checkedValue</propertyName>
+                      <expandable>1</expandable>
+                      <value>1</value>
+                    </property>
+                    <property>
+                      <propertyName>uncheckedValue</propertyName>
+                      <expandable>1</expandable>
+                      <value>0</value>
+                    </property>
+                    <property>
+                      <propertyName>initiallyChecked</propertyName>
+                      <expandable>1</expandable>
+                      <value>0</value>
+                    </property>
+                  </propertySheet>
+                </property>
+                <property>
+                  <propertyName>esx_pools</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+                <property>
+                  <propertyName>esx_workspace</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_number_of_vms</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_timeout</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+              </propertySheet>
+            </property>
+          </propertySheet>
+        </property>
+      </propertySheet>
+	  <formalParameter>
+        <formalParameterName>connection_config</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>The name of the configuration which holds the connection information for ESX server.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>sdk_installation_path</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Absolute path to sdk installation lib. Default: 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_vmname</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Name of the virtual machine to power on.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_properties_location</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>The ElectricCommander location to store properties. Default: '/myJob/ESX/vms'.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+      <formalParameter>
+        <formalParameterName>esx_create_resources</formalParameterName>
+		<defaultValue></defaultValue>
+        <description>Flag to specify whether or not to create ElectricCommander resources for the powered on virtual machines. Default: 0.</description>
+        <required>0</required>
+        <type>checkbox</type>
+      </formalParameter>
+      <formalParameter>
+        <formalParameterName>esx_pools</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>The ElectricCommander resource pool names to be associated with the created resources if created.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+      <formalParameter>
+        <formalParameterName>esx_workspace</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>The ElectricCommander workspace the created resources should use.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_number_of_vms</formalParameterName>
+        <defaultValue>1</defaultValue>
+        <description>Number of virtual machines to power on. If more than one, a suffix (_#) is added to vm names. Default: 1.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_timeout</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Timeout for the step execution in minutes. Blank means no timeout.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <step>
+        <stepName>SetTimelimit</stepName>
+        <alwaysRun>0</alwaysRun>
+        <broadcast>0</broadcast>
+        <command></command>
+        <condition></condition>
+        <description>Set the timelimit for the next step</description>
+        <errorHandling>failProcedure</errorHandling>
+        <exclusive>0</exclusive>
+        <logFileName></logFileName>
+        <parallel>0</parallel>
+        <postProcessor>postp</postProcessor>
+        <releaseExclusive>0</releaseExclusive>
+        <resourceName>local</resourceName>
+        <retries>0</retries>
+        <shell>ec-perl</shell>
+        <timeLimit></timeLimit>
+        <timeLimitUnits>minutes</timeLimitUnits>
+        <workingDirectory></workingDirectory>
+        <workspaceName></workspaceName>
+        <procedureName>PowerOn</procedureName>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+          <property>
+            <propertyName>ec_customEditorData</propertyName>
+            <propertySheet>
+              <property>
+                <propertyName>formType</propertyName>
+                <expandable>1</expandable>
+                <value>command</value>
+              </property>
+            </propertySheet>
+          </property>
+        </propertySheet>
+      </step>
+      <step>
+        <stepName>PowerOn</stepName>
+        <alwaysRun>0</alwaysRun>
+        <broadcast>0</broadcast>
+        <command></command>
+        <condition></condition>
+        <description>Power on a virtual machine</description>
+        <errorHandling>failProcedure</errorHandling>
+        <exclusive>0</exclusive>
+        <logFileName></logFileName>
+        <parallel>0</parallel>
+        <postProcessor>postp</postProcessor>
+        <releaseExclusive>0</releaseExclusive>
+        <resourceName>local</resourceName>
+        <retries>0</retries>
+        <shell>ec-perl</shell>
+        <timeLimit>$[/myCall/esx_timelimit]</timeLimit>
+        <timeLimitUnits>minutes</timeLimitUnits>
+        <workingDirectory></workingDirectory>
+        <workspaceName></workspaceName>
+        <procedureName>PowerOn</procedureName>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+          <property>
+            <propertyName>ec_customEditorData</propertyName>
+            <propertySheet>
+              <property>
+                <propertyName>formType</propertyName>
+                <expandable>1</expandable>
+                <value>command</value>
+              </property>
+            </propertySheet>
+          </property>
+        </propertySheet>
+      </step>
+    </procedure>
+    <procedure>
+      <procedureName>PowerOff</procedureName>
+      <description>Power off a virtual machine</description>
+      <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+      <resourceName></resourceName>
+      <workspaceName></workspaceName>
+      <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+      <propertySheet>
+        <property>
+          <propertyName>ec_customEditorData</propertyName>
+          <propertySheet>
+            <property>
+              <propertyName>parameters</propertyName>
+              <propertySheet>
+                <property>
+                  <propertyName>connection_config</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>sdk_installation_path</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_vmname</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_number_of_vms</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_timeout</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+              </propertySheet>
+            </property>
+          </propertySheet>
+        </property>
+      </propertySheet>
+	  <formalParameter>
+        <formalParameterName>connection_config</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>The name of the configuration which holds the connection information for ESX server.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>sdk_installation_path</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Absolute path to sdk installation lib. Default: 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_vmname</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Name of the virtual machine to power off.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_number_of_vms</formalParameterName>
+        <defaultValue>1</defaultValue>
+        <description>Number of virtual machines to power off. If more than one, a suffix (_#) is added to vm names. Default: 1.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_timeout</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Timeout for the step execution in minutes. Blank means no timeout.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <step>
+        <stepName>SetTimelimit</stepName>
+        <alwaysRun>0</alwaysRun>
+        <broadcast>0</broadcast>
+        <command></command>
+        <condition></condition>
+        <description>Set the timelimit for the next step</description>
+        <errorHandling>failProcedure</errorHandling>
+        <exclusive>0</exclusive>
+        <logFileName></logFileName>
+        <parallel>0</parallel>
+        <postProcessor>postp</postProcessor>
+        <releaseExclusive>0</releaseExclusive>
+        <resourceName>local</resourceName>
+        <retries>0</retries>
+        <shell>ec-perl</shell>
+        <timeLimit></timeLimit>
+        <timeLimitUnits>minutes</timeLimitUnits>
+        <workingDirectory></workingDirectory>
+        <workspaceName></workspaceName>
+        <procedureName>PowerOff</procedureName>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+          <property>
+            <propertyName>ec_customEditorData</propertyName>
+            <propertySheet>
+              <property>
+                <propertyName>formType</propertyName>
+                <expandable>1</expandable>
+                <value>command</value>
+              </property>
+            </propertySheet>
+          </property>
+        </propertySheet>
+      </step>
+      <step>
+        <stepName>PowerOff</stepName>
+        <alwaysRun>0</alwaysRun>
+        <broadcast>0</broadcast>
+        <command></command>
+        <condition></condition>
+        <description>Power off a virtual machine</description>
+        <errorHandling>failProcedure</errorHandling>
+        <exclusive>0</exclusive>
+        <logFileName></logFileName>
+        <parallel>0</parallel>
+        <postProcessor>postp</postProcessor>
+        <releaseExclusive>0</releaseExclusive>
+        <resourceName>local</resourceName>
+        <retries>0</retries>
+        <shell>ec-perl</shell>
+        <timeLimit>$[/myCall/esx_timelimit]</timeLimit>
+        <timeLimitUnits>minutes</timeLimitUnits>
+        <workingDirectory></workingDirectory>
+        <workspaceName></workspaceName>
+        <procedureName>PowerOff</procedureName>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+          <property>
+            <propertyName>ec_customEditorData</propertyName>
+            <propertySheet>
+              <property>
+                <propertyName>formType</propertyName>
+                <expandable>1</expandable>
+                <value>command</value>
+              </property>
+            </propertySheet>
+          </property>
+        </propertySheet>
+      </step>
+    </procedure>
+    <procedure>
+      <procedureName>Shutdown</procedureName>
+      <description>Shutdown a virtual machine</description>
+      <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+      <resourceName></resourceName>
+      <workspaceName></workspaceName>
+      <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+      <propertySheet>
+        <property>
+          <propertyName>ec_customEditorData</propertyName>
+          <propertySheet>
+            <property>
+              <propertyName>parameters</propertyName>
+              <propertySheet>
+                <property>
+                  <propertyName>connection_config</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>sdk_installation_path</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_vmname</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_number_of_vms</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_timeout</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+              </propertySheet>
+            </property>
+          </propertySheet>
+        </property>
+      </propertySheet>
+	  <formalParameter>
+        <formalParameterName>connection_config</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>The name of the configuration which holds the connection information for ESX server.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>sdk_installation_path</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Absolute path to sdk installation lib. Default: 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_vmname</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Name of the virtual machine to shut down.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_number_of_vms</formalParameterName>
+        <defaultValue>1</defaultValue>
+        <description>Number of virtual machines to shut down. If more than one, a suffix (_#) is added to vm names. Default: 1.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_timeout</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Timeout for the step execution in minutes. Blank means no timeout.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <step>
+        <stepName>SetTimelimit</stepName>
+        <alwaysRun>0</alwaysRun>
+        <broadcast>0</broadcast>
+        <command></command>
+        <condition></condition>
+        <description>Set the timelimit for the next step</description>
+        <errorHandling>failProcedure</errorHandling>
+        <exclusive>0</exclusive>
+        <logFileName></logFileName>
+        <parallel>0</parallel>
+        <postProcessor>postp</postProcessor>
+        <releaseExclusive>0</releaseExclusive>
+        <resourceName>local</resourceName>
+        <retries>0</retries>
+        <shell>ec-perl</shell>
+        <timeLimit></timeLimit>
+        <timeLimitUnits>minutes</timeLimitUnits>
+        <workingDirectory></workingDirectory>
+        <workspaceName></workspaceName>
+        <procedureName>Shutdown</procedureName>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+          <property>
+            <propertyName>ec_customEditorData</propertyName>
+            <propertySheet>
+              <property>
+                <propertyName>formType</propertyName>
+                <expandable>1</expandable>
+                <value>command</value>
+              </property>
+            </propertySheet>
+          </property>
+        </propertySheet>
+      </step>
+      <step>
+        <stepName>Shutdown</stepName>
+        <alwaysRun>0</alwaysRun>
+        <broadcast>0</broadcast>
+        <command></command>
+        <condition></condition>
+        <description>Shutdown a virtual machine</description>
+        <errorHandling>failProcedure</errorHandling>
+        <exclusive>0</exclusive>
+        <logFileName></logFileName>
+        <parallel>0</parallel>
+        <postProcessor>postp</postProcessor>
+        <releaseExclusive>0</releaseExclusive>
+        <resourceName>local</resourceName>
+        <retries>0</retries>
+        <shell>ec-perl</shell>
+        <timeLimit>$[/myCall/esx_timelimit]</timeLimit>
+        <timeLimitUnits>minutes</timeLimitUnits>
+        <workingDirectory></workingDirectory>
+        <workspaceName></workspaceName>
+        <procedureName>Shutdown</procedureName>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+          <property>
+            <propertyName>ec_customEditorData</propertyName>
+            <propertySheet>
+              <property>
+                <propertyName>formType</propertyName>
+                <expandable>1</expandable>
+                <value>command</value>
+              </property>
+            </propertySheet>
+          </property>
+        </propertySheet>
+      </step>
+    </procedure>
+    <procedure>
+      <procedureName>Suspend</procedureName>
+      <description>Suspend a virtual machine</description>
+      <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+      <resourceName></resourceName>
+      <workspaceName></workspaceName>
+      <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+      <propertySheet>
+        <property>
+          <propertyName>ec_customEditorData</propertyName>
+          <propertySheet>
+            <property>
+              <propertyName>parameters</propertyName>
+              <propertySheet>
+                <property>
+                  <propertyName>connection_config</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>sdk_installation_path</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_vmname</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_number_of_vms</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_timeout</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+              </propertySheet>
+            </property>
+          </propertySheet>
+        </property>
+      </propertySheet>
+	  <formalParameter>
+        <formalParameterName>connection_config</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>The name of the configuration which holds the connection information for ESX server.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>sdk_installation_path</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Absolute path to sdk installation lib. Default: 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_vmname</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Name of the virtual machine to suspend.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_number_of_vms</formalParameterName>
+        <defaultValue>1</defaultValue>
+        <description>Number of virtual machines to suspend. If more than one, a suffix (_#) is added to vm names. Default: 1.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_timeout</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Timeout for the step execution in minutes. Blank means no timeout.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <step>
+        <stepName>SetTimelimit</stepName>
+        <alwaysRun>0</alwaysRun>
+        <broadcast>0</broadcast>
+        <command></command>
+        <condition></condition>
+        <description>Set the timelimit for the next step</description>
+        <errorHandling>failProcedure</errorHandling>
+        <exclusive>0</exclusive>
+        <logFileName></logFileName>
+        <parallel>0</parallel>
+        <postProcessor>postp</postProcessor>
+        <releaseExclusive>0</releaseExclusive>
+        <resourceName>local</resourceName>
+        <retries>0</retries>
+        <shell>ec-perl</shell>
+        <timeLimit></timeLimit>
+        <timeLimitUnits>minutes</timeLimitUnits>
+        <workingDirectory></workingDirectory>
+        <workspaceName></workspaceName>
+        <procedureName>Suspend</procedureName>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+          <property>
+            <propertyName>ec_customEditorData</propertyName>
+            <propertySheet>
+              <property>
+                <propertyName>formType</propertyName>
+                <expandable>1</expandable>
+                <value>command</value>
+              </property>
+            </propertySheet>
+          </property>
+        </propertySheet>
+      </step>
+      <step>
+        <stepName>Suspend</stepName>
+        <alwaysRun>0</alwaysRun>
+        <broadcast>0</broadcast>
+        <command></command>
+        <condition></condition>
+        <description>Suspend a virtual machine</description>
+        <errorHandling>failProcedure</errorHandling>
+        <exclusive>0</exclusive>
+        <logFileName></logFileName>
+        <parallel>0</parallel>
+        <postProcessor>postp</postProcessor>
+        <releaseExclusive>0</releaseExclusive>
+        <resourceName>local</resourceName>
+        <retries>0</retries>
+        <shell>ec-perl</shell>
+        <timeLimit>$[/myCall/esx_timelimit]</timeLimit>
+        <timeLimitUnits>minutes</timeLimitUnits>
+        <workingDirectory></workingDirectory>
+        <workspaceName></workspaceName>
+        <procedureName>Suspend</procedureName>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+          <property>
+            <propertyName>ec_customEditorData</propertyName>
+            <propertySheet>
+              <property>
+                <propertyName>formType</propertyName>
+                <expandable>1</expandable>
+                <value>command</value>
+              </property>
+            </propertySheet>
+          </property>
+        </propertySheet>
+      </step>
+    </procedure>
+	<procedure>
+      <procedureName>CreateResourceFromVM</procedureName>
+      <description>Store information about a virtual machine and create ElectricCommander resources</description>
+      <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+      <resourceName></resourceName>
+      <workspaceName></workspaceName>
+      <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+      <propertySheet>
+        <property>
+          <propertyName>ec_customEditorData</propertyName>
+          <propertySheet>
+            <property>
+              <propertyName>parameters</propertyName>
+              <propertySheet>
+                <property>
+                  <propertyName>connection_config</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>sdk_installation_path</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_vmname</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_number_of_vms</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_properties_location</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+                <property>
+                  <propertyName>esx_create_resources</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+					<property>
+                      <propertyName>checkedValue</propertyName>
+                      <expandable>1</expandable>
+                      <value>1</value>
+                    </property>
+                    <property>
+                      <propertyName>uncheckedValue</propertyName>
+                      <expandable>1</expandable>
+                      <value>0</value>
+                    </property>
+                    <property>
+                      <propertyName>initiallyChecked</propertyName>
+                      <expandable>1</expandable>
+                      <value>0</value>
+                    </property>
+                  </propertySheet>
+                </property>
+                <property>
+                  <propertyName>esx_pools</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+                <property>
+                  <propertyName>esx_workspace</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_timeout</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+              </propertySheet>
+            </property>
+          </propertySheet>
+        </property>
+      </propertySheet>
+	  <formalParameter>
+        <formalParameterName>connection_config</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>The name of the configuration which holds the connection information for ESX server.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>sdk_installation_path</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Absolute path to sdk installation lib. Default: 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_vmname</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Name of the virtual machine to get the information from.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_number_of_vms</formalParameterName>
+        <defaultValue>1</defaultValue>
+        <description>Number of virtual machines to get the information from. If more than one, a suffix (_#) is added to vm names. Default: 1.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_properties_location</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>The ElectricCommander location to store properties containing information about the virtual machines. Default: '/myJob/ESX/vms'.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+      <formalParameter>
+        <formalParameterName>esx_create_resources</formalParameterName>
+		<defaultValue></defaultValue>
+        <description>Flag to specify whether or not to create ElectricCommander resources for the virtual machines. Default: 0.</description>
+        <required>0</required>
+        <type>checkbox</type>
+      </formalParameter>
+      <formalParameter>
+        <formalParameterName>esx_pools</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>The ElectricCommander resource pool names to be associated with the created resources if created.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+      <formalParameter>
+        <formalParameterName>esx_workspace</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>The ElectricCommander workspace the created resources should use.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_timeout</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Timeout for the step execution in minutes. Blank means no timeout.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <step>
+        <stepName>SetTimelimit</stepName>
+        <alwaysRun>0</alwaysRun>
+        <broadcast>0</broadcast>
+        <command></command>
+        <condition></condition>
+        <description>Set the timelimit for the next step</description>
+        <errorHandling>failProcedure</errorHandling>
+        <exclusive>0</exclusive>
+        <logFileName></logFileName>
+        <parallel>0</parallel>
+        <postProcessor>postp</postProcessor>
+        <releaseExclusive>0</releaseExclusive>
+        <resourceName>local</resourceName>
+        <retries>0</retries>
+        <shell>ec-perl</shell>
+        <timeLimit></timeLimit>
+        <timeLimitUnits>minutes</timeLimitUnits>
+        <workingDirectory></workingDirectory>
+        <workspaceName></workspaceName>
+        <procedureName>CreateResourceFromVM</procedureName>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+          <property>
+            <propertyName>ec_customEditorData</propertyName>
+            <propertySheet>
+              <property>
+                <propertyName>formType</propertyName>
+                <expandable>1</expandable>
+                <value>command</value>
+              </property>
+            </propertySheet>
+          </property>
+        </propertySheet>
+      </step>
+      <step>
+        <stepName>CreateResourceFromVM</stepName>
+        <alwaysRun>0</alwaysRun>
+        <broadcast>0</broadcast>
+        <command></command>
+        <condition></condition>
+        <description>Store information about a virtual machine and create ElectricCommander resources</description>
+        <errorHandling>failProcedure</errorHandling>
+        <exclusive>0</exclusive>
+        <logFileName></logFileName>
+        <parallel>0</parallel>
+        <postProcessor>postp</postProcessor>
+        <releaseExclusive>0</releaseExclusive>
+        <resourceName>local</resourceName>
+        <retries>0</retries>
+        <shell>ec-perl</shell>
+        <timeLimit>$[/myCall/esx_timelimit]</timeLimit>
+        <timeLimitUnits>minutes</timeLimitUnits>
+        <workingDirectory></workingDirectory>
+        <workspaceName></workspaceName>
+        <procedureName>CreateResourceFromVM</procedureName>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+          <property>
+            <propertyName>ec_customEditorData</propertyName>
+            <propertySheet>
+              <property>
+                <propertyName>formType</propertyName>
+                <expandable>1</expandable>
+                <value>command</value>
+              </property>
+            </propertySheet>
+          </property>
+        </propertySheet>
+      </step>
+    </procedure>
+	<procedure>
+      <procedureName>GetVMConfiguration</procedureName>
+      <description>Get virtual machine information and store it in properties</description>
+      <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+      <resourceName></resourceName>
+      <workspaceName></workspaceName>
+      <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+      <propertySheet>
+        <property>
+          <propertyName>ec_customEditorData</propertyName>
+          <propertySheet>
+            <property>
+              <propertyName>parameters</propertyName>
+              <propertySheet>
+                <property>
+                  <propertyName>connection_config</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>sdk_installation_path</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_vmname</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_number_of_vms</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_properties_location</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_timeout</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+              </propertySheet>
+            </property>
+          </propertySheet>
+        </property>
+      </propertySheet>
+	  <formalParameter>
+        <formalParameterName>connection_config</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>The name of the configuration which holds the connection information for ESX server.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>sdk_installation_path</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Absolute path to sdk installation lib. Default: 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_vmname</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Name of the virtual machine to get the information from.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_number_of_vms</formalParameterName>
+        <defaultValue>1</defaultValue>
+        <description>Number of virtual machines to get the information from. If more than one, a suffix (_#) is added to vm names. Default: 1.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_properties_location</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>The ElectricCommander location to store properties containing information about the virtual machines. Default: '/myJob/ESX/vms'.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_timeout</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Timeout for the step execution in minutes. Blank means no timeout.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <step>
+        <stepName>SetTimelimit</stepName>
+        <alwaysRun>0</alwaysRun>
+        <broadcast>0</broadcast>
+        <command></command>
+        <condition></condition>
+        <description>Set the timelimit for the next step</description>
+        <errorHandling>failProcedure</errorHandling>
+        <exclusive>0</exclusive>
+        <logFileName></logFileName>
+        <parallel>0</parallel>
+        <postProcessor>postp</postProcessor>
+        <releaseExclusive>0</releaseExclusive>
+        <resourceName>local</resourceName>
+        <retries>0</retries>
+        <shell>ec-perl</shell>
+        <timeLimit></timeLimit>
+        <timeLimitUnits>minutes</timeLimitUnits>
+        <workingDirectory></workingDirectory>
+        <workspaceName></workspaceName>
+        <procedureName>GetVMConfiguration</procedureName>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+          <property>
+            <propertyName>ec_customEditorData</propertyName>
+            <propertySheet>
+              <property>
+                <propertyName>formType</propertyName>
+                <expandable>1</expandable>
+                <value>command</value>
+              </property>
+            </propertySheet>
+          </property>
+        </propertySheet>
+      </step>
+      <step>
+        <stepName>GetVMConfiguration</stepName>
+        <alwaysRun>0</alwaysRun>
+        <broadcast>0</broadcast>
+        <command></command>
+        <condition></condition>
+        <description>Get virtual machine information and store it in properties</description>
+        <errorHandling>failProcedure</errorHandling>
+        <exclusive>0</exclusive>
+        <logFileName></logFileName>
+        <parallel>0</parallel>
+        <postProcessor>postp</postProcessor>
+        <releaseExclusive>0</releaseExclusive>
+        <resourceName>local</resourceName>
+        <retries>0</retries>
+        <shell>ec-perl</shell>
+        <timeLimit>$[/myCall/esx_timelimit]</timeLimit>
+        <timeLimitUnits>minutes</timeLimitUnits>
+        <workingDirectory></workingDirectory>
+        <workspaceName></workspaceName>
+        <procedureName>GetVMConfiguration</procedureName>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+          <property>
+            <propertyName>ec_customEditorData</propertyName>
+            <propertySheet>
+              <property>
+                <propertyName>formType</propertyName>
+                <expandable>1</expandable>
+                <value>command</value>
+              </property>
+            </propertySheet>
+          </property>
+        </propertySheet>
+      </step>
+    </procedure>
+	<procedure>
+      <procedureName>Import</procedureName>
+      <description>Import an OVF package to the ESX server</description>
+      <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+      <resourceName></resourceName>
+      <workspaceName></workspaceName>
+      <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+      <propertySheet>
+        <property>
+          <propertyName>ec_customEditorData</propertyName>
+          <propertySheet>
+            <property>
+              <propertyName>parameters</propertyName>
+              <propertySheet>
+                <property>
+                  <propertyName>connection_config</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+                <property>
+                  <propertyName>esx_host</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_datastore</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_vmname</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_source_directory</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_number_of_vms</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_timeout</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+              </propertySheet>
+            </property>
+          </propertySheet>
+        </property>
+      </propertySheet>
+      <formalParameter>
+        <formalParameterName>connection_config</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>The name of the configuration which holds the connection information for ESX server.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+      <formalParameter>
+        <formalParameterName>esx_host</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Name of the host where virtual machines will be imported.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+      <formalParameter>
+        <formalParameterName>esx_datastore</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Name of the datastore to be used.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_vmname</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Name of the virtual machine to import.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_source_directory</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Absoulte path to the directory where OVF packages are stored.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_number_of_vms</formalParameterName>
+        <defaultValue>1</defaultValue>
+        <description>Number of virtual machines to import. If more than one, a suffix (_#) is added to directories and vm names. Default: 1.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_timeout</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Timeout for the step execution in minutes. Blank means no timeout.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <step>
+        <stepName>SetTimelimit</stepName>
+        <alwaysRun>0</alwaysRun>
+        <broadcast>0</broadcast>
+        <command></command>
+        <condition></condition>
+        <description>Set the timelimit for the next step</description>
+        <errorHandling>failProcedure</errorHandling>
+        <exclusive>0</exclusive>
+        <logFileName></logFileName>
+        <parallel>0</parallel>
+        <postProcessor>postp</postProcessor>
+        <releaseExclusive>0</releaseExclusive>
+        <resourceName>local</resourceName>
+        <retries>0</retries>
+        <shell>ec-perl</shell>
+        <timeLimit></timeLimit>
+        <timeLimitUnits>minutes</timeLimitUnits>
+        <workingDirectory></workingDirectory>
+        <workspaceName></workspaceName>
+        <procedureName>Import</procedureName>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+          <property>
+            <propertyName>ec_customEditorData</propertyName>
+            <propertySheet>
+              <property>
+                <propertyName>formType</propertyName>
+                <expandable>1</expandable>
+                <value>command</value>
+              </property>
+            </propertySheet>
+          </property>
+        </propertySheet>
+      </step>
+      <step>
+        <stepName>Import</stepName>
+        <alwaysRun>0</alwaysRun>
+        <broadcast>0</broadcast>
+        <command></command>
+        <condition></condition>
+        <description>Import an OVF package to the ESX server</description>
+        <errorHandling>failProcedure</errorHandling>
+        <exclusive>0</exclusive>
+        <logFileName></logFileName>
+        <parallel>0</parallel>
+        <postProcessor>postp</postProcessor>
+        <releaseExclusive>0</releaseExclusive>
+        <resourceName>local</resourceName>
+        <retries>0</retries>
+        <shell>ec-perl</shell>
+        <timeLimit>$[/myCall/esx_timelimit]</timeLimit>
+        <timeLimitUnits>minutes</timeLimitUnits>
+        <workingDirectory></workingDirectory>
+        <workspaceName></workspaceName>
+        <procedureName>Import</procedureName>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+          <property>
+            <propertyName>ec_customEditorData</propertyName>
+            <propertySheet>
+              <property>
+                <propertyName>formType</propertyName>
+                <expandable>1</expandable>
+                <value>command</value>
+              </property>
+            </propertySheet>
+          </property>
+        </propertySheet>
+      </step>
+    </procedure>
+	<procedure>
+      <procedureName>Export</procedureName>
+      <description>Export a virtual machine to an OVF package using ovftool</description>
+      <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+      <resourceName></resourceName>
+      <workspaceName></workspaceName>
+      <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+      <propertySheet>
+        <property>
+          <propertyName>ec_customEditorData</propertyName>
+          <propertySheet>
+            <property>
+              <propertyName>parameters</propertyName>
+              <propertySheet>
+                <property>
+                  <propertyName>connection_config</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+                <property>
+                  <propertyName>esx_host</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_datacenter</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_datastore</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_vmname</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_target_directory</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_number_of_vms</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+				<property>
+                  <propertyName>esx_timeout</propertyName>
+                  <propertySheet>
+                    <property>
+                      <propertyName>formType</propertyName>
+                      <expandable>1</expandable>
+                      <value>standard</value>
+                    </property>
+                  </propertySheet>
+                </property>
+              </propertySheet>
+            </property>
+          </propertySheet>
+        </property>
+      </propertySheet>
+      <formalParameter>
+        <formalParameterName>connection_config</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>The name of the configuration which holds the connection information for ESX server.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+      <formalParameter>
+        <formalParameterName>esx_host</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Name of the host where virtual machine is located.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_datacenter</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Name of the datacenter.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+      <formalParameter>
+        <formalParameterName>esx_datastore</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Name of the datastore.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+      <formalParameter>
+        <formalParameterName>esx_vmname</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Name of the virtual machine to export.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_target_directory</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Absoulte path to the directory where virtual machines will be exported.</description>
+        <required>1</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_number_of_vms</formalParameterName>
+        <defaultValue>1</defaultValue>
+        <description>Number of virtual machines to export. If more than one, a suffix (_#) is added to vm names. Default: 1.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <formalParameter>
+        <formalParameterName>esx_timeout</formalParameterName>
+        <defaultValue></defaultValue>
+        <description>Timeout for the step execution in minutes. Blank means no timeout.</description>
+        <required>0</required>
+        <type>entry</type>
+      </formalParameter>
+	  <step>
+        <stepName>SetTimelimit</stepName>
+        <alwaysRun>0</alwaysRun>
+        <broadcast>0</broadcast>
+        <command></command>
+        <condition></condition>
+        <description>Set the timelimit for the next step</description>
+        <errorHandling>failProcedure</errorHandling>
+        <exclusive>0</exclusive>
+        <logFileName></logFileName>
+        <parallel>0</parallel>
+        <postProcessor>postp</postProcessor>
+        <releaseExclusive>0</releaseExclusive>
+        <resourceName>local</resourceName>
+        <retries>0</retries>
+        <shell>ec-perl</shell>
+        <timeLimit></timeLimit>
+        <timeLimitUnits>minutes</timeLimitUnits>
+        <workingDirectory></workingDirectory>
+        <workspaceName></workspaceName>
+        <procedureName>Export</procedureName>
+        <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+        <propertySheet>
+          <property>
+            <propertyName>ec_customEditorData</propertyName>
+            <propertySheet>
+              <property>
+                <propertyName>formType</propertyName>
+                <expandable>1</expandable>
+                <value>command</value>
+              </property>
+            </propertySheet>
+          </property>
+        </propertySheet>
+      </step>
+      <step>
+        <stepName>Export</stepName>
+        <alwaysRun>0</alwaysRun>
+        <broadcast>0</broadcast>
+        <command></command>
+        <condition></condition>
+        <description>Export a virtual machine to an OVF package using ovftool</description>
+        <errorHandling>failProcedure</errorHandling>
+        <exclusive>0</exclusive>
+        <logFileName></logFileName>
+        <parallel>0</parallel>
+        <postProcessor>postp</postProcessor>
+        <releaseExclusive>0</releaseExclusive>
+        <resourceName>local</resourceName>
+        <retries>0</retries>
+        <shell>ec-perl</shell>
+        <timeLimit>$[/myCall/esx_timelimit]</timeLimit>
+        <timeLimitUnits>minutes</timeLimitUnits>
+        <workingDirectory></workingDirectory>
+        <workspaceName></workspaceName>
+        <procedureName>Export</procedureName>
         <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
         <propertySheet>
           <property>

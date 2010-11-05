@@ -60,27 +60,115 @@ ntest "check-components-present", {}, sub {
     
     $xpath = $::N->getSteps("$::gPlugin_name","Create");
     assertOK($xpath,"Create");
-    assertEq("Create", $xpath->findvalue("//step[1]/stepName"), "step 1 is Create");
+    assertEq("SetTimelimit", $xpath->findvalue("//step[1]/stepName"), "step 1 is SetTimelimit");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","Create");
+    assertOK($xpath,"Create");
+    assertEq("Create", $xpath->findvalue("//step[2]/stepName"), "step 2 is Create");
     
     $xpath = $::N->getSteps("$::gPlugin_name","Clone");
     assertOK($xpath,"Clone");
-    assertEq("Clone", $xpath->findvalue("//step[1]/stepName"), "step 1 is Clone");
+    assertEq("SetTimelimit", $xpath->findvalue("//step[1]/stepName"), "step 1 is SetTimelimit");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","Clone");
+    assertOK($xpath,"Clone");
+    assertEq("Clone", $xpath->findvalue("//step[2]/stepName"), "step 2 is Clone");
     
     $xpath = $::N->getSteps("$::gPlugin_name","Relocate");
     assertOK($xpath,"Relocate");
-    assertEq("Relocate", $xpath->findvalue("//step[1]/stepName"), "step 1 is Relocate");
+    assertEq("SetTimelimit", $xpath->findvalue("//step[1]/stepName"), "step 1 is SetTimelimit");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","Relocate");
+    assertOK($xpath,"Relocate");
+    assertEq("Relocate", $xpath->findvalue("//step[2]/stepName"), "step 2 is Relocate");
     
     $xpath = $::N->getSteps("$::gPlugin_name","Cleanup");
     assertOK($xpath,"Cleanup");
-    assertEq("Cleanup", $xpath->findvalue("//step[1]/stepName"), "step 1 is Cleanup");
+    assertEq("SetTimelimit", $xpath->findvalue("//step[1]/stepName"), "step 1 is SetTimelimit");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","Cleanup");
+    assertOK($xpath,"Cleanup");
+    assertEq("Cleanup", $xpath->findvalue("//step[2]/stepName"), "step 2 is Cleanup");
     
     $xpath = $::N->getSteps("$::gPlugin_name","Revert");
     assertOK($xpath,"Revert");
-    assertEq("Revert", $xpath->findvalue("//step[1]/stepName"), "step 1 is Revert");
+    assertEq("SetTimelimit", $xpath->findvalue("//step[1]/stepName"), "step 1 is SetTimelimit");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","Revert");
+    assertOK($xpath,"Revert");
+    assertEq("Revert", $xpath->findvalue("//step[2]/stepName"), "step 2 is Revert");
     
     $xpath = $::N->getSteps("$::gPlugin_name","Snapshot");
     assertOK($xpath,"Snapshot");
-    assertEq("Snapshot", $xpath->findvalue("//step[1]/stepName"), "step 1 is Snapshot");
+    assertEq("SetTimelimit", $xpath->findvalue("//step[1]/stepName"), "step 1 is SetTimelimit");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","Snapshot");
+    assertOK($xpath,"Snapshot");
+    assertEq("Snapshot", $xpath->findvalue("//step[2]/stepName"), "step 2 is Snapshot");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","PowerOn");
+    assertOK($xpath,"PowerOn");
+    assertEq("SetTimelimit", $xpath->findvalue("//step[1]/stepName"), "step 1 is SetTimelimit");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","PowerOn");
+    assertOK($xpath,"PowerOn");
+    assertEq("PowerOn", $xpath->findvalue("//step[2]/stepName"), "step 2 is PowerOn");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","PowerOff");
+    assertOK($xpath,"PowerOff");
+    assertEq("SetTimelimit", $xpath->findvalue("//step[1]/stepName"), "step 1 is SetTimelimit");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","PowerOff");
+    assertOK($xpath,"PowerOff");
+    assertEq("PowerOff", $xpath->findvalue("//step[2]/stepName"), "step 2 is PowerOff");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","Shutdown");
+    assertOK($xpath,"Shutdown");
+    assertEq("SetTimelimit", $xpath->findvalue("//step[1]/stepName"), "step 1 is SetTimelimit");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","Shutdown");
+    assertOK($xpath,"Shutdown");
+    assertEq("Shutdown", $xpath->findvalue("//step[2]/stepName"), "step 2 is Shutdown");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","Suspend");
+    assertOK($xpath,"Suspend");
+    assertEq("SetTimelimit", $xpath->findvalue("//step[1]/stepName"), "step 1 is SetTimelimit");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","Suspend");
+    assertOK($xpath,"Suspend");
+    assertEq("Suspend", $xpath->findvalue("//step[2]/stepName"), "step 2 is Suspend");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","CreateResourceFromVM");
+    assertOK($xpath,"CreateResourceFromVM");
+    assertEq("SetTimelimit", $xpath->findvalue("//step[1]/stepName"), "step 1 is SetTimelimit");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","CreateResourceFromVM");
+    assertOK($xpath,"CreateResourceFromVM");
+    assertEq("CreateResourceFromVM", $xpath->findvalue("//step[2]/stepName"), "step 2 is CreateResourceFromVM");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","GetVMConfiguration");
+    assertOK($xpath,"GetVMConfiguration");
+    assertEq("SetTimelimit", $xpath->findvalue("//step[1]/stepName"), "step 1 is SetTimelimit");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","GetVMConfiguration");
+    assertOK($xpath,"GetVMConfiguration");
+    assertEq("GetVMConfiguration", $xpath->findvalue("//step[2]/stepName"), "step 2 is GetVMConfiguration");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","Import");
+    assertOK($xpath,"Import");
+    assertEq("SetTimelimit", $xpath->findvalue("//step[1]/stepName"), "step 1 is SetTimelimit");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","Import");
+    assertOK($xpath,"Import");
+    assertEq("Import", $xpath->findvalue("//step[2]/stepName"), "step 2 is Import");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","Export");
+    assertOK($xpath,"Export");
+    assertEq("SetTimelimit", $xpath->findvalue("//step[1]/stepName"), "step 1 is SetTimelimit");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","Export");
+    assertOK($xpath,"Export");
+    assertEq("Export", $xpath->findvalue("//step[2]/stepName"), "step 2 is Export");
 };
 
 ################################
@@ -171,15 +259,16 @@ ntest "create vm", {}, sub {
     $opts->{esx_vmname} = "test_vm";
     $opts->{esx_vmhost} = "test_host";
     
-    my $gd = new ESX($opts);
+    my $ec;
+    my $gd = new ESX($ec, $opts);
     my $out = $gd->create();
     
-    my $expectedOutput;
-    $expectedOutput .= "Creating virtual machine 'test_vm' ...";
+    my $expectedOutput = "";
+    $expectedOutput .= "Creating virtual machine 'test_vm'...";
     $expectedOutput .= "\n";
     $expectedOutput .= "Successfully created virtual machine: 'test_vm' under host test_host";
     $expectedOutput .= "\n";
-    $expectedOutput .= "Powering on virtual machine 'test_vm' ...";
+    $expectedOutput .= "Powering on virtual machine 'test_vm'...";
     $expectedOutput .= "\n";
     $expectedOutput .= "Successfully powered on virtual machine: 'test_vm'";
     assertEq($expectedOutput, $out, "output");
@@ -201,11 +290,12 @@ ntest "clone vm", {}, sub {
     $opts->{esx_vmname_destination} = "test_vm_destination";
     $opts->{esx_operation} = 'clone';
     
-    my $gd = new ESX($opts);
-    my $out = $gd->clone_relocate();
+    my $ec;
+    my $gd = new ESX($ec, $opts);
+    my $out = $gd->clone();
     
-    my $expectedOutput;
-    $expectedOutput .= "Cloning virtual machine 'test_vm' ...";
+    my $expectedOutput = "";
+    $expectedOutput .= "Cloning virtual machine 'test_vm'...";
     $expectedOutput .= "\n";
     $expectedOutput .= "Clone 'test_vm_destination' of virtual machine 'test_vm' successfully created";
     assertEq($expectedOutput, $out, "output");
@@ -226,11 +316,12 @@ ntest "relocate vm", {}, sub {
     $opts->{esx_vmname} = "test_vm";
     $opts->{esx_operation} = 'relocate';
     
-    my $gd = new ESX($opts);
-    my $out = $gd->clone_relocate();
+    my $ec;
+    my $gd = new ESX($ec, $opts);
+    my $out = $gd->relocate();
     
-    my $expectedOutput;
-    $expectedOutput .= "Relocating virtual machine 'test_vm' ...";
+    my $expectedOutput = "";
+    $expectedOutput .= "Relocating virtual machine 'test_vm'...";
     $expectedOutput .= "\n";
     $expectedOutput .= "Virtual machine 'test_vm' successfully relocated";
     assertEq($expectedOutput, $out, "output");
@@ -250,15 +341,16 @@ ntest "cleanup vm", {}, sub {
     my $opts;
     $opts->{esx_vmname} = "test_vm";
     
-    my $gd = new ESX($opts);
+    my $ec;
+    my $gd = new ESX($ec, $opts);
     my $out = $gd->cleanup();
     
-    my $expectedOutput;
-    $expectedOutput .= "Powering off virtual machine 'test_vm' ...";
+    my $expectedOutput = "";
+    $expectedOutput .= "Powering off virtual machine 'test_vm'...";
     $expectedOutput .= "\n";
     $expectedOutput .= "Successfully powered off virtual machine: 'test_vm'";
     $expectedOutput .= "\n";
-    $expectedOutput .= "Destroying virtual machine 'test_vm' ...";
+    $expectedOutput .= "Destroying virtual machine 'test_vm'...";
     $expectedOutput .= "\n";
     $expectedOutput .= "Virtual machine 'test_vm' successfully destroyed";
     assertEq($expectedOutput, $out, "output");
@@ -280,15 +372,16 @@ ntest "revert vm", {}, sub {
     $opts->{esx_vmhost} = "test_host";
     $opts->{esx_snapshotname} = "snapshot1";
     
-    my $gd = new ESX($opts);
+    my $ec;
+    my $gd = new ESX($ec, $opts);
     my $out = $gd->revert();
     
-    my $expectedOutput;
+    my $expectedOutput = "";
     $expectedOutput .= "Reverting virtual machine 'test_vm' to snapshot snapshot1...";
     $expectedOutput .= "\n";
     $expectedOutput .= "Revert to snapshot snapshot1 for virtual machine 'test_vm' completed successfully under host test_host";
     $expectedOutput .= "\n";
-    $expectedOutput .= "Powering on virtual machine 'test_vm' ...";
+    $expectedOutput .= "Powering on virtual machine 'test_vm'...";
     $expectedOutput .= "\n";
     $expectedOutput .= "Successfully powered on virtual machine: 'test_vm'";
     assertEq($expectedOutput, $out, "output");
@@ -310,12 +403,241 @@ ntest "snapshot vm", {}, sub {
     $opts->{esx_vmhost} = "test_host";
     $opts->{esx_snapshotname} = "snapshot1";
     
-    my $gd = new ESX($opts);
+    my $ec;
+    my $gd = new ESX($ec, $opts);
     my $out = $gd->snapshot();
     
-    my $expectedOutput;
+    my $expectedOutput = "";
     $expectedOutput .= "Creating snapshot snapshot1 for virtual machine 'test_vm'...";
     $expectedOutput .= "\n";
     $expectedOutput .= "Snapshot snapshot1 completed for virtual machine 'test_vm' under host test_host";
     assertEq($expectedOutput, $out, "output");
 };
+
+################################
+# poweron vm - Power on a virtual machine
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+ntest "poweron vm", {}, sub {
+    my $opts;
+    $opts->{esx_vmname} = "test_vm";
+    
+    my $ec;
+    my $gd = new ESX($ec, $opts);
+    my $out = $gd->poweron();
+    
+    my $expectedOutput = "";
+    $expectedOutput .= "Powering on virtual machine 'test_vm'...";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Successfully powered on virtual machine 'test_vm'";
+    assertEq($expectedOutput, $out, "output");
+};
+
+################################
+# poweroff vm - Power off a virtual machine
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+ntest "poweroff vm", {}, sub {
+    my $opts;
+    $opts->{esx_vmname} = "test_vm";
+    
+    my $ec;
+    my $gd = new ESX($ec, $opts);
+    my $out = $gd->poweroff();
+    
+    my $expectedOutput = "";
+    $expectedOutput .= "Powering off virtual machine 'test_vm'...";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Successfully powered off virtual machine 'test_vm'";
+    assertEq($expectedOutput, $out, "output");
+};
+
+################################
+# shutdown vm - Shut down a virtual machine
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+ntest "shutdown vm", {}, sub {
+    my $opts;
+    $opts->{esx_vmname} = "test_vm";
+    
+    my $ec;
+    my $gd = new ESX($ec, $opts);
+    my $out = $gd->shutdown();
+    
+    my $expectedOutput = "";
+    $expectedOutput .= "Shutting down virtual machine 'test_vm'...";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Successfully shut down virtual machine 'test_vm'";
+    assertEq($expectedOutput, $out, "output");
+};
+
+################################
+# suspend vm - Suspend a virtual machine
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+ntest "suspend vm", {}, sub {
+    my $opts;
+    $opts->{esx_vmname} = "test_vm";
+    
+    my $ec;
+    my $gd = new ESX($ec, $opts);
+    my $out = $gd->suspend();
+    
+    my $expectedOutput = "";
+    $expectedOutput .= "Suspending virtual machine 'test_vm'...";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Successfully suspended virtual machine 'test_vm'";
+    assertEq($expectedOutput, $out, "output");
+};
+
+################################
+# create resource from vm - Create a EC resource from a VM
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+ntest "create resource from vm", {}, sub {
+    my $opts;
+    $opts->{esx_vmname} = "test_vm";
+    
+    my $ec;
+    my $gd = new ESX($ec, $opts);
+    my $out = $gd->createresourcefromvm();
+    
+    my $expectedOutput = "";
+    $expectedOutput .= "Creating resource for virtual machine 'test_vm'...";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Resource created";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Waiting for ping response #(300) of resource test_vm";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Ping response succesfully received";
+    assertEq($expectedOutput, $out, "output");
+};
+
+################################
+# get vm configuration - Get a VM configuration and store it in EC properties
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+ntest "get vm configuration", {}, sub {
+    my $opts;
+    $opts->{esx_vmname} = "test_vm";
+    $opts->{esx_ipaddress} = "10.0.0.1";
+    $opts->{esx_hostname} = "test_machine";
+    
+    my $ec;
+    my $gd = new ESX($ec, $opts);
+    my $out = $gd->getvmconfiguration();
+    
+    my $expectedOutput = "";
+    $expectedOutput .= "Getting information of virtual machine 'test_vm'...";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Storing properties...";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "IP address: 10.0.0.1";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Hostname: test_machine";
+    assertEq($expectedOutput, $out, "output");
+};
+
+################################
+# import vm - Import a OVF package to ESX server
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+ntest "import vm", {}, sub {
+    my $opts;
+    $opts->{esx_user} = "user";
+    $opts->{esx_pass} = "pass";
+    $opts->{esx_host} = "host";
+    $opts->{esx_ovf_file} = "c:/test.ovf";
+    
+    my $ec;
+    my $gd = new ESX($ec, $opts);
+    my $out = $gd->import();
+    
+    my $expectedOutput = "";
+    $expectedOutput .= "Importing OVF package...";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Opening OVF source: c:/test.ovf";
+    $expectedOutput .= 'Opening VI target: vi://user:pass@host/';
+    $expectedOutput .= 'Deploying to VI: vi://user@host/';
+    $expectedOutput .= "Disk progress: 0%\nDisk progress: 1%\nDisk progress: 96%\nDisk progress: 97%\nDisk progress: 99%\nDisk Transfer Completed";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Completed successfully";
+    assertEq($expectedOutput, $out, "output");
+};
+
+################################
+# export vm - Export a VM to a OVF package
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+ntest "export vm", {}, sub {
+    my $opts;
+    $opts->{esx_vmname} = "test_vm";
+    $opts->{esx_user} = "user";
+    $opts->{esx_host} = "host";
+    $opts->{esx_datacenter} = "ha-datacenter";
+    $opts->{esx_target_directory} = "c:/test";
+    
+    my $ec;
+    my $gd = new ESX($ec, $opts);
+    my $out = $gd->export();
+    
+    my $expectedOutput = "";
+    $expectedOutput .= "Exporting virtual machine...";
+    $expectedOutput .= "\n";
+    $expectedOutput .= 'Opening VI source: vi://user@host/ha-datacenter';
+    $expectedOutput .= "Opening OVF target: c:/test";
+    $expectedOutput .= "Writing OVF package: c:/test/test_vm/test_vm.ovf";
+    $expectedOutput .= "Disk progress: 0%\nDisk Transfer Completed"; 
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Completed successfully";
+    assertEq($expectedOutput, $out, "output");
+};
+

@@ -52,11 +52,6 @@ if(defined($opts->{connection_config}) && $opts->{connection_config} ne "") {
 	}
 }
 
-$opts->{sdk_installation_path} = '$[sdk_installation_path]';
-if($opts->{sdk_installation_path} eq '') {
-	$opts->{sdk_installation_path} = 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib';
-}
-
 # Load the actual code into this process
 if (!ElectricCommander::PropMod::loadPerlCodeFromProperty(
     $ec,'/myProject/esx_driver/ESX') ) {
@@ -65,4 +60,4 @@ if (!ElectricCommander::PropMod::loadPerlCodeFromProperty(
 }
 
 # Make an instance of the object, passing in options as a hash
-my $gt = new ESX($opts);
+my $gt = new ESX($ec, $opts);

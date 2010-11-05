@@ -85,6 +85,38 @@ if ($upgradeAction eq "upgrade") {
                 procedureName => 'Snapshot',
                 stepName => 'Snapshot'
             });
+            $batch->attachCredential("\$[/plugins/$pluginName/project]", $cred, {
+                procedureName => 'PowerOn',
+                stepName => 'PowerOn'
+            });
+            $batch->attachCredential("\$[/plugins/$pluginName/project]", $cred, {
+                procedureName => 'PowerOff',
+                stepName => 'PowerOff'
+            });
+            $batch->attachCredential("\$[/plugins/$pluginName/project]", $cred, {
+                procedureName => 'Shutdown',
+                stepName => 'Shutdown'
+            });
+            $batch->attachCredential("\$[/plugins/$pluginName/project]", $cred, {
+                procedureName => 'Suspend',
+                stepName => 'Suspend'
+            });
+			$batch->attachCredential("\$[/plugins/$pluginName/project]", $cred, {
+                procedureName => 'CreateResourceFromVM',
+                stepName => 'CreateResourceFromVM'
+            });
+			$batch->attachCredential("\$[/plugins/$pluginName/project]", $cred, {
+                procedureName => 'GetVMConfiguration',
+                stepName => 'GetVMConfiguration'
+            });
+			$batch->attachCredential("\$[/plugins/$pluginName/project]", $cred, {
+                procedureName => 'Import',
+                stepName => 'Import'
+            });
+			$batch->attachCredential("\$[/plugins/$pluginName/project]", $cred, {
+                procedureName => 'Export',
+                stepName => 'Export'
+            });
         }
     }
 }

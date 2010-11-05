@@ -71,6 +71,46 @@ $xpath = $ec->attachCredential($projName, $credName,
      stepName => 'Snapshot'});
 $errors .= $ec->checkAllErrors($xpath);
 
+$xpath = $ec->attachCredential($projName, $credName,
+    {procedureName => 'PowerOn',
+     stepName => 'PowerOn'});
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential($projName, $credName,
+    {procedureName => 'PowerOff',
+     stepName => 'PowerOff'});
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential($projName, $credName,
+    {procedureName => 'Shutdown',
+     stepName => 'Shutdown'});
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential($projName, $credName,
+    {procedureName => 'Suspend',
+     stepName => 'Suspend'});
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential($projName, $credName,
+    {procedureName => 'CreateResourceFromVM',
+     stepName => 'CreateResourceFromVM'});
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential($projName, $credName,
+    {procedureName => 'GetVMConfiguration',
+     stepName => 'GetVMConfiguration'});
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential($projName, $credName,
+    {procedureName => 'Import',
+     stepName => 'Import'});
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential($projName, $credName,
+    {procedureName => 'Export',
+     stepName => 'Export'});
+$errors .= $ec->checkAllErrors($xpath);
+
 if ("$errors" ne "") {
     
     # Cleanup the partially created configuration we just created

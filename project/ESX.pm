@@ -4,6 +4,7 @@
 #
 # Dependencies
 #    VMware::VIRuntime
+#    ElectricCommander.pm
 #
 # Purpose
 #    A perl library that encapsulates the logic to manipulate Virtual Machines on ESX using vSphere SDK for Perl
@@ -16,6 +17,8 @@ package ESX;
 # -------------------------------------------------------------------------
 use warnings;
 use strict;
+use ElectricCommander;
+use ElectricCommander::PropDB;
 
 # -------------------------------------------------------------------------
 # Constants
@@ -24,14 +27,40 @@ use constant {
 	SUCCESS => 0,
 	ERROR   => 1,
 	
+	TRUE  => 1,
+	FALSE => 0,
+	
+    ALIVE             => 1,
+    NOT_ALIVE         => 0,
+	
 	DEFAULT_DEBUG         => 1,
 	DEFAULT_SDK_PATH      => 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib',
 	DEFAULT_GUESTID       => 'winXPProGuest',
 	DEFAULT_DISKSIZE      => 4096,
 	DEFAULT_MEMORY        => 256,
 	DEFAULT_NUM_CPUS      => 1,
-	DEFAULT_NIC_POWERON   => 1,
 	DEFAULT_NUMBER_OF_VMS => 1,
+	DEFAULT_PING_TIMEOUT  => 300,
+	DEFAULT_PROPERTIES_LOCATION => '/myJob/ESX/vms',
+	
+	SOAP_FAULT                   => 'SoapFault',
+	INVALID_STATE                => 'InvalidState',
+	INVALID_POWER_STATE          => 'InvalidPowerState',
+	NOT_SUPPORTED                => 'NotSupported',
+	TASK_IN_PROGRESS             => 'TaskInProgress',
+	RUNTIME_FAULT                => 'RuntimeFault',
+	TOOLS_UNAVAILABLE            => 'ToolsUnavailable',
+	FILE_FAULT                   => 'FileFault',
+	VM_CONFIG_FAULT              => 'VmConfigFault',
+	DUPLICATE_NAME               => 'DuplicateName',
+	NO_DISK_TO_CUSTOMIZE         => 'NoDisksToCustomize',
+	HOST_NOT_CONNECTED           => 'HostNotConnected',
+	UNCUSTOMIZABLE_GUEST         => 'UncustomizableGuest',
+	INSUFFICIENT_RESOURCES_FAULT => 'InsufficientResourcesFault',
+	PLATFORM_CONFIG_FAULT        => 'PlatformConfigFault',
+	INVALID_DEVICE_SPEC          => 'InvalidDeviceSpec',
+	DATACENTER_MISMATCH          => 'DatacenterMismatch',
+	INVALID_NAME                 => 'InvalidName',
 };
 
 ################################
@@ -45,8 +74,11 @@ use constant {
 #
 ################################
 sub new {
-	my ( $class, $opts ) = @_;
-	my $self = { _opts => $opts, };
+	my ( $class, $cmdr, $opts ) = @_;
+	my $self = { 
+		_cmdr => $cmdr,
+		_opts => $opts, 
+	};
 	bless $self, $class;
 }
 
@@ -79,11 +111,11 @@ sub initialize {
 	if(defined($self->opts->{esx_num_cpus}) && $self->opts->{esx_num_cpus} eq "") {
 		$self->opts->{esx_num_cpus} = DEFAULT_NUM_CPUS;
 	}
-	if(defined($self->opts->{esx_nic_poweron}) && $self->opts->{esx_nic_poweron} eq "") {
-		$self->opts->{esx_nic_poweron} = DEFAULT_NIC_POWERON;
-	}
-	if(defined($self->opts->{esx_number_of_vms}) && $self->opts->{esx_number_of_vms} eq "") {
+	if(defined($self->opts->{esx_number_of_vms}) && ($self->opts->{esx_number_of_vms} eq "" or $self->opts->{esx_number_of_vms} <= 0)) {
 		$self->opts->{esx_number_of_vms} = DEFAULT_NUMBER_OF_VMS;
+	}
+	if(defined($self->opts->{esx_properties_location}) && $self->opts->{esx_properties_location} eq "") {
+		$self->opts->{esx_properties_location} = DEFAULT_PROPERTIES_LOCATION;
 	}
 	
 	# Add specified or default location to @INC array
@@ -94,6 +126,53 @@ sub initialize {
 		push @INC, DEFAULT_SDK_PATH;
 	}
 	require VMware::VIRuntime;
+}
+
+###############################
+# myCmdr - Get ElectricCommander instance
+#
+# Arguments:
+#   none
+#
+# Returns:
+#   ElectricCommander instance
+#
+################################
+sub myCmdr {
+    my ($self) = @_;
+    return $self->{_cmdr};
+}
+
+###############################
+# myProp - Get PropDB
+#
+# Arguments:
+#   none
+#
+# Returns:
+#   PropDB
+#
+################################
+sub myProp {
+    my ($self) = @_;
+    return $self->{_props};
+}
+
+###############################
+# setProp - Use stored property prefix and PropDB to set a property
+#
+# Arguments:
+#   location - relative location to set the property
+#   value    - value of the property
+#
+# Returns:
+#   setResult - result returned by PropDB->setProp
+#
+################################
+sub setProp {
+    my ($self, $location, $value) = @_;
+    my $setResult = $self->myProp->setProp($self->opts->{esx_properties_location} . $location, $value);
+    return $setResult;
 }
 
 ################################
@@ -180,11 +259,11 @@ sub create {
 	if ($::gRunTestUseFakeOutput) {
 		# Create and return fake output
 		my $out = "";
-		$out .= "Creating virtual machine '".$self->opts->{esx_vmname}."' ...";
+		$out .= "Creating virtual machine '".$self->opts->{esx_vmname}."'...";
 		$out .= "\n";
 		$out .= "Successfully created virtual machine: '".$self->opts->{esx_vmname}."' under host ".$self->opts->{esx_vmhost};
 		$out .= "\n";
-		$out .= "Powering on virtual machine '" . $self->opts->{esx_vmname} . "' ...";
+		$out .= "Powering on virtual machine '" . $self->opts->{esx_vmname} . "'...";
 		$out .= "\n";
 		$out .= "Successfully powered on virtual machine: '" . $self->opts->{esx_vmname}."'";
 		return $out;
@@ -193,21 +272,17 @@ sub create {
 	$self->initialize();
 	$self->login();
 	
-	my $count;
-	if ( defined( $self->opts->{esx_number_of_vms} ) && $self->opts->{esx_number_of_vms} ne "" ) {
-		$count = $self->opts->{esx_number_of_vms};
+	if ($self->opts->{esx_number_of_vms} == DEFAULT_NUMBER_OF_VMS) {
+		$self->create_vm();
 	}
 	else {
-		$count = 1;
-	}
-	my $vm_prefix = $self->opts->{esx_vmname};
-	for ( my $i = 0 ; $i < $count ; $i++ ) {
-		my $vm_name = $vm_prefix;
-		if ( $i != 0 ) {
-			$vm_name = $vm_name . "_$i";
+		my $vm_prefix = $self->opts->{esx_vmname};
+		my $vm_number;
+		for ( my $i = 0 ; $i < $self->opts->{esx_number_of_vms} ; $i++ ) {
+			$vm_number = $i + 1;
+			$self->opts->{esx_vmname} = $vm_prefix . "_$vm_number";
+			$self->create_vm();
 		}
-		$self->opts->{esx_vmname} = $vm_name;
-		$self->create_vm();
 	}
 
 	$self->logout();
@@ -226,6 +301,7 @@ sub create {
 sub create_vm {
 	my ($self) = @_;
 	my @vm_devices;
+	my $vm_reference;
 
 	my $host_view = Vim::find_entity_view(
 		view_type => 'HostSystem',
@@ -242,7 +318,7 @@ sub create_vm {
 	my $ds_name = $self->opts->{esx_datastore};
 	my %ds_info = $self->get_datastore($host_view, $ds_name);
 	
-	if ($self->opts->{exitcode}) { return; }
+	if ( $ds_info{error} ) { return; }
 
 	if ( $ds_info{mor} eq 0 ) {
 		if ( $ds_info{name} eq 'datastore_error' ) {
@@ -322,44 +398,44 @@ sub create_vm {
 
 	my $comp_res_view = Vim::get_view( mo_ref => $host_view->parent );
 
-	$self->debugMsg (1, 'Creating virtual machine \'' . $self->opts->{esx_vmname} . '\' ...');
+	$self->debugMsg (1, 'Creating virtual machine \'' . $self->opts->{esx_vmname} . '\'...');
 	eval {
-		$vm_folder_view->CreateVM(
+		$vm_reference = $vm_folder_view->CreateVM(
 			config => $vm_config_spec,
 			pool   => $comp_res_view->resourcePool
 		);
 		$self->debugMsg( 0,
-			    'Successfully created virtual machine: \'' . $self->opts->{esx_vmname} .
+			    'Successfully created virtual machine \'' . $self->opts->{esx_vmname} .
 			    '\' under host ' . $self->opts->{esx_vmhost});
 	};
 	if ($@) {
 		$self->debugMsg( 0, 'Error creating VM \''.$self->opts->{esx_vmname}.'\': ' );
-		if ( ref($@) eq 'SoapFault' ) {
-			if ( ref( $@->detail ) eq 'PlatformConfigFault' ) {
+		if ( ref($@) eq SOAP_FAULT ) {
+			if ( ref( $@->detail ) eq PLATFORM_CONFIG_FAULT ) {
 				$self->debugMsg( 0,
 					    'Invalid VM configuration: '
 					  . ${ $@->detail }{'text'});
 			}
-			elsif ( ref( $@->detail ) eq 'InvalidDeviceSpec' ) {
+			elsif ( ref( $@->detail ) eq INVALID_DEVICE_SPEC ) {
 				$self->debugMsg( 0,
 					    'Invalid Device configuration: '
 					  . ${ $@->detail }{'property'});
 			}
-			elsif ( ref( $@->detail ) eq 'DatacenterMismatch' ) {
+			elsif ( ref( $@->detail ) eq DATACENTER_MISMATCH ) {
 				$self->debugMsg( 0,
 					    'DatacenterMismatch, the input arguments had entities '
 					  . 'that did not belong to the same datacenter' );
 			}
-			elsif ( ref( $@->detail ) eq 'HostNotConnected' ) {
+			elsif ( ref( $@->detail ) eq HOST_NOT_CONNECTED ) {
 				$self->debugMsg( 0,
 					    'Unable to communicate with the remote host,'
 					  . ' since it is disconnected' );
 			}
-			elsif ( ref( $@->detail ) eq 'InvalidState' ) {
+			elsif ( ref( $@->detail ) eq INVALID_STATE ) {
 				$self->debugMsg( 0,
 					'The operation is not allowed in the current state' );
 			}
-			elsif ( ref( $@->detail ) eq 'DuplicateName' ) {
+			elsif ( ref( $@->detail ) eq DUPLICATE_NAME ) {
 				$self->debugMsg( 0, 'Virtual machine already exists' );
 			}
 			else {
@@ -372,11 +448,15 @@ sub create_vm {
 		$self->opts->{exitcode} = ERROR;
 		return;
 	}
-	$self->poweron_vm();
+	
+	# Power on vm if specified
+	if(defined($self->opts->{esx_vm_poweron}) && $self->opts->{esx_vm_poweron}) {
+		$self->poweron_vm();
+	}
 }
 
 ################################
-# clone_relocate - Connect, call clone_relocate_vm, and disconnect from ESX server
+# relocate - Connect, call relocate_vm, and disconnect from ESX server
 #
 # Arguments:
 #   -
@@ -385,36 +465,39 @@ sub create_vm {
 #   -
 #
 ################################
-sub clone_relocate {
+sub relocate {
 	my ($self) = @_;
 	
 	if ($::gRunTestUseFakeOutput) {
 		# Create and return fake output
 		my $out = "";
-		my $op = $self->opts->{esx_operation};
-		if ( $op eq 'clone' ) {
-			$out .= "Cloning virtual machine '" . $self->opts->{esx_vmname} . "' ...";
-			$out .= "\n";
-			$out .= "Clone '".$self->opts->{esx_vmname_destination}."' of virtual machine"
-                     . " '".$self->opts->{esx_vmname}."' successfully created";
-		}
-		else {
-			$out .= "Relocating virtual machine '" . $self->opts->{esx_vmname} . "' ...";
-			$out .= "\n";
-			$out .= "Virtual machine '".$self->opts->{esx_vmname}."' successfully relocated";
-		}
-		
+		$out .= "Relocating virtual machine '" . $self->opts->{esx_vmname} . "'...";
+		$out .= "\n";
+		$out .= "Virtual machine '".$self->opts->{esx_vmname}."' successfully relocated";
 		return $out;
 	}
 	
 	$self->initialize();
 	$self->login();
-	$self->clone_relocate_vm();
+	
+	if ($self->opts->{esx_number_of_vms} == DEFAULT_NUMBER_OF_VMS) {
+		$self->relocate_vm();
+	}
+	else {
+		my $vm_prefix = $self->opts->{esx_vmname};
+		my $vm_number;
+		for ( my $i = 0 ; $i < $self->opts->{esx_number_of_vms} ; $i++ ) {
+			$vm_number = $i + 1;
+			$self->opts->{esx_vmname} = $vm_prefix . "_$vm_number";
+			$self->relocate_vm();
+		}
+	}
+
 	$self->logout();
 }
 
 ################################
-# clone_relocate_vm - Clone or relocate a virtual machine (operation specified in 'esx_operation')
+# relocate_vm - Relocate a virtual machine
 #
 # Arguments:
 #   -
@@ -423,10 +506,9 @@ sub clone_relocate {
 #   -
 #
 ################################
-sub clone_relocate_vm {
+sub relocate_vm {
 	my ($self) = @_;
 
-	my $op      = $self->opts->{esx_operation};
 	my $vm_name = $self->opts->{esx_vmname};
 	my $vm_view = Vim::find_entity_view(
 		view_type => 'VirtualMachine',
@@ -445,7 +527,7 @@ sub clone_relocate_vm {
 	);
 	if ( !$host_view ) {
 		$self->debugMsg( 0,
-			    'Error cloning/relocating VM \''.$self->opts->{esx_vmname}.'\': '
+			    'Error relocating VM \''.$self->opts->{esx_vmname}.'\': '
 			  . 'Host \''.$self->opts->{esx_vmhost_destination}.'\' not found' );
 		$self->opts->{exitcode} = ERROR;
 		return;
@@ -455,7 +537,7 @@ sub clone_relocate_vm {
 	# Get datastore info for the destination host
 	my $ds_name = $self->opts->{esx_datastore};
 	my %ds_info = $self->get_datastore($host_view, $ds_name);
-	if ( $self->opts->{exitcode} ) { return; }
+	if ( $ds_info{error} ) { return; }
 
 	# Create RelocateSpec using the destination host's resource pool;
 	my $relocate_spec = VirtualMachineRelocateSpec->new(
@@ -464,69 +546,41 @@ sub clone_relocate_vm {
 		pool      => $comp_res_view->resourcePool
 	);
 
-	if ( $op eq 'clone' ) {
-
-		# Create CloneSpec corresponding to the RelocateSpec
-		my $clone_spec = VirtualMachineCloneSpec->new(
-			powerOn  => 0,
-			template => 0,
-			location => $relocate_spec
-		);
-	
-		$self->debugMsg (1, 'Cloning virtual machine \'' . $vm_name . '\' ...');
-		
-		eval {
-			# Clone source vm
-			$vm_view->CloneVM(
-				folder => $vm_view->parent,
-				name   => $self->opts->{esx_vmname_destination},
-				spec   => $clone_spec);
-				
-			$self->debugMsg (1, 'Clone \''.$self->opts->{esx_vmname_destination}.'\' of virtual machine'
-                             . ' \''.$vm_name.'\' successfully created');
-		};
-	}
-	else {
-		$self->debugMsg (1, 'Relocating virtual machine \'' . $vm_name . '\' ...');
-		eval {
-			# Relocate the vm
-			$vm_view->RelocateVM( spec => $relocate_spec );
-			$self->debugMsg (1, 'Virtual machine \''.$vm_name.'\' successfully relocated');
-		};
-	}
+	$self->debugMsg (1, 'Relocating virtual machine \'' . $vm_name . '\'...');
+	eval {
+		# Relocate the vm
+		$vm_view->RelocateVM( spec => $relocate_spec );
+		$self->debugMsg (1, 'Virtual machine \''.$vm_name.'\' successfully relocated');
+	};
 	
 	if ($@) {
-	   if (ref($@) eq 'SoapFault') {
-		  if (ref($@->detail) eq 'FileFault') {
+	   if (ref($@) eq SOAP_FAULT) {
+		  if (ref($@->detail) eq FILE_FAULT) {
 			 $self->debugMsg(0, 'Failed to access the virtual machine files');
 		  }
-		  elsif (ref($@->detail) eq 'InvalidState') {
+		  elsif (ref($@->detail) eq INVALID_STATE) {
 			 $self->debugMsg(0,'The operation is not allowed in the current state');
 		  }
-		  elsif (ref($@->detail) eq 'NotSupported') {
+		  elsif (ref($@->detail) eq NOT_SUPPORTED) {
 			 $self->debugMsg(0,'Operation is not supported by the current agent');
 		  }
-		  elsif (ref($@->detail) eq 'VmConfigFault') {
+		  elsif (ref($@->detail) eq VM_CONFIG_FAULT) {
 			 $self->debugMsg(0,
 			 'Virtual machine is not compatible with the destination host');
 		  }
-		  elsif (ref($@->detail) eq 'InvalidPowerState') {
+		  elsif (ref($@->detail) eq INVALID_POWER_STATE) {
 			 $self->debugMsg(0,
 			 'The attempted operation cannot be performed in the current state');
 		  }
-		  elsif (ref($@->detail) eq 'DuplicateName') {
-			 $self->debugMsg(0,
-			 'The name \''.$self->opts->{esx_vmname_destination}.'\' already exists');
-		  }
-		  elsif (ref($@->detail) eq 'NoDisksToCustomize') {
+		  elsif (ref($@->detail) eq NO_DISK_TO_CUSTOMIZE) {
 			 $self->debugMsg(0, 'The virtual machine has no virtual disks that'
 						  . ' are suitable for customization or no guest'
 						  . ' is present on given virtual machine');
 		  }
-		  elsif (ref($@->detail) eq 'HostNotConnected') {
+		  elsif (ref($@->detail) eq HOST_NOT_CONNECTED) {
 			 $self->debugMsg(0, 'Unable to communicate with the remote host, since it is disconnected');
 		  }
-		  elsif (ref($@->detail) eq 'UncustomizableGuest') {
+		  elsif (ref($@->detail) eq UNCUSTOMIZABLE_GUEST) {
 			 $self->debugMsg(0, 'Customization is not supported for the guest operating system');
 		  }
 		  else {
@@ -538,6 +592,163 @@ sub clone_relocate_vm {
 	   }
 	   $self->opts->{exitcode} = ERROR;
 	   return;
+	}
+}
+
+################################
+# clone - Connect, call clone_vm, and disconnect from ESX server
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+sub clone {
+	my ($self) = @_;
+	
+	if ($::gRunTestUseFakeOutput) {
+		# Create and return fake output
+		my $out = "";
+		$out .= "Cloning virtual machine '" . $self->opts->{esx_vmname} . "'...";
+		$out .= "\n";
+		$out .= "Clone '".$self->opts->{esx_vmname_destination}."' of virtual machine"
+                    . " '".$self->opts->{esx_vmname}."' successfully created";
+		return $out;
+	}
+	
+	$self->initialize();
+	$self->login();
+	$self->clone_vm();
+	$self->logout();
+}
+
+################################
+# clone_vm - Clone a virtual machine
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+sub clone_vm {
+	my ($self) = @_;
+
+	my $vm_name = $self->opts->{esx_vmname};
+	my $vm_view = Vim::find_entity_view(
+		view_type => 'VirtualMachine',
+		filter    => { 'name' => $vm_name }
+	);
+	if ( !$vm_view ) {
+		$self->debugMsg( 0, 'Source virtual machine \''.$vm_name.'\' not found' );
+		$self->opts->{exitcode} = ERROR;
+		return;
+	}
+
+	# Get destination host and compute resource views
+	my $host_view = Vim::find_entity_view(
+		view_type => 'HostSystem',
+		filter    => { 'name' => $self->opts->{esx_vmhost_destination} }
+	);
+	if ( !$host_view ) {
+		$self->debugMsg( 0,
+			    'Error cloning VM \''.$self->opts->{esx_vmname}.'\': '
+			  . 'Host \''.$self->opts->{esx_vmhost_destination}.'\' not found' );
+		$self->opts->{exitcode} = ERROR;
+		return;
+	}
+	my $comp_res_view = Vim::get_view( mo_ref => $host_view->parent );
+
+	# Get datastore info for the destination host
+	my $ds_name = $self->opts->{esx_datastore};
+	my %ds_info = $self->get_datastore($host_view, $ds_name);
+	if ( $ds_info{error} ) { return; }
+
+	# Create RelocateSpec using the destination host's resource pool;
+	my $relocate_spec = VirtualMachineRelocateSpec->new(
+		datastore => $ds_info{mor},
+		host      => $host_view,
+		pool      => $comp_res_view->resourcePool
+	);
+
+
+	# Create CloneSpec corresponding to the RelocateSpec
+	my $clone_spec = VirtualMachineCloneSpec->new(
+		powerOn  => 0,
+		template => 0,
+		location => $relocate_spec
+	);
+
+	my $clone_name;
+	my $vm_number;
+	for ( my $i = 0 ; $i < $self->opts->{esx_number_of_clones} ; $i++ ) {
+		
+		$vm_number = $i + 1;
+		if($self->opts->{esx_number_of_clones} == DEFAULT_NUMBER_OF_VMS) {
+			$clone_name = $self->opts->{esx_vmname_destination};
+		} else {
+			$clone_name = $self->opts->{esx_vmname_destination} . "_$vm_number";
+		}
+		
+		$self->debugMsg (1, 'Cloning virtual machine \'' . $vm_name . '\' to \''.$clone_name.'\'...');
+
+		eval {
+			# Clone source vm
+			$vm_view->CloneVM(
+				folder => $vm_view->parent,
+				name   => $clone_name,
+				spec   => $clone_spec);
+				
+			$self->debugMsg (1, 'Clone \''.$clone_name.'\' of virtual machine'
+							 . ' \''.$vm_name.'\' successfully created');
+		};
+		
+		if ($@) {
+		   if (ref($@) eq SOAP_FAULT) {
+			  if (ref($@->detail) eq FILE_FAULT) {
+				 $self->debugMsg(0, 'Failed to access the virtual machine files');
+			  }
+			  elsif (ref($@->detail) eq INVALID_STATE) {
+				 $self->debugMsg(0,'The operation is not allowed in the current state');
+			  }
+			  elsif (ref($@->detail) eq NOT_SUPPORTED) {
+				 $self->debugMsg(0,'Operation is not supported by the current agent');
+			  }
+			  elsif (ref($@->detail) eq VM_CONFIG_FAULT) {
+				 $self->debugMsg(0,
+				 'Virtual machine is not compatible with the destination host');
+			  }
+			  elsif (ref($@->detail) eq INVALID_POWER_STATE) {
+				 $self->debugMsg(0,
+				 'The attempted operation cannot be performed in the current state');
+			  }
+			  elsif (ref($@->detail) eq DUPLICATE_NAME) {
+				 $self->debugMsg(0,
+				 'The name \''.$clone_name.'\' already exists');
+			  }
+			  elsif (ref($@->detail) eq NO_DISK_TO_CUSTOMIZE) {
+				 $self->debugMsg(0, 'The virtual machine has no virtual disks that'
+							  . ' are suitable for customization or no guest'
+							  . ' is present on given virtual machine');
+			  }
+			  elsif (ref($@->detail) eq HOST_NOT_CONNECTED) {
+				 $self->debugMsg(0, 'Unable to communicate with the remote host, since it is disconnected');
+			  }
+			  elsif (ref($@->detail) eq UNCUSTOMIZABLE_GUEST) {
+				 $self->debugMsg(0, 'Customization is not supported for the guest operating system');
+			  }
+			  else {
+				 $self->debugMsg(0, 'Fault' . $@);
+			  }
+		   }
+		   else {
+			  $self->debugMsg(0, 'Fault' . $@);
+		   }
+		   $self->opts->{exitcode} = ERROR;
+		}
 	}
 }
 
@@ -557,11 +768,11 @@ sub cleanup {
 	if ($::gRunTestUseFakeOutput) {
 		# Create and return fake output
 		my $out = "";
-		$out .= "Powering off virtual machine '" . $self->opts->{esx_vmname} . "' ...";
+		$out .= "Powering off virtual machine '" . $self->opts->{esx_vmname} . "'...";
 		$out .= "\n";
 		$out .= "Successfully powered off virtual machine: '" . $self->opts->{esx_vmname}."'";
 		$out .= "\n";
-		$out .= "Destroying virtual machine '".$self->opts->{esx_vmname}."' ...";
+		$out .= "Destroying virtual machine '".$self->opts->{esx_vmname}."'...";
 		$out .= "\n";
 		$out .= "Virtual machine '".$self->opts->{esx_vmname}."' successfully destroyed";
 		return $out;
@@ -569,7 +780,20 @@ sub cleanup {
 	
 	$self->initialize();
 	$self->login();
-	$self->cleanup_vm();
+	
+	if ($self->opts->{esx_number_of_vms} == DEFAULT_NUMBER_OF_VMS) {
+		$self->cleanup_vm();
+	}
+	else {
+		my $vm_prefix = $self->opts->{esx_vmname};
+		my $vm_number;
+		for ( my $i = 0 ; $i < $self->opts->{esx_number_of_vms} ; $i++ ) {
+			$vm_number = $i + 1;
+			$self->opts->{esx_vmname} = $vm_prefix . "_$vm_number";
+			$self->cleanup_vm();
+		}
+	}
+
 	$self->logout();
 }
 
@@ -587,27 +811,48 @@ sub cleanup_vm {
 	my ($self) = @_;
 	my $vm_name = $self->opts->{esx_vmname};
 
-	$self->poweroff_vm();
-	if ($self->opts->{exitcode}) { return;}
+	# Remove resource
+    $self->debugMsg(1, 'Deleting resource ' . $vm_name .'...');
+	my $cmdrresult = $self->myCmdr()->deleteResource( $vm_name);
+	
+	# Check for error return
+	my $errMsg = $self->myCmdr()->checkAllErrors($cmdrresult);
+	if ($errMsg ne "") {
+		$self->debugMsg(1, "Error: $errMsg");
+		$self->opts->{exitcode} = ERROR;
+		return;
+	}
+	$self->debugMsg(1, 'Resource deleted');
 
-	if (defined($self->opts->{esx_save_vm}) && $self->opts->{esx_save_vm} eq "0") {
-		$self->debugMsg (1, "Destroying up virtual machine '$vm_name' ...");
+	if (defined($self->opts->{esx_delete_vm}) && $self->opts->{esx_delete_vm}) {
 		
-		my $vm_views = Vim::find_entity_views(
+		# Get virtual machine to destroy
+		my $vm_view = Vim::find_entity_view(
 			view_type => 'VirtualMachine',
 			filter => { 'config.name' => $vm_name });
-	
-		foreach (@$vm_views) {
-			eval {
-				# Destroy the vm
-				$_->Destroy ;
-				$self->debugMsg (1, "Virtual machine '$vm_name' successfully destroyed");
-			};
-			if ($@) {
-				$self->debugMsg(0, 'Fault' . $@);
-				$self->opts->{exitcode} = ERROR;
-	   			return;
-			}
+		
+		if ( !$vm_view ) {
+			$self->debugMsg( 0, 'Virtual machine \''.$self->opts->{esx_vmname} .'\' not found' );
+			$self->opts->{exitcode} = ERROR;
+			return;
+		}
+		
+		# VM must be powered off to be destroyed. If an error occurs in power_off, it can be ignored because then Cleanup is going to show the error
+		my $exitcode_temp = $self->opts->{exitcode};
+		$self->poweroff_vm();
+		$self->opts->{exitcode} = $exitcode_temp;
+		
+		$self->debugMsg (1, "Destroying virtual machine '$vm_name'...");
+		
+		eval {
+			# Destroy the vm
+			$vm_view->Destroy ;
+			$self->debugMsg (1, "Virtual machine '$vm_name' successfully destroyed");
+		};
+		if ($@) {
+			$self->debugMsg(0, 'Fault' . $@);
+			$self->opts->{exitcode} = ERROR;
+   			return;
 		}
 	}
 }
@@ -632,7 +877,7 @@ sub revert {
 		$out .= "\n";
 		$out .= "Revert to snapshot ".$self->opts->{esx_snapshotname}." for virtual machine '" . $self->opts->{esx_vmname}."' completed successfully under host ".$self->opts->{esx_vmhost};
 		$out .= "\n";
-		$out .= "Powering on virtual machine '".$self->opts->{esx_vmname}."' ...";
+		$out .= "Powering on virtual machine '".$self->opts->{esx_vmname}."'...";
 		$out .= "\n";
 		$out .= "Successfully powered on virtual machine: '".$self->opts->{esx_vmname}."'";
 		return $out;
@@ -640,7 +885,22 @@ sub revert {
 	
 	$self->initialize();
 	$self->login();
-	$self->revert_vm();
+	
+	if ($self->opts->{esx_number_of_vms} == DEFAULT_NUMBER_OF_VMS) {
+		$self->revert_vm();
+	}
+	else {
+		my $vm_prefix = $self->opts->{esx_vmname};
+		my $snapshot_prefix = $self->opts->{esx_snapshotname};
+		my $vm_number;
+		for ( my $i = 0 ; $i < $self->opts->{esx_number_of_vms} ; $i++ ) {
+			$vm_number = $i + 1;
+			$self->opts->{esx_vmname} = $vm_prefix . "_$vm_number";
+			$self->opts->{esx_snapshotname} = $snapshot_prefix . "_$vm_number";
+			$self->revert_vm();
+		}
+	}
+
 	$self->logout();
 }
 
@@ -688,23 +948,22 @@ sub revert_vm {
 				  			. '\' completed successfully under host ' . $hostname);
 		};
         if ($@) {
-            if ( ref($@) eq 'SoapFault' ) {
-                if ( ref( $@->detail ) eq 'InvalidState' ) {
+            if ( ref($@) eq SOAP_FAULT ) {
+                if ( ref( $@->detail ) eq INVALID_STATE ) {
                     $self->debugMsg(0, 'Operation cannot be performed in the current state of the virtual machine');
                 }
-                elsif ( ref( $@->detail ) eq 'NotSupported' ) {
+                elsif ( ref( $@->detail ) eq NOT_SUPPORTED ) {
                     $self->debugMsg( 0,'Host product does not support snapshots' );
                 }
-                elsif ( ref( $@->detail ) eq 'InvalidPowerState' ) {
+                elsif ( ref( $@->detail ) eq INVALID_POWER_STATE ) {
                     $self->debugMsg(0, 'Operation cannot be performed in the current power state of the virtual machine');
                 }
-                elsif ( ref( $@->detail ) eq 'InsufficientResourcesFault' )
-                {
+                elsif ( ref( $@->detail ) eq INSUFFICIENT_RESOURCES_FAULT ) {
                     $self->debugMsg( 0, 'Operation would violate a resource usage policy');
                 }
-                elsif ( ref( $@->detail ) eq 'HostNotConnected' ) {
+                elsif ( ref( $@->detail ) eq HOST_NOT_CONNECTED ) {
                     $self->debugMsg( 0, 'Host not connected');
-                }
+                } 
                 else {
                     $self->debugMsg( 0, 'Fault: ' . $@);
                 }
@@ -762,7 +1021,22 @@ sub snapshot {
 	
 	$self->initialize();
 	$self->login();
-	$self->snapshot_vm();
+	
+	if ($self->opts->{esx_number_of_vms} == DEFAULT_NUMBER_OF_VMS) {
+		$self->snapshot_vm();
+	}
+	else {
+		my $vm_prefix = $self->opts->{esx_vmname};
+		my $snapshot_prefix = $self->opts->{esx_snapshotname};
+		my $vm_number;
+		for ( my $i = 0 ; $i < $self->opts->{esx_number_of_vms} ; $i++ ) {
+			$vm_number = $i + 1;
+			$self->opts->{esx_vmname} = $vm_prefix . "_$vm_number";
+			$self->opts->{esx_snapshotname} = $snapshot_prefix . "_$vm_number";
+			$self->snapshot_vm();
+		}
+	}
+	
 	$self->logout();
 }
 
@@ -779,8 +1053,6 @@ sub snapshot {
 sub snapshot_vm {
 	my ($self) = @_;
 
-	$self->debugMsg (1, 'Creating snapshot ' . $self->opts->{esx_snapshotname}.' for virtual machine \'' .	$self->opts->{esx_vmname} .'\'...');
-
 	my $vm_view = Vim::find_entity_view(
 		view_type => 'VirtualMachine',
 		filter    => { 'name' => $self->opts->{esx_vmname} }
@@ -795,6 +1067,8 @@ sub snapshot_vm {
 	my $mor_host = $vm_view->runtime->host;
 	my $hostname = Vim::get_view( mo_ref => $mor_host )->name;
 	
+	$self->debugMsg (1, 'Creating snapshot ' . $self->opts->{esx_snapshotname}.' for virtual machine \'' .	$self->opts->{esx_vmname} .'\'...');
+	
 	eval {
 	    $vm_view->CreateSnapshot(name => $self->opts->{esx_snapshotname},
 	        description => 'Snapshot created for virtual machine: '.$self->opts->{esx_vmname},
@@ -806,21 +1080,20 @@ sub snapshot_vm {
 	};
 	if ($@) {
 		$self->debugMsg(0, 'Error creating snapshot of virtual machine: ' . $self->opts->{esx_vmname});
-		if ( ref($@) eq 'SoapFault' ) {
-            if ( ref( $@->detail ) eq 'InvalidName' ) {
+		if ( ref($@) eq SOAP_FAULT ) {
+            if ( ref( $@->detail ) eq INVALID_NAME ) {
                 $self->debugMsg( 0,'Specified snapshot name is invalid' );
             }
-            elsif ( ref( $@->detail ) eq 'InvalidState' ) {
+            elsif ( ref( $@->detail ) eq INVALID_STATE ) {
                 $self->debugMsg(0, 'Operation cannot be performed in the current state of the virtual machine');
             }
-            elsif ( ref( $@->detail ) eq 'InvalidPowerState' ) {
+            elsif ( ref( $@->detail ) eq INVALID_POWER_STATE ) {
                 $self->debugMsg(0, 'Operation cannot be performed in the current power state of the virtual machine');
             }
-            elsif ( ref( $@->detail ) eq 'HostNotConnected' )
-            {
+            elsif ( ref( $@->detail ) eq HOST_NOT_CONNECTED ) {
                 $self->debugMsg( 0, 'Unable to communicate with the remote host since it is disconnected');
             }
-            elsif ( ref( $@->detail ) eq 'NotSupported' ) {
+            elsif ( ref( $@->detail ) eq NOT_SUPPORTED ) {
                 $self->debugMsg( 0, 'Host does not support snapshots');
             }
             else {
@@ -835,9 +1108,46 @@ sub snapshot_vm {
     }
 }
 
-# -------------------------------------------------------------------------
-# Helper functions
-# -------------------------------------------------------------------------
+################################
+# poweron - Connect, call poweron_vm, and disconnect from ESX server
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+sub poweron {
+	my ($self) = @_;
+	
+	if ($::gRunTestUseFakeOutput) {
+		# Create and return fake output
+		my $out = "";
+		$out .= "Powering on virtual machine '" . $self->opts->{esx_vmname} . "'...";
+		$out .= "\n";
+		$out .= "Successfully powered on virtual machine '" . $self->opts->{esx_vmname}."'";
+		return $out;
+	}
+	
+	$self->initialize();	
+	$self->login();
+	
+	if ($self->opts->{esx_number_of_vms} == DEFAULT_NUMBER_OF_VMS) {
+		$self->poweron_vm();
+	}
+	else {
+		my $vm_prefix = $self->opts->{esx_vmname};
+		my $vm_number;
+		for ( my $i = 0 ; $i < $self->opts->{esx_number_of_vms} ; $i++ ) {
+			$vm_number = $i + 1;
+			$self->opts->{esx_vmname} = $vm_prefix . "_$vm_number";
+			$self->poweron_vm();
+		}
+	}
+	
+	$self->logout();
+}
 
 ################################
 # poweron_vm - Power on the vm having the name specified on $opts->{esx_vmname}
@@ -866,32 +1176,76 @@ sub poweron_vm {
 	$self->debugMsg (1, 'Powering on virtual machine \'' . $self->opts->{esx_vmname} . '\'...');
 	eval {
 		$vm_view->PowerOnVM();
-		$self->debugMsg( 0, 'Successfully powered on virtual machine: \'' . $self->opts->{esx_vmname}.'\'');
+		$self->debugMsg( 0, 'Successfully powered on virtual machine \'' . $self->opts->{esx_vmname}.'\'');
 	};
-	if ($@) { 
-	    if (ref($@) eq 'SoapFault') {
-	        $self->debugMsg (0, 'Error powering on \'' . $self->opts->{esx_vmname} . '\': ');
-	        if (ref($@->detail) eq 'NotSupported') {
-	            $self->debugMsg(0,'Virtual machine is marked as a template ');
-	        }
-	        elsif (ref($@->detail) eq 'InvalidPowerState') {
-	            $self->debugMsg(0, 'The attempted operation cannot be performed in the current state');
-	        }
-	        elsif (ref($@->detail) eq 'InvalidState') {
-	            $self->debugMsg(0,'Current State of the virtual machine is not supported for this operation');
-	        }
-	        else {
-	            $self->debugMsg(0, "VM '"  .$self->opts->{esx_vmname}.
-	            "' can't be powered on\n" . $@ . "" );
-	        }
-	    }
-	    else {
-	        $self->debugMsg(0, "VM '"  .$self->opts->{esx_vmname}.
-	        "' can't be powered on\n" . $@ . "" );
-	    }
-	    $self->opts->{exitcode} = ERROR;
-	   	return;
+	if ($@) {
+		if (ref($@) eq SOAP_FAULT and ref($@->detail) eq INVALID_POWER_STATE) {
+			# VM was already powered on, no error
+		    $self->debugMsg(0,'Virtual machine already powered on');
+		} else {
+		    if (ref($@) eq SOAP_FAULT) {
+		        
+		        $self->debugMsg (0, 'Error powering on \'' . $self->opts->{esx_vmname} . '\': ');
+		        if(!$self->print_error(ref($@->detail))) {
+		        	$self->debugMsg(0, "VM '"  .$self->opts->{esx_vmname}. "' can't be powered on \n"
+		            . $@ . "" );
+		        }
+		    }
+		    else {
+		        $self->debugMsg(0, "VM '"  .$self->opts->{esx_vmname}.
+		        "' can't be powered on\n" . $@ . "" );
+		    }
+		    $self->opts->{exitcode} = ERROR;
+		   	return;
+		}
 	}
+
+	# Create resource if specified
+	if(defined($self->opts->{esx_create_resources}) && $self->opts->{esx_create_resources}) {
+		$self->createresourcefrom_vm();
+		if($self->ecode()) {return;}
+	}
+}
+
+################################
+# poweroff - Connect, call poweroff_vm, and disconnect from ESX server
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+sub poweroff {
+	my ($self) = @_;
+	
+	if ($::gRunTestUseFakeOutput) {
+		# Create and return fake output
+		my $out = "";
+		$out .= "Powering off virtual machine '" . $self->opts->{esx_vmname} . "'...";
+		$out .= "\n";
+		$out .= "Successfully powered off virtual machine '" . $self->opts->{esx_vmname}."'";
+		return $out;
+	}
+	
+	$self->initialize();
+	$self->login();
+	
+	if ($self->opts->{esx_number_of_vms} == DEFAULT_NUMBER_OF_VMS) {
+		$self->poweroff_vm();
+	}
+	else {
+		my $vm_prefix = $self->opts->{esx_vmname};
+		my $vm_number;
+		for ( my $i = 0 ; $i < $self->opts->{esx_number_of_vms} ; $i++ ) {
+			$vm_number = $i + 1;
+			$self->opts->{esx_vmname} = $vm_prefix . "_$vm_number";
+			$self->poweroff_vm();
+		}
+	}
+	
+	$self->logout();
 }
 
 ################################
@@ -921,25 +1275,14 @@ sub poweroff_vm {
 	$self->debugMsg (1, 'Powering off virtual machine \'' . $self->opts->{esx_vmname} . '\'...');
 	eval {
 		$vm_view->PowerOffVM();
-		$self->debugMsg( 0, 'Successfully powered off virtual machine: \'' . $self->opts->{esx_vmname}.'\'');
+		$self->debugMsg( 0, 'Successfully powered off virtual machine \'' . $self->opts->{esx_vmname}.'\'');
 	};
 	if ($@) { 
-	    if (ref($@) eq 'SoapFault') {
-	        if (ref($@->detail) eq 'InvalidPowerState') {
-	        	# VM was already powered off, no error
-	        	$self->debugMsg(0,'Virtual machine already powered off');
-	        	return;
-	        }
+	    if (ref($@) eq SOAP_FAULT) {
 	        
 	        $self->debugMsg (0, 'Error powering off \'' . $self->opts->{esx_vmname} . '\': ');
-	        if (ref($@->detail) eq 'InvalidState') {
-	            $self->debugMsg(0,'Current State of the virtual machine is not supported for this operation');
-	        }
-	        elsif(ref($@->detail) eq 'NotSupported') {
-	            $self->debugMsg(0,'Virtual machine is marked as template');
-	        }
-	        else {
-	            $self->debugMsg(0, "VM '"  .$self->opts->{esx_vmname}. "' can't be powered off \n"
+	        if(!$self->print_error(ref($@->detail))) {
+	        	$self->debugMsg(0, "VM '"  .$self->opts->{esx_vmname}. "' can't be powered off \n"
 	            . $@ . "" );
 	        }
 	    }
@@ -949,6 +1292,561 @@ sub poweroff_vm {
 	    $self->opts->{exitcode} = ERROR;
 	   	return;
 	}
+}
+
+################################
+# shutdown - Connect, call shutdown_vm, and disconnect from ESX server
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+sub shutdown {
+	my ($self) = @_;
+	
+	if ($::gRunTestUseFakeOutput) {
+		# Create and return fake output
+		my $out = "";
+		$out .= "Shutting down virtual machine '" . $self->opts->{esx_vmname} . "'...";
+		$out .= "\n";
+		$out .= "Successfully shut down virtual machine '" . $self->opts->{esx_vmname}."'";
+		return $out;
+	}
+	
+	$self->initialize();
+	$self->login();
+	
+	if ($self->opts->{esx_number_of_vms} == DEFAULT_NUMBER_OF_VMS) {
+		$self->shutdown_vm();
+	}
+	else {
+		my $vm_prefix = $self->opts->{esx_vmname};
+		my $vm_number;
+		for ( my $i = 0 ; $i < $self->opts->{esx_number_of_vms} ; $i++ ) {
+			$vm_number = $i + 1;
+			$self->opts->{esx_vmname} = $vm_prefix . "_$vm_number";
+			$self->shutdown_vm();
+		}
+	}
+	
+	$self->logout();
+}
+
+################################
+# shutdown_vm - Shut down the vm having the name specified on $opts->{esx_vmname}
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+sub shutdown_vm {
+	my ($self) = @_;
+	
+	my $vm_view = Vim::find_entity_view(
+		view_type => 'VirtualMachine',
+		filter    => { 'name' => $self->opts->{esx_vmname} }
+	);
+	
+	if ( !$vm_view ) {
+		$self->debugMsg( 0, 'Virtual machine \''.$self->opts->{esx_vmname} .'\' not found' );
+		$self->opts->{exitcode} = ERROR;
+		return;
+	}
+	
+	$self->debugMsg (1, 'Shutting down virtual machine \'' . $self->opts->{esx_vmname} . '\'...');
+	eval {
+		$vm_view->ShutdownGuest();
+		$self->debugMsg( 0, 'Successfully shut down virtual machine \'' . $self->opts->{esx_vmname}.'\'');
+	};
+	if ($@) { 
+	    if (ref($@) eq SOAP_FAULT) { 
+	        $self->debugMsg (0, 'Error shutting down \'' . $self->opts->{esx_vmname} . '\': ');
+	        
+	        if(!$self->print_error(ref($@->detail))) {
+	        	$self->debugMsg(0, "VM '"  .$self->opts->{esx_vmname}. "' can't be shut down \n"
+	            . $@ . "" );
+	        }
+	    }
+	    else {
+	       $self->debugMsg(0, "VM '"  .$self->opts->{esx_vmname}. "' can't be shut down \n" . $@ . "" );
+	    }
+	    $self->opts->{exitcode} = ERROR;
+	   	return;
+	}
+}
+
+################################
+# suspend - Connect, call suspend_vm, and disconnect from ESX server
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+sub suspend {
+	my ($self) = @_;
+	
+	if ($::gRunTestUseFakeOutput) {
+		# Create and return fake output
+		my $out = "";
+		$out .= "Suspending virtual machine '" . $self->opts->{esx_vmname} . "'...";
+		$out .= "\n";
+		$out .= "Successfully suspended virtual machine '" . $self->opts->{esx_vmname}."'";
+		return $out;
+	}
+	
+	$self->initialize();
+	$self->login();
+	
+	if ($self->opts->{esx_number_of_vms} == DEFAULT_NUMBER_OF_VMS) {
+		$self->suspend_vm();
+	}
+	else {
+		my $vm_prefix = $self->opts->{esx_vmname};
+		my $vm_number;
+		for ( my $i = 0 ; $i < $self->opts->{esx_number_of_vms} ; $i++ ) {
+			$vm_number = $i + 1;
+			$self->opts->{esx_vmname} = $vm_prefix . "_$vm_number";
+			$self->suspend_vm();
+		}
+	}
+	
+	$self->logout();
+}
+
+################################
+# suspend_vm - Suspend the vm having the name specified on $opts->{esx_vmname}
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+sub suspend_vm {
+	my ($self) = @_;
+	
+	my $vm_view = Vim::find_entity_view(
+		view_type => 'VirtualMachine',
+		filter    => { 'name' => $self->opts->{esx_vmname} }
+	);
+	
+	if ( !$vm_view ) {
+		$self->debugMsg( 0, 'Virtual machine \''.$self->opts->{esx_vmname} .'\' not found' );
+		$self->opts->{exitcode} = ERROR;
+		return;
+	}
+	
+	$self->debugMsg (1, 'Suspending virtual machine \'' . $self->opts->{esx_vmname} . '\'...');
+	eval {
+		$vm_view->SuspendVM();
+		$self->debugMsg( 0, 'Successfully suspended virtual machine \'' . $self->opts->{esx_vmname}.'\'');
+	};
+	if ($@) { 
+	    if (ref($@) eq SOAP_FAULT) { 
+	        $self->debugMsg (0, 'Error suspending \'' . $self->opts->{esx_vmname} . '\': ');
+	        
+	        if(!$self->print_error(ref($@->detail))) {
+	        	$self->debugMsg(0, "VM '"  .$self->opts->{esx_vmname}. "' can't be suspended \n"
+	            . $@ . "" );
+	        }
+	    }
+	    else {
+	       $self->debugMsg(0, "VM '"  .$self->opts->{esx_vmname}. "' can't be suspended \n" . $@ . "" );
+	    }
+	    $self->opts->{exitcode} = ERROR;
+	   	return;
+	}
+}
+
+################################
+# createresourcefromvm - Connect, call createresourcefrom_vm, and disconnect from ESX server
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+sub createresourcefromvm {
+	my ($self) = @_;
+	
+	if ($::gRunTestUseFakeOutput) {
+		# Create and return fake output
+		my $out = "";
+		$out .= "Creating resource for virtual machine '".$self->opts->{esx_vmname}."'...";
+		$out .= "\n";
+		$out .= "Resource created";
+		$out .= "\n";
+		$out .= "Waiting for ping response #(300) of resource " . $self->opts->{esx_vmname};
+		$out .= "\n";
+		$out .= "Ping response succesfully received";
+		return $out;
+	}
+	
+	$self->initialize();
+	$self->login();
+	
+	if ($self->opts->{esx_number_of_vms} == DEFAULT_NUMBER_OF_VMS) {
+		$self->createresourcefrom_vm();
+	}
+	else {
+		my $vm_prefix = $self->opts->{esx_vmname};
+		my $vm_number;
+		for ( my $i = 0 ; $i < $self->opts->{esx_number_of_vms} ; $i++ ) {
+			$vm_number = $i + 1;
+			$self->opts->{esx_vmname} = $vm_prefix . "_$vm_number";
+			$self->createresourcefrom_vm();
+		}
+	}
+	
+	$self->logout();
+}
+
+################################
+# createresourcefrom_vm - Store information about a virtual machine and create ElectricCommander resources
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+sub createresourcefrom_vm {
+	my ($self) = @_;
+	
+	my $hostname = $self->get_vm_configuration();
+	if($self->ecode()) {return;}
+
+	# Create resource if specified
+	if(defined($self->opts->{esx_create_resources}) && $self->opts->{esx_create_resources}) {
+
+		$self->debugMsg(1, 'Creating resource for virtual machine \''.$self->opts->{esx_vmname}.'\'...');
+        my $cmdrresult = $self->myCmdr()->createResource(
+           	$self->opts->{esx_vmname},
+            {description => "ESX created resource",
+             workspaceName => $self->opts->{esx_workspace},
+             hostName => $hostname,
+             pools => $self->opts->{esx_pools} } );
+
+        # Check for error return
+        my $errMsg = $self->myCmdr()->checkAllErrors($cmdrresult);
+        if ($errMsg ne "") {
+            $self->debugMsg(1, "Error: $errMsg");
+            $self->opts->{exitcode} =  ERROR;
+            return;
+        }
+        
+        $self->debugMsg(1, 'Resource created');
+        
+        # Test connection to vm
+        my $resStarted = 0;
+		my $try  = DEFAULT_PING_TIMEOUT;
+		while ($try > 0) {
+			$self->debugMsg(1, "Waiting for ping response #("
+				. $try . ") of resource " . $self->opts->{esx_vmname});
+			my $pingresult = $self->pingResource($self->opts->{esx_vmname});
+			if ($pingresult == 1) {
+				$resStarted = 1;
+				last;
+			}
+			sleep(1);
+			$try -= 1;
+		}
+		if ($resStarted == 0) {
+			$self->debugMsg(1, 'Unable to ping virtual machine');
+			$self->opts->{exitcode} =  ERROR;
+		} else {
+			$self->debugMsg(1, 'Ping response succesfully received');
+		}
+	}
+}
+
+################################
+# getvmconfiguration - Connect, call get_vm_configuration, and disconnect from ESX server
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+sub getvmconfiguration {
+	my ($self) = @_;
+	
+	if ($::gRunTestUseFakeOutput) {
+		# Create and return fake output
+		my $out = "";
+		$out .= "Getting information of virtual machine '" . $self->opts->{esx_vmname} . "'...";
+		$out .= "\n";
+		$out .= "Storing properties...";
+		$out .= "\n";
+		$out .= "IP address: " . $self->opts->{esx_ipaddress};
+		$out .= "\n";
+		$out .= "Hostname: " . $self->opts->{esx_hostname};
+		return $out;
+	}
+	
+	$self->initialize();
+	$self->login();
+	
+	if ($self->opts->{esx_number_of_vms} == DEFAULT_NUMBER_OF_VMS) {
+		$self->get_vm_configuration();
+	}
+	else {
+		my $vm_prefix = $self->opts->{esx_vmname};
+		my $vm_number;
+		for ( my $i = 0 ; $i < $self->opts->{esx_number_of_vms} ; $i++ ) {
+			$vm_number = $i + 1;
+			$self->opts->{esx_vmname} = $vm_prefix . "_$vm_number";
+			$self->get_vm_configuration();
+		}
+	}
+	
+	$self->logout();
+}
+
+################################
+# get_vm_configuration - Get virtual machine information and store it in properties
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+sub get_vm_configuration {
+	my ($self) = @_;
+	
+	my $vm_view = Vim::find_entity_view(
+		view_type => 'VirtualMachine',
+		filter    => { 'name' => $self->opts->{esx_vmname} }
+	);
+	
+	if ( !$vm_view ) {
+		$self->debugMsg( 0, 'Virtual machine \''.$self->opts->{esx_vmname} .'\' not found' );
+		$self->opts->{exitcode} = ERROR;
+		return;
+	}
+	
+	$self->debugMsg (1, 'Getting information of virtual machine \'' . $self->opts->{esx_vmname} . '\'...');
+	
+	# Retrieve virtual machine info
+	my $ip_address = $vm_view->guest->ipAddress;
+	my $hostname = $vm_view->guest->hostName;
+	
+	if (!defined($ip_address) or $ip_address eq "" or !defined($hostname) or $hostname eq "") {
+		$self->debugMsg(1, 'Unable to get IP address and/or hostname from virtual machine \''.$self->opts->{esx_vmname}.'\'');
+		$self->opts->{exitcode} = ERROR;
+		return;
+	}
+
+	# Store vm info in properties
+	$self->debugMsg(1, 'Storing properties...');
+	$self->debugMsg(1, 'IP address: ' . $ip_address);
+	$self->debugMsg(1, 'Hostname: ' . $hostname);
+	
+	# Create ElectricCommander PropDB
+	$self->{_props} = new ElectricCommander::PropDB($self->myCmdr(),"");
+		
+	$self->setProp( '/'.$self->opts->{esx_vmname}.'/ipAddress', $ip_address);
+	$self->setProp( '/'.$self->opts->{esx_vmname}.'/hostName', $hostname);
+	
+	return $hostname;
+}
+
+################################
+# import - Iterate and call import_vm
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+sub import {
+	my ($self) = @_;
+	
+	if ($::gRunTestUseFakeOutput) {
+		# Create and return fake output
+		my $out = "";
+		$out .= "Importing OVF package...";
+		$out .= "\n";
+		$out .= "Opening OVF source: " . $self->opts->{esx_ovf_file};
+		$out .= "Opening VI target: " . "vi://".$self->opts->{esx_user}.":".$self->opts->{esx_pass}."@".$self->opts->{esx_host}."/";
+		$out .= "Deploying to VI: " . "vi://".$self->opts->{esx_user}."@".$self->opts->{esx_host}."/";
+		$out .= "Disk progress: 0%\nDisk progress: 1%\nDisk progress: 96%\nDisk progress: 97%\nDisk progress: 99%\nDisk Transfer Completed";                    
+		$out .= "\n";
+		$out .= "Completed successfully";
+		return $out;
+	}
+	
+	sleep(80);
+	
+	# Initialize 
+	$self->opts->{Debug} = DEFAULT_DEBUG;
+	$self->opts->{exitcode} = SUCCESS;
+	if(defined($self->opts->{esx_number_of_vms}) && ($self->opts->{esx_number_of_vms} eq "" or $self->opts->{esx_number_of_vms} <= 0)) {
+		$self->opts->{esx_number_of_vms} = DEFAULT_NUMBER_OF_VMS;
+	}
+	
+	if ($self->opts->{esx_number_of_vms} == DEFAULT_NUMBER_OF_VMS) {
+		$self->opts->{esx_ovf_file} = $self->opts->{esx_source_directory} . '/' . $self->opts->{esx_vmname} . '/' . $self->opts->{esx_vmname} . '.ovf';
+		$self->import_vm();
+	}
+	else {
+		my $vm_number;
+		for ( my $i = 0 ; $i < $self->opts->{esx_number_of_vms} ; $i++ ) {
+			$vm_number = $i + 1;
+			$self->opts->{esx_ovf_file} = $self->opts->{esx_source_directory} . '/' . $self->opts->{esx_vmname} . "_$vm_number/" . $self->opts->{esx_vmname} . "_$vm_number.ovf";
+			$self->import_vm();
+		}
+	}
+}
+
+################################
+# import_vm - Import an OVF package to the ESX server using ovftool
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+sub import_vm {
+	my ($self) = @_;
+	
+	# Call ovftool to import OVF package
+	$self->debugMsg(1, 'Importing OVF package...');
+	my $command = 'ovftool --datastore='.$self->opts->{esx_datastore}.' "'.$self->opts->{esx_ovf_file}.'" "vi://'.$self->opts->{esx_user}.':'.$self->opts->{esx_pass}.'@'.$self->opts->{esx_host}.'/"';
+	system($command);
+}
+
+################################
+# export - Iterate and call export_vm
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+sub export {
+	my ($self) = @_;
+	
+	if ($::gRunTestUseFakeOutput) {
+		# Create and return fake output
+		my $out = "";
+		$out .= "Exporting virtual machine...";
+		$out .= "\n";
+		$out .= "Opening VI source: " . "vi://".$self->opts->{esx_user}."@".$self->opts->{esx_host}."/".$self->opts->{esx_datacenter};
+		$out .= "Opening OVF target: " . $self->opts->{esx_target_directory};
+		$out .= "Writing OVF package: " . $self->opts->{esx_target_directory}."/".$self->opts->{esx_vmname}."/".$self->opts->{esx_vmname}.".ovf";
+		$out .= "Disk progress: 0%\nDisk Transfer Completed";                    
+		$out .= "\n";
+		$out .= "Completed successfully";
+		return $out;
+	}
+	
+	# Initialize 
+	$self->opts->{Debug} = DEFAULT_DEBUG;
+	$self->opts->{exitcode} = SUCCESS;
+	if(defined($self->opts->{esx_number_of_vms}) && ($self->opts->{esx_number_of_vms} eq "" or $self->opts->{esx_number_of_vms} <= 0)) {
+		$self->opts->{esx_number_of_vms} = DEFAULT_NUMBER_OF_VMS;
+	}
+	
+	if ($self->opts->{esx_number_of_vms} == DEFAULT_NUMBER_OF_VMS) {
+		$self->opts->{esx_source} = $self->opts->{esx_vmname} . '/' . $self->opts->{esx_vmname} . '.vmx';
+		$self->export_vm();
+	}
+	else {
+		my $vm_number;
+		for ( my $i = 0 ; $i < $self->opts->{esx_number_of_vms} ; $i++ ) {
+			$vm_number = $i + 1;
+			$self->opts->{esx_source} = $self->opts->{esx_vmname} . "_$vm_number/" . $self->opts->{esx_vmname} . "_$vm_number.vmx";
+			$self->export_vm();
+		}
+	}
+}
+
+################################
+# export - Export a virtual machine to an OVF package using ovftool
+#
+# Arguments:
+#   -
+#
+# Returns:
+#   -
+#
+################################
+sub export_vm {
+	my ($self) = @_;
+		
+	# Call ovftool to export virtual machine
+	$self->debugMsg(1, 'Exporting virtual machine...');
+	my $command = 'ovftool "vi://'.$self->opts->{esx_user}.':'.$self->opts->{esx_pass}.'@'.$self->opts->{esx_host}.'/'.$self->opts->{esx_datacenter}.'?ds=['.$self->opts->{esx_datastore}.'] '.$self->opts->{esx_source}.'" "'.$self->opts->{esx_target_directory}.'"';
+	system($command);
+}
+
+# -------------------------------------------------------------------------
+# Helper functions
+# -------------------------------------------------------------------------
+
+################################
+# print_error - Print the appropiate message error
+#
+# Arguments:
+#   error - string
+#
+# Returns:
+#   1 - Known error, printed
+#   0 - Unknown error
+#
+################################
+sub print_error {
+	my ($self, $error) = @_;
+	
+	if ($error eq INVALID_STATE) {
+        $self->debugMsg(0,'Current State of the virtual machine is not supported for this operation');
+        return TRUE;
+    }
+    elsif($error eq INVALID_POWER_STATE) {
+        $self->debugMsg(0,'The attempted operation cannot be performed in the current state');
+        return TRUE;
+    }
+    elsif($error eq NOT_SUPPORTED) {
+        $self->debugMsg(0,'The operation is not supported on the object');
+        return TRUE;
+    }
+    elsif($error eq TASK_IN_PROGRESS) {
+        $self->debugMsg(0,'Virtual machine is busy');
+        return TRUE;
+    }
+    elsif($error eq RUNTIME_FAULT) {
+        $self->debugMsg(0,'A runtime fault occured');
+        return TRUE;
+    }
+    elsif($error eq TOOLS_UNAVAILABLE) {
+		$self->debugMsg(0,'VMTools are not running in this VM');
+		return TRUE;
+	}
+    return FALSE;
 }
 
 ################################
@@ -1143,7 +2041,7 @@ sub get_datastore {
 		$self->debugMsg( 0,
 			'Datastore \''.$ds_name.'\' is not available to host '.$host_name);
 		$self->opts->{exitcode} = ERROR;
-		return;
+		return ( error => TRUE );
 	}
 
 	return ( name => $name, mor => $mor );
@@ -1178,6 +2076,27 @@ sub find_snapshot_name {
       $ref = $subRef if ($subCount);
    }
    return ($ref, $count);
+}
+
+###############################
+# pingResource - Use commander to ping a resource
+#
+# Arguments:
+#   resource - string
+#
+# Returns:
+#   1 if alive, 0 otherwise
+#
+################################
+sub pingResource {
+    my ($self, $resource) = @_;
+
+    my $alive = "0";
+    my $result = $self->myCmdr()->pingResource($resource);
+    if (!$result) { return NOT_ALIVE; }
+    $alive = $result->findvalue('//alive');
+    if ($alive eq "1") { return ALIVE;}
+    return NOT_ALIVE;
 }
 
 ###############################
