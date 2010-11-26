@@ -23,6 +23,7 @@
  ['//procedure[procedureName="GetVMConfiguration"]/step[stepName="GetVMConfiguration"]/command' , 'vm/getvmconfiguration.pl'],
  ['//procedure[procedureName="Import"]/step[stepName="Import"]/command' , 'vm/import.pl'],
  ['//procedure[procedureName="Export"]/step[stepName="Export"]/command' , 'vm/export.pl'],
+ ['//procedure[procedureName="RegisterVM"]/step[stepName="RegisterVM"]/command' , 'vm/registervm.pl'],
  
  ['//procedure[procedureName="Create"]/step[stepName="SetTimelimit"]/command' , 'setTimelimit.pl'],
  ['//procedure[procedureName="Clone"]/step[stepName="SetTimelimit"]/command' , 'setTimelimit.pl'],
@@ -38,6 +39,7 @@
  ['//procedure[procedureName="GetVMConfiguration"]/step[stepName="SetTimelimit"]/command' , 'setTimelimit.pl'],
  ['//procedure[procedureName="Import"]/step[stepName="SetTimelimit"]/command' , 'setTimelimit.pl'],
  ['//procedure[procedureName="Export"]/step[stepName="SetTimelimit"]/command' , 'setTimelimit.pl'],
+ ['//procedure[procedureName="RegisterVM"]/step[stepName="SetTimelimit"]/command' , 'setTimelimit.pl'],
 
  ['//property[propertyName="ec_setup"]/value', 'ec_setup.pl'],
 );

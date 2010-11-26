@@ -111,6 +111,11 @@ $xpath = $ec->attachCredential($projName, $credName,
      stepName => 'Export'});
 $errors .= $ec->checkAllErrors($xpath);
 
+$xpath = $ec->attachCredential($projName, $credName,
+    {procedureName => 'RegisterVM',
+     stepName => 'RegisterVM'});
+$errors .= $ec->checkAllErrors($xpath);
+
 if ("$errors" ne "") {
     
     # Cleanup the partially created configuration we just created

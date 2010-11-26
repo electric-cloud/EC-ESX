@@ -19,4 +19,14 @@
       <include name="**/ESXConfigList.java"/>
       <include name="**/ESXConfigListLoader.*"/>
     </fileset>
+	
+	
+	<fileset id="images" dir="${dir.htdocs}">
+      <include name="**/PluginConstants.java"/>
+      <include name="**/ESXConfigList.java"/>
+      <include name="**/ESXConfigListLoader.*"/>
+    </fileset>
+	
+	
+	
 </project>

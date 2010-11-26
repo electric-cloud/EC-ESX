@@ -41,10 +41,10 @@ $::gRunTestUseFakeOutput = 1;
 # check-components-present - Check that the plugin contains required components
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 ntest "check-components-present", {}, sub {
@@ -169,16 +169,24 @@ ntest "check-components-present", {}, sub {
     $xpath = $::N->getSteps("$::gPlugin_name","Export");
     assertOK($xpath,"Export");
     assertEq("Export", $xpath->findvalue("//step[2]/stepName"), "step 2 is Export");
+
+    $xpath = $::N->getSteps("$::gPlugin_name","RegisterVM");
+    assertOK($xpath,"RegisterVM");
+    assertEq("SetTimelimit", $xpath->findvalue("//step[1]/stepName"), "step 1 is SetTimelimit");
+    
+    $xpath = $::N->getSteps("$::gPlugin_name","RegisterVM");
+    assertOK($xpath,"RegisterVM");
+    assertEq("RegisterVM", $xpath->findvalue("//step[2]/stepName"), "step 2 is RegisterVM");
 };
 
 ################################
 # Eval ESX Driver - Test loading ESX driver
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 ntest "Eval ESX Driver", {}, sub {
@@ -193,10 +201,10 @@ ntest "Eval ESX Driver", {}, sub {
 # setup-create configuration - Test creating a configuration
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 ntest "setup-create configuration", {}, sub {
@@ -248,10 +256,10 @@ ntest "setup-create configuration", {}, sub {
 # create vm - Create virtual machine
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 ntest "create vm", {}, sub {
@@ -278,17 +286,16 @@ ntest "create vm", {}, sub {
 # clone vm - Clone virtual machine
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 ntest "clone vm", {}, sub {
     my $opts;
     $opts->{esx_vmname} = "test_vm";
     $opts->{esx_vmname_destination} = "test_vm_destination";
-    $opts->{esx_operation} = 'clone';
     
     my $ec;
     my $gd = new ESX($ec, $opts);
@@ -305,16 +312,15 @@ ntest "clone vm", {}, sub {
 # relocate vm - Relocate virtual machine
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 ntest "relocate vm", {}, sub {
     my $opts;
     $opts->{esx_vmname} = "test_vm";
-    $opts->{esx_operation} = 'relocate';
     
     my $ec;
     my $gd = new ESX($ec, $opts);
@@ -331,10 +337,10 @@ ntest "relocate vm", {}, sub {
 # cleanup vm - Cleanup virtual machine
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 ntest "cleanup vm", {}, sub {
@@ -360,10 +366,10 @@ ntest "cleanup vm", {}, sub {
 # revert vm - Revert virtual machine
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 ntest "revert vm", {}, sub {
@@ -391,10 +397,10 @@ ntest "revert vm", {}, sub {
 # snapshot vm - Create a snapshot of a virtual machine
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 ntest "snapshot vm", {}, sub {
@@ -418,10 +424,10 @@ ntest "snapshot vm", {}, sub {
 # poweron vm - Power on a virtual machine
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 ntest "poweron vm", {}, sub {
@@ -443,10 +449,10 @@ ntest "poweron vm", {}, sub {
 # poweroff vm - Power off a virtual machine
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 ntest "poweroff vm", {}, sub {
@@ -468,10 +474,10 @@ ntest "poweroff vm", {}, sub {
 # shutdown vm - Shut down a virtual machine
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 ntest "shutdown vm", {}, sub {
@@ -493,10 +499,10 @@ ntest "shutdown vm", {}, sub {
 # suspend vm - Suspend a virtual machine
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 ntest "suspend vm", {}, sub {
@@ -518,10 +524,10 @@ ntest "suspend vm", {}, sub {
 # create resource from vm - Create a EC resource from a VM
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 ntest "create resource from vm", {}, sub {
@@ -547,10 +553,10 @@ ntest "create resource from vm", {}, sub {
 # get vm configuration - Get a VM configuration and store it in EC properties
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 ntest "get vm configuration", {}, sub {
@@ -578,10 +584,10 @@ ntest "get vm configuration", {}, sub {
 # import vm - Import a OVF package to ESX server
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 ntest "import vm", {}, sub {
@@ -611,10 +617,10 @@ ntest "import vm", {}, sub {
 # export vm - Export a VM to a OVF package
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 ntest "export vm", {}, sub {
@@ -638,6 +644,32 @@ ntest "export vm", {}, sub {
     $expectedOutput .= "Disk progress: 0%\nDisk Transfer Completed"; 
     $expectedOutput .= "\n";
     $expectedOutput .= "Completed successfully";
+    assertEq($expectedOutput, $out, "output");
+};
+
+################################
+# register vm - Register a vm to the ESX server
+#
+# Arguments:
+#   none
+#
+# Returns:
+#   none
+#
+################################
+ntest "register vm", {}, sub {
+    my $opts;
+    $opts->{esx_vmname} = "test_vm";
+    $opts->{esx_host} = "test_host";
+    
+    my $ec;
+    my $gd = new ESX($ec, $opts);
+    my $out = $gd->register();
+    
+    my $expectedOutput = "";
+    $expectedOutput .= "Registering virtual machine 'test_vm'...";
+    $expectedOutput .= "\n";
+    $expectedOutput .= "Virtual machine 'test_vm' successfully registered under host test_host";
     assertEq($expectedOutput, $out, "output");
 };
 

@@ -117,6 +117,10 @@ if ($upgradeAction eq "upgrade") {
                 procedureName => 'Export',
                 stepName => 'Export'
             });
+			$batch->attachCredential("\$[/plugins/$pluginName/project]", $cred, {
+                procedureName => 'RegisterVM',
+                stepName => 'RegisterVM'
+            });
         }
     }
 }

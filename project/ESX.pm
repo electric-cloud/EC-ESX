@@ -41,6 +41,7 @@ use constant {
 	DEFAULT_NUM_CPUS      => 1,
 	DEFAULT_NUMBER_OF_VMS => 1,
 	DEFAULT_PING_TIMEOUT  => 300,
+	DEFAULT_SLEEP         => 5,
 	DEFAULT_PROPERTIES_LOCATION => '/myJob/ESX/vms',
 	
 	SOAP_FAULT                   => 'SoapFault',
@@ -61,6 +62,11 @@ use constant {
 	INVALID_DEVICE_SPEC          => 'InvalidDeviceSpec',
 	DATACENTER_MISMATCH          => 'DatacenterMismatch',
 	INVALID_NAME                 => 'InvalidName',
+	ALREADY_EXISTS               => 'AlreadyExists',
+	OUT_OF_BOUNDS                => 'OutOfBounds',
+	INVALID_ARGUMENT             => 'InvalidArgument',
+	INVALID_DATASTORE            => 'InvalidDatastore',
+	NOT_FOUND                    => 'NotFound',
 };
 
 ################################
@@ -70,7 +76,7 @@ use constant {
 #   opts hash
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub new {
@@ -86,10 +92,10 @@ sub new {
 # initialize - Set initial values and load required modules
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub initialize {
@@ -179,7 +185,7 @@ sub setProp {
 # opts - Get opts hash
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
 #   opts hash
@@ -194,7 +200,7 @@ sub opts {
 # ecode - Get exit code
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
 #   exit code number
@@ -209,10 +215,10 @@ sub ecode {
 # login - Establish a connection with ESX server
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub login {
@@ -232,10 +238,10 @@ sub login {
 # logout - Disconnect the client from the ESX server
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub logout {
@@ -247,10 +253,10 @@ sub logout {
 # create - Call create_vm the number of times specified  by 'esx_number_of_vms'
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub create {
@@ -292,10 +298,10 @@ sub create {
 # create_vm - Create a vm according to the specifications provided
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub create_vm {
@@ -459,10 +465,10 @@ sub create_vm {
 # relocate - Connect, call relocate_vm, and disconnect from ESX server
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub relocate {
@@ -500,10 +506,10 @@ sub relocate {
 # relocate_vm - Relocate a virtual machine
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub relocate_vm {
@@ -599,10 +605,10 @@ sub relocate_vm {
 # clone - Connect, call clone_vm, and disconnect from ESX server
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub clone {
@@ -628,10 +634,10 @@ sub clone {
 # clone_vm - Clone a virtual machine
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub clone_vm {
@@ -756,10 +762,10 @@ sub clone_vm {
 # cleanup - Connect, call cleanup_vm, and disconnect from ESX server
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub cleanup {
@@ -801,10 +807,10 @@ sub cleanup {
 # cleanup_vm - Cleanup the specified virtual machine
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub cleanup_vm {
@@ -861,10 +867,10 @@ sub cleanup_vm {
 # revert - Connect, call revert_vm, and disconnect from ESX server
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub revert {
@@ -908,10 +914,10 @@ sub revert {
 # revert_vm - Revert a virtual machine to a specified snapshot
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub revert_vm {
@@ -1001,10 +1007,10 @@ sub revert_vm {
 # snapshot - Connect, call snapshot_vm, and disconnect from ESX server
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub snapshot {
@@ -1044,10 +1050,10 @@ sub snapshot {
 # snapshot_vm - Create a snapshot for the specified virtual machine
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub snapshot_vm {
@@ -1112,10 +1118,10 @@ sub snapshot_vm {
 # poweron - Connect, call poweron_vm, and disconnect from ESX server
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub poweron {
@@ -1153,10 +1159,10 @@ sub poweron {
 # poweron_vm - Power on the vm having the name specified on $opts->{esx_vmname}
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub poweron_vm {
@@ -1211,10 +1217,10 @@ sub poweron_vm {
 # poweroff - Connect, call poweroff_vm, and disconnect from ESX server
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub poweroff {
@@ -1252,10 +1258,10 @@ sub poweroff {
 # poweroff_vm - Power off the vm having the name specified on $opts->{esx_vmname}
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub poweroff_vm {
@@ -1298,10 +1304,10 @@ sub poweroff_vm {
 # shutdown - Connect, call shutdown_vm, and disconnect from ESX server
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub shutdown {
@@ -1339,10 +1345,10 @@ sub shutdown {
 # shutdown_vm - Shut down the vm having the name specified on $opts->{esx_vmname}
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub shutdown_vm {
@@ -1385,10 +1391,10 @@ sub shutdown_vm {
 # suspend - Connect, call suspend_vm, and disconnect from ESX server
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub suspend {
@@ -1426,10 +1432,10 @@ sub suspend {
 # suspend_vm - Suspend the vm having the name specified on $opts->{esx_vmname}
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub suspend_vm {
@@ -1472,10 +1478,10 @@ sub suspend_vm {
 # createresourcefromvm - Connect, call createresourcefrom_vm, and disconnect from ESX server
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub createresourcefromvm {
@@ -1517,17 +1523,50 @@ sub createresourcefromvm {
 # createresourcefrom_vm - Store information about a virtual machine and create ElectricCommander resources
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub createresourcefrom_vm {
 	my ($self) = @_;
 	
-	my $hostname = $self->get_vm_configuration();
-	if($self->ecode()) {return;}
+	$self->debugMsg (1, 'Getting information of virtual machine \'' . $self->opts->{esx_vmname} . '\'...');
+	my $vm_view;
+	my $ip_address = '';
+	my $hostname = '';
+	
+	# Loop until ip address and hostname are correct
+	# Timeout must be set in step
+	while(TRUE) {
+		$vm_view = Vim::find_entity_view(
+		view_type => 'VirtualMachine',
+		filter    => { 'name' => $self->opts->{esx_vmname} }
+		);
+		if ( !$vm_view ) {
+			$self->debugMsg( 0, 'Virtual machine \''.$self->opts->{esx_vmname} .'\' not found' );
+			$self->opts->{exitcode} = ERROR;
+			return;
+		}
+		
+		$ip_address = $vm_view->guest->ipAddress;
+		$hostname = $vm_view->guest->hostName;
+		if(defined($ip_address) && $ip_address ne '' && defined($hostname) && $hostname ne '') {
+			last;
+		}
+		sleep(DEFAULT_SLEEP);
+	}
+	
+	# Store vm info in properties
+	$self->debugMsg(1, 'Storing properties...');
+	$self->debugMsg(1, 'IP address: ' . $ip_address);
+	$self->debugMsg(1, 'Hostname: ' . $hostname);
+	
+	# Create ElectricCommander PropDB and store properties
+	$self->{_props} = new ElectricCommander::PropDB($self->myCmdr(),"");
+	$self->setProp( '/'.$self->opts->{esx_vmname}.'/ipAddress', $ip_address);
+	$self->setProp( '/'.$self->opts->{esx_vmname}.'/hostName', $hostname);
 
 	# Create resource if specified
 	if(defined($self->opts->{esx_create_resources}) && $self->opts->{esx_create_resources}) {
@@ -1537,7 +1576,7 @@ sub createresourcefrom_vm {
            	$self->opts->{esx_vmname},
             {description => "ESX created resource",
              workspaceName => $self->opts->{esx_workspace},
-             hostName => $hostname,
+             hostName => $ip_address,
              pools => $self->opts->{esx_pools} } );
 
         # Check for error return
@@ -1577,10 +1616,10 @@ sub createresourcefrom_vm {
 # getvmconfiguration - Connect, call get_vm_configuration, and disconnect from ESX server
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub getvmconfiguration {
@@ -1622,10 +1661,10 @@ sub getvmconfiguration {
 # get_vm_configuration - Get virtual machine information and store it in properties
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub get_vm_configuration {
@@ -1649,6 +1688,7 @@ sub get_vm_configuration {
 	my $hostname = $vm_view->guest->hostName;
 	
 	if (!defined($ip_address) or $ip_address eq "" or !defined($hostname) or $hostname eq "") {
+		# Failed to get ip address or hostname
 		$self->debugMsg(1, 'Unable to get IP address and/or hostname from virtual machine \''.$self->opts->{esx_vmname}.'\'');
 		$self->opts->{exitcode} = ERROR;
 		return;
@@ -1664,18 +1704,16 @@ sub get_vm_configuration {
 		
 	$self->setProp( '/'.$self->opts->{esx_vmname}.'/ipAddress', $ip_address);
 	$self->setProp( '/'.$self->opts->{esx_vmname}.'/hostName', $hostname);
-	
-	return $hostname;
 }
 
 ################################
 # import - Iterate and call import_vm
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub import {
@@ -1722,10 +1760,10 @@ sub import {
 # import_vm - Import an OVF package to the ESX server using ovftool
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub import_vm {
@@ -1741,10 +1779,10 @@ sub import_vm {
 # export - Iterate and call export_vm
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub export {
@@ -1786,13 +1824,13 @@ sub export {
 }
 
 ################################
-# export - Export a virtual machine to an OVF package using ovftool
+# export_vm - Export a virtual machine to an OVF package using ovftool
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub export_vm {
@@ -1802,6 +1840,139 @@ sub export_vm {
 	$self->debugMsg(1, 'Exporting virtual machine...');
 	my $command = 'ovftool "vi://'.$self->opts->{esx_user}.':'.$self->opts->{esx_pass}.'@'.$self->opts->{esx_host}.'/'.$self->opts->{esx_datacenter}.'?ds=['.$self->opts->{esx_datastore}.'] '.$self->opts->{esx_source}.'" "'.$self->opts->{esx_target_directory}.'"';
 	system($command);
+}
+
+################################
+# register - Connect, call register_vm, and disconnect from ESX server
+#
+# Arguments:
+#   none
+#
+# Returns:
+#   none
+#
+################################
+sub register {
+	my ($self) = @_;
+	
+	if ($::gRunTestUseFakeOutput) {
+		# Create and return fake output
+		my $out = "";
+		$out .= "Registering virtual machine '" . $self->opts->{esx_vmname} . "'...";
+		$out .= "\n";
+		$out .= "Virtual machine '".$self->opts->{esx_vmname}."' successfully registered under host ".$self->opts->{esx_host};
+		return $out;
+	}
+	
+	$self->initialize();
+	$self->login();
+	$self->register_vm();
+	$self->logout();
+}
+
+################################
+# register_vm - Register an existing virtual machine to the ESX server
+#
+# Arguments:
+#   none
+#
+# Returns:
+#   none
+#
+################################
+sub register_vm {
+	my ($self) = @_;
+	
+	# Get host view
+   	my $host_view = Vim::find_entity_view(view_type => 'HostSystem', filter => { 'name' => $self->opts->{esx_host}});
+   	if(!$host_view) {
+      	$self->debugMsg(0, 'No host found with name ' . $self->opts->{esx_host});
+      	$self->opts->{exitcode} = ERROR;
+		return;
+   	}
+	# Get datacenter and folder view
+   	my $datacenter = Vim::find_entity_view (view_type => 'Datacenter', filter => {name => $self->opts->{esx_datacenter}});
+   	if (!$datacenter) {
+      	$self->debugMsg(0, 'No data center found with name: '. $self->opts->{esx_datacenter});
+      	$self->opts->{exitcode} = ERROR;
+		return;
+   	}
+   	my $folder_view = Vim::get_view(mo_ref => $datacenter->vmFolder);
+   	
+   	# Get resource pool views
+    my $pool_views = Vim::find_entity_views(view_type => 'ResourcePool',
+                                          begin_entity => $host_view->parent,
+                                          filter => { 'name' => $self->opts->{esx_pool}} );
+                                          
+   	unless (@$pool_views) {
+      	$self->debugMsg(0, 'Resource pool \''.$self->opts->{esx_pool}.'\' not found');
+      	$self->opts->{exitcode} = ERROR;
+		return;
+   	}
+   	if ($#{$pool_views} != 0) {
+      	$self->debugMsg(0, 'Resource pool \''.$self->opts->{esx_pool}.'\' not unique');
+      	$self->opts->{exitcode} = ERROR;
+		return;
+   	}
+   	my $pool = shift (@$pool_views);
+   	eval {
+   		$self->debugMsg (1, 'Registering virtual machine \'' . $self->opts->{esx_vmname} . '\'...');
+      	$folder_view->RegisterVM(path => $self->opts->{esx_vmxpath},
+                               	name => $self->opts->{esx_vmname},
+                               	asTemplate => 'false',
+                               	pool => $pool,
+                               	host => $host_view);
+                               	
+      	$self->debugMsg(0,'Virtual machine \''.$self->opts->{esx_vmname}.'\' successfully registered under host ' . $host_view->name);
+   	};
+   	if ($@) {
+      	if (ref($@) eq SOAP_FAULT) {
+         	if (ref($@->detail) eq ALREADY_EXISTS) {
+	            $self->debugMsg(0,'The specified key, name, or identifier already exists');
+         	}
+         	elsif (ref($@->detail) eq DUPLICATE_NAME) {
+	            $self->debugMsg(0,'A virtual machine named '.$self->opts->{esx_vmname}.' already exists');
+         	}
+         	elsif (ref($@->detail) eq FILE_FAULT) {
+	            $self->debugMsg(0,'Failed to access the virtual machine files');
+         	}
+         	elsif (ref($@->detail) eq INSUFFICIENT_RESOURCES_FAULT) {
+	            $self->debugMsg(0,'Resource usage policy violated');
+         	}
+         	elsif (ref($@->detail) eq INVALID_NAME) {
+	            $self->debugMsg(0,'Specified name is not valid');
+         	}
+         	elsif (ref($@->detail) eq NOT_FOUND) {
+	            $self->debugMsg(0,'Configuration file not found on the system');
+         	}
+         	elsif (ref($@->detail) eq OUT_OF_BOUNDS) {
+	            $self->debugMsg(0,'Maximum number of virtual machines has been exceeded');
+         	}
+         	elsif (ref($@->detail) eq INVALID_ARGUMENT) {
+	            $self->debugMsg(0,'A specified parameter was not correct');
+         	}
+         	elsif (ref($@->detail) eq DATACENTER_MISMATCH) {
+	            $self->debugMsg(0,'Datacenter mismatch: The input arguments had entities that did not belong to the same datacenter');
+         	}
+         	elsif (ref($@->detail) eq INVALID_DATASTORE) {
+	            $self->debugMsg(0,'Invalid datastore path: ' . $self->opts->{esx_vmxpath});
+         	}
+         	elsif (ref($@->detail) eq NOT_SUPPORTED) {
+	            $self->debugMsg(0,'Operation is not supported');
+         	}
+         	elsif (ref($@->detail) eq INVALID_STATE) {
+	            $self->debugMsg(0,'The operation is not allowed in the current state');
+         	}
+         	else {
+	            $self->debugMsg(0, $@);
+         	}
+      	}
+      	else {
+         	$self->debugMsg(0, $@);
+      	}
+      	$self->opts->{exitcode} = ERROR;
+		return;
+   	}
 }
 
 # -------------------------------------------------------------------------
@@ -1853,7 +2024,7 @@ sub print_error {
 # create_conf_spec - Create virtual device config spec for controller
 #
 # Arguments:
-#   -
+#   none
 #
 # Returns:
 #   controller_vm_dev_conf_spec - spec of configuration for controller 
@@ -2107,7 +2278,7 @@ sub pingResource {
 #   msg        - string message
 #
 # Returns:
-#   -
+#   none
 #
 ################################
 sub debugMsg {
