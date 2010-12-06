@@ -13,7 +13,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.JavaScriptObject;
 
 import com.electriccloud.commander.gwt.client.BrowserContext;
-import com.electriccloud.commander.gwt.client.ComponentBase;
+import com.electriccloud.commander.gwt.client.Component;
 import com.electriccloud.commander.gwt.client.ComponentBaseFactory;
 import com.electriccloud.commander.gwt.client.FormBase;
 import com.electriccloud.commander.gwt.client.PropertySheetEditor;
@@ -27,12 +27,10 @@ public class ConfigurationManagementFactory
 
     //~ Methods ----------------------------------------------------------------
 
-    @Override public void onCommanderInit(
-            String           divId,
-            JavaScriptObject jso)
+    @Override public Component getComponent(JavaScriptObject jso)
     {
-        String        panel     = getParameter(jso, "panel");
-        ComponentBase component;
+        String    panel     = getParameter(jso, "panel");
+        Component component;
 
         if ("create".equals(panel)) {
             component = new CreateConfiguration();
@@ -58,6 +56,6 @@ public class ConfigurationManagementFactory
             component = new ConfigurationList();
         }
 
-        renderIntoDiv(divId, jso, component);
+        return component;
     }
 }
