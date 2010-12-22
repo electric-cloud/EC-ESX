@@ -22,18 +22,20 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import com.electriccloud.commander.gwt.client.ChainedCallback;
-import com.electriccloud.commander.gwt.client.DialogClickHandler;
-import com.electriccloud.commander.gwt.client.ListBase;
 import com.electriccloud.commander.gwt.client.requests.CgiRequestProxy;
 import com.electriccloud.commander.gwt.client.requests.RunProcedureRequest;
 import com.electriccloud.commander.gwt.client.responses.DefaultRunProcedureResponseCallback;
 import com.electriccloud.commander.gwt.client.responses.RunProcedureResponse;
-import com.electriccloud.commander.gwt.client.ui.ListTable;
 import com.electriccloud.commander.gwt.client.ui.SimpleErrorBox;
 import com.electriccloud.commander.gwt.client.util.CommanderUrlBuilder;
 
+import static ecinternal.client.ui.ListTable.constructActionList;
+
+import ecinternal.client.DialogClickHandler;
+import ecinternal.client.ListBase;
+import ecinternal.client.ui.ListTable;
+
 import static com.electriccloud.commander.gwt.client.ComponentBaseFactory.getPluginName;
-import static com.electriccloud.commander.gwt.client.ui.ListTable.constructActionList;
 import static com.electriccloud.commander.gwt.client.util.CommanderUrlBuilder.createPageUrl;
 import static com.electriccloud.commander.gwt.client.util.CommanderUrlBuilder.createRedirectUrl;
 

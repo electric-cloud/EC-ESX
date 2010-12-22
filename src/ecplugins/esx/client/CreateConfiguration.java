@@ -19,9 +19,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.ui.Anchor;
 
-import com.electriccloud.commander.gwt.client.FormBase;
 import com.electriccloud.commander.gwt.client.requests.CgiRequestProxy;
-import com.electriccloud.commander.gwt.client.requests.FormBuilderLoader;
 import com.electriccloud.commander.gwt.client.requests.RunProcedureRequest;
 import com.electriccloud.commander.gwt.client.responses.DefaultRunProcedureResponseCallback;
 import com.electriccloud.commander.gwt.client.responses.RunProcedureResponse;
@@ -31,6 +29,9 @@ import com.electriccloud.commander.gwt.client.ui.FormTable;
 import com.electriccloud.commander.gwt.client.ui.SimpleErrorBox;
 import com.electriccloud.commander.gwt.client.util.CommanderUrlBuilder;
 
+import ecinternal.client.InternalFormBase;
+import ecinternal.client.ui.FormBuilderLoader;
+
 import static com.electriccloud.commander.gwt.client.ComponentBaseFactory.getPluginName;
 import static com.electriccloud.commander.gwt.client.util.CommanderUrlBuilder.createPageUrl;
 import static com.electriccloud.commander.gwt.client.util.CommanderUrlBuilder.createUrl;
@@ -39,7 +40,7 @@ import static com.electriccloud.commander.gwt.client.util.CommanderUrlBuilder.cr
  * Create ESX Configuration.
  */
 public class CreateConfiguration
-    extends FormBase
+    extends InternalFormBase
 {
 
     //~ Constructors -----------------------------------------------------------
