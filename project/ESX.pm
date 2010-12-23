@@ -67,6 +67,14 @@ use constant {
 	INVALID_ARGUMENT             => 'InvalidArgument',
 	INVALID_DATASTORE            => 'InvalidDatastore',
 	NOT_FOUND                    => 'NotFound',
+	
+	HOST_SYSTEM     => 'HostSystem',
+	DATACENTER      => 'Datacenter',
+	VIRTUAL_MACHINE => 'VirtualMachine',
+	RESOURCE_POOL   => 'ResourcePool',
+	
+	DATASTORE_ERROR => 'datastore_error',
+	DISKSIZE_ERROR  => 'disksize_error',
 };
 
 ################################
@@ -310,7 +318,7 @@ sub create_vm {
 	my $vm_reference;
 
 	my $host_view = Vim::find_entity_view(
-		view_type => 'HostSystem',
+		view_type => HOST_SYSTEM,
 		filter    => { 'name' => $self->opts->{esx_vmhost} }
 	);
 	if ( !$host_view ) {
@@ -327,14 +335,14 @@ sub create_vm {
 	if ( $ds_info{error} ) { return; }
 
 	if ( $ds_info{mor} eq 0 ) {
-		if ( $ds_info{name} eq 'datastore_error' ) {
+		if ( $ds_info{name} eq DATASTORE_ERROR ) {
 			$self->debugMsg( 0,
 				    'Error creating VM \''.$self->opts->{esx_vmname}.'\': '
 				  . 'Datastore '.$self->opts->{esx_datastore}.' not available.' );
 			$self->opts->{exitcode} = ERROR;
 			return;
 		}
-		if ( $ds_info{name} eq 'disksize_error' ) {
+		if ( $ds_info{name} eq DISKSIZE_ERROR ) {
 			$self->debugMsg(0, 'Error creating VM \''.$self->opts->{esx_vmname}.'\': The free space '
 				  . 'available is less than the specified disksize.'
 			);
@@ -379,7 +387,7 @@ sub create_vm {
 	);
 
 	my $datacenter_views = Vim::find_entity_views(
-		view_type => 'Datacenter',
+		view_type => DATACENTER,
 		filter    => { name => $self->opts->{esx_datacenter} }
 	);
 
@@ -517,7 +525,7 @@ sub relocate_vm {
 
 	my $vm_name = $self->opts->{esx_vmname};
 	my $vm_view = Vim::find_entity_view(
-		view_type => 'VirtualMachine',
+		view_type => VIRTUAL_MACHINE,
 		filter    => { 'name' => $vm_name }
 	);
 	if ( !$vm_view ) {
@@ -528,7 +536,7 @@ sub relocate_vm {
 
 	# Get destination host and compute resource views
 	my $host_view = Vim::find_entity_view(
-		view_type => 'HostSystem',
+		view_type => HOST_SYSTEM,
 		filter    => { 'name' => $self->opts->{esx_vmhost_destination} }
 	);
 	if ( !$host_view ) {
@@ -645,7 +653,7 @@ sub clone_vm {
 
 	my $vm_name = $self->opts->{esx_vmname};
 	my $vm_view = Vim::find_entity_view(
-		view_type => 'VirtualMachine',
+		view_type => VIRTUAL_MACHINE,
 		filter    => { 'name' => $vm_name }
 	);
 	if ( !$vm_view ) {
@@ -656,7 +664,7 @@ sub clone_vm {
 
 	# Get destination host and compute resource views
 	my $host_view = Vim::find_entity_view(
-		view_type => 'HostSystem',
+		view_type => HOST_SYSTEM,
 		filter    => { 'name' => $self->opts->{esx_vmhost_destination} }
 	);
 	if ( !$host_view ) {
@@ -834,7 +842,7 @@ sub cleanup_vm {
 		
 		# Get virtual machine to destroy
 		my $vm_view = Vim::find_entity_view(
-			view_type => 'VirtualMachine',
+			view_type => VIRTUAL_MACHINE,
 			filter => { 'config.name' => $vm_name });
 		
 		if ( !$vm_view ) {
@@ -924,7 +932,7 @@ sub revert_vm {
 	my ($self) = @_;
 
 	my $vm_view = Vim::find_entity_view(
-		view_type => 'VirtualMachine',
+		view_type => VIRTUAL_MACHINE,
 		filter    => { 'name' => $self->opts->{esx_vmname} }
 	);
 	
@@ -1060,7 +1068,7 @@ sub snapshot_vm {
 	my ($self) = @_;
 
 	my $vm_view = Vim::find_entity_view(
-		view_type => 'VirtualMachine',
+		view_type => VIRTUAL_MACHINE,
 		filter    => { 'name' => $self->opts->{esx_vmname} }
 	);
 	
@@ -1169,7 +1177,7 @@ sub poweron_vm {
 	my ($self) = @_;
 	
 	my $vm_view = Vim::find_entity_view(
-		view_type => 'VirtualMachine',
+		view_type => VIRTUAL_MACHINE,
 		filter    => { 'name' => $self->opts->{esx_vmname} }
 	);
 	
@@ -1268,7 +1276,7 @@ sub poweroff_vm {
 	my ($self) = @_;
 	
 	my $vm_view = Vim::find_entity_view(
-		view_type => 'VirtualMachine',
+		view_type => VIRTUAL_MACHINE,
 		filter    => { 'name' => $self->opts->{esx_vmname} }
 	);
 	
@@ -1355,7 +1363,7 @@ sub shutdown_vm {
 	my ($self) = @_;
 	
 	my $vm_view = Vim::find_entity_view(
-		view_type => 'VirtualMachine',
+		view_type => VIRTUAL_MACHINE,
 		filter    => { 'name' => $self->opts->{esx_vmname} }
 	);
 	
@@ -1442,7 +1450,7 @@ sub suspend_vm {
 	my ($self) = @_;
 	
 	my $vm_view = Vim::find_entity_view(
-		view_type => 'VirtualMachine',
+		view_type => VIRTUAL_MACHINE,
 		filter    => { 'name' => $self->opts->{esx_vmname} }
 	);
 	
@@ -1541,7 +1549,7 @@ sub createresourcefrom_vm {
 	# Timeout must be set in step
 	while(TRUE) {
 		$vm_view = Vim::find_entity_view(
-		view_type => 'VirtualMachine',
+		view_type => VIRTUAL_MACHINE,
 		filter    => { 'name' => $self->opts->{esx_vmname} }
 		);
 		if ( !$vm_view ) {
@@ -1671,7 +1679,7 @@ sub get_vm_configuration {
 	my ($self) = @_;
 	
 	my $vm_view = Vim::find_entity_view(
-		view_type => 'VirtualMachine',
+		view_type => VIRTUAL_MACHINE,
 		filter    => { 'name' => $self->opts->{esx_vmname} }
 	);
 	
@@ -1884,14 +1892,14 @@ sub register_vm {
 	my ($self) = @_;
 	
 	# Get host view
-   	my $host_view = Vim::find_entity_view(view_type => 'HostSystem', filter => { 'name' => $self->opts->{esx_host}});
+   	my $host_view = Vim::find_entity_view(view_type => HOST_SYSTEM, filter => { 'name' => $self->opts->{esx_host}});
    	if(!$host_view) {
       	$self->debugMsg(0, 'No host found with name ' . $self->opts->{esx_host});
       	$self->opts->{exitcode} = ERROR;
 		return;
    	}
 	# Get datacenter and folder view
-   	my $datacenter = Vim::find_entity_view (view_type => 'Datacenter', filter => {name => $self->opts->{esx_datacenter}});
+   	my $datacenter = Vim::find_entity_view (view_type => DATACENTER, filter => {name => $self->opts->{esx_datacenter}});
    	if (!$datacenter) {
       	$self->debugMsg(0, 'No data center found with name: '. $self->opts->{esx_datacenter});
       	$self->opts->{exitcode} = ERROR;
@@ -1900,7 +1908,7 @@ sub register_vm {
    	my $folder_view = Vim::get_view(mo_ref => $datacenter->vmFolder);
    	
    	# Get resource pool views
-    my $pool_views = Vim::find_entity_views(view_type => 'ResourcePool',
+    my $pool_views = Vim::find_entity_views(view_type => RESOURCE_POOL,
                                           begin_entity => $host_view->parent,
                                           filter => { 'name' => $self->opts->{esx_pool}} );
                                           
