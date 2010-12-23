@@ -9,7 +9,6 @@
 
 package ecplugins.esx.client;
 
-import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.JavaScriptObject;
 
 import com.electriccloud.commander.gwt.client.BrowserContext;
@@ -23,7 +22,7 @@ import static com.electriccloud.commander.gwt.client.util.CommanderUrlBuilder.cr
 
 public class ConfigurationManagementFactory
     extends ComponentBaseFactory
-    implements EntryPoint
+
 {
 
     //~ Methods ----------------------------------------------------------------
