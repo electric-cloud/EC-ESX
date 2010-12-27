@@ -19,6 +19,10 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.ui.Anchor;
 
+import ecinternal.client.InternalFormBase;
+
+import ecinternal.client.ui.FormBuilderLoader;
+
 import com.electriccloud.commander.gwt.client.requests.CgiRequestProxy;
 import com.electriccloud.commander.gwt.client.requests.RunProcedureRequest;
 import com.electriccloud.commander.gwt.client.responses.DefaultRunProcedureResponseCallback;
@@ -28,9 +32,6 @@ import com.electriccloud.commander.gwt.client.ui.FormBuilder;
 import com.electriccloud.commander.gwt.client.ui.FormTable;
 import com.electriccloud.commander.gwt.client.ui.SimpleErrorBox;
 import com.electriccloud.commander.gwt.client.util.CommanderUrlBuilder;
-
-import ecinternal.client.InternalFormBase;
-import ecinternal.client.ui.FormBuilderLoader;
 
 import static com.electriccloud.commander.gwt.client.ComponentBaseFactory.getPluginName;
 import static com.electriccloud.commander.gwt.client.util.CommanderUrlBuilder.createPageUrl;
@@ -59,7 +60,7 @@ public class CreateConfiguration
 
     @Override protected FormTable initializeFormTable()
     {
-        FormBuilder fb = new FormBuilder();
+        FormBuilder fb = getUIFactory().createFormBuilder();
 
         return fb;
     }
@@ -176,8 +177,9 @@ public class CreateConfiguration
                             cancel();
                         }
                         else {
-                            SimpleErrorBox      error      = new SimpleErrorBox(
-                                    "Error occurred during configuration creation: "
+                            SimpleErrorBox      error      = getUIFactory()
+                                    .createSimpleErrorBox(
+                                        "Error occurred during configuration creation: "
                                         + responseString);
                             CommanderUrlBuilder urlBuilder = createUrl(
                                     "jobDetails.php").setParameter("jobId",
