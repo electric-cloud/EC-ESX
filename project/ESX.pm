@@ -1741,8 +1741,6 @@ sub import {
 		return $out;
 	}
 	
-	sleep(80);
-	
 	# Initialize 
 	$self->opts->{Debug} = DEFAULT_DEBUG;
 	$self->opts->{exitcode} = SUCCESS;
