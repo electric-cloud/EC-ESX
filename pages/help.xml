@@ -8,262 +8,238 @@
 
     <h2 class="help">Overview</h2>
 		<p class="help">
-        The EC-ESX plugin allows users to manipulate virtual machines on ESX servers. The plugin provides the following procedures: Cleanup, Clone, Create, CreateResourceFromVM, Export, GetVMConfiguration, Import, PowerOn, PowerOff, RegisterVM, Relocate, Revert, Shutdown, Snapshot, and Suspend. The plugin uses <a href="http://communities.vmware.com/community/developer/forums/vsphere_sdk_perl">vSphere SDK for Perl</a> to accomplish these tasks, which means that you must install the SDK.
+        The EC-ESX plugin allows users to manipulate virtual machines on ESX servers. This plugin provides the following procedures: Cleanup, Clone, Create, CreateResourceFromVM, Export, GetVMConfiguration, Import, PowerOn, PowerOff, RegisterVM, Relocate, Revert, Shutdown, Snapshot, and Suspend. This plugin uses <a href="http://communities.vmware.com/community/developer/forums/vsphere_sdk_perl">vSphere SDK for Perl</a> to accomplish these tasks, which means that you must install the SDK.
 		</p>
+	<p class="help">
+	<b>Note:</b> This plugin requires vSphere SDK for Perl. The SDK provides an easy-to-use Perl scripting interface to the vSphere API. You can download the SDK from the <a href="http://communities.vmware.com/community/developer/forums/vsphere_sdk_perl">vSphere SDK for Perl home page</a>. You must have an account to download the SDK. If you do not have an account, you can create one for free.
+	</p>
 	
+	<p class="help">
+	       <b>Supported ESX version</b><br/>
+	       This plugin was developed and tested with ESX version 4.1.
+       </p>
+
     <h2 class="help">Configuration</h2>
-		<p class="help">
-		The plugin allows users to store connection configurations in the plugin project.
-		</p>
-		
-		<p class="help">
-		To manage your ESX configuration, go to Administration > Plugins and click the EC-ESX <b>Configure</b> link.
-		</p>
-	
-		<p class="help">
-		Configurations have the following properties:
-		<ul>
-			<li>Configuration name - The name of the configuration.</li>
-			<li>ESX URL - The URL for the ESX server.</li>
-			<li>Credential - Username and password for the ESX server.</li>
-		</ul>
-		</p>
-        
-        <p class="help">
-		This plugin requires vSphere SDK for Perl. The SDK provides an easy-to-use Perl scripting interface to the vSphere API. You can download the SDK from the <a href="http://communities.vmware.com/community/developer/forums/vsphere_sdk_perl">vSphere SDK for Perl home page</a>. You must have an account to download the SDK. If you do not have an account, you can create one for free.
-		</p>
-		
+	<p class="help">
+	To enable Commander to communicate with ESX, create an ESX configuration, supplying the following information:
+	</p>	
+	<ul>
+		<li><b>Configuration Name</b> - Provide a unique name for the configuration, keeping in mind that you may need to create additional configurations over time.</li>
+		<li><b>ESX URL</b> - Provide the URL of the ESX server.</li>
+          	<li><b>Credential</b> - Provide the user name and password Commander uses to communicate with the ESX server.</li>	                  
+    	</ul>    	
+			
+
 	<h2 class="help">Using the Plugin</h2>
-		<p class="help">
-		To use the plugin, you must first create a step. There are two ways to create steps:
-			<ul>
-				<li>
-					Wizard step: When creating a procedure, do the following:
-					<ol>
-						<li>Click <b>Add Step</b> on the <b>Steps</b> panel.</li>
-						<li>Select the Subprocedure category.</li>
-						<li>In the Project field, select <b>EC-ESX</b>.</li>
-						<li>In the Procedure field, select the procedure you wish to execute.</li>
-						<li>Click <b>OK</b>.</li>
-					</ol>
-				</li>
-				<li>
-					Subprocedure step: To add a step to a procedure, do the following:
-					<ol>
-						<li>Go to the <b>Procedure Details</b> page for the procedure where you want to add the step.</li>
-						<li>Click the arrow adjacent to <b>Create Step</b>.</li>
-						<li>Select <b>Subprocedure Step</b>.</li>
-						<li>In the Project field, click <b>Browse</b> and select <b>EC-ESX</b>.</li>
-						<li>In the Procedure field, click <b>Browse</b> and select the procedure you wish to execute.</li>
-						<li>Click <b>OK</b>.</li>
-					</ol>
-				</li>
-			</ul>
-		</p>
-		
-		<p class="help">
-		The subprocedure you select determines which fields are available.
-		</p>		
+	<p class="help">
+	    See the <a href="/commander/link/showHelp?page=plugins&amp;section=using">Commander online help system</a> for details about how to use this plugin within a procedure.
+	    </p>
+	    
+	    <p class="help">
+	    When you provide information for this plugin, fill-in the fields as follows:
+	    </p>
 
         <p class="help">
-		The Cleanup subprocedure deletes ElectricCommander resources and optionally destroys the virtual machines on the ESX server.
-		The following fields are available for Cleanup:
+	The Cleanup subprocedure deletes ElectricCommander resources and optionally destroys the virtual machines on the ESX server. Cleanup has the following fields:
 		<ul>
-			<li>connection_config - The name of the configuration that holds connection information for the ESX server (created on the Configure page).</li>
-			<li>esx_vmname - Name of the virtual machine to cleanup.</li>
-			<li>esx_delete_vm - Flag to specify whether or not to destroy the virtual machine.</li>
-			<li>esx_number_of_vms - Number of virtual machines to cleanup. Default value is 1. If value is greater than 1, a suffix is added to vm names. The suffix consists of an underscore and the VM number ('_#').</li>
-			<li>esx_timeout - Timeout for the step execution in minutes. Blank means no timeout.</li>
-			<li>sdk_installation_path - Absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
+			<li><b>connection_config</b> - Provide the name of the configuration that contains connection information for the ESX server.</li>
+			<li><b>esx_vmname</b> - Provide the name of the virtual machine to clean up.</li>
+			<li><b>esx_delete_vm</b> - If checked, this destroys the virtual machine.</li>
+			
+			<li><b>esx_number_of_vms</b> - Indicate the number of virtual machines to clean up. The default is 1. If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
+			
+			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
+			<li><b>sdk_installation_path</b> - Provide the absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
-		</p>
-		
+		</p>		
 		<p class="help">
-		The Clone subprocedure creates one or more clones of a virtual machine.
-		The following fields are available for Clone:
+		The Clone subprocedure creates one or more clones of a virtual machine.		Clone has the following fields:
 		<ul>
-			<li>connection_config - The name of the configuration that holds connection information for the ESX server (created on the Configure page).</li>
-			<li>esx_vmname - Name of the virtual machine whose clone is to be created.</li>
-			<li>esx_datastore - Name of the datastore. Default value is the datastore with the most free space.</li>
-			<li>esx_vmname_destination - Name of the clone virtual machine that will be created.</li>
-			<li>esx_vmhost_destination - Target host for the new virtual machine.</li>
-			<li>esx_number_of_clones - Number of clones to be created. Default value is 1. If value is greater than 1, a suffix is added to cloned VM names. The suffix consists of an underscore and the clone number ('_#').</li>
-			<li>esx_timeout - Timeout for the step execution in minutes. Blank means no timeout.</li>
-			<li>sdk_installation_path - Absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
+			<li><b>connection_config</b> - Provide the name of the configuration that contains connection information for the ESX server.</li>
+			<li><b>esx_vmname</b> - Provide the name of the virtual machine to clone.</li>
+			<li><b>esx_datastore</b> - Provide the name of the datastore. The default is the datastore with the most free space.</li>
+			<li><b>esx_vmname_destination</b> - Name the virtual machine that will be created.</li>
+			<li><b>esx_vmhost_destination</b> - Indicate the target host for the new virtual machine.</li>
+			
+			<li><b>esx_number_of_clones</b> - Indicate the number of clones to create. The default is 1. If the value is greater than 1, a suffix is added to cloned VM names. The suffix consists of an underscore and the clone number ('_#').</li>
+			
+			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
+			<li><b>sdk_installation_path</b> - Provide the absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
-		</p>
-		
+		</p>		
 		<p class="help">
 		The Create subprocedure creates virtual machines on the ESX server.
-		The following fields are available for Create:
+		Create has the following fields:
 		<ul>
-			<li>connection_config - The name of the configuration that holds connection information for the ESX server (created on the Configure page).</li>
-			<li>esx_vmname - Name of the virtual machine to be created.</li>
-			<li>esx_datastore - Name of the datastore. Default value is any accessible datastore with free space greater than the disk size specified.</li>
-			<li>esx_vmhost - Name of the host.</li>
-			<li>esx_datacenter - Name of the datacenter.</li>
-			<li>esx_guestid - Guest operating system identifier. Default value is 'winXPProGuest'.</li>
-			<li>esx_disksize - Capacity of the virtual disk (in KB). Default value is 4096.</li>
-			<li>esx_memory - Size of virtual machine's memory (in MB). Default value is 256.</li>
-			<li>esx_num_cpus - Number of virtual processors in a virtual machine. Default value is 1.</li>
-			<li>esx_nic_network - Network name. Default value is any accessible network.</li>
-			<li>esx_nic_poweron - Flag to specify whether or not to connect the device when the virtual machine starts. Default value is 0.</li>
-			<li>esx_vm_poweron - Flag to specify whether or not to power on the created virtual machine(s). Default value is 0.</li>
-			<li>esx_number_of_vms - Number of virtual machines to create. Default value is 1. If value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
-			<li>esx_timeout - Timeout for the step execution in minutes. Blank means no timeout.</li>
-			<li>sdk_installation_path - Absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
+			<li><b>connection_config</b> - Provide the name of the configuration that contains connection information for the ESX server.</li>
+			<li><b>esx_vmname</b> - Provide the name the virtual machine to be created.</li>
+			<li><b>esx_datastore</b> - Provide the name of the datastore. The default  is any accessible datastore with free space greater than the disk size specified.</li>
+			<li><b>esx_vmhost</b> - Provide the name of the host.</li>
+			<li><b>esx_datacenter</b> - Provide the name of the datacenter.</li>
+			<li><b>esx_guestid</b> - Provide the guest operating system identifier. The default is 'winXPProGuest'.</li>
+			<li><b>esx_disksize</b> - Indicate the capacity of the virtual disk (in KB). The default is 4096.</li>
+			<li><b>esx_memory</b> - Indicate the size of the virtual machine's memory (in MB). The default is 256.</li>
+			<li><b>esx_num_cpus</b> - Indicate the number of virtual processors in a virtual machine. The default is 1.</li>
+			<li><b>esx_nic_network</b> - Provide the network name. The default is any accessible network.</li>
+			<li><b>esx_nic_poweron</b> - If checked, this connects the device when the virtual machine starts.</li>
+			<li><b>esx_vm_poweron</b> - If checked, this powers on the created virtual machine(s).</li>
+			<li><b>esx_number_of_vms</b> - Indicate the number of virtual machines to create. The default is 1. If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
+			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
+			<li><b>sdk_installation_path</b> - Provide the absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
 		</p>
 		
 		<p class="help">
 		The CreateResourceFromVM subprocedure has the same functionality as the GetVMConfiguration subprocedure, and additionally creates an ElectricCommander resource for each virtual machine.
-		The following fields are available for CreateResourceFromVM:
+		CreateResourceFromVM has the following fields:
 		<ul>
-			<li>connection_config - The name of the configuration that holds connection information for the ESX server (created on the Configure page).</li>
-			<li>esx_vmname - Name of the virtual machine from which to get the information.</li>
-			<li>esx_properties_location - The ElectricCommander location to store properties containing information about the powered on virtual machines. Default value is '/myJob/ESX/vms'.</li>
-			<li>esx_create_resources - Flag to specify whether or not to create ElectricCommander resources for the created virtual machines. Default value is 0.</li>
-			<li>esx_pools - The ElectricCommander resource pool names to be associated with the created resources if created.</li>
-			<li>esx_workspace - The ElectricCommander workspace the created resources should use.</li>
-			<li>esx_number_of_vms - Number of virtual machines from which to get the information. Default value is 1. If value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
-			<li>esx_timeout - Timeout for the step execution in minutes. Blank means no timeout.</li>
-			<li>sdk_installation_path - Absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
+			<li><b>connection_config</b> - Provide the name of the configuration that contains connection information for the ESX server.</li>
+			<li><b>esx_vmname</b> - Provide the name of the virtual machine from which to get information.</li>
+			<li><b>esx_properties_location</b> - Indicate the ElectricCommander location to store properties containing information about the powered on virtual machines. The default is '/myJob/ESX/vms'.</li>
+			<li><b>esx_create_resources</b> - If checked, this creates ElectricCommander resources for the created virtual machines.</li>
+			<li><b>esx_pools</b> - Provide the ElectricCommander resource pool names to associate with the created resources if created.</li>
+			<li><b>esx_workspace</b> - Indicate the ElectricCommander workspace the created resources should use.</li>
+			<li><b>esx_number_of_vms</b> - Indicate the number of virtual machines from which to get information. The default is 1. If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
+			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
+			<li><b>sdk_installation_path</b> - Provide the absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
 		</p>
 		
 		<p class="help">
 		The Export subprocedure exports a virtual machine to an OVF package.
-		The following fields are available for Export:
+		Export has the following fields:
 		<ul>
-			<li>connection_config - The name of the configuration that holds connection information for the ESX server (created on the Configure page).</li>
-			<li>esx_host - Name of the host where the virtual machine is located.</li>
-			<li>esx_datacenter - Name of the datacenter.</li>
-			<li>esx_datastore - Name of the datastore.</li>
-			<li>esx_vmname - Name of the virtual machine to export.</li>
-			<li>esx_target_directory - Absoulte path to the directory where virtual machines will be exported.</li>
-			<li>esx_number_of_vms - Number of virtual machines to export. Default value is 1. If value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
-			<li>esx_timeout - Timeout for the step execution in minutes. Blank means no timeout.</li>
+			<li><b>connection_config</b> - Provide the name of the configuration that contains connection information for the ESX server.</li>
+			<li><b>esx_host</b> - Provide the name of the host where the virtual machine is located.</li>
+			<li><b>esx_datacenter</b> - Provide the name of the datacenter.</li>
+			<li><b>esx_datastore</b> - Provide the name of the datastore.</li>
+			<li><b>esx_vmname</b> - Provide the name of the virtual machine to export.</li>
+			<li><b>esx_target_directory</b> - Provide the absolute path to the directory where virtual machines will be exported.</li>
+			<li><b>esx_number_of_vms</b> - Indicate the number of virtual machines to export. The default is 1. If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
+			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
 		</ul>
 		</p>
 		
 		<p class="help">
 		The GetVMConfiguration subprocedure gets the IP address and hostname of a virtual machine and stores them in the specified location in ElectricCommander properties.
-		The following fields are available for GetVMConfiguration:
+		GetVMConfiguration has the following fields:
 		<ul>
-			<li>connection_config - The name of the configuration that holds connection information for the ESX server (created on the Configure page).</li>
-			<li>esx_vmname - Name of the virtual machine from which to get the information.</li>
-			<li>esx_properties_location - The ElectricCommander location to store properties containing information about the virtual machines. Default value is '/myJob/ESX/vms'.</li>
-			<li>esx_number_of_vms - Number of virtual machines from which to get the information. Default value is 1. If value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
-			<li>esx_timeout - Timeout for the step execution in minutes. Blank means no timeout.</li>
-			<li>sdk_installation_path - Absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
+			<li><b>connection_config</b> - Provide the name of the configuration that contains connection information for the ESX server.</li>
+			<li><b>esx_vmname</b> - Provide the name of the virtual machine from which to get information.</li>
+			<li><b>esx_properties_location</b> - Indicate the ElectricCommander location to store properties containing information about the virtual machines. The default is '/myJob/ESX/vms'.</li>
+			<li><b>esx_number_of_vms</b> - Indicate the number of virtual machines from which to get information. The default is 1. If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
+			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
+			<li><b>sdk_installation_path</b> - Provide the absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
 		</p>
 		
 		<p class="help">
 		The Import subprocedure imports an OVF package to the ESX server.
-		The following fields are available for Import:
+		Import has the following fields:
 		<ul>
-			<li>connection_config - The name of the configuration that holds connection information for the ESX server (created on the Configure page).</li>
-			<li>esx_host - Name of the host where virtual machines will be imported.</li>
-			<li>esx_datastore - Name of the datastore to be used.</li>
-			<li>esx_vmname - Name of the virtual machine to import.</li>
-			<li>esx_source_directory - Absoulte path to the directory where OVF packages are stored.</li>
-			<li>esx_number_of_vms - Number of virtual machines to import. Default value is 1. If value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
-			<li>esx_timeout - Timeout for the step execution in minutes. Blank means no timeout.</li>
+			<li><b>connection_config</b> - Provide the name of the configuration that contains connection information for the ESX server.</li>
+			<li><b>esx_host</b> - Provide the name of the host where virtual machines will be imported.</li>
+			<li><b>esx_datastore</b> - Indicate the name of the datastore to use.</li>
+			<li><b>esx_vmname</b> - Indicate the name of the virtual machine to import.</li>
+			<li><b>esx_source_directory</b> - Provide the absolute path to the directory where OVF packages are stored.</li>
+			<li><b>esx_number_of_vms</b> - Indicate the number of virtual machines to import. The default is 1. If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
+			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
 		</ul>
 		</p>
 		
 		<p class="help">
 		The PowerOn subprocedure powers on the specified virtual machine and optionally creates an ElectricCommander resource for the virtual machine.
-		The following fields are available for PowerOn:
+		PowerOn has the following fields:
 		<ul>
-			<li>connection_config - The name of the configuration that holds connection information for the ESX server (created on the Configure page).</li>
-			<li>esx_vmname - Name of the virtual machine to poweron.</li>
-			<li>esx_properties_location - The ElectricCommander location to store properties containing information about the powered on virtual machines. Default value is '/myJob/ESX/vms'.</li>
-			<li>esx_create_resources - Flag to specify whether or not to create ElectricCommander resources for the powered on virtual machines. Default value is 0.</li>
-			<li>esx_pools - The ElectricCommander resource pool names to be associated with the created resources if created.</li>
-			<li>esx_workspace - The ElectricCommander workspace the created resources should use.</li>
-			<li>esx_number_of_vms - Number of virtual machines to power on. Default value is 1. If value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
-			<li>esx_timeout - Timeout for the step execution in minutes. Blank means no timeout.</li>
-			<li>sdk_installation_path - Absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
+			<li><b>connection_config</b> - Provide the name of the configuration that contains connection information for the ESX server.</li>
+			<li><b>esx_vmname</b> - Provide the name of the virtual machine to power on.</li>
+			<li><b>esx_properties_location</b> - Indicate the ElectricCommander location to store properties containing information about the powered on virtual machines. The default is '/myJob/ESX/vms'.</li>
+			<li><b>esx_create_resources</b> - If checked, this creates ElectricCommander resources for the powered on virtual machines.</li>
+			<li><b>esx_pools</b> - Provide the ElectricCommander resource pool names to associate with the created resources if created.</li>
+			<li><b>esx_workspace</b> - Indicate the ElectricCommander workspace the created resources should use.</li>
+			<li><b>esx_number_of_vms</b> - Indicate the number of virtual machines to power on. The default is 1. If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
+			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
+			<li><b>sdk_installation_path</b> - Provide the absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
 		</p>
 			
 		<p class="help">
 		The RegisterVM subprocedure registers an existing virtual machine with the ESX server.
-		The following fields are available for RegisterVM:
+		RegisterVM has the following fields:
 		<ul>
-			<li>connection_config - The name of the configuration that holds connection information for the ESX server (created on the Configure page).</li>
-			<li>esx_host - Name of the host where the virtual machine will be registered.</li>
-			<li>esx_datacenter - Name of the datacenter.</li>
-			<li>esx_pool - Name of the resource pool to register the virtual machine.</li>
-			<li>esx_vmxpath - Datastore path to the virtual machine configuration file (vmx).</li>
-			<li>esx_vmname - Name to be assigned to the virtual machine.</li>
-			<li>esx_timeout - Timeout for the step execution in minutes. Blank means no timeout.</li>
-			<li>sdk_installation_path - Absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
+			<li><b>connection_config</b> - Provide the name of the configuration that holds connection information for the ESX server.</li>
+			<li><b>esx_host</b> - Provide the name of the host where virtual machines will be registered.</li>
+			<li><b>esx_datacenter</b> - Provide the name of the datacenter.</li>
+			<li><b>esx_pool</b> - Provide the name of the resource pool to register the virtual machine.</li>
+			<li><b>esx_vmxpath</b> - Provide the datastore path to the virtual machine configuration file (vmx).</li>
+			<li><b>esx_vmname</b> - Assign a name to the virtual machine.</li>
+			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
+			<li><b>sdk_installation_path</b> - Provide the absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
 		</p>
 			
 		<p class="help">
 		The Relocate subprocedure relocates a virtual machine to the specified destination host.
-		The following fields are available for Relocate:
+		Relocate has the following fields:
 		<ul>
-			<li>connection_config - The name of the configuration that holds connection information for the ESX server (created on the Configure page).</li>
-			<li>esx_vmname - Name of the virtual machine to be relocated.</li>
-			<li>esx_datastore - Name of the datastore. Default value is the datastore with the most free space.</li>
-			<li>esx_vmhost_destination - Target host for the virtual machine.</li>
-			<li>esx_number_of_vms - Number of virtual machines to relocated. Default value is 1. If value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
-			<li>esx_timeout - Timeout for the step execution in minutes. Blank means no timeout.</li>
-            		<li>sdk_installation_path - Absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
+			<li><b>connection_config</b> - Provide the name of the configuration that contains connection information for the ESX server.</li>
+			<li><b>esx_vmname</b> - Provide the name of the virtual machine to relocate.</li>
+			<li><b>esx_datastore</b> - Provide the name of the datastore. The default is the datastore with the most free space.</li>
+			<li><b>esx_vmhost_destination</b> - Indicate the garget host for the virtual machine.</li>
+			<li><b>esx_number_of_vms</b> - Indicate the number of virtual machines to relocate. The default is 1. If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
+			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
+			<li><b>sdk_installation_path</b> - Provide the absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
 		</p>      
 
         <p class="help">
 		The Revert subprocedure reverts a virtual machine to the specified snapshot.
-		The following fields are available for Revert:
+		Revert has the following fields:
 		<ul>
-			<li>connection_config - The name of the configuration that holds connection information for the ESX server (created on the Configure page).</li>
-			<li>esx_vmname - Name of the source virtual machine.</li>
-            		<li>esx_snapshotname - Name of snapshot to revert to.</li>
-			<li>esx_poweron_vm - Flag to specify whether or not to power on the virtual machine(s) after being reverted. Default value is 0.</li>
-			<li>esx_number_of_vms - Number of virtual machines to revert. Default value is 1. If value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
-			<li>esx_timeout - Timeout for the step execution in minutes. Blank means no timeout.</li>
-            		<li>sdk_installation_path - Absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
+			<li><b>connection_config</b> - Provide the name of the configuration that contains connection information for the ESX server.</li>
+			<li><b>esx_vmname</b> - Provide the name of the source virtual machine.</li>
+            		<li><b>esx_snapshotname</b> - Provide the name of snapshot to revert to.</li>
+			<li><b>esx_poweron_vm</b> - If checked, this powers on the virtual machine(s) after being reverted.</li>
+			<li><b>esx_number_of_vms</b> - Indicate the number of virtual machines to revert. The default is 1. If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
+			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
+			<li><b>sdk_installation_path</b> - Provide the absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
 		</p>
 		
 		<p class="help">
 		The Snapshot subprocedure creates a snapshot for the specified virtual machine.
-		The following fields are available for Snapshot:
-		<ul>
-			<li>connection_config - The name of the configuration that holds connection information for the ESX server (created on the Configure page).</li>
-			<li>esx_vmname - Name of the virtual machine whose snapshot is to be created.</li>
-			<li>esx_snapshotname - Name of the snapshot to be created.</li>
-			<li>esx_number_of_vms - Number of virtual machines to snapshot. Default value is 1. If value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
-			<li>esx_timeout - Timeout for the step execution in minutes. Blank means no timeout.</li>
-			<li>sdk_installation_path - Absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
+		Snapshot has the following fields:
+		<ul>			<li><b>connection_config</b> - Provide the name of the configuration that contains connection information for the ESX server.</li>
+			<li><b>esx_vmname</b> - Provide the name of the virtual machine whose snapshot will be created.</li>
+			<li><b>esx_snapshotname</b> - Provide the name of the snapshot to be created.</li>
+			
+			<li><b>esx_number_of_vms</b> - Indicate the number of virtual machines to snapshot. The default is 1. If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
+			
+			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
+			
+			<li><b>sdk_installation_path</b> - Provide the absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
 		</p>
                 
         <p class="help">
 		The PowerOff/Shutdown/Suspend subprocedure powers off/shuts down/suspends the specified virtual machine.
-		The following fields are available for PowerOff, Shutdown, and Suspend:
+		PowerOff, Shutdown, and Suspend have the following fields:
 		<ul>
-			<li>connection_config - The name of the configuration that holds connection information for the ESX server (created on the Configure page).</li>
-			<li>esx_vmname - Name of the virtual machine to power off/shut down/suspend.</li>
-			<li>esx_number_of_vms - Number of virtual machines to power off/shut down/suspend. Default value is 1. If value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
-			<li>esx_timeout - Timeout for the step execution in minutes. Blank means no timeout.</li>
-			<li>sdk_installation_path - Absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
+			<li><b>connection_config</b> - Provide the name of the configuration that contains connection information for the ESX server.</li>
+			<li><b>esx_vmname</b> - Provide the name of the virtual machine to power off/shut down/suspend.</li>
+			<li><b>esx_number_of_vms</b> - Indicate the number of virtual machines to power off/shut down/suspend. The default is 1. If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
+			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
+			<li><b>sdk_installation_path</b> - Provide the absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
 		</p>
 		
 	<h2 class="help">OVF Tool</h2>
 		<p class="help">
-		VMWare OVF Tool is a command line utility that allows you to import and export OVF packages. In order to execute Import and Export procedures using the ESX plugin, OVF Tool must be installed. You can download this utility from the <a href="http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf">OVF Tool page</a>. You must have an account to download this tool. If you do not have an account, you can create one for free.
+		VMware OVF Tool is a command line utility that allows you to import and export OVF packages. In order to execute Import and Export procedures using the ESX plugin, OVF Tool must be installed. You can download this utility from the <a href="http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf">OVF Tool page</a>. You must have an account to download this tool. If you do not have an account, you can create one for free.
 		</p>
 		
 		<p class="help">
-		After downloading VMware OVF Tool, use the corresponding install method for your computer operating system:
+		After downloading VMware OVF Tool, use the corresponding install method for your operating system:
 		</p>
 		<table border="0" class="help">
 			<tr>
@@ -271,23 +247,23 @@
 				<th>Installation Method</th>
 			</tr>
 			<tr>
-				<td>Linux 32 bit</td>
+				<td>Linux 32-bit</td>
 				<td>Run the shell script as ./VMware-OVF-Tool.sh</td>
 			</tr>
 			<tr>
-				<td>Linux 64 bit</td>
+				<td>Linux 64-bit</td>
 				<td>Run the shell script as ./VMware-OVF-Tool.x86_64.sh</td>
 			</tr>
 			<tr>
-				<td>Mac 64 bit</td>
+				<td>Mac 64-bit</td>
 				<td></td>
 			</tr>
 			<tr>
-				<td>Windows 32 bit</td>
+				<td>Windows 32-bit</td>
 				<td>Double-click the installer, VMware-OVF-Tool.exe</td>
 			</tr>
 			<tr>
-				<td>Windows 64 bit</td>
+				<td>Windows 64-bit</td>
 				<td>Double-click the installer, VMware-OVF-Tool.x86_64.exe</td>
 			</tr>
 		</table>
@@ -295,266 +271,31 @@
 		For more information, download the OVF Tool User Guide from <a href="http://www.vmware.com/support/developer/ovf/">OVF Tool Documentation page</a>.
 		</p>
 		
-	<h2 class="help">Examples</h2>
-		<p class="help">
-		You want to use the EC-ESX plugin to manage virtual machines on the ESX server. First, create a connection configuration. Then use the plugin's subprocedures to perform different actions on the virtual machines. The use cases are:
-		<ol>
-			<li>Create configuration</li>
-			<li>Create virtual machine(s)</li>
-			<li>Power on virtual machine(s)</li>
-			<li>Power off virtual machine(s)</li>
-			<li>Shut down virtual machine(s)</li>
-			<li>Suspend virtual machine(s)</li>
-			<li>Clone virtual machine.</li>
-			<li>Relocate virtual machine(s)</li>
-			<li>Snapshot virtual machine(s)</li>
-			<li>Revert virtual machine(s)</li>
-			<li>Export virtual machine(s)</li>
-			<li>Import OVF package(s).</li>
-			<li>Register virtual machine</li>
-			<li>Get virtual machine(s) configuration</li>
-			<li>Create resource from virtual machine(s)</li>
-			<li>Clean up virtual machine(s)</li>
-		</ol>
-		</p>
 		
-		<h3 class="help">Create Configuration</h3>
-			<p class="help">
-			<ol>
-				<li>Go to Administration > Plugins in ElectricCommander.</li>
-				<img src="../../plugins/EC-ESX/images/CreateConfiguration/1.png" alt=""/>
-				<li>Click the EC-ESX Configure link.</li>
-				<img src="../../plugins/EC-ESX/images/CreateConfiguration/2.png" alt=""/>
-				<li>Click the Create Configuration link.</li>
-				<img src="../../plugins/EC-ESX/images/CreateConfiguration/3.png" alt=""/>
-				<li>Fill-in the form with the following parameters:</li>
-				<img src="../../plugins/EC-ESX/images/CreateConfiguration/4.png" alt=""/>
-				<li>Click the OK button to create the configuration.</li>
-				<img src="../../plugins/EC-ESX/images/CreateConfiguration/5.png" alt=""/>
-			</ol>
-			</p>
-			
-		<h3 class="help">Create virtual machine(s)</h3>
-			<p class="help">
-			<ul>
-				<li><b>Create one virtual machine.</b></li>
-					<ol>
-						<li>Create a new Procedure and assign a name.</li>
-						<li>Add a new Subprocedure Step and select the EC-ESX project and the Create procedure.</li>
-						<li>Fill-in the fields with the following parameters:</li>
-						<img src="../../plugins/EC-ESX/images/Create/1.png" alt=""/>
-						<li>Create and run the procedure.</li>
-						<img src="../../plugins/EC-ESX/images/Create/2.png" alt=""/>
-					</ol>
-				<li><b>Create three virtual machines.</b></li>
-					<ol>
-						<li>Create a new Procedure and assign a name.</li>
-						<li>Add a new Subprocedure Step and select the EC-ESX project and the Create procedure.</li>
-						<li>Fill-in the fields with the following parameters:</li>
-						<img src="../../plugins/EC-ESX/images/Create/3.png" alt=""/>
-						<li>Create and run the procedure.</li>
-						<img src="../../plugins/EC-ESX/images/Create/4.png" alt=""/>
-					</ol>
-					<p class="help">
-					Three new virtual machines were created: TestVM_1, TestVM_2, TestVM_3.
-					</p>
-			</ul>
-			</p>
-			
-		<h3 class="help">Power on virtual machine(s)</h3>
-			<p class="help">
-			<ol>
-				<li>Create a new Procedure and assign a name.</li>
-				<li>Add a new Subprocedure Step and select the EC-ESX project and the PowerOn procedure.</li>
-				<li>Fill-in the fields with the following parameters:</li>
-				<img src="../../plugins/EC-ESX/images/PowerOn/1.png" alt=""/>
-				<li>Create and run the procedure.</li>
-				<img src="../../plugins/EC-ESX/images/PowerOn/2.png" alt=""/>
-			</ol>
-			</p>
-			
-		<h3 class="help">Power off virtual machine(s)</h3>
-			<p class="help">
-			<ol>
-				<li>Create a new Procedure and assign a name.</li>
-				<li>Add a new Subprocedure Step and select the EC-ESX project and the PowerOff procedure.</li>
-				<li>Fill-in the fields with the following parameters:</li>
-				<img src="../../plugins/EC-ESX/images/PowerOff/1.png" alt=""/>
-				<li>Create and run the procedure.</li>
-				<img src="../../plugins/EC-ESX/images/PowerOff/2.png" alt=""/>
-			</ol>
-			</p>
-			
-		<h3 class="help">Shut down virtual machine(s)</h3>
-			<p class="help">
-			<ol>
-				<li>Create a new Procedure and assign a name.</li>
-				<li>Add a new Subprocedure Step and select the EC-ESX project and the Shutdown procedure.</li>
-				<li>Fill-in the fields with the following parameters:</li>
-				<img src="../../plugins/EC-ESX/images/Shutdown/1.png" alt=""/>
-				<li>Create and run the procedure.</li>
-				<img src="../../plugins/EC-ESX/images/Shutdown/2.png" alt=""/>
-			</ol>
-			</p>
-			
-		<h3 class="help">Suspend virtual machine(s)</h3>
-			<p class="help">
-			<ol>
-				<li>Create a new Procedure and assign a name.</li>
-				<li>Add a new Subprocedure Step and select the EC-ESX project and the Suspend procedure.</li>
-				<li>Fill-in the fields with the following parameters:</li>
-				<img src="../../plugins/EC-ESX/images/Suspend/1.png" alt=""/>
-				<li>Create and run the procedure.</li>
-				<img src="../../plugins/EC-ESX/images/Suspend/2.png" alt=""/>
-			</ol>
-			</p>
-			
-		<h3 class="help">Clone virtual machine(s)</h3>
-			<p class="help">
-			<ol>
-				<li>Create a new Procedure and assign a name.</li>
-				<li>Add a new Subprocedure Step and select the EC-ESX project and the Clone procedure.</li>
-				<li>Fill-in the fields with the following parameters:</li>
-				<img src="../../plugins/EC-ESX/images/Clone/1.png" alt=""/>
-				<li>Create and run the procedure.</li>
-			</ol>
-			</p>
-			
-		<h3 class="help">Relocate virtual machine(s)</h3>
-			<p class="help">
-			<ol>
-				<li>Create a new Procedure and assign a name.</li>
-				<li>Add a new Subprocedure Step and select the EC-ESX project and the Relocate procedure.</li>
-				<li>Fill-in the fields with the following parameters:</li>
-				<img src="../../plugins/EC-ESX/images/Relocate/1.png" alt=""/>
-				<li>Create and run the procedure.</li>
-			</ol>
-			</p>
-			
-		<h3 class="help">Snapshot virtual machine(s)</h3>
-			<p class="help">
-			<ol>
-				<li>Create a new Procedure and assign a name.</li>
-				<li>Add a new Subprocedure Step and select the EC-ESX project and the Snapshot procedure.</li>
-				<li>Fill-in the fields with the following parameters:</li>
-				<img src="../../plugins/EC-ESX/images/Snapshot/1.png" alt=""/>
-				<li>Create and run the procedure.</li>
-				<img src="../../plugins/EC-ESX/images/Snapshot/2.png" alt=""/>
-			</ol>
-			</p>
-			
-		<h3 class="help">Revert virtual machine(s)</h3>
-			<p class="help">
-			<ol>
-				<li>Create a new Procedure and assign a name.</li>
-				<li>Add a new Subprocedure Step and select the EC-ESX project and the Revert procedure.</li>
-				<li>Fill-in the fields with the following parameters:</li>
-				<img src="../../plugins/EC-ESX/images/Revert/1.png" alt=""/>
-				<li>Create and run the procedure.</li>
-				<img src="../../plugins/EC-ESX/images/Revert/2.png" alt=""/>
-			</ol>
-			</p>
-			
-		<h3 class="help">Export virtual machine(s)</h3>
-			<p class="help">
-			<ol>
-				<li>Create a new Procedure and assign a name.</li>
-				<li>Add a new Subprocedure Step and select the EC-ESX project and the Export procedure.</li>
-				<li>Fill-in the fields with the following parameters:</li>
-				<img src="../../plugins/EC-ESX/images/Export/1.png" alt=""/>
-				<li>Create and run the procedure.</li>
-				<img src="../../plugins/EC-ESX/images/Export/2.png" alt=""/>
-			</ol>
-			</p>
-			
-		<h3 class="help">Import OVF package(s)</h3>
-			<p class="help">
-			<ol>
-				<li>Create a new Procedure and assign a name.</li>
-				<li>Add a new Subprocedure Step and select the EC-ESX project and the Import procedure.</li>
-				<li>Fill-in the fields with the following parameters:</li>
-				<img src="../../plugins/EC-ESX/images/Import/1.png" alt=""/>
-				<li>Create and run the procedure.</li>
-				<img src="../../plugins/EC-ESX/images/Import/2.png" alt=""/>
-			</ol>
-			</p>
-			
-		<h3 class="help">Register virtual machine</h3>
-			<p class="help">
-			<ol>
-				<li>Create a new Procedure and assign a name.</li>
-				<li>Add a new Subprocedure Step and select the EC-ESX project and the RegisterVM procedure.</li>
-				<li>Fill-in the fields with the following parameters:</li>
-				<img src="../../plugins/EC-ESX/images/RegisterVM/1.png" alt=""/>
-				<li>Create and run the procedure.</li>
-				<img src="../../plugins/EC-ESX/images/RegisterVM/2.png" alt=""/>
-			</ol>
-			</p>
-			
-		<h3 class="help">Get virtual machine(s) configuration</h3>
-			<p class="help">
-			<ol>
-				<li>Create a new Procedure and assign a name.</li>
-				<li>Add a new Subprocedure Step and select the EC-ESX project and the GetVMConfiguration procedure.</li>
-				<li>Fill-in the fields with the following parameters:</li>
-				<img src="../../plugins/EC-ESX/images/GetVMConfiguration/1.png" alt=""/>
-				<li>Create and run the procedure.</li>
-				<img src="../../plugins/EC-ESX/images/GetVMConfiguration/2.png" alt=""/>
-				<li>Get IP address and hostname from the specified location.</li>
-				<img src="../../plugins/EC-ESX/images/GetVMConfiguration/3.png" alt=""/>
-			</ol>
-			</p>
-			
-		<h3 class="help">Create resource from virtual machine(s)</h3>
-			<p class="help">
-			<ol>
-				<li>Create a new Procedure and assign a name.</li>
-				<li>Add a new Subprocedure Step and select the EC-ESX project and the CreateResourceFromVM procedure.</li>
-				<li>Fill-in the fields with the following parameters:</li>
-				<img src="../../plugins/EC-ESX/images/CreateResourceFromVM/1.png" alt=""/>
-				<li>Create and run the procedure.</li>
-				<img src="../../plugins/EC-ESX/images/CreateResourceFromVM/2.png" alt=""/>
-			</ol>
-			</p>
-			<p class="help">
-			The ElectricCommander resource was created:
-			<img src="../../plugins/EC-ESX/images/CreateResourceFromVM/3.png" alt=""/>
-			</p>
-			
-		<h3 class="help">Clean up virtual machine(s)</h3>
-			<p class="help">
-			<ol>
-				<li>Create a new Procedure and assign a name.</li>
-				<li>Add a new Subprocedure Step and select the EC-ESX project and the Cleanup procedure.</li>
-				<li>Fill-in the fields with the following parameters:</li>
-				<img src="../../plugins/EC-ESX/images/Cleanup/1.png" alt=""/>
-				<li>Create and run the procedure.</li>
-				<img src="../../plugins/EC-ESX/images/Cleanup/2.png" alt=""/>
-			</ol>
-			</p>
-	
 	<h2 class="help">Additional Information</h2>
 		<ul>
-			<li><a href="http://www.vmware.com/products/vsphere/esxi-and-esx/index.html">VMWare ESX home page</a></li>
+			<li><a href="http://www.vmware.com/products/vsphere/esxi-and-esx/index.html">VMware ESX home page</a></li>
 			<li><a href="http://communities.vmware.com/community/developer/forums/vsphere_sdk_perl">vSphere SDK for Perl home page</a></li>
 			<li><a href="http://www.vmware.com/support/developer/viperltoolkit/">vSphere SDK for Perl documentation page</a></li>            
-			<li><a href="http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf">OVF Tool Community page</a></li>            
+			<li><a href="http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf">OVF Tool community page</a></li>            
 		</ul>
         
     <h2 class="help">Release Notes</h2>
         <h3 class="help">EC-ESX-1.2.0.0</h3>
         <p class="help">
         <ul>
-        	<li>Modified the Cleanup and Create subprocedures.</li>
-        	<li>Added the ability for all subprocedures to perform operations for multiple virtual machines.</li>
-			<li>Added the timeout parameter to all steps.</li>
-			<li>Added the PowerOn, PowerOff, Shutdown, Suspend, GetVMConfiguration, CreateResourceFromVM, Import, Export, and RegisterVM subprocedures.</li>
+        	<li>Modified the Cleanup and Create subprocedures</li>
+        	<li>Added the ability for all subprocedures to perform operations for multiple virtual machines</li>
+		<li>Added the timeout parameter to all steps</li>
+		<li>Added these subprocedures: PowerOn, PowerOff, Shutdown, Suspend, GetVMConfiguration, CreateResourceFromVM, Import, Export, and RegisterVM </li>
         </ul>
         </p>     
         
         <h3 class="help">EC-ESX-1.1.0.0</h3>
         <p class="help">
-        Added the Snapshot subprodecure.
+        <ul>
+        <li>Added the Snapshot subprodecure</li>
+        </ul>
         </p>    
 
  
