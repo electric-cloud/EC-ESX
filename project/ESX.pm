@@ -15,6 +15,8 @@ package ESX;
 # -------------------------------------------------------------------------
 # Includes
 # -------------------------------------------------------------------------
+use lib $ENV{COMMANDER_PLUGINS}.'/@PLUGIN_NAME@/agent/lib';
+
 use warnings;
 use strict;
 use ElectricCommander;
@@ -34,7 +36,6 @@ use constant {
     NOT_ALIVE         => 0,
 	
 	DEFAULT_DEBUG         => 1,
-	DEFAULT_SDK_PATH      => 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib',
 	DEFAULT_GUESTID       => 'winXPProGuest',
 	DEFAULT_DISKSIZE      => 4096,
 	DEFAULT_MEMORY        => 256,
@@ -43,6 +44,8 @@ use constant {
 	DEFAULT_PING_TIMEOUT  => 300,
 	DEFAULT_SLEEP         => 5,
 	DEFAULT_PROPERTIES_LOCATION => '/myJob/ESX/vms',
+	
+	CURRENT_DIRECTORY => '.', 
 	
 	SOAP_FAULT                   => 'SoapFault',
 	INVALID_STATE                => 'InvalidState',
@@ -132,13 +135,7 @@ sub initialize {
 		$self->opts->{esx_properties_location} = DEFAULT_PROPERTIES_LOCATION;
 	}
 	
-	# Add specified or default location to @INC array
-	if(defined($self->opts->{sdk_installation_path}) && $self->opts->{sdk_installation_path} ne '') {
-		push @INC, $self->opts->{sdk_installation_path};
-	}
-	else {
-		push @INC, DEFAULT_SDK_PATH;
-	}
+	# Include vSphere SDK
 	require VMware::VIRuntime;
 }
 
@@ -1741,22 +1738,17 @@ sub import {
 		return $out;
 	}
 	
-	# Initialize 
-	$self->opts->{Debug} = DEFAULT_DEBUG;
-	$self->opts->{exitcode} = SUCCESS;
-	if(defined($self->opts->{esx_number_of_vms}) && ($self->opts->{esx_number_of_vms} eq "" or $self->opts->{esx_number_of_vms} <= 0)) {
-		$self->opts->{esx_number_of_vms} = DEFAULT_NUMBER_OF_VMS;
-	}
+	$self->initialize();
 	
 	if ($self->opts->{esx_number_of_vms} == DEFAULT_NUMBER_OF_VMS) {
-		$self->opts->{esx_ovf_file} = $self->opts->{esx_source_directory} . '/' . $self->opts->{esx_vmname} . '/' . $self->opts->{esx_vmname} . '.ovf';
+		$self->opts->{esx_ovf_file} = CURRENT_DIRECTORY . '/' . $self->opts->{esx_vmname} . '/' . $self->opts->{esx_vmname} . '.ovf';
 		$self->import_vm();
 	}
 	else {
 		my $vm_number;
 		for ( my $i = 0 ; $i < $self->opts->{esx_number_of_vms} ; $i++ ) {
 			$vm_number = $i + 1;
-			$self->opts->{esx_ovf_file} = $self->opts->{esx_source_directory} . '/' . $self->opts->{esx_vmname} . "_$vm_number/" . $self->opts->{esx_vmname} . "_$vm_number.ovf";
+			$self->opts->{esx_ovf_file} = CURRENT_DIRECTORY . '/' . $self->opts->{esx_vmname} . "_$vm_number/" . $self->opts->{esx_vmname} . "_$vm_number.ovf";
 			$self->import_vm();
 		}
 	}
@@ -1808,12 +1800,7 @@ sub export {
 		return $out;
 	}
 	
-	# Initialize 
-	$self->opts->{Debug} = DEFAULT_DEBUG;
-	$self->opts->{exitcode} = SUCCESS;
-	if(defined($self->opts->{esx_number_of_vms}) && ($self->opts->{esx_number_of_vms} eq "" or $self->opts->{esx_number_of_vms} <= 0)) {
-		$self->opts->{esx_number_of_vms} = DEFAULT_NUMBER_OF_VMS;
-	}
+	$self->initialize();
 	
 	if ($self->opts->{esx_number_of_vms} == DEFAULT_NUMBER_OF_VMS) {
 		$self->opts->{esx_source} = $self->opts->{esx_vmname} . '/' . $self->opts->{esx_vmname} . '.vmx';
@@ -1841,10 +1828,10 @@ sub export {
 ################################
 sub export_vm {
 	my ($self) = @_;
-		
+
 	# Call ovftool to export virtual machine
 	$self->debugMsg(1, 'Exporting virtual machine...');
-	my $command = 'ovftool "vi://'.$self->opts->{esx_user}.':'.$self->opts->{esx_pass}.'@'.$self->opts->{esx_host}.'/'.$self->opts->{esx_datacenter}.'?ds=['.$self->opts->{esx_datastore}.'] '.$self->opts->{esx_source}.'" "'.$self->opts->{esx_target_directory}.'"';
+	my $command = 'ovftool "vi://'.$self->opts->{esx_user}.':'.$self->opts->{esx_pass}.'@'.$self->opts->{esx_host}.'/'.$self->opts->{esx_datacenter}.'?ds=['.$self->opts->{esx_datastore}.'] '.$self->opts->{esx_source}.'" "'.CURRENT_DIRECTORY.'"';
 	system($command);
 }
 

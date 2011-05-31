@@ -68,6 +68,12 @@
       <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
       <propertySheet>
         <property>
+          <propertyName>ec_visibility</propertyName>
+          <description></description>
+          <expandable>1</expandable>
+          <value>hidden</value>
+        </property>
+        <property>
           <propertyName>ec_customEditorData</propertyName>
           <propertySheet>
             <property>
@@ -212,6 +218,12 @@
       <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
       <propertySheet>
         <property>
+          <propertyName>ec_visibility</propertyName>
+          <description></description>
+          <expandable>1</expandable>
+          <value>hidden</value>
+        </property>
+        <property>
           <propertyName>ec_customEditorData</propertyName>
           <propertySheet>
             <property>
@@ -291,16 +303,6 @@
               <propertySheet>
                 <property>
                   <propertyName>connection_config</propertyName>
-                  <propertySheet>
-                    <property>
-                      <propertyName>formType</propertyName>
-                      <expandable>1</expandable>
-                      <value>standard</value>
-                    </property>
-                  </propertySheet>
-                </property>
-				<property>
-                  <propertyName>sdk_installation_path</propertyName>
                   <propertySheet>
                     <property>
                       <propertyName>formType</propertyName>
@@ -479,13 +481,6 @@
         <defaultValue></defaultValue>
         <description>The name of the configuration which holds the connection information for ESX server.</description>
         <required>1</required>
-        <type>entry</type>
-      </formalParameter>
-	  <formalParameter>
-        <formalParameterName>sdk_installation_path</formalParameterName>
-        <defaultValue></defaultValue>
-        <description>Absolute path to sdk installation lib. Default: 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</description>
-        <required>0</required>
         <type>entry</type>
       </formalParameter>
       <formalParameter>
@@ -675,16 +670,6 @@
                   </propertySheet>
                 </property>
 				<property>
-                  <propertyName>sdk_installation_path</propertyName>
-                  <propertySheet>
-                    <property>
-                      <propertyName>formType</propertyName>
-                      <expandable>1</expandable>
-                      <value>standard</value>
-                    </property>
-                  </propertySheet>
-                </property>
-				<property>
                   <propertyName>esx_vmname</propertyName>
                   <propertySheet>
                     <property>
@@ -754,13 +739,6 @@
         <defaultValue></defaultValue>
         <description>The name of the configuration which holds the connection information for ESX server.</description>
         <required>1</required>
-        <type>entry</type>
-      </formalParameter>
-	  <formalParameter>
-        <formalParameterName>sdk_installation_path</formalParameterName>
-        <defaultValue></defaultValue>
-        <description>Absolute path to sdk installation lib. Default: 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</description>
-        <required>0</required>
         <type>entry</type>
       </formalParameter>
       <formalParameter>
@@ -901,16 +879,6 @@
                   </propertySheet>
                 </property>
 				<property>
-                  <propertyName>sdk_installation_path</propertyName>
-                  <propertySheet>
-                    <property>
-                      <propertyName>formType</propertyName>
-                      <expandable>1</expandable>
-                      <value>standard</value>
-                    </property>
-                  </propertySheet>
-                </property>
-				<property>
                   <propertyName>esx_vmname</propertyName>
                   <propertySheet>
                     <property>
@@ -970,13 +938,6 @@
         <defaultValue></defaultValue>
         <description>The name of the configuration which holds the connection information for ESX server.</description>
         <required>1</required>
-        <type>entry</type>
-      </formalParameter>
-	  <formalParameter>
-        <formalParameterName>sdk_installation_path</formalParameterName>
-        <defaultValue></defaultValue>
-        <description>Absolute path to sdk installation lib. Default: 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</description>
-        <required>0</required>
         <type>entry</type>
       </formalParameter>
       <formalParameter>
@@ -1110,16 +1071,6 @@
                   </propertySheet>
                 </property>
 				<property>
-                  <propertyName>sdk_installation_path</propertyName>
-                  <propertySheet>
-                    <property>
-                      <propertyName>formType</propertyName>
-                      <expandable>1</expandable>
-                      <value>standard</value>
-                    </property>
-                  </propertySheet>
-                </property>
-				<property>
                   <propertyName>esx_vmname</propertyName>
                   <propertySheet>
                     <property>
@@ -1184,13 +1135,6 @@
         <defaultValue></defaultValue>
         <description>The name of the configuration which holds the connection information for ESX server.</description>
         <required>1</required>
-        <type>entry</type>
-      </formalParameter>
-	  <formalParameter>
-        <formalParameterName>sdk_installation_path</formalParameterName>
-        <defaultValue></defaultValue>
-        <description>Absolute path to sdk installation lib. Default: 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</description>
-        <required>0</required>
         <type>entry</type>
       </formalParameter>
 	  <formalParameter>
@@ -1317,16 +1261,6 @@
                   </propertySheet>
                 </property>
 				<property>
-                  <propertyName>sdk_installation_path</propertyName>
-                  <propertySheet>
-                    <property>
-                      <propertyName>formType</propertyName>
-                      <expandable>1</expandable>
-                      <value>standard</value>
-                    </property>
-                  </propertySheet>
-                </property>
-				<property>
                   <propertyName>esx_vmname</propertyName>
                   <propertySheet>
                     <property>
@@ -1401,13 +1335,6 @@
         <defaultValue></defaultValue>
         <description>The name of the configuration which holds the connection information for ESX server.</description>
         <required>1</required>
-        <type>entry</type>
-      </formalParameter>
-	  <formalParameter>
-        <formalParameterName>sdk_installation_path</formalParameterName>
-        <defaultValue></defaultValue>
-        <description>Absolute path to sdk installation lib. Default: 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</description>
-        <required>0</required>
         <type>entry</type>
       </formalParameter>
 	  <formalParameter>
@@ -1541,16 +1468,6 @@
                   </propertySheet>
                 </property>
 				<property>
-                  <propertyName>sdk_installation_path</propertyName>
-                  <propertySheet>
-                    <property>
-                      <propertyName>formType</propertyName>
-                      <expandable>1</expandable>
-                      <value>standard</value>
-                    </property>
-                  </propertySheet>
-                </property>
-				<property>
                   <propertyName>esx_vmname</propertyName>
                   <propertySheet>
                     <property>
@@ -1600,13 +1517,6 @@
         <defaultValue></defaultValue>
         <description>The name of the configuration which holds the connection information for ESX server.</description>
         <required>1</required>
-        <type>entry</type>
-      </formalParameter>
-	  <formalParameter>
-        <formalParameterName>sdk_installation_path</formalParameterName>
-        <defaultValue></defaultValue>
-        <description>Absolute path to sdk installation lib. Default: 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</description>
-        <required>0</required>
         <type>entry</type>
       </formalParameter>
 	  <formalParameter>
@@ -1733,16 +1643,6 @@
                   </propertySheet>
                 </property>
 				<property>
-                  <propertyName>sdk_installation_path</propertyName>
-                  <propertySheet>
-                    <property>
-                      <propertyName>formType</propertyName>
-                      <expandable>1</expandable>
-                      <value>standard</value>
-                    </property>
-                  </propertySheet>
-                </property>
-				<property>
                   <propertyName>esx_vmname</propertyName>
                   <propertySheet>
                     <property>
@@ -1837,13 +1737,6 @@
         <defaultValue></defaultValue>
         <description>The name of the configuration which holds the connection information for ESX server.</description>
         <required>1</required>
-        <type>entry</type>
-      </formalParameter>
-	  <formalParameter>
-        <formalParameterName>sdk_installation_path</formalParameterName>
-        <defaultValue></defaultValue>
-        <description>Absolute path to sdk installation lib. Default: 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</description>
-        <required>0</required>
         <type>entry</type>
       </formalParameter>
 	  <formalParameter>
@@ -1991,16 +1884,6 @@
                   </propertySheet>
                 </property>
 				<property>
-                  <propertyName>sdk_installation_path</propertyName>
-                  <propertySheet>
-                    <property>
-                      <propertyName>formType</propertyName>
-                      <expandable>1</expandable>
-                      <value>standard</value>
-                    </property>
-                  </propertySheet>
-                </property>
-				<property>
                   <propertyName>esx_vmname</propertyName>
                   <propertySheet>
                     <property>
@@ -2040,13 +1923,6 @@
         <defaultValue></defaultValue>
         <description>The name of the configuration which holds the connection information for ESX server.</description>
         <required>1</required>
-        <type>entry</type>
-      </formalParameter>
-	  <formalParameter>
-        <formalParameterName>sdk_installation_path</formalParameterName>
-        <defaultValue></defaultValue>
-        <description>Absolute path to sdk installation lib. Default: 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</description>
-        <required>0</required>
         <type>entry</type>
       </formalParameter>
 	  <formalParameter>
@@ -2166,16 +2042,6 @@
                   </propertySheet>
                 </property>
 				<property>
-                  <propertyName>sdk_installation_path</propertyName>
-                  <propertySheet>
-                    <property>
-                      <propertyName>formType</propertyName>
-                      <expandable>1</expandable>
-                      <value>standard</value>
-                    </property>
-                  </propertySheet>
-                </property>
-				<property>
                   <propertyName>esx_vmname</propertyName>
                   <propertySheet>
                     <property>
@@ -2215,13 +2081,6 @@
         <defaultValue></defaultValue>
         <description>The name of the configuration which holds the connection information for ESX server.</description>
         <required>1</required>
-        <type>entry</type>
-      </formalParameter>
-	  <formalParameter>
-        <formalParameterName>sdk_installation_path</formalParameterName>
-        <defaultValue></defaultValue>
-        <description>Absolute path to sdk installation lib. Default: 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</description>
-        <required>0</required>
         <type>entry</type>
       </formalParameter>
 	  <formalParameter>
@@ -2341,16 +2200,6 @@
                   </propertySheet>
                 </property>
 				<property>
-                  <propertyName>sdk_installation_path</propertyName>
-                  <propertySheet>
-                    <property>
-                      <propertyName>formType</propertyName>
-                      <expandable>1</expandable>
-                      <value>standard</value>
-                    </property>
-                  </propertySheet>
-                </property>
-				<property>
                   <propertyName>esx_vmname</propertyName>
                   <propertySheet>
                     <property>
@@ -2390,13 +2239,6 @@
         <defaultValue></defaultValue>
         <description>The name of the configuration which holds the connection information for ESX server.</description>
         <required>1</required>
-        <type>entry</type>
-      </formalParameter>
-	  <formalParameter>
-        <formalParameterName>sdk_installation_path</formalParameterName>
-        <defaultValue></defaultValue>
-        <description>Absolute path to sdk installation lib. Default: 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</description>
-        <required>0</required>
         <type>entry</type>
       </formalParameter>
 	  <formalParameter>
@@ -2516,16 +2358,6 @@
                   </propertySheet>
                 </property>
 				<property>
-                  <propertyName>sdk_installation_path</propertyName>
-                  <propertySheet>
-                    <property>
-                      <propertyName>formType</propertyName>
-                      <expandable>1</expandable>
-                      <value>standard</value>
-                    </property>
-                  </propertySheet>
-                </property>
-				<property>
                   <propertyName>esx_vmname</propertyName>
                   <propertySheet>
                     <property>
@@ -2620,13 +2452,6 @@
         <defaultValue></defaultValue>
         <description>The name of the configuration which holds the connection information for ESX server.</description>
         <required>1</required>
-        <type>entry</type>
-      </formalParameter>
-	  <formalParameter>
-        <formalParameterName>sdk_installation_path</formalParameterName>
-        <defaultValue></defaultValue>
-        <description>Absolute path to sdk installation lib. Default: 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</description>
-        <required>0</required>
         <type>entry</type>
       </formalParameter>
 	  <formalParameter>
@@ -2774,16 +2599,6 @@
                   </propertySheet>
                 </property>
 				<property>
-                  <propertyName>sdk_installation_path</propertyName>
-                  <propertySheet>
-                    <property>
-                      <propertyName>formType</propertyName>
-                      <expandable>1</expandable>
-                      <value>standard</value>
-                    </property>
-                  </propertySheet>
-                </property>
-				<property>
                   <propertyName>esx_vmname</propertyName>
                   <propertySheet>
                     <property>
@@ -2833,13 +2648,6 @@
         <defaultValue></defaultValue>
         <description>The name of the configuration which holds the connection information for ESX server.</description>
         <required>1</required>
-        <type>entry</type>
-      </formalParameter>
-	  <formalParameter>
-        <formalParameterName>sdk_installation_path</formalParameterName>
-        <defaultValue></defaultValue>
-        <description>Absolute path to sdk installation lib. Default: 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</description>
-        <required>0</required>
         <type>entry</type>
       </formalParameter>
 	  <formalParameter>
@@ -3132,7 +2940,7 @@
         <shell>ec-perl</shell>
         <timeLimit>$[/myCall/esx_timelimit]</timeLimit>
         <timeLimitUnits>minutes</timeLimitUnits>
-        <workingDirectory></workingDirectory>
+        <workingDirectory>$[esx_source_directory]</workingDirectory>
         <workspaceName></workspaceName>
         <procedureName>Import</procedureName>
         <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -3358,7 +3166,7 @@
         <shell>ec-perl</shell>
         <timeLimit>$[/myCall/esx_timelimit]</timeLimit>
         <timeLimitUnits>minutes</timeLimitUnits>
-        <workingDirectory></workingDirectory>
+        <workingDirectory>$[esx_target_directory]</workingDirectory>
         <workspaceName></workspaceName>
         <procedureName>Export</procedureName>
         <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -3392,16 +3200,6 @@
               <propertySheet>
                 <property>
                   <propertyName>connection_config</propertyName>
-                  <propertySheet>
-                    <property>
-                      <propertyName>formType</propertyName>
-                      <expandable>1</expandable>
-                      <value>standard</value>
-                    </property>
-                  </propertySheet>
-                </property>
-				<property>
-                  <propertyName>sdk_installation_path</propertyName>
                   <propertySheet>
                     <property>
                       <propertyName>formType</propertyName>
@@ -3480,13 +3278,6 @@
         <defaultValue></defaultValue>
         <description>The name of the configuration which holds the connection information for ESX server.</description>
         <required>1</required>
-        <type>entry</type>
-      </formalParameter>
-	  <formalParameter>
-        <formalParameterName>sdk_installation_path</formalParameterName>
-        <defaultValue></defaultValue>
-        <description>Absolute path to sdk installation lib. Default: 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</description>
-        <required>0</required>
         <type>entry</type>
       </formalParameter>
       <formalParameter>

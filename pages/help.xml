@@ -8,16 +8,16 @@
 
     <h2 class="help">Overview</h2>
 		<p class="help">
-        The EC-ESX plugin allows users to manipulate virtual machines on ESX servers. This plugin provides the following procedures: Cleanup, Clone, Create, CreateResourceFromVM, Export, GetVMConfiguration, Import, PowerOn, PowerOff, RegisterVM, Relocate, Revert, Shutdown, Snapshot, and Suspend. This plugin uses <a href="http://communities.vmware.com/community/developer/forums/vsphere_sdk_perl">vSphere SDK for Perl</a> to accomplish these tasks, which means that you must install the SDK.
+        The EC-ESX plugin allows users to manipulate virtual machines on ESX servers. This plugin provides the following procedures: Cleanup, Clone, Create, CreateResourceFromVM, Export, GetVMConfiguration, Import, PowerOn, PowerOff, RegisterVM, Relocate, Revert, Shutdown, Snapshot, and Suspend.
 		</p>
-	<p class="help">
-	<b>Note:</b> This plugin requires vSphere SDK for Perl. The SDK provides an easy-to-use Perl scripting interface to the vSphere API. You can download the SDK from the <a href="http://communities.vmware.com/community/developer/forums/vsphere_sdk_perl">vSphere SDK for Perl home page</a>. You must have an account to download the SDK. If you do not have an account, you can create one for free.
-	</p>
 	
 	<p class="help">
-	       <b>Supported ESX version</b><br/>
-	       This plugin was developed and tested with ESX version 4.1.
-       </p>
+		<b>Supported ESX version</b><br/>
+	    This plugin was developed and tested with ESX version 4.1.
+    </p>
+	<p class="help">
+		<b>Note:</b> VMware limited remote access to read-only for the <b>free</b> version of ESXi beginning with <b>ESXi 3.5 Update 4</b>. Because this plugin uses the vSphere SDK for Perl, which requires remote access, if this plugin is used against any of the restricted versions, you will receive a "RestrictedVersionFault" error. If you use a previous version of ESXi (earlier than version 3.5 U4) or a licensed version of ESXi, this plugin will work successfully.
+	</p>
 
     <h2 class="help">Configuration</h2>
 	<p class="help">
@@ -49,7 +49,6 @@
 			<li><b>esx_number_of_vms</b> - Indicate the number of virtual machines to clean up. The default is 1. If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
 			
 			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
-			<li><b>sdk_installation_path</b> - Provide the absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
 		</p>		
 		<p class="help">
@@ -64,7 +63,6 @@
 			<li><b>esx_number_of_clones</b> - Indicate the number of clones to create. The default is 1. If the value is greater than 1, a suffix is added to cloned VM names. The suffix consists of an underscore and the clone number ('_#').</li>
 			
 			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
-			<li><b>sdk_installation_path</b> - Provide the absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
 		</p>		
 		<p class="help">
@@ -85,7 +83,6 @@
 			<li><b>esx_vm_poweron</b> - If checked, this powers on the created virtual machine(s).</li>
 			<li><b>esx_number_of_vms</b> - Indicate the number of virtual machines to create. The default is 1. If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
 			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
-			<li><b>sdk_installation_path</b> - Provide the absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
 		</p>
 		
@@ -101,7 +98,6 @@
 			<li><b>esx_workspace</b> - Indicate the ElectricCommander workspace the created resources should use.</li>
 			<li><b>esx_number_of_vms</b> - Indicate the number of virtual machines from which to get information. The default is 1. If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
 			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
-			<li><b>sdk_installation_path</b> - Provide the absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
 		</p>
 		
@@ -129,7 +125,6 @@
 			<li><b>esx_properties_location</b> - Indicate the ElectricCommander location to store properties containing information about the virtual machines. The default is '/myJob/ESX/vms'.</li>
 			<li><b>esx_number_of_vms</b> - Indicate the number of virtual machines from which to get information. The default is 1. If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
 			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
-			<li><b>sdk_installation_path</b> - Provide the absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
 		</p>
 		
@@ -159,7 +154,6 @@
 			<li><b>esx_workspace</b> - Indicate the ElectricCommander workspace the created resources should use.</li>
 			<li><b>esx_number_of_vms</b> - Indicate the number of virtual machines to power on. The default is 1. If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
 			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
-			<li><b>sdk_installation_path</b> - Provide the absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
 		</p>
 			
@@ -174,7 +168,6 @@
 			<li><b>esx_vmxpath</b> - Provide the datastore path to the virtual machine configuration file (vmx).</li>
 			<li><b>esx_vmname</b> - Assign a name to the virtual machine.</li>
 			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
-			<li><b>sdk_installation_path</b> - Provide the absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
 		</p>
 			
@@ -188,7 +181,6 @@
 			<li><b>esx_vmhost_destination</b> - Indicate the garget host for the virtual machine.</li>
 			<li><b>esx_number_of_vms</b> - Indicate the number of virtual machines to relocate. The default is 1. If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
 			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
-			<li><b>sdk_installation_path</b> - Provide the absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
 		</p>      
 
@@ -202,7 +194,6 @@
 			<li><b>esx_poweron_vm</b> - If checked, this powers on the virtual machine(s) after being reverted.</li>
 			<li><b>esx_number_of_vms</b> - Indicate the number of virtual machines to revert. The default is 1. If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
 			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
-			<li><b>sdk_installation_path</b> - Provide the absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
 		</p>
 		
@@ -217,7 +208,6 @@
 			
 			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
 			
-			<li><b>sdk_installation_path</b> - Provide the absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
 		</p>
                 
@@ -229,7 +219,6 @@
 			<li><b>esx_vmname</b> - Provide the name of the virtual machine to power off/shut down/suspend.</li>
 			<li><b>esx_number_of_vms</b> - Indicate the number of virtual machines to power off/shut down/suspend. The default is 1. If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</li>
 			<li><b>esx_timeout</b> - Specify the step execution timeout length in minutes. Leave blank for no timeout.</li>
-			<li><b>sdk_installation_path</b> - Provide the absolute path to the SDK installation lib. Default value is 'C:\Program Files\VMware\VMware vSphere CLI\Perl\lib'.</li>
 		</ul>
 		</p>
 		
@@ -274,14 +263,29 @@
 		
 	<h2 class="help">Additional Information</h2>
 		<ul>
-			<li><a href="http://www.vmware.com/products/vsphere/esxi-and-esx/index.html">VMware ESX home page</a></li>
-			<li><a href="http://communities.vmware.com/community/developer/forums/vsphere_sdk_perl">vSphere SDK for Perl home page</a></li>
-			<li><a href="http://www.vmware.com/support/developer/viperltoolkit/">vSphere SDK for Perl documentation page</a></li>            
+			<li><a href="http://www.vmware.com/products/vsphere/esxi-and-esx/index.html">VMware ESX home page</a></li>         
 			<li><a href="http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf">OVF Tool community page</a></li>            
 		</ul>
         
     <h2 class="help">Release Notes</h2>
-        <h3 class="help">EC-ESX-1.2.0.0</h3>
+    
+        <h3 class="help">EC-ESX-1.2.2.0</h3>
+        <p class="help">
+        <ul>
+            <li>Included vSphere SDK for Perl in the plugin, removed sdk_installation_path parameter from all procedures</li>
+            <li>Removed CreateConfiguration and DeleteConfiguration procedures from the wizard/procedure selection</li>
+        	<li>Updated Help page</li>
+        </ul>
+        </p> 
+    
+        <h3 class="help">EC-ESX-1.2.1.0</h3>
+        <p class="help">
+        <ul>
+        	<li>Updated Help page</li>
+        </ul>
+        </p> 
+		
+		<h3 class="help">EC-ESX-1.2.0.0</h3>
         <p class="help">
         <ul>
         	<li>Modified the Cleanup and Create subprocedures</li>

@@ -6,11 +6,10 @@ use strict;
 
 my $opts;
 
-$opts->{sdk_installation_path} = '$[sdk_installation_path]';
-$opts->{connection_config} = "$[connection_config]";
-$opts->{esx_vmname} = "$[esx_vmname]";
-$opts->{esx_number_of_vms} = "$[esx_number_of_vms]";
-$opts->{esx_properties_location} = "$[esx_properties_location]";
+$opts->{connection_config} = q{$[connection_config]};
+$opts->{esx_vmname} = q{$[esx_vmname]};
+$opts->{esx_number_of_vms} = q{$[esx_number_of_vms]};
+$opts->{esx_properties_location} = q{$[esx_properties_location]};
 
 $[/myProject/procedure_helpers/preamble]
 
