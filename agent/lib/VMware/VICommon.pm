@@ -2176,7 +2176,7 @@ sub request {
    # http header
    my $http_header = HTTP::Headers->new(
                         Content_Type => 'text/xml',
-                        SOAPAction => '"urn:vim25/4.1"',
+                        SOAPAction => '"urn:vim25/5.0"',
                         Content_Length => byte_length($request_envelope));
    # request
    my $request = HTTP::Request->new('POST',

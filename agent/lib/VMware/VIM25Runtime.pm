@@ -316,13 +316,14 @@ sub get_property_list {
 package HostSystem;
 our @ISA = qw(ManagedEntity HostSystemOperations);
 
-VIMRuntime::make_get_set('HostSystem', 'runtime', 'summary', 'hardware', 'capability', 'configManager', 'config', 'vm', 'datastore', 'network', 'datastoreBrowser', 'systemResources');
+VIMRuntime::make_get_set('HostSystem', 'runtime', 'summary', 'hardware', 'capability', 'licensableResource', 'configManager', 'config', 'vm', 'datastore', 'network', 'datastoreBrowser', 'systemResources');
 
 our @property_list = (
    ['runtime', 'HostRuntimeInfo', undef],
    ['summary', 'HostListSummary', undef],
    ['hardware', 'HostHardwareInfo', undef],
    ['capability', 'HostCapability', undef],
+   ['licensableResource', 'HostLicensableResourceInfo', undef],
    ['configManager', 'HostConfigManager', undef],
    ['config', 'HostConfigInfo', undef],
    ['vm', 'VirtualMachine', 'true'],
@@ -618,6 +619,25 @@ our @property_list = (
    ['messageLocaleList', undef, 'true'],
    ['supportedLocaleList', undef, 'true'],
    ['defaultLocale', undef, undef],
+);
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);
+}
+
+1;
+##################################################################################
+
+##################################################################################
+package StoragePod;
+our @ISA = qw(Folder StoragePodOperations);
+
+VIMRuntime::make_get_set('StoragePod', 'summary', 'podStorageDrsEntry');
+
+our @property_list = (
+   ['summary', 'StoragePodSummary', undef],
+   ['podStorageDrsEntry', 'PodStorageDrsEntry', undef],
 );
 sub get_property_list {
    my $class = shift;
@@ -1029,6 +1049,24 @@ sub get_property_list {
 ##################################################################################
 
 ##################################################################################
+package HostCacheConfigurationManager;
+our @ISA = qw(ViewBase HostCacheConfigurationManagerOperations);
+
+VIMRuntime::make_get_set('HostCacheConfigurationManager', 'cacheConfigurationInfo');
+
+our @property_list = (
+   ['cacheConfigurationInfo', 'HostCacheConfigurationInfo', 'true'],
+);
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);
+}
+
+1;
+##################################################################################
+
+##################################################################################
 package HostCpuSchedulerSystem;
 our @ISA = qw(ExtensibleManagedObject HostCpuSchedulerSystemOperations);
 
@@ -1138,6 +1176,24 @@ sub get_property_list {
 ##################################################################################
 
 ##################################################################################
+package HostEsxAgentHostManager;
+our @ISA = qw(ViewBase HostEsxAgentHostManagerOperations);
+
+VIMRuntime::make_get_set('HostEsxAgentHostManager', 'configInfo');
+
+our @property_list = (
+   ['configInfo', 'HostEsxAgentHostManagerConfigInfo', undef],
+);
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);
+}
+
+1;
+##################################################################################
+
+##################################################################################
 package HostFirewallSystem;
 our @ISA = qw(ExtensibleManagedObject HostFirewallSystemOperations);
 
@@ -1180,6 +1236,40 @@ VIMRuntime::make_get_set('HostHealthStatusSystem', 'runtime');
 
 our @property_list = (
    ['runtime', 'HealthSystemRuntime', undef],
+);
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);
+}
+
+1;
+##################################################################################
+
+##################################################################################
+package HostImageConfigManager;
+our @ISA = qw(ViewBase HostImageConfigManagerOperations);
+
+VIMRuntime::make_get_set('HostImageConfigManager');
+
+our @property_list = (
+);
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);
+}
+
+1;
+##################################################################################
+
+##################################################################################
+package IscsiManager;
+our @ISA = qw(ViewBase IscsiManagerOperations);
+
+VIMRuntime::make_get_set('IscsiManager');
+
+our @property_list = (
 );
 sub get_property_list {
    my $class = shift;
@@ -1778,6 +1868,77 @@ sub get_property_list {
 ##################################################################################
 
 ##################################################################################
+package GuestAuthManager;
+our @ISA = qw(ViewBase GuestAuthManagerOperations);
+
+VIMRuntime::make_get_set('GuestAuthManager');
+
+our @property_list = (
+);
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);
+}
+
+1;
+##################################################################################
+
+##################################################################################
+package GuestFileManager;
+our @ISA = qw(ViewBase GuestFileManagerOperations);
+
+VIMRuntime::make_get_set('GuestFileManager');
+
+our @property_list = (
+);
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);
+}
+
+1;
+##################################################################################
+
+##################################################################################
+package GuestOperationsManager;
+our @ISA = qw(ViewBase GuestOperationsManagerOperations);
+
+VIMRuntime::make_get_set('GuestOperationsManager', 'authManager', 'fileManager', 'processManager');
+
+our @property_list = (
+   ['authManager', 'GuestAuthManager', undef],
+   ['fileManager', 'GuestFileManager', undef],
+   ['processManager', 'GuestProcessManager', undef],
+);
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);
+}
+
+1;
+##################################################################################
+
+##################################################################################
+package GuestProcessManager;
+our @ISA = qw(ViewBase GuestProcessManagerOperations);
+
+VIMRuntime::make_get_set('GuestProcessManager');
+
+our @property_list = (
+);
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);
+}
+
+1;
+##################################################################################
+
+##################################################################################
 package PropertyCollector;
 our @ISA = qw(ViewBase PropertyCollectorOperations);
 
@@ -1876,6 +2037,12 @@ sub RemoveEntityPermission {
    return $response
 }
 
+sub HasPrivilegeOnEntity {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('HasPrivilegeOnEntity', %args));
+   return $response
+}
+
 
 1;
 ##################################################################################
@@ -1954,6 +2121,12 @@ sub RefreshRecommendation {
 sub RetrieveDasAdvancedRuntimeInfo {
    my ($self, %args) = @_;
    my $response = Util::check_fault($self->invoke('RetrieveDasAdvancedRuntimeInfo', %args));
+   return $response
+}
+
+sub ClusterEnterMaintenanceMode {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('ClusterEnterMaintenanceMode', %args));
    return $response
 }
 
@@ -2137,6 +2310,23 @@ sub DestroyDatastore {
    return $response
 }
 
+sub DatastoreEnterMaintenanceMode {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('DatastoreEnterMaintenanceMode', %args));
+   return $response
+}
+
+sub DatastoreExitMaintenanceMode_Task {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('DatastoreExitMaintenanceMode_Task', %args));
+   return $response
+}
+
+sub DatastoreExitMaintenanceMode {
+   my ($self, %args) = @_;
+   return $self->waitForTask($self->DatastoreExitMaintenanceMode_Task(%args));
+}
+
 
 1;
 ##################################################################################
@@ -2286,6 +2476,18 @@ sub UpdateNetworkResourcePool {
    return $response
 }
 
+sub AddNetworkResourcePool {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('AddNetworkResourcePool', %args));
+   return $response
+}
+
+sub RemoveNetworkResourcePool {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('RemoveNetworkResourcePool', %args));
+   return $response
+}
+
 sub EnableNetworkResourceManagement {
    my ($self, %args) = @_;
    my $response = Util::check_fault($self->invoke('EnableNetworkResourceManagement', %args));
@@ -2379,6 +2581,12 @@ sub SetPublicKey {
 sub SetExtensionCertificate {
    my ($self, %args) = @_;
    my $response = Util::check_fault($self->invoke('SetExtensionCertificate', %args));
+   return $response
+}
+
+sub QueryManagedBy {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('QueryManagedBy', %args));
    return $response
 }
 
@@ -2528,6 +2736,12 @@ sub CreateDVS_Task {
 sub CreateDVS {
    my ($self, %args) = @_;
    return $self->waitForTask($self->CreateDVS_Task(%args));
+}
+
+sub CreateStoragePod {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('CreateStoragePod', %args));
+   return $response
 }
 
 
@@ -3044,6 +3258,18 @@ sub UpdatePerfInterval {
    return $response
 }
 
+sub UpdateCounterLevelMapping {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('UpdateCounterLevelMapping', %args));
+   return $response
+}
+
+sub ResetCounterLevelMapping {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('ResetCounterLevelMapping', %args));
+   return $response
+}
+
 
 1;
 ##################################################################################
@@ -3271,6 +3497,12 @@ sub AcquireLocalTicket {
    return $response
 }
 
+sub AcquireGenericServiceTicket {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('AcquireGenericServiceTicket', %args));
+   return $response
+}
+
 sub TerminateSession {
    my ($self, %args) = @_;
    my $response = Util::check_fault($self->invoke('TerminateSession', %args));
@@ -3324,6 +3556,13 @@ sub CloneSession {
 ##################################################################################
 
 ##################################################################################
+package StoragePodOperations;
+our @ISA = qw(FolderOperations);
+
+1;
+##################################################################################
+
+##################################################################################
 package StorageResourceManagerOperations;
 sub ConfigureDatastoreIORM_Task {
    my ($self, %args) = @_;
@@ -3339,6 +3578,57 @@ sub ConfigureDatastoreIORM {
 sub QueryIORMConfigOption {
    my ($self, %args) = @_;
    my $response = Util::check_fault($self->invoke('QueryIORMConfigOption', %args));
+   return $response
+}
+
+sub ApplyStorageDrsRecommendationToPod_Task {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('ApplyStorageDrsRecommendationToPod_Task', %args));
+   return $response
+}
+
+sub ApplyStorageDrsRecommendationToPod {
+   my ($self, %args) = @_;
+   return $self->waitForTask($self->ApplyStorageDrsRecommendationToPod_Task(%args));
+}
+
+sub ApplyStorageDrsRecommendation_Task {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('ApplyStorageDrsRecommendation_Task', %args));
+   return $response
+}
+
+sub ApplyStorageDrsRecommendation {
+   my ($self, %args) = @_;
+   return $self->waitForTask($self->ApplyStorageDrsRecommendation_Task(%args));
+}
+
+sub CancelStorageDrsRecommendation {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('CancelStorageDrsRecommendation', %args));
+   return $response
+}
+
+sub RefreshStorageDrsRecommendation {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('RefreshStorageDrsRecommendation', %args));
+   return $response
+}
+
+sub ConfigureStorageDrsForPod_Task {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('ConfigureStorageDrsForPod_Task', %args));
+   return $response
+}
+
+sub ConfigureStorageDrsForPod {
+   my ($self, %args) = @_;
+   return $self->waitForTask($self->ConfigureStorageDrsForPod_Task(%args));
+}
+
+sub RecommendDatastores {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('RecommendDatastores', %args));
    return $response
 }
 
@@ -3686,6 +3976,28 @@ sub RemoveAllSnapshots_Task {
 sub RemoveAllSnapshots {
    my ($self, %args) = @_;
    return $self->waitForTask($self->RemoveAllSnapshots_Task(%args));
+}
+
+sub ConsolidateVMDisks_Task {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('ConsolidateVMDisks_Task', %args));
+   return $response
+}
+
+sub ConsolidateVMDisks {
+   my ($self, %args) = @_;
+   return $self->waitForTask($self->ConsolidateVMDisks_Task(%args));
+}
+
+sub EstimateStorageForConsolidateSnapshots_Task {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('EstimateStorageForConsolidateSnapshots_Task', %args));
+   return $response
+}
+
+sub EstimateStorageForConsolidateSnapshots {
+   my ($self, %args) = @_;
+   return $self->waitForTask($self->EstimateStorageForConsolidateSnapshots_Task(%args));
 }
 
 sub ReconfigVM_Task {
@@ -4217,6 +4529,17 @@ sub QueryDvsCheckCompatibility {
    return $response
 }
 
+sub RectifyDvsOnHost_Task {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('RectifyDvsOnHost_Task', %args));
+   return $response
+}
+
+sub RectifyDvsOnHost {
+   my ($self, %args) = @_;
+   return $self->waitForTask($self->RectifyDvsOnHost_Task(%args));
+}
+
 
 1;
 ##################################################################################
@@ -4297,6 +4620,28 @@ sub JoinDomain {
    return $self->waitForTask($self->JoinDomain_Task(%args));
 }
 
+sub JoinDomainWithCAM_Task {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('JoinDomainWithCAM_Task', %args));
+   return $response
+}
+
+sub JoinDomainWithCAM {
+   my ($self, %args) = @_;
+   return $self->waitForTask($self->JoinDomainWithCAM_Task(%args));
+}
+
+sub ImportCertificateForCAM_Task {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('ImportCertificateForCAM_Task', %args));
+   return $response
+}
+
+sub ImportCertificateForCAM {
+   my ($self, %args) = @_;
+   return $self->waitForTask($self->ImportCertificateForCAM_Task(%args));
+}
+
 sub LeaveCurrentDomain_Task {
    my ($self, %args) = @_;
    my $response = Util::check_fault($self->invoke('LeaveCurrentDomain_Task', %args));
@@ -4360,6 +4705,23 @@ sub UpdateBootDevice {
    my ($self, %args) = @_;
    my $response = Util::check_fault($self->invoke('UpdateBootDevice', %args));
    return $response
+}
+
+
+1;
+##################################################################################
+
+##################################################################################
+package HostCacheConfigurationManagerOperations;
+sub ConfigureHostCache_Task {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('ConfigureHostCache_Task', %args));
+   return $response
+}
+
+sub ConfigureHostCache {
+   my ($self, %args) = @_;
+   return $self->waitForTask($self->ConfigureHostCache_Task(%args));
 }
 
 
@@ -4594,6 +4956,18 @@ our @ISA = qw(HostAuthenticationStoreOperations);
 ##################################################################################
 
 ##################################################################################
+package HostEsxAgentHostManagerOperations;
+sub EsxAgentHostManagerUpdateConfig {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('EsxAgentHostManagerUpdateConfig', %args));
+   return $response
+}
+
+
+1;
+##################################################################################
+
+##################################################################################
 package HostFirewallSystemOperations;
 our @ISA = qw(ExtensibleManagedObjectOperations);
 sub UpdateDefaultPolicy {
@@ -4611,6 +4985,12 @@ sub EnableRuleset {
 sub DisableRuleset {
    my ($self, %args) = @_;
    my $response = Util::check_fault($self->invoke('DisableRuleset', %args));
+   return $response
+}
+
+sub UpdateRuleset {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('UpdateRuleset', %args));
    return $response
 }
 
@@ -4665,6 +5045,78 @@ sub RefreshHealthStatusSystem {
 sub ResetSystemHealthInfo {
    my ($self, %args) = @_;
    my $response = Util::check_fault($self->invoke('ResetSystemHealthInfo', %args));
+   return $response
+}
+
+
+1;
+##################################################################################
+
+##################################################################################
+package HostImageConfigManagerOperations;
+sub HostImageConfigGetAcceptance {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('HostImageConfigGetAcceptance', %args));
+   return $response
+}
+
+sub HostImageConfigGetProfile {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('HostImageConfigGetProfile', %args));
+   return $response
+}
+
+sub UpdateHostImageAcceptanceLevel {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('UpdateHostImageAcceptanceLevel', %args));
+   return $response
+}
+
+
+1;
+##################################################################################
+
+##################################################################################
+package IscsiManagerOperations;
+sub QueryVnicStatus {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('QueryVnicStatus', %args));
+   return $response
+}
+
+sub QueryPnicStatus {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('QueryPnicStatus', %args));
+   return $response
+}
+
+sub QueryBoundVnics {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('QueryBoundVnics', %args));
+   return $response
+}
+
+sub QueryCandidateNics {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('QueryCandidateNics', %args));
+   return $response
+}
+
+sub BindVnic {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('BindVnic', %args));
+   return $response
+}
+
+sub UnbindVnic {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('UnbindVnic', %args));
+   return $response
+}
+
+sub QueryMigrationDependencies {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('QueryMigrationDependencies', %args));
    return $response
 }
 
@@ -5122,6 +5574,18 @@ sub FormatVmfs {
    return $response
 }
 
+sub MountVmfsVolume {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('MountVmfsVolume', %args));
+   return $response
+}
+
+sub UnmountVmfsVolume {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('UnmountVmfsVolume', %args));
+   return $response
+}
+
 sub RescanVmfs {
    my ($self, %args) = @_;
    my $response = Util::check_fault($self->invoke('RescanVmfs', %args));
@@ -5290,9 +5754,33 @@ sub UpdateScsiLunDisplayName {
    return $response
 }
 
+sub DetachScsiLun {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('DetachScsiLun', %args));
+   return $response
+}
+
+sub AttachScsiLun {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('AttachScsiLun', %args));
+   return $response
+}
+
 sub RefreshStorageSystem {
    my ($self, %args) = @_;
    my $response = Util::check_fault($self->invoke('RefreshStorageSystem', %args));
+   return $response
+}
+
+sub DiscoverFcoeHbas {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('DiscoverFcoeHbas', %args));
+   return $response
+}
+
+sub MarkForRemoval {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('MarkForRemoval', %args));
    return $response
 }
 
@@ -5405,6 +5893,12 @@ sub QueryExpressionMetadata {
 
 ##################################################################################
 package ProfileOperations;
+sub RetrieveDescription {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('RetrieveDescription', %args));
+   return $response
+}
+
 sub DestroyProfile {
    my ($self, %args) = @_;
    my $response = Util::check_fault($self->invoke('DestroyProfile', %args));
@@ -5539,9 +6033,60 @@ sub QueryHostProfileMetadata {
    return $response
 }
 
+sub QueryProfileStructure {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('QueryProfileStructure', %args));
+   return $response
+}
+
 sub CreateDefaultProfile {
    my ($self, %args) = @_;
    my $response = Util::check_fault($self->invoke('CreateDefaultProfile', %args));
+   return $response
+}
+
+sub UpdateAnswerFile_Task {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('UpdateAnswerFile_Task', %args));
+   return $response
+}
+
+sub UpdateAnswerFile {
+   my ($self, %args) = @_;
+   return $self->waitForTask($self->UpdateAnswerFile_Task(%args));
+}
+
+sub RetrieveAnswerFile {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('RetrieveAnswerFile', %args));
+   return $response
+}
+
+sub ExportAnswerFile_Task {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('ExportAnswerFile_Task', %args));
+   return $response
+}
+
+sub ExportAnswerFile {
+   my ($self, %args) = @_;
+   return $self->waitForTask($self->ExportAnswerFile_Task(%args));
+}
+
+sub CheckAnswerFileStatus_Task {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('CheckAnswerFileStatus_Task', %args));
+   return $response
+}
+
+sub CheckAnswerFileStatus {
+   my ($self, %args) = @_;
+   return $self->waitForTask($self->CheckAnswerFileStatus_Task(%args));
+}
+
+sub QueryAnswerFileStatus {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('QueryAnswerFileStatus', %args));
    return $response
 }
 
@@ -5789,6 +6334,138 @@ sub CheckRelocate_Task {
 sub CheckRelocate {
    my ($self, %args) = @_;
    return $self->waitForTask($self->CheckRelocate_Task(%args));
+}
+
+
+1;
+##################################################################################
+
+##################################################################################
+package GuestAuthManagerOperations;
+sub ValidateCredentialsInGuest {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('ValidateCredentialsInGuest', %args));
+   return $response
+}
+
+sub AcquireCredentialsInGuest {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('AcquireCredentialsInGuest', %args));
+   return $response
+}
+
+sub ReleaseCredentialsInGuest {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('ReleaseCredentialsInGuest', %args));
+   return $response
+}
+
+
+1;
+##################################################################################
+
+##################################################################################
+package GuestFileManagerOperations;
+sub MakeDirectoryInGuest {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('MakeDirectoryInGuest', %args));
+   return $response
+}
+
+sub DeleteFileInGuest {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('DeleteFileInGuest', %args));
+   return $response
+}
+
+sub DeleteDirectoryInGuest {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('DeleteDirectoryInGuest', %args));
+   return $response
+}
+
+sub MoveDirectoryInGuest {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('MoveDirectoryInGuest', %args));
+   return $response
+}
+
+sub MoveFileInGuest {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('MoveFileInGuest', %args));
+   return $response
+}
+
+sub CreateTemporaryFileInGuest {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('CreateTemporaryFileInGuest', %args));
+   return $response
+}
+
+sub CreateTemporaryDirectoryInGuest {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('CreateTemporaryDirectoryInGuest', %args));
+   return $response
+}
+
+sub ListFilesInGuest {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('ListFilesInGuest', %args));
+   return $response
+}
+
+sub ChangeFileAttributesInGuest {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('ChangeFileAttributesInGuest', %args));
+   return $response
+}
+
+sub InitiateFileTransferFromGuest {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('InitiateFileTransferFromGuest', %args));
+   return $response
+}
+
+sub InitiateFileTransferToGuest {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('InitiateFileTransferToGuest', %args));
+   return $response
+}
+
+
+1;
+##################################################################################
+
+##################################################################################
+package GuestOperationsManagerOperations;
+
+1;
+##################################################################################
+
+##################################################################################
+package GuestProcessManagerOperations;
+sub StartProgramInGuest {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('StartProgramInGuest', %args));
+   return $response
+}
+
+sub ListProcessesInGuest {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('ListProcessesInGuest', %args));
+   return $response
+}
+
+sub TerminateProcessInGuest {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('TerminateProcessInGuest', %args));
+   return $response
+}
+
+sub ReadEnvironmentVariableInGuest {
+   my ($self, %args) = @_;
+   my $response = Util::check_fault($self->invoke('ReadEnvironmentVariableInGuest', %args));
+   return $response
 }
 
 

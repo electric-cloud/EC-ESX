@@ -28510,7 +28510,7 @@ sub QueryMemoryOverhead {
    my @arg_list = (['_this', 'ManagedObjectReference'],['memorySize', undef],['videoRamSize', undef],['numVcpus', undef],);
    my $arg_string = build_arg_string(\@arg_list, \%args);
    my ($result, $fault) = $vim_soap->request('QueryMemoryOverhead', $arg_string);
-   return deserialize_response($result, $fault, 'long', 0);
+   return deserialize_response($result, $fault, undef, 0);
 }
 
 sub ReconfigureHostForDAS_Task {

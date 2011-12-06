@@ -16,6 +16,6 @@ require VMware::VICommon;
 
 package VMware::VIRuntime;
 
-our $VERSION = '4.1';
+our $VERSION = '5.0';
 
 1;

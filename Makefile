@@ -4,7 +4,7 @@ SRCTOP=..
 
 include $(SRCTOP)/build/vars.mak
 
-PLUGIN_PATCH_LEVEL=1.2.2
+PLUGIN_PATCH_LEVEL=1.2.3
 
 gwtmodules := esx/ConfigurationManagement
 
