@@ -1,0 +1,70 @@
+<step>
+    <project>/plugins/@PLUGIN_KEY@/project</project>
+    <procedure>PowerOn</procedure>
+    <category>Resource Management</category>
+    <editor>
+        <label>Resource - @PLUGIN_KEY@ PowerOn</label>
+        <version>@PLUGIN_VERSION@</version>
+        <description>Power on the specified virtual machine and optionally creates an ElectricCommander resource for the virtual machine.</description>
+        <formElement>
+            <type>entry</type>
+            <label>ESX Connection:</label>
+            <property>connection_config</property>
+            <required>1</required>
+            <documentation>The name of the configuration which holds the connection information for ESX server.</documentation>
+        </formElement>
+        <formElement>
+            <type>entry</type>
+            <label>VM Name:</label>
+            <property>esx_vmname</property>
+            <required>1</required>
+            <documentation>Name of the virtual machine to power on.</documentation>
+        </formElement>
+        <formElement>
+            <type>entry</type>
+            <label>Results location:</label>
+            <property>esx_properties_location</property>
+            <required>0</required>
+            <documentation>The ElectricCommander location to store properties (default is '/myJob/ESX/vms').</documentation>
+        </formElement>
+        <formElement>
+            <type>checkbox</type>
+            <label>Create Resource?:</label>
+            <property>esx_create_resources</property>
+            <required>0</required>
+            <documentation>Flag to specify whether or not to create ElectricCommander resources for the powered on virtual machines (default is false).</documentation>
+            <checkedValue>1</checkedValue>
+            <uncheckedValue>0</uncheckedValue>
+            <initiallyChecked>0</initiallyChecked>
+        </formElement> 
+        <formElement>
+            <type>entry</type>
+            <label>Resource Pool(s):</label>
+            <property>esx_pools</property>
+            <required>0</required>
+            <documentation>The ElectricCommander resource pool names to be associated with the created resources if created.</documentation>
+        </formElement>
+        <formElement>
+            <type>entry</type>
+            <label>Commander Workspace:</label>
+            <property>esx_workspace</property>
+            <required>0</required>
+            <documentation>The ElectricCommander workspace the resource should use.</documentation>
+        </formElement>  
+        <formElement>
+            <type>entry</type>
+            <label>Number of VMs:</label>
+            <property>esx_number_of_vms</property>
+            <required>0</required>
+            <documentation>Number of virtual machines to power on (default is 1). If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</documentation>
+            <value>1</value>
+        </formElement>
+        <formElement>
+            <type>entry</type>
+            <label>JobStep Timeout:</label>
+            <property>esx_timeout</property>
+            <required>0</required>
+            <documentation>Timeout for the step execution in minutes. Blank means no timeout.</documentation>
+        </formElement>
+    </editor>
+</step>

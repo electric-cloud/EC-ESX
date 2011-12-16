@@ -1,0 +1,24 @@
+<step>
+    <project>/plugins/@PLUGIN_KEY@-@PLUGIN_VERSION@/project</project>
+    <procedure>CloudManagerShrink</procedure>
+    <category>Resource Management</category>
+    <editor>
+        <label>Resource - @PLUGIN_KEY@ CloudManagerShrink</label>
+        <version>@PLUGIN_VERSION@</version>
+        <description>Hook for CloudManager to remove servers.</description>
+        <formElement>
+            <type>entry</type>
+            <label>ESX Connection:</label>
+            <property>connection_config</property>
+            <required>1</required>
+            <documentation>The name of the configuration which holds the connection information for ESX server.</documentation>
+        </formElement>
+        <formElement>
+            <property>deployments</property>
+            <label>List of Deployments:</label>
+            <documentation>A list of deployments to stop.</documentation>
+            <required>1</required>
+            <type>entry</type>
+        </formElement>
+    </editor>
+</step>

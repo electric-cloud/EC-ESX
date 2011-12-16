@@ -1,0 +1,67 @@
+<step>
+    <project>/plugins/@PLUGIN_KEY@/project</project>
+    <procedure>Export</procedure>
+    <category>Resource Management</category>
+    <editor>
+        <label>Resource - @PLUGIN_KEY@ Export</label>
+        <version>@PLUGIN_VERSION@</version>
+        <description>The Export subprocedure exports a virtual machine to an OVF package using VMware OVF Tool(a command line utility that allows you to import and export OVF packages).VMware OVF Tool must be installed in the resource machine running this procedure.</description>
+        <formElement>
+            <type>entry</type>
+            <label>ESX Connection:</label>
+            <property>connection_config</property>
+            <required>1</required>
+            <documentation>The name of the configuration which holds the connection information for ESX server.</documentation>
+        </formElement>
+        <formElement>
+            <type>entry</type>
+            <label>Host:</label>
+            <property>esx_host</property>
+            <required>1</required>
+            <documentation>Name of the host where virtual machine is located.</documentation>
+        </formElement>
+        <formElement>
+            <type>entry</type>
+            <label>Datacenter:</label>
+            <property>esx_datacenter</property>
+            <required>1</required>
+            <documentation>Name of the datacenter.</documentation>
+        </formElement>
+        <formElement>
+            <type>entry</type>
+            <label>Datastore:</label>
+            <property>esx_datastore</property>
+            <required>1</required>
+            <documentation>Name of the datastore.</documentation>
+        </formElement>
+        <formElement>
+            <type>entry</type>
+            <label>VM Name:</label>
+            <property>esx_vmname</property>
+            <required>1</required>
+            <documentation>Name of the virtual machine to export.</documentation>
+        </formElement>
+        <formElement>
+            <type>entry</type>
+            <label>Target directory:</label>
+            <property>esx_target_directory</property>
+            <documentation>Absoulte path to the directory where virtual machines will be exported.</documentation>
+            <required>1</required>
+        </formElement>
+        <formElement>
+            <type>entry</type>
+            <label>Number of VMs:</label>
+            <property>esx_number_of_vms</property>
+            <required>0</required>
+            <documentation>Number of virtual machines to export (default is 1). If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</documentation>
+            <value>1</value>
+        </formElement>
+        <formElement>
+            <type>entry</type>
+            <label>JobStep Timeout:</label>
+            <property>esx_timeout</property>
+            <required>0</required>
+            <documentation>Timeout for the step execution in minutes. Blank means no timeout.</documentation>
+        </formElement>
+    </editor>
+</step>

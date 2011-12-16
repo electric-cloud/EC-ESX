@@ -116,6 +116,16 @@ $xpath = $ec->attachCredential($projName, $credName,
      stepName => 'RegisterVM'});
 $errors .= $ec->checkAllErrors($xpath);
 
+$xpath = $ec->attachCredential($projName, $credName,
+    {procedureName => 'CloudManagerGrow',
+     stepName => 'grow'});
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential($projName, $credName,
+    {procedureName => 'CloudManagerShrink',
+     stepName => 'shrink'});
+$errors .= $ec->checkAllErrors($xpath);
+
 if ("$errors" ne "") {
     
     # Cleanup the partially created configuration we just created
