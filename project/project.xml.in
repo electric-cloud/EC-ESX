@@ -45,96 +45,6 @@
                         <expandable>1</expandable>
                         <value></value>
                     </property>
-                    <property>
-                        <propertyName>Create</propertyName>
-                        <description></description>
-                        <expandable>1</expandable>
-                        <value></value>
-                    </property>
-                    <property>
-                        <propertyName>Cleanup</propertyName>
-                        <description></description>
-                        <expandable>1</expandable>
-                        <value></value>
-                    </property>
-                    <property>
-                        <propertyName>Clone</propertyName>
-                        <description></description>
-                        <expandable>1</expandable>
-                        <value></value>
-                    </property>
-                    <property>
-                        <propertyName>Relocate</propertyName>
-                        <description></description>
-                        <expandable>1</expandable>
-                        <value></value>
-                    </property>
-                    <property>
-                        <propertyName>Revert</propertyName>
-                        <description></description>
-                        <expandable>1</expandable>
-                        <value></value>
-                    </property>
-                    <property>
-                        <propertyName>Snapshot</propertyName>
-                        <description></description>
-                        <expandable>1</expandable>
-                        <value></value>
-                    </property>
-                    <property>
-                        <propertyName>PowerOn</propertyName>
-                        <description></description>
-                        <expandable>1</expandable>
-                        <value></value>
-                    </property>
-                    <property>
-                        <propertyName>PowerOff</propertyName>
-                        <description></description>
-                        <expandable>1</expandable>
-                        <value></value>
-                    </property>
-                    <property>
-                        <propertyName>Shutdown</propertyName>
-                        <description></description>
-                        <expandable>1</expandable>
-                        <value></value>
-                    </property>
-                    <property>
-                        <propertyName>Suspend</propertyName>
-                        <description></description>
-                        <expandable>1</expandable>
-                        <value></value>
-                    </property>
-                    <property>
-                        <propertyName>CreateResourceFromVM</propertyName>
-                        <description></description>
-                        <expandable>1</expandable>
-                        <value></value>
-                    </property>
-                    <property>
-                        <propertyName>GetVMConfiguration</propertyName>
-                        <description></description>
-                        <expandable>1</expandable>
-                        <value></value>
-                    </property>
-                    <property>
-                        <propertyName>Import</propertyName>
-                        <description></description>
-                        <expandable>1</expandable>
-                        <value></value>
-                    </property>
-                    <property>
-                        <propertyName>Export</propertyName>
-                        <description></description>
-                        <expandable>1</expandable>
-                        <value></value>
-                    </property>
-                    <property>
-                        <propertyName>RegisterVM</propertyName>
-                        <description></description>
-                        <expandable>1</expandable>
-                        <value></value>
-                    </property>
                 </propertySheet>
             </property>
             <property>
@@ -202,6 +112,12 @@
                             </propertySheet>
                         </property>
                     </propertySheet>
+                </property>
+                <property>
+                    <propertyName>ec_parameterForm</propertyName>
+                    <description></description>
+                    <expandable>1</expandable>
+                    <value></value>
                 </property>
             </propertySheet>
             <formalParameter>
@@ -332,6 +248,12 @@
                             </propertySheet>
                         </property>
                     </propertySheet>
+                </property>
+                <property>
+                    <propertyName>ec_parameterForm</propertyName>
+                    <description></description>
+                    <expandable>1</expandable>
+                    <value></value>
                 </property>
             </propertySheet>
             <formalParameter>
@@ -564,6 +486,12 @@
                             </propertySheet>
                         </property>
                     </propertySheet>
+                </property>
+                <property>
+                    <propertyName>ec_parameterForm</propertyName>
+                    <description></description>
+                    <expandable>1</expandable>
+                    <value></value>
                 </property>
             </propertySheet>
             <formalParameter>
@@ -823,6 +751,12 @@
                         </property>
                     </propertySheet>
                 </property>
+                <property>
+                    <propertyName>ec_parameterForm</propertyName>
+                    <description></description>
+                    <expandable>1</expandable>
+                    <value></value>
+                </property>
             </propertySheet>
             <formalParameter>
                 <formalParameterName>connection_config</formalParameterName>
@@ -1022,6 +956,12 @@
                         </property>
                     </propertySheet>
                 </property>
+                <property>
+                    <propertyName>ec_parameterForm</propertyName>
+                    <description></description>
+                    <expandable>1</expandable>
+                    <value></value>
+                </property>
             </propertySheet>
             <formalParameter>
                 <formalParameterName>connection_config</formalParameterName>
@@ -1218,6 +1158,12 @@
                             </propertySheet>
                         </property>
                     </propertySheet>
+                </property>
+                <property>
+                    <propertyName>ec_parameterForm</propertyName>
+                    <description></description>
+                    <expandable>1</expandable>
+                    <value></value>
                 </property>
             </propertySheet>
             <formalParameter>
@@ -1419,6 +1365,12 @@
                         </property>
                     </propertySheet>
                 </property>
+                <property>
+                    <propertyName>ec_parameterForm</propertyName>
+                    <description></description>
+                    <expandable>1</expandable>
+                    <value></value>
+                </property>
             </propertySheet>
             <formalParameter>
                 <formalParameterName>connection_config</formalParameterName>
@@ -1600,6 +1552,12 @@
                             </propertySheet>
                         </property>
                     </propertySheet>
+                </property>
+                <property>
+                    <propertyName>ec_parameterForm</propertyName>
+                    <description></description>
+                    <expandable>1</expandable>
+                    <value></value>
                 </property>
             </propertySheet>
             <formalParameter>
@@ -1821,6 +1779,12 @@
                         </property>
                     </propertySheet>
                 </property>
+                <property>
+                    <propertyName>ec_parameterForm</propertyName>
+                    <description></description>
+                    <expandable>1</expandable>
+                    <value></value>
+                </property>
             </propertySheet>
             <formalParameter>
                 <formalParameterName>connection_config</formalParameterName>
@@ -2007,6 +1971,12 @@
                         </property>
                     </propertySheet>
                 </property>
+                <property>
+                    <propertyName>ec_parameterForm</propertyName>
+                    <description></description>
+                    <expandable>1</expandable>
+                    <value></value>
+                </property>
             </propertySheet>
             <formalParameter>
                 <formalParameterName>connection_config</formalParameterName>
@@ -2165,6 +2135,12 @@
                         </property>
                     </propertySheet>
                 </property>
+                <property>
+                    <propertyName>ec_parameterForm</propertyName>
+                    <description></description>
+                    <expandable>1</expandable>
+                    <value></value>
+                </property>
             </propertySheet>
             <formalParameter>
                 <formalParameterName>connection_config</formalParameterName>
@@ -2322,6 +2298,12 @@
                             </propertySheet>
                         </property>
                     </propertySheet>
+                </property>
+                <property>
+                    <propertyName>ec_parameterForm</propertyName>
+                    <description></description>
+                    <expandable>1</expandable>
+                    <value></value>
                 </property>
             </propertySheet>
             <formalParameter>
@@ -2536,6 +2518,12 @@
                         </property>
                     </propertySheet>
                 </property>
+                <property>
+                    <propertyName>ec_parameterForm</propertyName>
+                    <description></description>
+                    <expandable>1</expandable>
+                    <value></value>
+                </property>
             </propertySheet>
             <formalParameter>
                 <formalParameterName>connection_config</formalParameterName>
@@ -2732,6 +2720,12 @@
                         </property>
                     </propertySheet>
                 </property>
+                <property>
+                    <propertyName>ec_parameterForm</propertyName>
+                    <description></description>
+                    <expandable>1</expandable>
+                    <value></value>
+                </property>
             </propertySheet>
             <formalParameter>
                 <formalParameterName>connection_config</formalParameterName>
@@ -2926,6 +2920,12 @@
                             </propertySheet>
                         </property>
                     </propertySheet>
+                </property>
+                <property>
+                    <propertyName>ec_parameterForm</propertyName>
+                    <description></description>
+                    <expandable>1</expandable>
+                    <value></value>
                 </property>
             </propertySheet>
             <formalParameter>
@@ -3146,6 +3146,12 @@
                         </property>
                     </propertySheet>
                 </property>
+                <property>
+                    <propertyName>ec_parameterForm</propertyName>
+                    <description></description>
+                    <expandable>1</expandable>
+                    <value></value>
+                </property>
             </propertySheet>
             <formalParameter>
                 <formalParameterName>connection_config</formalParameterName>
@@ -3362,6 +3368,12 @@
                         </property>
                     </propertySheet>
                 </property>
+                <property>
+                    <propertyName>ec_parameterForm</propertyName>
+                    <description></description>
+                    <expandable>1</expandable>
+                    <value></value>
+                </property>
             </propertySheet>
             <formalParameter>
                 <formalParameterName>connection_config</formalParameterName>
@@ -3520,6 +3532,12 @@
                         </property>
                     </propertySheet>
                 </property>
+                <property>
+                    <propertyName>ec_parameterForm</propertyName>
+                    <description></description>
+                    <expandable>1</expandable>
+                    <value></value>
+                </property>
             </propertySheet>
             <formalParameter>
                 <formalParameterName>deployments</formalParameterName>
@@ -3635,6 +3653,12 @@
                             </propertySheet>
                         </property>
                     </propertySheet>
+                </property>
+                <property>
+                    <propertyName>ec_parameterForm</propertyName>
+                    <description></description>
+                    <expandable>1</expandable>
+                    <value></value>
                 </property>
             </propertySheet>
             <formalParameter>

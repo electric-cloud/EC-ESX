@@ -1,56 +1,49 @@
-<step>
-    <project>/plugins/@PLUGIN_KEY@/project</project>
-    <procedure>Revert</procedure>
-    <category>Resource Management</category>
-    <editor>
-        <label>Resource - @PLUGIN_KEY@ Revert</label>
-        <version>@PLUGIN_VERSION@</version>
-        <description>Revert a virtual machine to the specified snapshot.</description> 
-        <formElement>
-            <label>ESX Connection:</label>
-            <property>connection_config</property>
-            <documentation>The name of the configuration which holds the connection information for ESX server.</documentation>
-            <required>1</required>
-            <type>entry</type>
-        </formElement>
-        <formElement>
-            <label>VM Name:</label>
-            <property>esx_vmname</property>
-            <documentation>Name of the source virtual machine.</documentation>
-            <required>1</required>
-            <type>entry</type>
-        </formElement>
-        <formElement>
-            <label>Snapshot Name:</label>
-            <property>esx_snapshotname</property>
-            <documentation>Name of snapshot to revert to.</documentation>
-            <required>1</required>
-            <type>entry</type>
-        </formElement>
-        <formElement>
-            <label>Power On?</label>
-            <property>esx_poweron_vm</property>
-            <documentation>If checked, Power on the virtual machine after being reverted.</documentation>
-            <required>0</required>
-            <type>checkbox</type>
-            <checkedValue>1</checkedValue>
-            <uncheckedValue>0</uncheckedValue>
-            <initiallyChecked>1</initiallyChecked>
-        </formElement>
-        <formElement>
-            <label>Number of VMs:</label>
-            <property>esx_number_of_vms</property>
-            <value>1</value>
-            <documentation>Number of virtual machines to revert (default is 1). If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</documentation>
-            <required>0</required>
-            <type>entry</type>
-        </formElement>
-        <formElement>
-            <label>JobStep Timeout:</label>
-            <property>esx_timeout</property>
-            <documentation>Timeout for the step execution in minutes. Blank means no timeout.</documentation>
-            <required>0</required>
-            <type>entry</type>
-        </formElement>  
-    </editor>
-</step>
+<editor>
+    <help>/commander/pages/@PLUGIN_NAME@/@PLUGIN_KEY@_help?s=Administration&amp;ss=Plugins#Revert</help> 
+    <formElement>
+        <label>ESX Connection:</label>
+        <property>connection_config</property>
+        <documentation>The name of the configuration which holds the connection information for ESX server.</documentation>
+        <required>1</required>
+        <type>entry</type>
+    </formElement>
+    <formElement>
+        <label>VM Name:</label>
+        <property>esx_vmname</property>
+        <documentation>Name of the source virtual machine.</documentation>
+        <required>1</required>
+        <type>entry</type>
+    </formElement>
+    <formElement>
+        <label>Snapshot Name:</label>
+        <property>esx_snapshotname</property>
+        <documentation>Name of snapshot to revert to.</documentation>
+        <required>1</required>
+        <type>entry</type>
+    </formElement>
+    <formElement>
+        <label>Power On?</label>
+        <property>esx_poweron_vm</property>
+        <documentation>If checked, Power on the virtual machine after being reverted.</documentation>
+        <required>0</required>
+        <type>checkbox</type>
+        <checkedValue>1</checkedValue>
+        <uncheckedValue>0</uncheckedValue>
+        <initiallyChecked>1</initiallyChecked>
+    </formElement>
+    <formElement>
+        <label>Number of VMs:</label>
+        <property>esx_number_of_vms</property>
+        <value>1</value>
+        <documentation>Number of virtual machines to revert (default is 1). If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</documentation>
+        <required>0</required>
+        <type>entry</type>
+    </formElement>
+    <formElement>
+        <label>JobStep Timeout:</label>
+        <property>esx_timeout</property>
+        <documentation>Timeout for the step execution in minutes. Blank means no timeout.</documentation>
+        <required>0</required>
+        <type>entry</type>
+    </formElement>  
+</editor>

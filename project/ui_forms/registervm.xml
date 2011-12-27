@@ -1,59 +1,52 @@
-<step>
-    <project>/plugins/@PLUGIN_KEY@/project</project>
-    <procedure>RegisterVM</procedure>
-    <category>Resource Management</category>
-    <editor>
-        <label>Resource - @PLUGIN_KEY@ RegisterVM</label>
-        <version>@PLUGIN_VERSION@</version>
-        <description>Register an existing virtual machine with the ESX server.</description>
-        <formElement>
-            <type>entry</type>
-            <label>ESX Connection:</label>
-            <property>connection_config</property>
-            <required>1</required>
-            <documentation>The name of the configuration which holds the connection information for ESX server.</documentation>
-        </formElement>
-        <formElement>
-            <type>entry</type>
-            <label>Host:</label>
-            <property>esx_host</property>
-            <required>1</required>
-            <documentation>Name of the host where virtual machine will be registered.</documentation>
-        </formElement>
-        <formElement>
-            <type>entry</type>
-            <label>Datacenter:</label>
-            <property>esx_datacenter</property>
-            <required>1</required>
-            <documentation>Name of the datacenter.</documentation>
-        </formElement>
-        <formElement>
-            <type>entry</type>
-            <label>Resource Pool:</label>
-            <property>esx_pool</property>
-            <required>1</required>
-            <documentation>Name of the resource pool to register virtual machine.</documentation>
-        </formElement>
-        <formElement>
-            <type>entry</type>
-            <label>VMX path:</label>
-            <property>esx_vmxpath</property>
-            <required>1</required>
-            <documentation>Datastore path to the virtual machine configuration file (vmx).</documentation>
-        </formElement>
-        <formElement>
-            <type>entry</type>
-            <label>VM Name:</label>
-            <property>esx_vmname</property>
-            <required>1</required>
-            <documentation>Name to be assigned to the virtual machine.</documentation>
-        </formElement>
-        <formElement>
-            <type>entry</type>
-            <label>JobStep Timeout:</label>
-            <property>esx_timeout</property>
-            <required>0</required>
-            <documentation>Timeout for the step execution in minutes. Blank means no timeout.</documentation>
-        </formElement>
-    </editor>
-</step>
+<editor>
+    <help>/commander/pages/@PLUGIN_NAME@/@PLUGIN_KEY@_help?s=Administration&amp;ss=Plugins#RegisterVM</help>
+    <formElement>
+        <type>entry</type>
+        <label>ESX Connection:</label>
+        <property>connection_config</property>
+        <required>1</required>
+        <documentation>The name of the configuration which holds the connection information for ESX server.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Host:</label>
+        <property>esx_host</property>
+        <required>1</required>
+        <documentation>Name of the host where virtual machine will be registered.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Datacenter:</label>
+        <property>esx_datacenter</property>
+        <required>1</required>
+        <documentation>Name of the datacenter.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Resource Pool:</label>
+        <property>esx_pool</property>
+        <required>1</required>
+        <documentation>Name of the resource pool to register virtual machine.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>VMX path:</label>
+        <property>esx_vmxpath</property>
+        <required>1</required>
+        <documentation>Datastore path to the virtual machine configuration file (vmx).</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>VM Name:</label>
+        <property>esx_vmname</property>
+        <required>1</required>
+        <documentation>Name to be assigned to the virtual machine.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>JobStep Timeout:</label>
+        <property>esx_timeout</property>
+        <required>0</required>
+        <documentation>Timeout for the step execution in minutes. Blank means no timeout.</documentation>
+    </formElement>
+</editor>

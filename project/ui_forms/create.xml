@@ -1,119 +1,112 @@
-<step>
-    <project>/plugins/@PLUGIN_KEY@/project</project>
-    <procedure>Create</procedure>
-    <category>Resource Management</category>
-    <editor>
-        <label>Resource - @PLUGIN_KEY@ Create</label>
-        <version>@PLUGIN_VERSION@</version>
-        <description>Create virtual machines on the ESX server. Guest OS installation must be performed by the user.</description>
-        <formElement>
-            <type>entry</type>
-            <label>ESX Connection:</label>
-            <property>connection_config</property>
-            <required>1</required>
-            <documentation>The name of the configuration which holds the connection information for ESX server.</documentation>
-        </formElement>
-        <formElement>
-            <type>entry</type>
-            <label>VM Name:</label>
-            <property>esx_vmname</property>
-            <required>1</required>
-            <documentation>Name of the virtual machine to be created.</documentation>
-        </formElement>
-        <formElement>
-            <type>entry</type>
-            <label>Datastore:</label>
-            <property>esx_datastore</property>
-            <required>0</required>
-            <documentation>Name of the datastore. Default: Any accessible datastore with free space greater than the disksize specified.</documentation>
-        </formElement>
-        <formElement>
-            <type>entry</type>
-            <label>Host:</label>
-            <property>esx_vmhost</property>
-            <required>1</required>
-            <documentation>Name of the host.</documentation>
-        </formElement>
-        <formElement>
-            <type>entry</type>
-            <label>Datacenter:</label>
-            <property>esx_datacenter</property>
-            <required>1</required>
-            <documentation>Name of the datacenter.</documentation>
-        </formElement>
-        <formElement>
-            <type>entry</type>
-            <label>Guest OS Id:</label>
-            <property>esx_guestid</property>
-            <required>0</required>
-            <value>winXPProGuest</value>
-            <documentation>Guest operating system identifier (default is 'winXPProGuest').</documentation>
-        </formElement>
-        <formElement>
-            <type>entry</type>
-            <label>Disk size (in KB):</label>
-            <property>esx_disksize</property>
-            <required>0</required>
-            <value>4096</value>
-            <documentation>Capacity of the virtual disk in KB (default is 4096).</documentation>
-        </formElement>
-        <formElement>
-            <type>entry</type>
-            <label>Memory size:</label>
-            <property>esx_memory</property>
-            <required>0</required>
-            <value>256</value>
-            <documentation>Size of virtual machine's memory in MB (default is 256)</documentation>
-        </formElement>
-        <formElement>
-            <type>entry</type>
-            <label>Number of CPUs:</label>
-            <property>esx_num_cpus</property>
-            <required>0</required>
-            <value>1</value>
-            <documentation>Number of virtual processors in a virtual machine (default is 1).</documentation>
-        </formElement>
-        <formElement>
-            <type>entry</type>
-            <label>Network Name:</label>
-            <property>esx_nic_network</property>
-            <required>0</required>
-            <documentation>Network name. Default: Any accessible network.</documentation>
-        </formElement>
-        <formElement>
-            <type>checkbox</type>
-            <label>Connect Network at Power On?:</label>
-            <property>esx_nic_poweron</property>
-            <required>0</required>
-            <documentation>Flag to specify whether or not to connect the device when the virtual machine starts (default is false).</documentation>
-            <checkedValue>1</checkedValue>
-            <uncheckedValue>0</uncheckedValue>
-            <initiallyChecked>0</initiallyChecked>
-        </formElement>
-        <formElement>
-            <type>checkbox</type>
-            <label>Power On Vm?:</label>
-            <property>esx_vm_poweron</property>
-            <required>0</required>
-            <documentation>Flag to specify whether or not to power on the created virtual machine(s) (default is false).</documentation>
-            <checkedValue>1</checkedValue>
-            <uncheckedValue>0</uncheckedValue>
-            <initiallyChecked>0</initiallyChecked>
-        </formElement>
-        <formElement>
-            <type>entry</type>
-            <label>Number of VMs:</label>
-            <property>esx_number_of_vms</property>
-            <required>0</required>
-            <documentation>Number of virtual machines to create (default is 1). If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</documentation>
-            <value>1</value>
-        </formElement>
-        <formElement>
-            <type>entry</type>
-            <label>JobStep Timeout:</label>
-            <property>esx_timeout</property>
-            <required>0</required>
-            <documentation>Timeout for the step execution in minutes. Blank means no timeout.</documentation>
-        </formElement>
-    </editor>
-</step>
+<editor>
+    <help>/commander/pages/@PLUGIN_NAME@/@PLUGIN_KEY@_help?s=Administration&amp;ss=Plugins#Create</help>
+    <formElement>
+        <type>entry</type>
+        <label>ESX Connection:</label>
+        <property>connection_config</property>
+        <required>1</required>
+        <documentation>The name of the configuration which holds the connection information for ESX server.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>VM Name:</label>
+        <property>esx_vmname</property>
+        <required>1</required>
+        <documentation>Name of the virtual machine to be created.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Datastore:</label>
+        <property>esx_datastore</property>
+        <required>0</required>
+        <documentation>Name of the datastore. Default: Any accessible datastore with free space greater than the disksize specified.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Host:</label>
+        <property>esx_vmhost</property>
+        <required>1</required>
+        <documentation>Name of the host.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Datacenter:</label>
+        <property>esx_datacenter</property>
+        <required>1</required>
+        <documentation>Name of the datacenter.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Guest OS Id:</label>
+        <property>esx_guestid</property>
+        <required>0</required>
+        <value>winXPProGuest</value>
+        <documentation>Guest operating system identifier (default is 'winXPProGuest').</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Disk size (in KB):</label>
+        <property>esx_disksize</property>
+        <required>0</required>
+        <value>4096</value>
+        <documentation>Capacity of the virtual disk in KB (default is 4096).</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Memory size:</label>
+        <property>esx_memory</property>
+        <required>0</required>
+        <value>256</value>
+        <documentation>Size of virtual machine's memory in MB (default is 256)</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Number of CPUs:</label>
+        <property>esx_num_cpus</property>
+        <required>0</required>
+        <value>1</value>
+        <documentation>Number of virtual processors in a virtual machine (default is 1).</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Network Name:</label>
+        <property>esx_nic_network</property>
+        <required>0</required>
+        <documentation>Network name. Default: Any accessible network.</documentation>
+    </formElement>
+    <formElement>
+        <type>checkbox</type>
+        <label>Connect Network at Power On?:</label>
+        <property>esx_nic_poweron</property>
+        <required>0</required>
+        <documentation>Flag to specify whether or not to connect the device when the virtual machine starts (default is false).</documentation>
+        <checkedValue>1</checkedValue>
+        <uncheckedValue>0</uncheckedValue>
+        <initiallyChecked>0</initiallyChecked>
+    </formElement>
+    <formElement>
+        <type>checkbox</type>
+        <label>Power On Vm?:</label>
+        <property>esx_vm_poweron</property>
+        <required>0</required>
+        <documentation>Flag to specify whether or not to power on the created virtual machine(s) (default is false).</documentation>
+        <checkedValue>1</checkedValue>
+        <uncheckedValue>0</uncheckedValue>
+        <initiallyChecked>0</initiallyChecked>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Number of VMs:</label>
+        <property>esx_number_of_vms</property>
+        <required>0</required>
+        <documentation>Number of virtual machines to create (default is 1). If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').</documentation>
+        <value>1</value>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>JobStep Timeout:</label>
+        <property>esx_timeout</property>
+        <required>0</required>
+        <documentation>Timeout for the step execution in minutes. Blank means no timeout.</documentation>
+    </formElement>
+</editor>

@@ -1,45 +1,39 @@
-<step>
-    <project>/plugins/@PLUGIN_KEY@-@PLUGIN_VERSION@/project</project>
-    <procedure>CloudManagerGrow</procedure>
-    <category>Resource Management</category>
-    <editor>
-        <label>Resource - @PLUGIN_KEY@ CloudManagerGrow</label>
-        <version>@PLUGIN_VERSION@</version>
-        <description>Hook for CloudManager to add servers.</description>
-        <formElement>
-            <type>entry</type>
-            <label>ESX Connection:</label>
-            <property>connection_config</property>
-            <required>1</required>
-            <documentation>The name of the configuration which holds the connection information for ESX server.</documentation>
-        </formElement>     
-        <formElement>
-            <type>entry</type>
-            <label>VM Name pattern:</label>
-            <property>esx_pattern</property>
-            <required>0</required>
-            <documentation>Pattern used to find available machines on the server.</documentation>
-        </formElement> 
-        <formElement>
-            <type>entry</type>
-            <label>Commander Workspace:</label>
-            <property>esx_workspace</property>
-            <required>0</required>
-            <documentation>The ElectricCommander workspace the resource should use.</documentation>
-        </formElement>
-        <formElement>
-            <type>entry</type>
-            <label>Number of Servers:</label>
-            <property>number</property>
-            <required>1</required>
-            <documentation>Number of new servers</documentation>
-        </formElement> 
-        <formElement>
-            <type>entry</type>
-            <label>Resources Pool:</label>
-            <property>poolName</property>
-            <required>1</required>
-            <documentation>Pool name for creating resources.</documentation>
-        </formElement>         
-    </editor>
-</step> 
+<editor>
+    <help>/commander/pages/@PLUGIN_NAME@/@PLUGIN_KEY@_help?s=Administration&amp;ss=Plugins#CloudManagerGrow</help>
+    <formElement>
+        <type>entry</type>
+        <label>ESX Connection:</label>
+        <property>connection_config</property>
+        <required>1</required>
+        <documentation>The name of the configuration which holds the connection information for ESX server.</documentation>
+    </formElement>     
+    <formElement>
+        <type>entry</type>
+        <label>VM Name pattern:</label>
+        <property>esx_pattern</property>
+        <required>0</required>
+        <documentation>Pattern used to find available machines on the server.</documentation>
+    </formElement> 
+    <formElement>
+        <type>entry</type>
+        <label>Commander Workspace:</label>
+        <property>esx_workspace</property>
+        <required>0</required>
+        <documentation>The ElectricCommander workspace the resource should use.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Number of Servers:</label>
+        <property>number</property>
+        <required>1</required>
+        <documentation>Number of new servers</documentation>
+    </formElement> 
+    <formElement>
+        <type>entry</type>
+        <label>Resources Pool:</label>
+        <property>poolName</property>
+        <required>1</required>
+        <documentation>Pool name for creating resources.</documentation>
+    </formElement>         
+</editor>
+
