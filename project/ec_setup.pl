@@ -133,22 +133,9 @@ if ($promoteAction ne '') {
                         description => "Create a snapshot for the specified virtual machine.",
                         category    => "Resource Management"
                        );
-                       
-        my %cloudmanagershrink = (
-                                  label       => "@PLUGIN_KEY@ - CloudManagerShrink",
-                                  procedure   => "CloudManagerShrink",
-                                  description => "Hook for CloudManager to remove servers.",
-                                  category    => "Resource Management"
-                                 );
+                     
 
-        my %cloudmanagergrow = (
-                                label       => "@PLUGIN_KEY@ - CloudManagerGrow",
-                                procedure   => "CloudManagerShrink",
-                                description => "Hook for CloudManager to add servers.",
-                                category    => "Resource Management"
-                               );               
-
-        @::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%cloudmanagershrink, \%cloudmanagergrow);
+        @::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot);
 
     }
     elsif ($promoteAction eq "demote") {
@@ -167,8 +154,6 @@ if ($promoteAction ne '') {
         $batch->deleteProperty("/server/ec_customEditors/pickerStep/@PLUGIN_KEY@ - Revert");
         $batch->deleteProperty("/server/ec_customEditors/pickerStep/@PLUGIN_KEY@ - Shutdown");
         $batch->deleteProperty("/server/ec_customEditors/pickerStep/@PLUGIN_KEY@ - Snapshot");
-        $batch->deleteProperty("/server/ec_customEditors/pickerStep/@PLUGIN_KEY@ - CloudManagerShrink");
-        $batch->deleteProperty("/server/ec_customEditors/pickerStep/@PLUGIN_KEY@ - CloudManagerGrow");
     }
 }
 
