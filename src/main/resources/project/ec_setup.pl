@@ -1,13 +1,15 @@
+my $pluginName = "@PLUGIN_NAME@";
+my $pluginKey = "@PLUGIN_KEY@";
 if ($promoteAction ne '') {
     my @objTypes = ('projects', 'resources', 'workspaces');
     my $query    = $commander->newBatch();
-    my @reqs     = map { $query->getAclEntry('user', 'project: @PLUGIN_NAME@', { systemObjectName => $_ }) } @objTypes;
+    my @reqs     = map { $query->getAclEntry('user', 'project: $pluginName', { systemObjectName => $_ }) } @objTypes;
     push @reqs, $query->getProperty('/server/ec_hooks/promote');
     $query->submit();
 
     foreach my $type (@objTypes) {
         if ($query->findvalue(shift @reqs, 'code') ne 'NoSuchAclEntry') {
-            $batch->deleteAclEntry('user', 'project: @PLUGIN_NAME@', { systemObjectName => $type });
+            $batch->deleteAclEntry('user', 'project: $pluginName', { systemObjectName => $type });
         }
     }
 
@@ -15,7 +17,7 @@ if ($promoteAction ne '') {
         foreach my $type (@objTypes) {
             $batch->createAclEntry(
                                    'user',
-                                   'project: @PLUGIN_NAME@',
+                                   'project: $pluginName',
                                    {
                                       systemObjectName           => $type,
                                       readPrivilege              => 'allow',
@@ -30,105 +32,105 @@ if ($promoteAction ne '') {
         # Data that drives the create step picker registration for this plugin.
 
         my %suspend = (
-                       label       => "@PLUGIN_KEY@ - Suspend",
+                       label       => "$pluginKey - Suspend",
                        procedure   => "Suspend",
                        description => "Suspend a virtual machine.",
                        category    => "Resource Management"
                       );
 
         my %cleanup = (
-                       label       => "@PLUGIN_KEY@ - Cleanup",
+                       label       => "$pluginKey - Cleanup",
                        procedure   => "Cleanup",
                        description => "Cleanup a virtual machine.",
                        category    => "Resource Management"
                       );
 
         my %clone = (
-                     label       => "@PLUGIN_KEY@ - Clone",
+                     label       => "$pluginKey - Clone",
                      procedure   => "Clone",
                      description => "Clone a virtual machine.",
                      category    => "Resource Management"
                     );
 
         my %create = (
-                      label       => "@PLUGIN_KEY@ - Create",
+                      label       => "$pluginKey - Create",
                       procedure   => "Create",
                       description => "Create a virtual machine.",
                       category    => "Resource Management"
                      );
 
         my %createresourcefromvm = (
-                                    label       => "@PLUGIN_KEY@ - CreateResourceFromVM",
+                                    label       => "$pluginKey - CreateResourceFromVM",
                                     procedure   => "CreateResourceFromVM",
                                     description => "Store information about a virtual machine and create ElectricCommander resources.",
                                     category    => "Resource Management"
                                    );
 
         my %import = (
-                      label       => "@PLUGIN_KEY@ - Import",
+                      label       => "$pluginKey - Import",
                       procedure   => "Import",
                       description => "Import an OVF package to the ESX server.",
                       category    => "Resource Management"
                      );
 
         my %getvmconfiguration = (
-                                  label       => "@PLUGIN_KEY@ - GetVMConfiguration",
+                                  label       => "$pluginKey - GetVMConfiguration",
                                   procedure   => "GetVMConfiguration",
                                   description => "Get virtual machine information and store it in properties.",
                                   category    => "Resource Management"
                                  );
 
         my %export = (
-                      label       => "@PLUGIN_KEY@ - Export",
+                      label       => "$pluginKey - Export",
                       procedure   => "Export",
                       description => "Export a virtual machine to an OVF package using ovftool.",
                       category    => "Resource Management"
                      );
 
         my %relocate = (
-                        label       => "@PLUGIN_KEY@ - Relocate",
+                        label       => "$pluginKey - Relocate",
                         procedure   => "Relocate",
                         description => "Relocate a virtual machine.",
                         category    => "Resource Management"
                        );
 
         my %registervm = (
-                          label       => "@PLUGIN_KEY@ - RegisterVM",
+                          label       => "$pluginKey - RegisterVM",
                           procedure   => "RegisterVM",
                           description => "Register an existing virtual machine.",
                           category    => "Resource Management"
                          );
 
         my %poweroff = (
-                        label       => "@PLUGIN_KEY@ - PowerOff",
+                        label       => "$pluginKey - PowerOff",
                         procedure   => "PowerOff",
                         description => "Power off a virtual machine.",
                         category    => "Resource Management"
                        );
 
         my %poweron = (
-                       label       => "@PLUGIN_KEY@ - PowerOn",
+                       label       => "$pluginKey - PowerOn",
                        procedure   => "PowerOn",
                        description => "Power on a virtual machine.",
                        category    => "Resource Management"
                       );
 
         my %revert = (
-                      label       => "@PLUGIN_KEY@ - Revert",
+                      label       => "$pluginKey - Revert",
                       procedure   => "Revert",
                       description => "Revert the configuration to the last snapshot.",
                       category    => "Resource Management"
                      );
 
         my %shutdown = (
-                        label       => "@PLUGIN_KEY@ - Shutdown",
+                        label       => "$pluginKey - Shutdown",
                         procedure   => "Shutdown",
                         description => "Shutdown a virtual machine.",
                         category    => "Resource Management"
                        );
 
         my %snapshot = (
-                        label       => "@PLUGIN_KEY@ - Snapshot",
+                        label       => "$pluginKey - Snapshot",
                         procedure   => "Snapshot",
                         description => "Create a snapshot for the specified virtual machine.",
                         category    => "Resource Management"
@@ -139,21 +141,21 @@ if ($promoteAction ne '') {
 
     }
     elsif ($promoteAction eq "demote") {
-        $batch->deleteProperty("/server/ec_customEditors/pickerStep/@PLUGIN_KEY@ - Suspend");
-        $batch->deleteProperty("/server/ec_customEditors/pickerStep/@PLUGIN_KEY@ - Clone");
-        $batch->deleteProperty("/server/ec_customEditors/pickerStep/@PLUGIN_KEY@ - Cleanup");
-        $batch->deleteProperty("/server/ec_customEditors/pickerStep/@PLUGIN_KEY@ - Create");
-        $batch->deleteProperty("/server/ec_customEditors/pickerStep/@PLUGIN_KEY@ - CreateResourceFromVM");
-        $batch->deleteProperty("/server/ec_customEditors/pickerStep/@PLUGIN_KEY@ - GetVMConfiguration");
-        $batch->deleteProperty("/server/ec_customEditors/pickerStep/@PLUGIN_KEY@ - Import");
-        $batch->deleteProperty("/server/ec_customEditors/pickerStep/@PLUGIN_KEY@ - Export");
-        $batch->deleteProperty("/server/ec_customEditors/pickerStep/@PLUGIN_KEY@ - Relocate");
-        $batch->deleteProperty("/server/ec_customEditors/pickerStep/@PLUGIN_KEY@ - RegisterVM");
-        $batch->deleteProperty("/server/ec_customEditors/pickerStep/@PLUGIN_KEY@ - PowerOff");
-        $batch->deleteProperty("/server/ec_customEditors/pickerStep/@PLUGIN_KEY@ - PowerOn");
-        $batch->deleteProperty("/server/ec_customEditors/pickerStep/@PLUGIN_KEY@ - Revert");
-        $batch->deleteProperty("/server/ec_customEditors/pickerStep/@PLUGIN_KEY@ - Shutdown");
-        $batch->deleteProperty("/server/ec_customEditors/pickerStep/@PLUGIN_KEY@ - Snapshot");
+        $batch->deleteProperty("/server/ec_customEditors/pickerStep/$pluginKey - Suspend");
+        $batch->deleteProperty("/server/ec_customEditors/pickerStep/$pluginKey - Clone");
+        $batch->deleteProperty("/server/ec_customEditors/pickerStep/$pluginKey - Cleanup");
+        $batch->deleteProperty("/server/ec_customEditors/pickerStep/$pluginKey - Create");
+        $batch->deleteProperty("/server/ec_customEditors/pickerStep/$pluginKey - CreateResourceFromVM");
+        $batch->deleteProperty("/server/ec_customEditors/pickerStep/$pluginKey - GetVMConfiguration");
+        $batch->deleteProperty("/server/ec_customEditors/pickerStep/$pluginKey - Import");
+        $batch->deleteProperty("/server/ec_customEditors/pickerStep/$pluginKey - Export");
+        $batch->deleteProperty("/server/ec_customEditors/pickerStep/$pluginKey - Relocate");
+        $batch->deleteProperty("/server/ec_customEditors/pickerStep/$pluginKey - RegisterVM");
+        $batch->deleteProperty("/server/ec_customEditors/pickerStep/$pluginKey - PowerOff");
+        $batch->deleteProperty("/server/ec_customEditors/pickerStep/$pluginKey - PowerOn");
+        $batch->deleteProperty("/server/ec_customEditors/pickerStep/$pluginKey - Revert");
+        $batch->deleteProperty("/server/ec_customEditors/pickerStep/$pluginKey - Shutdown");
+        $batch->deleteProperty("/server/ec_customEditors/pickerStep/$pluginKey - Snapshot");
     }
 }
 
