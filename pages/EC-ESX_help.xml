@@ -161,21 +161,21 @@ only if appropriate, such as FOSS - but not commercial software.
 
     <div id="CreateConfiguration"><a name='CreateConfiguration' id=
     "CreateConfiguration"></a>
+
     <h3>Plugin Configuration</h3>
 
-      <p>
-        Plugin configurations are sets of parameters that apply
-        across some or all of the plugin's procedures. They are
-        intended to reduce repetition of common values, create
-        predefined sets of parameters for end users, and to
-        securely store credentials where needed. Each configuration
-        is given a unique name that is entered in designated
-        parameters on procedures that use them.<br /><br />
-        Plugin configurations are created by going to the Electric
-        Commander "Administration" tab, then to the "Defect
-        Tracking" sub-tab.
-      </p>
-      <!-- For all parameters, the parameter name should be *exactly* the same as it appears in the
+    <p>Plugin configurations are sets of parameters that apply
+    across some or all of the plugin's procedures. They are
+    intended to reduce repetition of common values, create
+    predefined sets of parameters for end users, and to securely
+    store credentials where needed. Each configuration is given a
+    unique name that is entered in designated parameters on
+    procedures that use them.<br />
+    <br />
+    Plugin configurations are created by going to the Electric
+    Commander "Administration" tab, then to the "Defect Tracking"
+    sub-tab.</p>
+    <!-- For all parameters, the parameter name should be *exactly* the same as it appears in the
     Parameter Panel, and the first sentence(s) of the description should be
     the same as the tooltip (if there is one). After that, the parameter
     description can go into greater detail about the parameter including
@@ -214,9 +214,8 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
       </tbody>
     </table><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/parameters/configuration_panel.png" />
+    "../../plugins/@PLUGIN_KEY@/images/parameters/configuration_panel.png" /></div>
 
-    </div>
     <div id="Create"><a name='Create' id="Create"></a>
 
     <h3>Create</h3>
@@ -1418,13 +1417,18 @@ only if appropriate, such as FOSS - but not commercial software.
 
     <h1>Release Notes</h1>
 
-    <h2>@PLUGIN_KEY@-@PLUGIN_VERSION@</h2>
+    <h2>@PLUGIN_KEY@-2.0.3</h2>
     <!-- Specific descriptions of additional or changed functionality,
         new parameters, etc. The plugin version header of this section should
         include the speciic build number if possible. Repeat this section for
         each version.
         -->
-    <!--EC-ESX-2.0.0.0-->
+
+    <ul>
+      <li>Fixed power on error.</li>
+    </ul>
+
+    <h2>@PLUGIN_KEY@-2.0.2</h2>
 
     <ul>
       <li>Deleted CloudManagerGrow And CloudManagerShrink from

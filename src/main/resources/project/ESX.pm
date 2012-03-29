@@ -1184,10 +1184,11 @@ sub poweron_vm {
     if (defined($self->opts->{esx_create_resources}) && $self->opts->{esx_create_resources}) {
         $self->createresourcefrom_vm();
         if ($self->ecode()) { return; }
+        $self->debugMsg(1, "Saving vm list " . $::instlist);
+        $self->setProp("/VMList", $::instlist);
     }
 
-    $self->debugMsg(1, "Saving vm list " . $::instlist);
-    $self->setProp("/VMList", $::instlist);
+    
 }
 
 ################################
