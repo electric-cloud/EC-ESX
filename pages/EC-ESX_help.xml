@@ -173,8 +173,10 @@ only if appropriate, such as FOSS - but not commercial software.
     procedures that use them.<br />
     <br />
     Plugin configurations are created by going to the Electric
-    Commander "Administration" tab, then to the "Defect Tracking"
-    sub-tab.</p>
+    Commander "Administration" tab, then to the "Plugins" sub-tab.
+    On the right side of the line for the EC-ESX plugin,
+    there is a "Configure" link which will open the Configuration
+    page.</p>
     <!-- For all parameters, the parameter name should be *exactly* the same as it appears in the
     Parameter Panel, and the first sentence(s) of the description should be
     the same as the tooltip (if there is one). After that, the parameter
@@ -1417,12 +1419,18 @@ only if appropriate, such as FOSS - but not commercial software.
 
     <h1>Release Notes</h1>
 
-    <h2>@PLUGIN_KEY@-2.0.3</h2>
+    <h2>@PLUGIN_KEY@-2.0.4</h2>
     <!-- Specific descriptions of additional or changed functionality,
         new parameters, etc. The plugin version header of this section should
         include the speciic build number if possible. Repeat this section for
         each version.
         -->
+
+    <ul>
+      <li>Fixed configuration description.</li>
+    </ul>
+
+    <h2>@PLUGIN_KEY@-2.0.3</h2>
 
     <ul>
       <li>Fixed power on error.</li>
@@ -1437,7 +1445,7 @@ only if appropriate, such as FOSS - but not commercial software.
       <li>Change Help page style</li>
     </ul>
 
-    <h2>@PLUGIN_KEY@-2.0.1.0</h2>
+    <h2>@PLUGIN_KEY@-2.0.1</h2>
 
     <ul>
       <li>Added help link to each procedure.</li>
@@ -1445,7 +1453,7 @@ only if appropriate, such as FOSS - but not commercial software.
       <li>Parameter Panel XML Cleanup.</li>
     </ul>
 
-    <h2>@PLUGIN_KEY@-2.0.0.0</h2>
+    <h2>@PLUGIN_KEY@-2.0.0</h2>
 
     <ul>
       <li>Applied new help page template.</li>
@@ -1460,13 +1468,13 @@ only if appropriate, such as FOSS - but not commercial software.
       exist.</li>
     </ul>
 
-    <h2>EC-ESX-1.2.3.0</h2>
+    <h2>@PLUGIN_KEY@-1.2.3</h2>
 
     <ul>
       <li>Changed EOL on VMware SDK files.</li>
     </ul>
 
-    <h2>EC-ESX-1.2.2.0</h2>
+    <h2>@PLUGIN_KEY@-1.2.2</h2>
 
     <ul>
       <li>Included vSphere SDK for Perl in the plugin, removed
@@ -1478,13 +1486,13 @@ only if appropriate, such as FOSS - but not commercial software.
       <li>Updated Help page.</li>
     </ul>
 
-    <h2>EC-ESX-1.2.1.0</h2>
+    <h2>@PLUGIN_KEY@-1.2.1</h2>
 
     <ul>
       <li>Updated Help page.</li>
     </ul>
 
-    <h2>EC-ESX-1.2.0.0</h2>
+    <h2>@PLUGIN_KEY@-1.2.0</h2>
 
     <ul>
       <li>Modified the Cleanup and Create subprocedures.</li>
@@ -1499,7 +1507,7 @@ only if appropriate, such as FOSS - but not commercial software.
       Export, and RegisterVM.</li>
     </ul>
 
-    <h2>EC-ESX-1.1.0.0</h2>
+    <h2>@PLUGIN_KEY@-1.1.0</h2>
 
     <ul>
       <li>Added the Snapshot subprodecure.</li>
