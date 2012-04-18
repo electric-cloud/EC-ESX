@@ -270,7 +270,7 @@ sub deleteVMs {
                actualParameter => [
 
                                                                { actualParameterName => "connection_config", value => "$esx_config" },
-                                                               { actualParameterName => "esx_vmname",        value => "$deplist->{$handle}{hostname}" },
+                                                               { actualParameterName => "esx_vmname",        value => "$handle" },
                                   ],
             }
         );

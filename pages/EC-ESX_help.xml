@@ -1327,6 +1327,42 @@ only if appropriate, such as FOSS - but not commercial software.
     </table><img alt="" src=
     "../../plugins/@PLUGIN_KEY@/images/parameters/CloudManagerShrink_panel.png" /></div>
 
+    <div id="CloudManagerSync"><a name='CloudManagerSync' id=
+    "CloudManagerSync"></a>
+
+    <h3>CloudManagerSync</h3>
+
+    <p>This procedure allows the plugin to work with CloudManager
+    plugin, it checks the vms state and is intended to be run
+    by CloudManager.</p>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+
+          <th>Description</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td class='required'>ESX Connection</td>
+
+          <td>The name of the configuration which holds the
+          connection information for ESX server. (Required)</td>
+        </tr>
+
+        <tr>
+          <td class='required'>List of Deployments</td>
+
+          <td>A list of deployments(previously created by
+          CloudManagerGrow) to check. (Required)</td>
+        </tr>
+      </tbody>
+    </table><img alt="" src=
+    "../../plugins/@PLUGIN_KEY@/images/parameters/CloudManagerShrink_panel.png" /></div>
+    
     <h1>Use Cases and Examples</h1>
     <!-- This section is for examples and use cases, including screenshots of the new Parameter Panel with example values filled in.
         Unfortunately, I can't tell you what exactly to put here, but it's OK to put what seems like too much! Include both parameter
@@ -1419,12 +1455,18 @@ only if appropriate, such as FOSS - but not commercial software.
 
     <h1>Release Notes</h1>
 
-    <h2>@PLUGIN_KEY@-2.0.4</h2>
+    <h2>@PLUGIN_KEY@-2.1.0</h2>
     <!-- Specific descriptions of additional or changed functionality,
         new parameters, etc. The plugin version header of this section should
         include the speciic build number if possible. Repeat this section for
         each version.
         -->
+
+    <ul>
+      <li>Added CloudManagerSync procedure.</li>
+    </ul>      
+        
+    <h2>@PLUGIN_KEY@-2.0.4</h2>
 
     <ul>
       <li>Fixed configuration description.</li>

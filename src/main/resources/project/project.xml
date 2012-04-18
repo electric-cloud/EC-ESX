@@ -302,7 +302,7 @@
         <procedure>
             <procedureName>Create</procedureName>
             <description>Create a virtual machine</description>
-            <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-create-$[jobId]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -666,7 +666,7 @@
         <procedure>
             <procedureName>Clone</procedureName>
             <description>Clone a virtual machine</description>
-            <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-clone-$[jobId]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -881,7 +881,7 @@
         <procedure>
             <procedureName>Relocate</procedureName>
             <description>Relocate a virtual machine</description>
-            <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-relocate-$[jobId]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -1079,7 +1079,7 @@
         <procedure>
             <procedureName>Cleanup</procedureName>
             <description>Cleanup a virtual machine</description>
-            <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-cleanup-$[jobId]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -1275,7 +1275,7 @@
         <procedure>
             <procedureName>Revert</procedureName>
             <description>Revert a virtual machine to a specified snapshot</description>
-            <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-revert-$[jobId]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -1488,7 +1488,7 @@
         <procedure>
             <procedureName>Snapshot</procedureName>
             <description>Create a snapshot for the specified virtual machine</description>
-            <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-snapshot-$[jobId]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -1669,7 +1669,7 @@
         <procedure>
             <procedureName>PowerOn</procedureName>
             <description>Power on a virtual machine</description>
-            <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-poweron-$[jobId]</jobNameTemplate>
             <resourceName>local</resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -1916,7 +1916,7 @@
         <procedure>
             <procedureName>PowerOff</procedureName>
             <description>Power off a virtual machine</description>
-            <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-poweroff-$[jobId]</jobNameTemplate>
             <resourceName>local</resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -2080,7 +2080,7 @@
         <procedure>
             <procedureName>Shutdown</procedureName>
             <description>Shutdown a virtual machine</description>
-            <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-shutdown-$[jobId]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -2244,7 +2244,7 @@
         <procedure>
             <procedureName>Suspend</procedureName>
             <description>Suspend a virtual machine</description>
-            <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-suspend-$[jobId]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -2408,7 +2408,7 @@
         <procedure>
             <procedureName>CreateResourceFromVM</procedureName>
             <description>Store information about a virtual machine and create ElectricCommander resources</description>
-            <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-createresource-$[jobId]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -2655,7 +2655,7 @@
         <procedure>
             <procedureName>GetVMConfiguration</procedureName>
             <description>Get virtual machine information and store it in properties</description>
-            <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-getvmconfig-$[jobId]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -2836,7 +2836,7 @@
         <procedure>
             <procedureName>Import</procedureName>
             <description>Import an OVF package to the ESX server</description>
-            <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-import-$[jobId]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -3051,7 +3051,7 @@
         <procedure>
             <procedureName>Export</procedureName>
             <description>Export a virtual machine to an OVF package using ovftool</description>
-            <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-export-$[jobId]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -3283,7 +3283,7 @@
         <procedure>
             <procedureName>RegisterVM</procedureName>
             <description>Register an existing virtual machine</description>
-            <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-register-$[jobId]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -3729,6 +3729,120 @@
                     </property>
                 </propertySheet>
             </step>
-        </procedure>        
+        </procedure>
+        <procedure>
+            <procedureName>CloudManagerSync</procedureName>
+            <description>Hook for CloudManager to sync servers</description>
+            <jobNameTemplate>ESX-CloudManager-Sync-$[jobId]</jobNameTemplate>
+            <resourceName>local</resourceName>
+            <resourceName/>
+            <workspaceName/>
+            <acl>
+                <inheriting>1</inheriting>
+            </acl>
+            <propertySheet>
+                <acl>
+                    <inheriting>1</inheriting>
+                </acl>
+                <property>
+                    <propertyName>ec_customEditorData</propertyName>
+                    <propertySheet>
+                        <acl>
+                            <inheriting>1</inheriting>
+                        </acl>
+                        <property>
+                            <propertyName>parameters</propertyName>
+                            <propertySheet>
+                                <property>
+                                    <propertyName>deployments</propertyName>
+                                    <propertySheet>
+                                        <acl>
+                                            <inheriting>1</inheriting>
+                                        </acl>
+                                        <property>
+                                            <propertyName>formType</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>standard</value>
+                                        </property>
+                                    </propertySheet>
+                                </property>
+                                <property>
+                                    <propertyName>connection_config</propertyName>
+                                    <propertySheet>
+                                        <property>
+                                            <propertyName>formType</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>standard</value>
+                                        </property>
+                                    </propertySheet>
+                                </property>
+                            </propertySheet>
+                        </property>
+                    </propertySheet>
+                </property>
+                <property>
+                    <propertyName>ec_parameterForm</propertyName>
+                    <description/>
+                    <expandable>1</expandable>
+                    <value/>
+                </property>
+            </propertySheet>
+            <formalParameter>
+                <formalParameterName>deployments</formalParameterName>
+                <defaultValue/>
+                <description>A list of deployments to check</description>
+                <required>1</required>
+                <type>entry</type>
+            </formalParameter>
+            <formalParameter>
+                <formalParameterName>connection_config</formalParameterName>
+                <defaultValue/>
+                <description>The name of an ESX config created from the EC-ESX plugin configuration page.</description>
+                <required>1</required>
+                <type>entry</type>
+            </formalParameter>
+            <step>
+                <stepName>sync</stepName>
+                <alwaysRun>0</alwaysRun>
+                <broadcast>0</broadcast>
+                <command/>
+                <condition/>
+                <description>Sync the cloud</description>
+                <errorHandling>failProcedure</errorHandling>
+                <exclusive>0</exclusive>
+                <logFileName/>
+                <parallel>0</parallel>
+                <postProcessor/>
+                <releaseExclusive>0</releaseExclusive>
+                <resourceName>local</resourceName>
+                <retries>0</retries>
+                <shell>ec-perl</shell>
+                <timeLimit/>
+                <timeLimitUnits>minutes</timeLimitUnits>
+                <workingDirectory/>
+                <workspaceName/>
+                <acl>
+                    <inheriting>1</inheriting>
+                </acl>
+                <propertySheet>
+                    <acl>
+                        <inheriting>1</inheriting>
+                    </acl>
+                    <property>
+                        <propertyName>ec_customEditorData</propertyName>
+                        <propertySheet>
+                            <acl>
+                                <inheriting>1</inheriting>
+                            </acl>
+                            <property>
+                                <propertyName>formType</propertyName>
+                                <expandable>1</expandable>
+                                <value>command</value>
+                            </property>
+                        </propertySheet>
+                    </property>
+                </propertySheet>
+            </step>
+        </procedure> 
     </project>
 </exportedData>

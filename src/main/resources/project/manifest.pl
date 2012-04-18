@@ -60,6 +60,8 @@
     ['//step[stepName="grow"]/command',                                                                                 'vm/step.grow.pl'],
     ['//procedure[procedureName="CloudManagerShrink"]/propertySheet/property[propertyName="ec_parameterForm"]/value',   'ui_forms/cloudmanagershrink.xml'],
     ['//step[stepName="shrink"]/command',                                                                               'vm/step.shrink.pl'],
+    ['//procedure[procedureName="CloudManagerSync"]/propertySheet/property[propertyName="ec_parameterForm"]/value',   'ui_forms/cloudmanagersync.xml'],
+    ['//step[stepName="sync"]/command',                                                                               'vm/step.sync.pl'],
 
     ['//property[propertyName="ec_setup"]/value', 'ec_setup.pl'],
          );
