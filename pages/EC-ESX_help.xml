@@ -1455,7 +1455,7 @@ only if appropriate, such as FOSS - but not commercial software.
 
     <h1>Release Notes</h1>
 
-    <h2>@PLUGIN_KEY@-2.1.0</h2>
+    <h2>@PLUGIN_KEY@ 2.1.1</h2>
     <!-- Specific descriptions of additional or changed functionality,
         new parameters, etc. The plugin version header of this section should
         include the speciic build number if possible. Repeat this section for
@@ -1463,96 +1463,106 @@ only if appropriate, such as FOSS - but not commercial software.
         -->
 
     <ul>
-      <li>Added CloudManagerSync procedure.</li>
+      <li>Procedure name(s) were changed in the step picker section</li>
+    </ul>      
+    <h2>@PLUGIN_KEY@ 2.1.0</h2>
+    <!-- Specific descriptions of additional or changed functionality,
+        new parameters, etc. The plugin version header of this section should
+        include the speciic build number if possible. Repeat this section for
+        each version.
+        -->
+
+    <ul>
+      <li>Added CloudManagerSync procedure</li>
     </ul>      
         
-    <h2>@PLUGIN_KEY@-2.0.4</h2>
+    <h2>@PLUGIN_KEY@ 2.0.4</h2>
 
     <ul>
-      <li>Fixed configuration description.</li>
+      <li>Fixed configuration description</li>
     </ul>
 
-    <h2>@PLUGIN_KEY@-2.0.3</h2>
+    <h2>@PLUGIN_KEY@ 2.0.3</h2>
 
     <ul>
-      <li>Fixed power on error.</li>
+      <li>Fixed power on error</li>
     </ul>
 
-    <h2>@PLUGIN_KEY@-2.0.2</h2>
+    <h2>@PLUGIN_KEY@ 2.0.2</h2>
 
     <ul>
       <li>Deleted CloudManagerGrow And CloudManagerShrink from
-      stepPicker.</li>
+      stepPicker</li>
 
       <li>Change Help page style</li>
     </ul>
 
-    <h2>@PLUGIN_KEY@-2.0.1</h2>
+    <h2>@PLUGIN_KEY@ 2.0.1</h2>
 
     <ul>
-      <li>Added help link to each procedure.</li>
+      <li>Added help link to each procedure</li>
 
-      <li>Parameter Panel XML Cleanup.</li>
+      <li>Parameter Panel XML Cleanup</li>
     </ul>
 
-    <h2>@PLUGIN_KEY@-2.0.0</h2>
+    <h2>@PLUGIN_KEY@ 2.0.0</h2>
 
     <ul>
-      <li>Applied new help page template.</li>
+      <li>Applied new help page template</li>
 
-      <li>Added detailed use case.</li>
+      <li>Added detailed use case</li>
 
-      <li>Added new XML parameter panel to all procedures.</li>
+      <li>Added new XML parameter panel to all procedures</li>
 
-      <li>Added support for EC-CloudManager.</li>
+      <li>Added support for EC-CloudManager</li>
 
       <li>Fixed cleanup procedure when resource does not
-      exist.</li>
+      exist</li>
     </ul>
 
-    <h2>@PLUGIN_KEY@-1.2.3</h2>
+    <h2>@PLUGIN_KEY@ 1.2.3</h2>
 
     <ul>
-      <li>Changed EOL on VMware SDK files.</li>
+      <li>Changed EOL on VMware SDK files</li>
     </ul>
 
-    <h2>@PLUGIN_KEY@-1.2.2</h2>
+    <h2>@PLUGIN_KEY@ 1.2.2</h2>
 
     <ul>
       <li>Included vSphere SDK for Perl in the plugin, removed
-      sdk_installation_path parameter from all procedures.</li>
+      sdk_installation_path parameter from all procedures</li>
 
       <li>Removed CreateConfiguration and DeleteConfiguration
-      procedures from the wizard/procedure selection.</li>
+      procedures from the wizard/procedure selection</li>
 
-      <li>Updated Help page.</li>
+      <li>Updated Help page</li>
     </ul>
 
-    <h2>@PLUGIN_KEY@-1.2.1</h2>
+    <h2>@PLUGIN_KEY@ 1.2.1</h2>
 
     <ul>
-      <li>Updated Help page.</li>
+      <li>Updated Help page</li>
     </ul>
 
-    <h2>@PLUGIN_KEY@-1.2.0</h2>
+    <h2>@PLUGIN_KEY@ 1.2.0</h2>
 
     <ul>
-      <li>Modified the Cleanup and Create subprocedures.</li>
+      <li>Modified the Cleanup and Create subprocedures</li>
 
       <li>Added the ability for all subprocedures to perform
-      operations for multiple virtual machines.</li>
+      operations for multiple virtual machines</li>
 
-      <li>Added the timeout parameter to all steps.</li>
+      <li>Added the timeout parameter to all steps</li>
 
       <li>Added these subprocedures: PowerOn, PowerOff, Shutdown,
       Suspend, GetVMConfiguration, CreateResourceFromVM, Import,
-      Export, and RegisterVM.</li>
+      Export, and RegisterVM</li>
     </ul>
 
-    <h2>@PLUGIN_KEY@-1.1.0</h2>
+    <h2>@PLUGIN_KEY@ 1.1.0</h2>
 
     <ul>
-      <li>Added the Snapshot subprodecure.</li>
+      <li>Added the Snapshot subprodecure</li>
     </ul>
   </div>
 </body>
