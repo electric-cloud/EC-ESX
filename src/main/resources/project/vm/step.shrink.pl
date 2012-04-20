@@ -185,6 +185,26 @@ sub removeFromPools {
 sub determineResourcesInUse {
     my ($deplist) = @_;
 
+    ## first check if any resources specified in the input list
+    ## if not, don't bother checking for usage
+    my $resourceSpecified = 0;
+    foreach my $handle (keys %{$deplist}) {
+        my $resource = $deplist->{$handle}{resource};
+
+        # mark as not in use/pending so it will be considered
+        # for immediate delete
+        if ($resource eq "") {
+            $deplist->{$handle}{inuse} = "no";
+            $deplist->{$handle}{result} = "pending";
+        } else {
+            $resourceSpecified = 1;
+        }
+    }
+    if (! $resourceSpecified) { 
+        print "No resources specified, skipping usage checks\n";
+        return;
+    }
+    
     ## get resource usage for all resources
     my $xpath = $::ec->getResourceUsage();
     my $usage;
@@ -201,6 +221,10 @@ sub determineResourcesInUse {
     foreach my $handle (keys %{$deplist}) {
         my $state    = $deplist->{$handle}{state};
         my $resource = $deplist->{$handle}{resource};
+        if ("$resource" eq "") {
+            next;
+        }
+        
         print "\nCheck pending resources $resource in state $state\n";
 
         # if resource not exclusively allocated
