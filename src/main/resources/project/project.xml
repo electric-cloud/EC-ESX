@@ -3498,7 +3498,7 @@
         <procedure>
             <procedureName>CloudManagerShrink</procedureName>
             <description>Hook for CloudManager to poweroff vms</description>
-            <jobNameTemplate>ESX-CloudManager-Shrink-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>ESX-CloudManagerShrink-$[jobId]</jobNameTemplate>
             <resourceName>local</resourceName>
             <workspaceName></workspaceName>
             <propertySheet>
@@ -3590,7 +3590,7 @@
         <procedure>
             <procedureName>CloudManagerGrow</procedureName>
             <description>Hook for CloudManager to poweron vms</description>
-            <jobNameTemplate>ESX-CloudManager-Grow-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>ESX-CloudManagerGrow-$[jobId]</jobNameTemplate>
             <resourceName>local</resourceName>
             <workspaceName></workspaceName>
             <propertySheet>
@@ -3733,7 +3733,7 @@
         <procedure>
             <procedureName>CloudManagerSync</procedureName>
             <description>Hook for CloudManager to sync servers</description>
-            <jobNameTemplate>ESX-CloudManager-Sync-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>ESX-CloudManagerSync-$[jobId]</jobNameTemplate>
             <resourceName>local</resourceName>
             <resourceName/>
             <workspaceName/>
