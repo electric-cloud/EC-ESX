@@ -1,4 +1,3 @@
-
 // CreateConfiguration.java --
 //
 // CreateConfiguration.java is part of ElectricCommander.
@@ -12,8 +11,6 @@ package ecplugins.esx.client;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
@@ -23,7 +20,6 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.electriccloud.commander.client.requests.RunProcedureRequest;
 import com.electriccloud.commander.client.responses.DefaultRunProcedureResponseCallback;
 import com.electriccloud.commander.client.responses.RunProcedureResponse;
-import com.electriccloud.commander.gwt.client.ComponentBaseFactory;
 import com.electriccloud.commander.gwt.client.requests.CgiRequestProxy;
 import com.electriccloud.commander.gwt.client.ui.CredentialEditor;
 import com.electriccloud.commander.gwt.client.ui.FormBuilder;
@@ -34,39 +30,39 @@ import com.electriccloud.commander.gwt.client.util.CommanderUrlBuilder;
 import ecinternal.client.InternalFormBase;
 import ecinternal.client.ui.CustomEditorLoader;
 
+import static ecinternal.client.InternalComponentBaseFactory.getPluginName;
+import static com.electriccloud.commander.gwt.client.util.CommanderUrlBuilder.createPageUrl;
+import static com.electriccloud.commander.gwt.client.util.CommanderUrlBuilder.createUrl;
+
 /**
  * Create ESX Configuration.
  */
-public class CreateConfiguration
-    extends InternalFormBase
-{
+public class CreateConfiguration extends InternalFormBase {
 
-    //~ Constructors -----------------------------------------------------------
+    // ~ Constructors
+    // -----------------------------------------------------------
 
-    public CreateConfiguration()
-    {
-
-        // noinspection HardCodedStringLiteral
+    public CreateConfiguration() {
         super("New ESX Configuration", "ESX Configurations");
 
-        CommanderUrlBuilder urlBuilder = CommanderUrlBuilder.createPageUrl(
-                ComponentBaseFactory.getPluginName(), "configurations");
+        CommanderUrlBuilder urlBuilder = createPageUrl(getPluginName(),
+                "configurations");
 
         setDefaultRedirectToUrl(urlBuilder.buildString());
     }
 
-    //~ Methods ----------------------------------------------------------------
+    // ~ Methods
+    // ----------------------------------------------------------------
 
-    @Override protected FormTable initializeFormTable()
-    {
+    @Override
+    protected FormTable initializeFormTable() {
         return getUIFactory().createFormBuilder();
     }
 
-    @Override protected void load()
-    {
+    @Override
+    protected void load() {
         FormBuilder fb = (FormBuilder) getFormTable();
 
-        // noinspection HardCodedStringLiteral
         setStatus("Loading...");
 
         CustomEditorLoader loader = new CustomEditorLoader(fb, this);
@@ -77,10 +73,8 @@ public class CreateConfiguration
         clearStatus();
     }
 
-    @Override protected void submit()
-    {
-
-        // noinspection HardCodedStringLiteral
+    @Override
+    protected void submit() {
         setStatus("Saving...");
         clearAllErrors();
 
@@ -99,38 +93,35 @@ public class CreateConfiguration
         request.setProjectName("/plugins/EC-ESX/project");
         request.setProcedureName("CreateConfiguration");
 
-        Map<String, String> params           = fb.getValues();
-        Collection<String>  credentialParams = fb.getCredentialIds();
+        Map<String, String> params = fb.getValues();
+        Collection<String> credentialParams = fb.getCredentialIds();
 
-        for (Entry<String, String> stringStringEntry : params.entrySet()) {
+        for (String paramName : params.keySet()) {
 
-            if (credentialParams.contains(stringStringEntry.getKey())) {
-                CredentialEditor credential = fb.getCredential(
-                        stringStringEntry.getKey());
+            if (credentialParams.contains(paramName)) {
+                CredentialEditor credential = fb.getCredential(paramName);
 
-                request.addCredentialParameter(stringStringEntry.getKey(),
-                    credential.getUsername(), credential.getPassword());
-            }
-            else {
-                request.addActualParameter(stringStringEntry.getKey(),
-                    stringStringEntry.getValue());
+                request.addCredentialParameter(paramName,
+                        credential.getUsername(), credential.getPassword());
+            } else {
+                request.addActualParameter(paramName, params.get(paramName));
             }
         }
 
+        // Launch the procedure
         request.setCallback(new DefaultRunProcedureResponseCallback(this) {
-                @Override public void handleResponse(
-                        RunProcedureResponse response)
-                {
+            @Override
+            public void handleResponse(RunProcedureResponse response) {
 
-                    if (getLog().isDebugEnabled()) {
-                        getLog().debug(
-                            "Commander runProcedure request returned job id: "
-                                + response.getJobId());
-                    }
-
-                    waitForJob(response.getJobId().toString());
+                if (getLog().isDebugEnabled()) {
+                    getLog().debug(
+                            "Commander runProcedure request returned jobId: "
+                                    + response.getJobId());
                 }
-            });
+
+                waitForJob(response.getJobId().toString());
+            }
+        });
 
         if (getLog().isDebugEnabled()) {
             getLog().debug("Issuing Commander request: " + request);
@@ -139,12 +130,10 @@ public class CreateConfiguration
         doRequest(request);
     }
 
-    @SuppressWarnings("OverlyComplexAnonymousInnerClass")
-    private void waitForJob(final String jobId)
-    {
-        CgiRequestProxy     cgiRequestProxy = new CgiRequestProxy(
-                ComponentBaseFactory.getPluginName(), "esxMonitor.cgi");
-        Map<String, String> cgiParams       = new HashMap<String, String>();
+    private void waitForJob(final String jobId) {
+        CgiRequestProxy cgiRequestProxy = new CgiRequestProxy(getPluginName(),
+                "esxMonitor.cgi");
+        Map<String, String> cgiParams = new HashMap<String, String>();
 
         cgiParams.put("jobId", jobId);
 
@@ -156,58 +145,40 @@ public class CreateConfiguration
 
         try {
             cgiRequestProxy.issueGetRequest(cgiParams, new RequestCallback() {
-                    @Override public void onError(
-                            Request   request,
-                            Throwable exception)
-                    {
+                @Override
+                public void onError(Request request, Throwable exception) {
+                    addErrorMessage("CGI request failed: ", exception);
+                }
 
-                        // noinspection HardCodedStringLiteral
-                        addErrorMessage("CGI request failed: ", exception);
-                    }
+                @Override
+                public void onResponseReceived(Request request,
+                        Response response) {
+                    String responseString = response.getText();
 
-                    @Override public void onResponseReceived(
-                            Request  request,
-                            Response response)
-                    {
-                        String responseString = response.getText();
-
-                        if (getLog().isDebugEnabled()) {
-                            getLog().debug(
+                    if (getLog().isDebugEnabled()) {
+                        getLog().debug(
                                 "CGI response received: " + responseString);
-                        }
-
-                        if (responseString.startsWith("Success")) {
-
-                            // We're done!
-                            cancel();
-                        }
-                        else {
-                            @SuppressWarnings(
-                                {
-                                    "HardCodedStringLiteral",
-                                    "StringConcatenation"
-                                }
-                            )
-                            SimpleErrorBox      error      = getUIFactory()
-                                    .createSimpleErrorBox(
-                                        "Error occurred during configuration creation: "
-                                        + responseString);
-                            CommanderUrlBuilder urlBuilder = CommanderUrlBuilder
-                                    .createUrl("jobDetails.php")
-                                    .setParameter("jobId", jobId);
-
-                            // noinspection HardCodedStringLiteral
-                            error.add(
-                                new Anchor("(See job for details)",
-                                    urlBuilder.buildString()));
-                            addErrorMessage(error);
-                        }
                     }
-                });
-        }
-        catch (RequestException e) {
 
-            // noinspection HardCodedStringLiteral
+                    if (responseString.startsWith("Success")) {
+
+                        // We're done!
+                        cancel();
+                    } else {
+                        SimpleErrorBox error = getUIFactory()
+                                .createSimpleErrorBox(
+                                        "Error occurred during configuration creation: "
+                                                + responseString);
+                        CommanderUrlBuilder urlBuilder = createUrl(
+                                "jobDetails.php").setParameter("jobId", jobId);
+
+                        error.add(new Anchor("(See job for details)",
+                                urlBuilder.buildString()));
+                        addErrorMessage(error);
+                    }
+                }
+            });
+        } catch (RequestException e) {
             addErrorMessage("CGI request failed: ", e);
         }
     }

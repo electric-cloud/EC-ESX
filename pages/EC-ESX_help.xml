@@ -176,7 +176,8 @@ only if appropriate, such as FOSS - but not commercial software.
     Commander "Administration" tab, then to the "Plugins" sub-tab.
     On the right side of the line for the EC-ESX plugin,
     there is a "Configure" link which will open the Configuration
-    page.</p>
+    page.<br />
+    ESX does not allow network-style login like (DOMAIN\user).</p>
     <!-- For all parameters, the parameter name should be *exactly* the same as it appears in the
     Parameter Panel, and the first sentence(s) of the description should be
     the same as the tooltip (if there is one). After that, the parameter
@@ -205,7 +206,7 @@ only if appropriate, such as FOSS - but not commercial software.
         <tr>
           <td class='required'>ESX URL</td>
 
-          <td>Provide the URL of the ESX server. (Required)</td>
+          <td>Provide the URL of the ESX server with the form: https://(ip_address|hostname). (Required)</td>
         </tr>
 
         <tr>
@@ -214,6 +215,13 @@ only if appropriate, such as FOSS - but not commercial software.
           <td>Provide the user name and password Commander uses to
           communicate with the ESX server. (Required)</td>
         </tr>
+        
+        <tr>
+          <td >Attempt Connection?</td>
+
+          <td>Attempt a connection to check credentials.</td>
+        </tr>
+        
       </tbody>
     </table><img alt="" src=
     "../../plugins/@PLUGIN_KEY@/images/parameters/configuration_panel.png" /></div>
@@ -1455,7 +1463,7 @@ only if appropriate, such as FOSS - but not commercial software.
 
     <h1>Release Notes</h1>
 
-    <h2>@PLUGIN_KEY@ 2.1.1</h2>
+    <h2>@PLUGIN_KEY@ 2.1.2</h2>
     <!-- Specific descriptions of additional or changed functionality,
         new parameters, etc. The plugin version header of this section should
         include the speciic build number if possible. Repeat this section for
@@ -1463,15 +1471,17 @@ only if appropriate, such as FOSS - but not commercial software.
         -->
 
     <ul>
+      <li>Documented from for ESX Url in configurations.</li>
+      <li>Added Step to test credentials.</li>
+      <li>Fixed Configuration Management.</li>
+    </ul>
+    
+    <h2>@PLUGIN_KEY@ 2.1.1</h2>
+    <ul>
       <li>Procedure name(s) were changed in the step picker section</li>
-    </ul>      
+    </ul> 
+    
     <h2>@PLUGIN_KEY@ 2.1.0</h2>
-    <!-- Specific descriptions of additional or changed functionality,
-        new parameters, etc. The plugin version header of this section should
-        include the speciic build number if possible. Repeat this section for
-        each version.
-        -->
-
     <ul>
       <li>Added CloudManagerSync procedure</li>
     </ul>      

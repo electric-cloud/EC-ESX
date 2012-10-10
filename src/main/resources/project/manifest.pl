@@ -1,16 +1,16 @@
 @files = (
-    ['//property[propertyName="ui_forms"]/propertySheet/property[propertyName="ESXCreateConfigForm"]/value', 'ESXCreateConfigForm.xml'],
-    ['//property[propertyName="ui_forms"]/propertySheet/property[propertyName="ESXEditConfigForm"]/value',   'ESXEditConfigForm.xml'],
 
-    ['//property[propertyName="preamble"]/value', 'preamble.pl'],
-    ['//property[propertyName="ESX"]/value',      'ESX.pm'],
+    #Configuration files
+    ['//procedure[procedureName="CreateConfiguration"]/propertySheet/property[propertyName="ec_parameterForm"]/value', 'ESXCreateConfigForm.xml'],
+    ['//procedure[procedureName="DeleteConfiguration"]/propertySheet/property[propertyName="ec_parameterForm"]/value', 'ui_forms/deleteconfiguration.xml'],
+    ['//property[propertyName="ui_forms"]/propertySheet/property[propertyName="ESXCreateConfigForm"]/value',           'ESXCreateConfigForm.xml'],
+    ['//property[propertyName="ui_forms"]/propertySheet/property[propertyName="ESXEditConfigForm"]/value',             'ESXEditConfigForm.xml'],
+    ['//procedure[procedureName="CreateConfiguration"]/step[stepName="CreateConfiguration"]/command',                  'conf/createcfg.pl'],
+    ['//procedure[procedureName="CreateConfiguration"]/step[stepName="CreateAndAttachCredential"]/command',            'conf/createAndAttachCredential.pl'],
+    ['//procedure[procedureName="CreateConfiguration"]/step[stepName="AttemptConnection"]/command',                    'conf/attemptConnection.pl'],
+    ['//procedure[procedureName="DeleteConfiguration"]/step[stepName="DeleteConfiguration"]/command',                  'conf/deletecfg.pl'],
 
-    ['//procedure[procedureName="CreateConfiguration"]/step[stepName="CreateConfiguration"]/command',       'conf/createcfg.pl'],
-    ['//procedure[procedureName="CreateConfiguration"]/step[stepName="CreateAndAttachCredential"]/command', 'conf/createAndAttachCredential.pl'],
-    ['//procedure[procedureName="DeleteConfiguration"]/step[stepName="DeleteConfiguration"]/command',       'conf/deletecfg.pl'],
-
-    ['//procedure[procedureName="CreateConfiguration"]/propertySheet/property[propertyName="ec_parameterForm"]/value',  'ESXCreateConfigForm.xml'],
-    ['//procedure[procedureName="DeleteConfiguration"]/propertySheet/property[propertyName="ec_parameterForm"]/value',  'ui_forms/deleteconfiguration.xml'],
+    #Procedures
     ['//procedure[procedureName="Create"]/propertySheet/property[propertyName="ec_parameterForm"]/value',               'ui_forms/create.xml'],
     ['//step[stepName="Create"]/command',                                                                               'vm/create.pl'],
     ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
@@ -60,8 +60,11 @@
     ['//step[stepName="grow"]/command',                                                                                 'vm/step.grow.pl'],
     ['//procedure[procedureName="CloudManagerShrink"]/propertySheet/property[propertyName="ec_parameterForm"]/value',   'ui_forms/cloudmanagershrink.xml'],
     ['//step[stepName="shrink"]/command',                                                                               'vm/step.shrink.pl'],
-    ['//procedure[procedureName="CloudManagerSync"]/propertySheet/property[propertyName="ec_parameterForm"]/value',   'ui_forms/cloudmanagersync.xml'],
-    ['//step[stepName="sync"]/command',                                                                               'vm/step.sync.pl'],
+    ['//procedure[procedureName="CloudManagerSync"]/propertySheet/property[propertyName="ec_parameterForm"]/value',     'ui_forms/cloudmanagersync.xml'],
+    ['//step[stepName="sync"]/command',                                                                                 'vm/step.sync.pl'],
 
+    #Main files
+    ['//property[propertyName="preamble"]/value', 'preamble.pl'],
+    ['//property[propertyName="ESX"]/value',      'ESX.pm'],
     ['//property[propertyName="ec_setup"]/value', 'ec_setup.pl'],
-         );
+);

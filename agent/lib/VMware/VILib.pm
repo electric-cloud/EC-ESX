@@ -2,7 +2,7 @@
 # Copyright 2006 VMware, Inc.  All rights reserved.
 #
 
-use 5.006001;
+use 5.006_001;
 use strict;
 use warnings;
 use File::Basename;
@@ -212,7 +212,7 @@ sub option_is_set {
 #
 sub construct_service_url {
    my %arg = @_;
-   use URI;
+   use URI 1.40;
    my $protocol = delete $arg{protocol};
    my $server = delete $arg{server};
    my $port = delete $arg{port};

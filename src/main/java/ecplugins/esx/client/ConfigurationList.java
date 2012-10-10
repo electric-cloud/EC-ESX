@@ -33,8 +33,6 @@ import com.electriccloud.commander.gwt.client.util.CommanderUrlBuilder;
 
 import ecinternal.client.DialogClickHandler;
 import ecinternal.client.ListBase;
-import ecinternal.client.Loader;
-
 import static com.electriccloud.commander.gwt.client.util.CommanderUrlBuilder.createPageUrl;
 import static com.electriccloud.commander.gwt.client.util.CommanderUrlBuilder.createRedirectUrl;
 
@@ -49,14 +47,12 @@ public class ConfigurationList
 
     //~ Instance fields --------------------------------------------------------
 
-    private final ESXConfigList m_configList;
+    private ESXConfigList m_configList;
 
     //~ Constructors -----------------------------------------------------------
 
     public ConfigurationList()
     {
-
-        // noinspection HardCodedStringLiteral
         super("ecgc", "ESX Configurations", "All Configurations");
         m_configList = new ESXConfigList();
     }
@@ -71,17 +67,14 @@ public class ConfigurationList
         urlBuilder.setParameter("redirectTo",
             createRedirectUrl().buildString());
 
-        // noinspection HardCodedStringLiteral
         return new Anchor("Create Configuration", urlBuilder.buildString());
     }
 
     @Override protected void load()
     {
-
-        // noinspection HardCodedStringLiteral
         setStatus("Loading...");
 
-        Loader loader = new ESXConfigListLoader(m_configList, this,
+        ESXConfigListLoader loader = new ESXConfigListLoader(m_configList, this,
                 new ChainedCallback() {
                     @Override public void onComplete()
                     {
@@ -94,8 +87,6 @@ public class ConfigurationList
 
     private void deleteConfiguration(String configName)
     {
-
-        // noinspection HardCodedStringLiteral
         setStatus("Deleting...");
         clearErrorMessages();
 
@@ -113,7 +104,7 @@ public class ConfigurationList
 
                     if (getLog().isDebugEnabled()) {
                         getLog().debug(
-                            "Commander runProcedure request returned job id: "
+                            "Commander runProcedure request returned jobId: "
                                 + response.getJobId());
                     }
 
@@ -134,8 +125,6 @@ public class ConfigurationList
         ListTable listTable = getListTable();
 
         if (!m_configList.isEmpty()) {
-
-            // noinspection HardCodedStringLiteral
             listTable.addHeaderRow(true, "Configuration Name", "Url");
         }
 
@@ -156,14 +145,11 @@ public class ConfigurationList
             urlBuilder.setParameter("redirectTo",
                 createRedirectUrl().buildString());
 
-            @SuppressWarnings("HardCodedStringLiteral")
             Anchor editConfigLink = new Anchor("Edit",
                     urlBuilder.buildString());
 
             // "Delete" link
-            @SuppressWarnings("HardCodedStringLiteral")
             Anchor       deleteConfigLink = new Anchor("Delete");
-            @SuppressWarnings({"HardCodedStringLiteral", "StringConcatenation"})
             ClickHandler dch = new DialogClickHandler(
                     new DeleteConfirmationDialog(configName,
                         "Are you sure you want to delete the ESX configuration '"
@@ -177,6 +163,11 @@ public class ConfigurationList
             deleteConfigLink.addClickHandler(dch);
 
             // Add the row
+            editConfigLink.getElement()
+            .setId(getIdPrefix() + "-edit");
+            deleteConfigLink.getElement()
+              .setId(getIdPrefix() + "-delete");
+
             Widget actions = getUIFactory().constructActionList(editConfigLink,
                     deleteConfigLink);
 
@@ -186,7 +177,6 @@ public class ConfigurationList
         clearStatus();
     }
 
-    @SuppressWarnings("OverlyComplexAnonymousInnerClass")
     private void waitForJob(final String jobId)
     {
         CgiRequestProxy     cgiRequestProxy = new CgiRequestProxy(
@@ -207,8 +197,6 @@ public class ConfigurationList
                             Request   request,
                             Throwable exception)
                     {
-
-                        // noinspection HardCodedStringLiteral
                         addErrorMessage("CGI request failed:: ", exception);
                     }
 
@@ -229,12 +217,6 @@ public class ConfigurationList
                             Location.reload();
                         }
                         else {
-                            @SuppressWarnings(
-                                {
-                                    "HardCodedStringLiteral",
-                                    "StringConcatenation"
-                                }
-                            )
                             SimpleErrorBox      error      = getUIFactory()
                                     .createSimpleErrorBox(
                                         "Error occurred during configuration deletion: "
@@ -243,7 +225,6 @@ public class ConfigurationList
                                     .createUrl("jobDetails.php")
                                     .setParameter("jobId", jobId);
 
-                            // noinspection HardCodedStringLiteral
                             error.add(
                                 new Anchor("(See job for details)",
                                     urlBuilder.buildString()));
@@ -253,8 +234,6 @@ public class ConfigurationList
                 });
         }
         catch (RequestException e) {
-
-            // noinspection HardCodedStringLiteral
             addErrorMessage("CGI request failed:: ", e);
         }
     }

@@ -71,7 +71,7 @@
                     <propertyName>ec_visibility</propertyName>
                     <description></description>
                     <expandable>1</expandable>
-                    <value>hidden</value>
+                    <value>private</value>
                 </property>
                 <property>
                     <propertyName>ec_customEditorData</propertyName>
@@ -109,6 +109,31 @@
                                         </property>
                                     </propertySheet>
                                 </property>
+                                <property>
+                                    <propertyName>attempt</propertyName>
+                                    <propertySheet>
+                                        <property>
+                                            <propertyName>checkedValue</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>true</value>
+                                        </property>
+                                        <property>
+                                            <propertyName>formType</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>standard</value>
+                                        </property>
+                                        <property>
+                                            <propertyName>initiallyChecked</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>0</value>
+                                        </property>
+                                        <property>
+                                            <propertyName>uncheckedValue</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>false</value>
+                                        </property>
+                                    </propertySheet>
+                                </property>
                             </propertySheet>
                         </property>
                     </propertySheet>
@@ -141,6 +166,14 @@
                 <required>0</required>
                 <type>credential</type>
             </formalParameter>
+            <formalParameter>
+                <formalParameterName>attempt</formalParameterName>
+                <defaultValue/>
+                <description>Attempt a connection to ESX to test credentials.</description>
+                <expansionDeferred>0</expansionDeferred>
+                <required>0</required>
+                <type>checkbox</type>
+            </formalParameter>
             <step>
                 <stepName>CreateConfiguration</stepName>
                 <alwaysRun>0</alwaysRun>
@@ -148,7 +181,7 @@
                 <command></command>
                 <condition></condition>
                 <description>Create a ESX configuration</description>
-                <errorHandling>failProcedure</errorHandling>
+                <errorHandling>abortJobNow</errorHandling>
                 <exclusive>0</exclusive>
                 <logFileName></logFileName>
                 <parallel>0</parallel>
@@ -196,6 +229,43 @@
                 <timeLimitUnits>minutes</timeLimitUnits>
                 <workingDirectory></workingDirectory>
                 <workspaceName></workspaceName>
+                <procedureName>CreateConfiguration</procedureName>
+                <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+                <propertySheet>
+                    <property>
+                        <propertyName>ec_customEditorData</propertyName>
+                        <propertySheet>
+                            <property>
+                                <propertyName>formType</propertyName>
+                                <expandable>1</expandable>
+                                <value>command</value>
+                            </property>
+                        </propertySheet>
+                    </property>
+                </propertySheet>
+                <attachedParameters>
+                    <formalParameterName>credential</formalParameterName>
+                </attachedParameters>
+            </step>
+            <step>
+                <stepName>AttemptConnection</stepName>
+                <alwaysRun>0</alwaysRun>
+                <broadcast>0</broadcast>
+                <command/>
+                <condition>$[attempt]</condition>
+                <description/>
+                <errorHandling>failProcedure</errorHandling>
+                <exclusiveMode>none</exclusiveMode>
+                <logFileName/>
+                <parallel>0</parallel>
+                <postProcessor>postp</postProcessor>
+                <releaseMode>none</releaseMode>
+                <resourceName>local</resourceName>
+                <shell>ec-perl</shell>
+                <timeLimit/>
+                <timeLimitUnits>minutes</timeLimitUnits>
+                <workingDirectory/>
+                <workspaceName/>
                 <procedureName>CreateConfiguration</procedureName>
                 <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
                 <propertySheet>

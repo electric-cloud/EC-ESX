@@ -48,6 +48,13 @@ if (defined $property && "$property" ne "") {
     exit ERROR;
 }
 
+# check valid esx_url
+if ($opts->{esx_url} !~ m/http(s*):\/\/(.*)/) {
+    print "You need to use the URL to address the host: 'http(s)://(ip_address|hostname)'";
+    exit ERROR;
+}
+
+
 my $cfg = new ElectricCommander::PropDB($ec,"/myProject/esx_cfgs");
 
 # add all the options as properties

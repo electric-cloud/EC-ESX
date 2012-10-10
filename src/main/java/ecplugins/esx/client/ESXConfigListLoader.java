@@ -235,7 +235,7 @@ public class ESXConfigListLoader
 
             // There was no property value found in the response
             String errorMsg = "Editor '" + m_editorName
-                    + "' not found for ESX plugin '" + m_configPlugin + "'";
+                    + "' not found for EC-ESX plugin '" + m_configPlugin + "'";
 
             if (m_component instanceof HasErrorPanel) {
                 ((HasErrorPanel) m_component).addErrorMessage(errorMsg);

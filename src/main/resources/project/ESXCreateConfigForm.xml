@@ -1,29 +1,36 @@
-<step>
-    <project>/plugins/@PLUGIN_KEY@/project</project>
-    <procedure>CreateConfiguration</procedure>
-    <category>Resource Management</category>
-    <editor>
-        <formElement>
-            <type>entry</type>
-            <label>Configuration Name:</label>
-            <property>config</property>
-            <value></value>
-            <required>1</required>
-        </formElement>
-        <formElement>
-            <type>entry</type>
-            <label>ESX Url:</label>
-            <property>esx_url</property>
-            <value></value>
-            <documentation>Url of ESX server</documentation>
-            <required>1</required>
-        </formElement>
-        <formElement>
-            <type>credential</type>
-            <label>Login as:</label>
-            <property>credential</property>
-            <value></value>
-            <required>0</required>
-        </formElement>
-    </editor>
-</step>
+<editor>
+    <formElement>
+        <type>entry</type>
+        <label>Configuration Name:</label>
+        <property>config</property>
+        <value/>
+        <required>1</required>
+        <documentation>Provide a unique name for the configuration, keeping in mind that you may need to create additional configurations over time.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>ESX Url:</label>
+        <property>esx_url</property>
+        <value/>
+        <documentation>Provide the URL of the ESX server with the form: https://(ip_address|hostname).</documentation>
+        <required>1</required>
+    </formElement>
+    <formElement>
+        <type>credential</type>
+        <label>Login as:</label>
+        <property>credential</property>
+        <value/>
+        <required>0</required>
+        <documentation>ESX username/password.</documentation>
+    </formElement>
+    <formElement>
+        <type>checkbox</type>
+        <label>Attempt Connection?:</label>
+        <property>attempt</property>
+        <checkedValue>1</checkedValue>
+        <uncheckedValue>0</uncheckedValue>
+        <initiallyChecked>1</initiallyChecked>        
+        <documentation>Attempt a connection to check credentials.</documentation>
+        <required>0</required>
+    </formElement>
+</editor>
