@@ -62,7 +62,7 @@
         <procedure>
             <procedureName>CreateConfiguration</procedureName>
             <description>Create an ESX configuration</description>
-            <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-cfg-$[/increment /myJob/project/jobCounter]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -288,7 +288,7 @@
         <procedure>
             <procedureName>DeleteConfiguration</procedureName>
             <description>Delete an ESX configuration</description>
-            <jobNameTemplate>esx-cfg-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-cfg-$[/increment /myJob/project/jobCounter]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -372,7 +372,7 @@
         <procedure>
             <procedureName>Create</procedureName>
             <description>Create a virtual machine</description>
-            <jobNameTemplate>esx-create-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-create-$[/increment /myJob/project/jobCounter]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -736,7 +736,7 @@
         <procedure>
             <procedureName>Clone</procedureName>
             <description>Clone a virtual machine</description>
-            <jobNameTemplate>esx-clone-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-clone-$[/increment /myJob/project/jobCounter]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -951,7 +951,7 @@
         <procedure>
             <procedureName>Relocate</procedureName>
             <description>Relocate a virtual machine</description>
-            <jobNameTemplate>esx-relocate-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-relocate-$[/increment /myJob/project/jobCounter]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -1149,7 +1149,7 @@
         <procedure>
             <procedureName>Cleanup</procedureName>
             <description>Cleanup a virtual machine</description>
-            <jobNameTemplate>esx-cleanup-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-cleanup-$[/increment /myJob/project/jobCounter]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -1345,7 +1345,7 @@
         <procedure>
             <procedureName>Revert</procedureName>
             <description>Revert a virtual machine to a specified snapshot</description>
-            <jobNameTemplate>esx-revert-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-revert-$[/increment /myJob/project/jobCounter]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -1558,7 +1558,7 @@
         <procedure>
             <procedureName>Snapshot</procedureName>
             <description>Create a snapshot for the specified virtual machine</description>
-            <jobNameTemplate>esx-snapshot-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-snapshot-$[/increment /myJob/project/jobCounter]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -1739,7 +1739,7 @@
         <procedure>
             <procedureName>PowerOn</procedureName>
             <description>Power on a virtual machine</description>
-            <jobNameTemplate>esx-poweron-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-poweron-$[/increment /myJob/project/jobCounter]</jobNameTemplate>
             <resourceName>local</resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -1986,7 +1986,7 @@
         <procedure>
             <procedureName>PowerOff</procedureName>
             <description>Power off a virtual machine</description>
-            <jobNameTemplate>esx-poweroff-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-poweroff-$[/increment /myJob/project/jobCounter]</jobNameTemplate>
             <resourceName>local</resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -2150,7 +2150,7 @@
         <procedure>
             <procedureName>Shutdown</procedureName>
             <description>Shutdown a virtual machine</description>
-            <jobNameTemplate>esx-shutdown-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-shutdown-$[/increment /myJob/project/jobCounter]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -2314,7 +2314,7 @@
         <procedure>
             <procedureName>Suspend</procedureName>
             <description>Suspend a virtual machine</description>
-            <jobNameTemplate>esx-suspend-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-suspend-$[/increment /myJob/project/jobCounter]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -2478,7 +2478,7 @@
         <procedure>
             <procedureName>CreateResourceFromVM</procedureName>
             <description>Store information about a virtual machine and create ElectricCommander resources</description>
-            <jobNameTemplate>esx-createresource-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-createresource-$[/increment /myJob/project/jobCounter]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -2725,7 +2725,7 @@
         <procedure>
             <procedureName>GetVMConfiguration</procedureName>
             <description>Get virtual machine information and store it in properties</description>
-            <jobNameTemplate>esx-getvmconfig-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-getvmconfig-$[/increment /myJob/project/jobCounter]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -2906,7 +2906,7 @@
         <procedure>
             <procedureName>Import</procedureName>
             <description>Import an OVF package to the ESX server</description>
-            <jobNameTemplate>esx-import-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-import-$[/increment /myJob/project/jobCounter]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -3121,7 +3121,7 @@
         <procedure>
             <procedureName>Export</procedureName>
             <description>Export a virtual machine to an OVF package using ovftool</description>
-            <jobNameTemplate>esx-export-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-export-$[/increment /myJob/project/jobCounter]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -3353,7 +3353,7 @@
         <procedure>
             <procedureName>RegisterVM</procedureName>
             <description>Register an existing virtual machine</description>
-            <jobNameTemplate>esx-register-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>esx-register-$[/increment /myJob/project/jobCounter]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -3568,7 +3568,7 @@
         <procedure>
             <procedureName>CloudManagerShrink</procedureName>
             <description>Hook for CloudManager to poweroff vms</description>
-            <jobNameTemplate>ESX-CloudManagerShrink-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>ESX-CloudManagerShrink-$[/increment /myJob/project/jobCounter]</jobNameTemplate>
             <resourceName>local</resourceName>
             <workspaceName></workspaceName>
             <propertySheet>
@@ -3660,7 +3660,7 @@
         <procedure>
             <procedureName>CloudManagerGrow</procedureName>
             <description>Hook for CloudManager to poweron vms</description>
-            <jobNameTemplate>ESX-CloudManagerGrow-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>ESX-CloudManagerGrow-$[/increment /myJob/project/jobCounter]</jobNameTemplate>
             <resourceName>local</resourceName>
             <workspaceName></workspaceName>
             <propertySheet>
@@ -3803,7 +3803,7 @@
         <procedure>
             <procedureName>CloudManagerSync</procedureName>
             <description>Hook for CloudManager to sync servers</description>
-            <jobNameTemplate>ESX-CloudManagerSync-$[jobId]</jobNameTemplate>
+            <jobNameTemplate>ESX-CloudManagerSync-$[/increment /myJob/project/jobCounter]</jobNameTemplate>
             <resourceName>local</resourceName>
             <resourceName/>
             <workspaceName/>
