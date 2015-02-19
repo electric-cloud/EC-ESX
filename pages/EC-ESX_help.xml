@@ -1463,6 +1463,11 @@ only if appropriate, such as FOSS - but not commercial software.
 
     <h1>Release Notes</h1>
 
+    <h2>@PLUGIN_KEY@ 2.1.3</h2>
+    <ul>
+      <li>Fixed manifest file.</li>
+    </ul>
+
     <h2>@PLUGIN_KEY@ 2.1.2</h2>
     <!-- Specific descriptions of additional or changed functionality,
         new parameters, etc. The plugin version header of this section should
