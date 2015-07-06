@@ -8,7 +8,7 @@
   <meta content="text/html; charset=us-ascii" http-equiv=
   "content-type" />
 
-  <title>Electric Commander Plugin for ESX</title>
+  <title>ElectricFlow Plugin for ESX</title>
   <link rel="stylesheet" href=
   "../../plugins/@PLUGIN_KEY@/pluginhelp.css" type="text/css"
   media="screen" />
@@ -21,7 +21,7 @@
     <p>Plugin Version @PLUGIN_VERSION@</p>
     <hr style=
     "margin-left: -10px; margin-top: 10px; height: 1px; width: 100%; color: #5981BD;"
-    noshade="noshade" />
+    noshade="noshade" />		<p>Revised on July 1, 2015</p>
     <!-- The tool description should answer these kinds of questions:
 What is the tool itself is used for in the development
 process? Who would use this tool? What is the general use-case or
@@ -45,32 +45,30 @@ only if appropriate, such as FOSS - but not commercial software.
 
     <h2>ESX Links</h2>
 
-    <p>More information can be found at <a href=
+    <p>More information can be found <a href=
     "http://www.vmware.com/products/vsphere/esxi-and-esx/index.html">
-    VMware ESX and ESXi</a>.</p>
+   here</a>.</p>
 
-    <p>Information about the OVF tool can be found at <a href=
+    <p>Information about the OVF tool can be found <a href=
     "http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf">
-    Open Virtualization Format Tool</a></p>
+    here.</a></p>
 
-    <p>For some procedures you need to specify the Guest OS id,
-    find these values at <a href=
+    <p>For some procedures you need to specify the Guest OS ID. Find these values <a href=
     "http://www.vmware.com/support/developer/converter-sdk/conv50_apireference/vim.vm.GuestOsDescriptor.GuestOsIdentifier.html">
-    VMware VM Guest OS Identifiers</a>.</p>
+    here</a>.</p>
 
-    <p>OVF manual is available at <a href=
-    "http://www.vmware.com/support/developer/ovf/">OVF Tool
-    Documentation</a></p>
+    <p>OVF manual is available <a href=
+    "http://www.vmware.com/support/developer/ovf/">here.</a></p>
 
-    <h2>Electric Commander Integration to VMware ESX and ESXi</h2>
+    <h2>ElectricFlow Integration to VMware ESX and ESXi</h2>
 
-    <p>EC-ESX integration uses modules from VI Perl Toolkit which
+    <p>EC-ESX integration uses modules from the VI Perl Toolkit, which
     provides access to the ESX system. By using this toolkit, the
     integration can connect to the ESX server to automate and
     perform various operations providing a more generic interface
     for managing virtual machines on ESX servers.</p>
 
-    <p>The plugin interact with ESX data using PERL to perform the
+    <p>The plugin interacts with ESX data using PERL to perform the
     following tasks:</p>
 
     <ul>
@@ -80,24 +78,24 @@ only if appropriate, such as FOSS - but not commercial software.
 
       <li>Perform actions on virtual machines.</li>
 
-      <li>Import and Export virtual machines.</li>
+      <li>Import and export virtual machines.</li>
 
-      <li>Create Electric Commander resources.</li>
+      <li>Create ElectricFlow resources.</li>
     </ul>
 
     <p>This plugin provides the following procedures: Cleanup,
     Clone, Create, CreateResourceFromVM, Export,
     GetVMConfiguration, Import, PowerOn, PowerOff, RegisterVM,
     Relocate, Revert, Shutdown, Snapshot, and Suspend.<br />
-    This plugin communicates with ESX by using the perl module:
+    This plugin communicates with ESX by using the Perl module
     VMware::VIRuntime, provided by VMware.</p>
 
     <h2>OVF Tool</h2>
 
-    <p>VMware OVF Tool is a command line utility that allows you to
+    <p>The VMware OVF Tool is a command line utility that allows you to
     import and export OVF packages.<br />
     In order to execute Import and Export procedures using the ESX
-    plugin, OVF Tool must be installed.</p>
+    plugin, the OVF Tool must be installed.</p>
 
     <p>You can download this utility from the <a href=
     "http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf">
@@ -154,7 +152,7 @@ only if appropriate, such as FOSS - but not commercial software.
     ESXi 5.0.</p>
 
     <h1>Plugin Procedures</h1>
-
+	<p>IMPORTANT: In the ElectricFlow UI, from the Home page, open the Main Menu, and click <b>Admin</b> > <b>Plugins</b> to open the Plugin Manager.</p>
     <p>IMPORTANT: For all parameter descriptions below, required
     parameters are shown in <span class='required'>bold
     italics</span>.</p>
@@ -172,8 +170,7 @@ only if appropriate, such as FOSS - but not commercial software.
     unique name that is entered in designated parameters on
     procedures that use them.<br />
     <br />
-    Plugin configurations are created by going to the Electric
-    Commander "Administration" tab, then to the "Plugins" sub-tab.
+    Plugin configurations are created by going to the ElectricFlow "Administration" tab, then to the "Plugins" sub-tab.
     On the right side of the line for the EC-ESX plugin,
     there is a "Configure" link which will open the Configuration
     page.<br />
@@ -212,7 +209,7 @@ only if appropriate, such as FOSS - but not commercial software.
         <tr>
           <td class='required'>Credential</td>
 
-          <td>Provide the user name and password Commander uses to
+          <td>Provide the user name and password ElectricFlow uses to
           communicate with the ESX server. (Required)</td>
         </tr>
         
@@ -247,7 +244,7 @@ only if appropriate, such as FOSS - but not commercial software.
           <td class='required'>ESX Connection</td>
 
           <td>The name of the configuration which holds the
-          connection information for ESX server. (Required)</td>
+          connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
@@ -261,7 +258,7 @@ only if appropriate, such as FOSS - but not commercial software.
           <td>Datastore</td>
 
           <td>Name of the datastore. Default: Any accessible
-          datastore with free space greater than the disksize
+          datastore with free space greater than the disk size
           specified.</td>
         </tr>
 
@@ -348,8 +345,8 @@ only if appropriate, such as FOSS - but not commercial software.
 
     <h3>Clone</h3>
 
-    <p>Clone a virtual machine. Clone operation is ONLY supported
-    and ONLY works when connecting against vCenter Server and not
+    <p>Clone a virtual machine. Clone operation is only supported
+    and only works when connecting against vCenter Server and not
     individual ESX(i) host.</p>
 
     <table class="grid">
@@ -366,7 +363,7 @@ only if appropriate, such as FOSS - but not commercial software.
           <td class='required'>ESX Connection</td>
 
           <td>The name of the configuration which holds the
-          connection information for ESX server. (Required)</td>
+          connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
@@ -421,7 +418,7 @@ only if appropriate, such as FOSS - but not commercial software.
     <h3>Relocate</h3>
 
     <p>Relocate a virtual machine to the specified destination
-    host. Relocate operation is ONLY supported and ONLY works when
+    host. Relocate operation is only supported and only works when
     connecting against vCenter Server and not individual ESX(i)
     host.</p>
 
@@ -486,7 +483,7 @@ only if appropriate, such as FOSS - but not commercial software.
 
     <h3>Cleanup</h3>
 
-    <p>Delete ElectricCommander resources and optionally destroys
+    <p>Deletes ElectricFlow resources and optionally destroys
     the virtual machines on the ESX server.</p>
 
     <table class="grid">
@@ -503,20 +500,20 @@ only if appropriate, such as FOSS - but not commercial software.
           <td class='required'>ESX Connection</td>
 
           <td>The name of the configuration which holds the
-          connection information for ESX server. (Required)</td>
+          connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
           <td class='required'>VM Name</td>
 
-          <td>Name of the virtual machine to cleanup.
+          <td>Name of the virtual machine to clean up.
           (Required)</td>
         </tr>
 
         <tr>
           <td>Number of VMs</td>
 
-          <td>Number of virtual machines to cleanup (default is 1).
+          <td>Number of virtual machines to clean up (default is 1).
           If the value is greater than 1, a suffix is added to VM
           names. The suffix consists of an underscore and the VM
           number ('_#').</td>
@@ -559,7 +556,7 @@ only if appropriate, such as FOSS - but not commercial software.
           <td class='required'>ESX Connection</td>
 
           <td>The name of the configuration which holds the
-          connection information for ESX server. (Required)</td>
+          connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
@@ -614,7 +611,7 @@ only if appropriate, such as FOSS - but not commercial software.
           <td class='required'>ESX Connection</td>
 
           <td>The name of the configuration which holds the
-          connection information for ESX server. (Required)</td>
+          connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
@@ -632,7 +629,7 @@ only if appropriate, such as FOSS - but not commercial software.
         <tr>
           <td>Power On?</td>
 
-          <td>If checked, Power on the virtual machine after being
+          <td>If checked, power on the virtual machine after being
           reverted.</td>
         </tr>
 
@@ -660,7 +657,7 @@ only if appropriate, such as FOSS - but not commercial software.
     <h3>PowerOn</h3>
 
     <p>Power on the specified virtual machine and optionally
-    creates an ElectricCommander resource for the virtual
+    create an ElectricFlow resource for the virtual
     machine.</p>
 
     <table class="grid">
@@ -677,7 +674,7 @@ only if appropriate, such as FOSS - but not commercial software.
           <td class='required'>ESX Connection</td>
 
           <td>The name of the configuration which holds the
-          connection information for ESX server. (Required)</td>
+          connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
@@ -690,7 +687,7 @@ only if appropriate, such as FOSS - but not commercial software.
         <tr>
           <td>Results location</td>
 
-          <td>The ElectricCommander location to store properties
+          <td>The ElectricFlow location to store properties
           (default is '/myJob/ESX/vms').</td>
         </tr>
 
@@ -698,21 +695,21 @@ only if appropriate, such as FOSS - but not commercial software.
           <td>Create Resource?</td>
 
           <td>Flag to specify whether or not to create
-          ElectricCommander resources for the powered on virtual
+          ElectricFlow resources for the powered on virtual
           machines (default is false).</td>
         </tr>
 
         <tr>
           <td>Resource Pool(s)</td>
 
-          <td>The ElectricCommander resource pool names to be
+          <td>The ElectricFlow resource pool names to be
           associated with the created resources if created.</td>
         </tr>
 
         <tr>
-          <td>Commander Workspace</td>
+          <td>ElectricFlow Workspace</td>
 
-          <td>The ElectricCommander workspace the resource should
+          <td>The ElectricFlow workspace the resource should
           use.</td>
         </tr>
 
@@ -755,7 +752,7 @@ only if appropriate, such as FOSS - but not commercial software.
           <td class='required'>ESX Connection</td>
 
           <td>The name of the configuration which holds the
-          connection information for ESX server. (Required)</td>
+          connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
@@ -804,7 +801,7 @@ only if appropriate, such as FOSS - but not commercial software.
           <td class='required'>ESX Connection</td>
 
           <td>The name of the configuration which holds the
-          connection information for ESX server. (Required)</td>
+          connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
@@ -853,7 +850,7 @@ only if appropriate, such as FOSS - but not commercial software.
           <td class='required'>ESX Connection</td>
 
           <td>The name of the configuration which holds the
-          connection information for ESX server. (Required)</td>
+          connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
@@ -888,7 +885,7 @@ only if appropriate, such as FOSS - but not commercial software.
     <h3>CreateResourceFromVM</h3>
 
     <p>Store information about a virtual machine and create
-    ElectricCommander resources. This procedure only works if the
+    ElectricFlow resources. This procedure only works if the
     guest has VMware tools installed on it.</p>
 
     <table class="grid">
@@ -905,7 +902,7 @@ only if appropriate, such as FOSS - but not commercial software.
           <td class='required'>ESX Connection</td>
 
           <td>The name of the configuration which holds the
-          connection information for ESX server. (Required)</td>
+          connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
@@ -927,7 +924,7 @@ only if appropriate, such as FOSS - but not commercial software.
         <tr>
           <td>Results location</td>
 
-          <td>The ElectricCommander location to store properties
+          <td>The ElectricFlow location to store properties
           containing information about the virtual machines
           (default is '/myJob/ESX/vms').</td>
         </tr>
@@ -936,21 +933,21 @@ only if appropriate, such as FOSS - but not commercial software.
           <td>Create Resource?</td>
 
           <td>Flag to specify whether or not to create
-          ElectricCommander resources for the virtual machines
+          ElectricFlow resources for the virtual machines
           (default is false).</td>
         </tr>
 
         <tr>
           <td>Resource Pool(s)</td>
 
-          <td>The ElectricCommander resource pool names to be
+          <td>The ElectricFlow resource pool names to be
           associated with the created resources if created.</td>
         </tr>
 
         <tr>
-          <td>Commander Workspace</td>
+          <td>ElectricFlow Workspace</td>
 
-          <td>The ElectricCommander workspace the resource should
+          <td>The ElectricFlow workspace the resource should
           use.</td>
         </tr>
 
@@ -970,7 +967,7 @@ only if appropriate, such as FOSS - but not commercial software.
     <h3>GetVMConfiguration</h3>
 
     <p>Get the IP address and hostname of a virtual machine and
-    store them in the specified location in ElectricCommander
+    store them in the specified location in ElectricFlow
     properties. This procedure only works if the guest has VMware
     tools installed on it.</p>
 
@@ -988,14 +985,14 @@ only if appropriate, such as FOSS - but not commercial software.
           <td class='required'>ESX Connection</td>
 
           <td>The name of the configuration which holds the
-          connection information for ESX server. (Required)</td>
+          connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
           <td class='required'>VM Name</td>
 
           <td>Name of the virtual machine to get the information
-          from.(Required)</td>
+          from. (Required)</td>
         </tr>
 
         <tr>
@@ -1010,7 +1007,7 @@ only if appropriate, such as FOSS - but not commercial software.
         <tr>
           <td>Results location</td>
 
-          <td>The ElectricCommander location to store properties
+          <td>The ElectricFlow location to store properties
           containing information about the virtual machines
           (default is '/myJob/ESX/vms').</td>
         </tr>
@@ -1030,8 +1027,8 @@ only if appropriate, such as FOSS - but not commercial software.
     <h3>Import</h3>
 
     <p>Import an OVF package to the ESX server using VMware OVF
-    Tool(a command line utility that allows you to import and
-    export OVF packages).VMware OVF Tool must be installed in the
+    Tool (a command line utility that allows you to import and
+    export OVF packages). VMware OVF Tool must be installed in the
     resource machine running this procedure.</p>
 
     <table class="grid">
@@ -1048,7 +1045,7 @@ only if appropriate, such as FOSS - but not commercial software.
           <td class='required'>ESX Connection</td>
 
           <td>The name of the configuration which holds the
-          connection information for ESX server. (Required)</td>
+          connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
@@ -1074,7 +1071,7 @@ only if appropriate, such as FOSS - but not commercial software.
         <tr>
           <td class='required'>Source directory</td>
 
-          <td>Absoulte path to the directory where OVF packages are
+          <td>Absolute path to the directory where OVF packages are
           stored. (Required)</td>
         </tr>
 
@@ -1102,8 +1099,8 @@ only if appropriate, such as FOSS - but not commercial software.
     <h3>Export</h3>
 
     <p>The Export subprocedure exports a virtual machine to an OVF
-    package using VMware OVF Tool(a command line utility that
-    allows you to import and export OVF packages).VMware OVF Tool
+    package using the VMware OVF Tool (a command line utility that
+    allows you to import and export OVF packages). The VMware OVF Tool
     must be installed in the resource machine running this
     procedure.</p>
 
@@ -1121,13 +1118,13 @@ only if appropriate, such as FOSS - but not commercial software.
           <td class='required'>ESX Connection</td>
 
           <td>The name of the configuration which holds the
-          connection information for ESX server. (Required)</td>
+          connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
           <td class='required'>Host</td>
 
-          <td>Name of the host where virtual machine is located.
+          <td>Name of the host where the virtual machine is located.
           (Required)</td>
         </tr>
 
@@ -1197,13 +1194,13 @@ only if appropriate, such as FOSS - but not commercial software.
           <td class='required'>ESX Connection</td>
 
           <td>The name of the configuration which holds the
-          connection information for ESX server. (Required)</td>
+          connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
           <td class='required'>Host</td>
 
-          <td>Name of the host where virtual machine will be
+          <td>Name of the host where the virtual machine will be
           registered. (Required)</td>
         </tr>
 
@@ -1249,8 +1246,8 @@ only if appropriate, such as FOSS - but not commercial software.
 
     <h3>CloudManagerGrow</h3>
 
-    <p>This procedure allows the plugin to work with CloudManager
-    plugin, it calls PowerOn procedure and is intended to be run by
+    <p>This procedure allows the plugin to work with the CloudManager
+    plugin. It calls the PowerOn procedure and is intended to be run by
     CloudManager.</p>
 
     <table class="grid">
@@ -1267,7 +1264,7 @@ only if appropriate, such as FOSS - but not commercial software.
           <td class='required'>ESX Connection</td>
 
           <td>The name of the configuration which holds the
-          connection information for ESX server. (Required)</td>
+          connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
@@ -1278,9 +1275,9 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 
         <tr>
-          <td>Commander Workspace</td>
+          <td>ElectricFlow Workspace</td>
 
-          <td>The ElectricCommander workspace the resource should
+          <td>The ElectricFlow workspace the resource should
           use.</td>
         </tr>
 
@@ -1304,8 +1301,8 @@ only if appropriate, such as FOSS - but not commercial software.
 
     <h3>CloudManagerShrink</h3>
 
-    <p>This procedure allows the plugin to work with CloudManager
-    plugin, it calls PowerOff procedure and is intended to be run
+    <p>This procedure allows the plugin to work with the CloudManager
+    plugin. It calls the PowerOff procedure and is intended to be run
     by CloudManager.</p>
 
     <table class="grid">
@@ -1322,13 +1319,13 @@ only if appropriate, such as FOSS - but not commercial software.
           <td class='required'>ESX Connection</td>
 
           <td>The name of the configuration which holds the
-          connection information for ESX server. (Required)</td>
+          connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
           <td class='required'>List of Deployments</td>
 
-          <td>A list of deployments(previously created by
+          <td>A list of deployments (previously created by
           CloudManagerGrow) to stop. (Required)</td>
         </tr>
       </tbody>
@@ -1358,7 +1355,7 @@ only if appropriate, such as FOSS - but not commercial software.
           <td class='required'>ESX Connection</td>
 
           <td>The name of the configuration which holds the
-          connection information for ESX server. (Required)</td>
+          connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
@@ -1378,13 +1375,13 @@ only if appropriate, such as FOSS - but not commercial software.
         outline used above where possible.
         -->
 
-    <h2>Use Case 1: PowerOn, Consume &amp; PowerOff Job</h2>
+    <h2>Use Case 1: PowerOn, Consume, and PowerOff Job</h2>
 
     <p>One of the most common uses for this plugin is to power on
-    an existing virtual machine, then create an ElectricCommander
+    an existing virtual machine, then create an ElectricFlow
     resource assigned to this VM, use the resource to run some
-    operations, and the power off the machine and delete the
-    resource. To acomplish these task you must:</p>
+    operations, and then power off the machine and delete the
+    resource. To accomplish these task you must:</p>
 
     <ol>
       <li>Create a Plugin Configuration.</li>
@@ -1402,8 +1399,7 @@ only if appropriate, such as FOSS - but not commercial software.
 
     <h4>Create a Plugin Configuration</h4>
 
-    <p>Plugin configurations are created by going to the Electric
-    Commander "Administration" tab, then to the "Plugins" sub-tab.
+    <p>Plugin configurations are created by going to the ElectricFlow "Administration" tab, then to the "Plugins" sub-tab.
     On the right side of the line for the ESX plugin, there is a
     "Configure" link which will open the Configuration page.<br />
     Create a new configuration by specifying the requested
@@ -1416,36 +1412,36 @@ only if appropriate, such as FOSS - but not commercial software.
 
     <h4>PowerOn</h4>
 
-    <p>Create a new PowerOn procedure, fill in the requested
+    <p>Create a new PowerOn procedure and fill in the requested
     parameters with real values from your ESX server:</p><img alt=
     "" src=
     "../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweron_parameters.png" />
 
-    <p>Make sure you selected "Create Resource?" checkbox.</p>
+    <p>Make sure you selected the "Create Resource?" checkbox.</p>
 
     <h4>Consume</h4>
 
-    <p>Create a new command step to use the created resource, in
-    this example we will pick a resource from the pool and just add
-    an ec-perl sleep to use it for 30 seconds</p><img alt="" src=
+    <p>Create a new command step to use the created resource. In
+    this example, we will pick a resource from the pool and just add
+    an ec-perl sleep to use it for 30 seconds.</p><img alt="" src=
     "../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/consume_parameters.png" />
 
     <h4>Cleanup</h4>
 
-    <p>Now the resource has been used and is ready to be deleted,
-    create a Cleanup step, fill in the requested
+    <p>Now that the resource has been used and is ready to be deleted,
+    create a Cleanup step and fill in the requested
     parameters.</p><img alt="" src=
     "../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/cleanup_parameters.png" />
 
     <h4>PowerOff</h4>
 
     <p>Now that the resource has been deleted, create a PowerOff
-    step, fill in the requested parameters.</p><img alt="" src=
+    step and fill in the requested parameters.</p><img alt="" src=
     "../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweroff_parameters.png" />
 
     <h4>Results and outputs</h4>
 
-    <p>Once the job finished, you can see properties stored in
+    <p>Once the job finished, you can see the properties stored in
     'Results location'.<br />
     <img alt="" src=
     "../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/job.png" /></p><img alt=""
@@ -1462,7 +1458,7 @@ only if appropriate, such as FOSS - but not commercial software.
     "../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweroff_log.png" />
 
     <h1>Release Notes</h1>
-
+    <h2>@PLUGIN_KEY@ 2.1.4</h2>    <ul>      <li>Renamed ElectricCommander to ElectricFlow.</li>    </ul>
     <h2>@PLUGIN_KEY@ 2.1.3</h2>
     <ul>
       <li>Fixed manifest file.</li>
@@ -1476,108 +1472,108 @@ only if appropriate, such as FOSS - but not commercial software.
         -->
 
     <ul>
-      <li>Documented from for ESX Url in configurations.</li>
-      <li>Added Step to test credentials.</li>
+      <li>Documented the form for ESX URL in configurations.</li>
+      <li>Added a Step to test credentials.</li>
       <li>Fixed Configuration Management.</li>
     </ul>
     
     <h2>@PLUGIN_KEY@ 2.1.1</h2>
     <ul>
-      <li>Procedure name(s) were changed in the step picker section</li>
+      <li>Procedure name(s) were changed in the step picker section.</li>
     </ul> 
     
     <h2>@PLUGIN_KEY@ 2.1.0</h2>
     <ul>
-      <li>Added CloudManagerSync procedure</li>
+      <li>Added CloudManagerSync procedure.</li>
     </ul>      
         
     <h2>@PLUGIN_KEY@ 2.0.4</h2>
 
     <ul>
-      <li>Fixed configuration description</li>
+      <li>Fixed configuration description.</li>
     </ul>
 
     <h2>@PLUGIN_KEY@ 2.0.3</h2>
 
     <ul>
-      <li>Fixed power on error</li>
+      <li>Fixed power on error.</li>
     </ul>
 
     <h2>@PLUGIN_KEY@ 2.0.2</h2>
 
     <ul>
       <li>Deleted CloudManagerGrow And CloudManagerShrink from
-      stepPicker</li>
+      stepPicker.</li>
 
-      <li>Change Help page style</li>
+      <li>Change Help page style.</li>
     </ul>
 
     <h2>@PLUGIN_KEY@ 2.0.1</h2>
 
     <ul>
-      <li>Added help link to each procedure</li>
+      <li>Added Help link to each procedure.</li>
 
-      <li>Parameter Panel XML Cleanup</li>
+      <li>Parameter Panel XML Cleanup.</li>
     </ul>
 
     <h2>@PLUGIN_KEY@ 2.0.0</h2>
 
     <ul>
-      <li>Applied new help page template</li>
+      <li>Applied new Help page template.</li>
 
-      <li>Added detailed use case</li>
+      <li>Added detailed use case.</li>
 
-      <li>Added new XML parameter panel to all procedures</li>
+      <li>Added new XML parameter panel to all procedures.</li>
 
-      <li>Added support for EC-CloudManager</li>
+      <li>Added support for EC-CloudManager.</li>
 
       <li>Fixed cleanup procedure when resource does not
-      exist</li>
+      exist.</li>
     </ul>
 
     <h2>@PLUGIN_KEY@ 1.2.3</h2>
 
     <ul>
-      <li>Changed EOL on VMware SDK files</li>
+      <li>Changed EOL on VMware SDK files.</li>
     </ul>
 
     <h2>@PLUGIN_KEY@ 1.2.2</h2>
 
     <ul>
-      <li>Included vSphere SDK for Perl in the plugin, removed
-      sdk_installation_path parameter from all procedures</li>
+      <li>Included vSphere SDK for Perl in the plugin and removed
+      sdk_installation_path parameter from all procedures.</li>
 
       <li>Removed CreateConfiguration and DeleteConfiguration
-      procedures from the wizard/procedure selection</li>
+      procedures from the wizard/procedure selection.</li>
 
-      <li>Updated Help page</li>
+      <li>Updated Help page.</li>
     </ul>
 
     <h2>@PLUGIN_KEY@ 1.2.1</h2>
 
     <ul>
-      <li>Updated Help page</li>
+      <li>Updated Help page.</li>
     </ul>
 
     <h2>@PLUGIN_KEY@ 1.2.0</h2>
 
     <ul>
-      <li>Modified the Cleanup and Create subprocedures</li>
+      <li>Modified the Cleanup and Create subprocedures.</li>
 
       <li>Added the ability for all subprocedures to perform
-      operations for multiple virtual machines</li>
+      operations for multiple virtual machines.</li>
 
-      <li>Added the timeout parameter to all steps</li>
+      <li>Added the timeout parameter to all steps.</li>
 
       <li>Added these subprocedures: PowerOn, PowerOff, Shutdown,
       Suspend, GetVMConfiguration, CreateResourceFromVM, Import,
-      Export, and RegisterVM</li>
+      Export, and RegisterVM.</li>
     </ul>
 
     <h2>@PLUGIN_KEY@ 1.1.0</h2>
 
     <ul>
-      <li>Added the Snapshot subprodecure</li>
+      <li>Added the Snapshot subprocedure.</li>
     </ul>
   </div>
 </body>
