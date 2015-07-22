@@ -1,7 +1,7 @@
-@PLUGIN_KEY@
+EC-ESX
 ============
 
-The ElectricFlow @PLUGIN_NAME@ integration
+The ElectricFlow ESX integration
 
 ## Compile ##
 
