@@ -1,17 +1,12 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta name="generator" content=
-  "HTML Tidy for Windows (vers 25 March 2009), see www.w3.org" />
-  <meta content="text/html; charset=us-ascii" http-equiv=
-  "content-type" />
+  <meta name="generator" content="HTML Tidy for Windows (vers 25 March 2009), see www.w3.org" />
+  <meta content="text/html; charset=us-ascii" http-equiv="content-type" />
 
   <title>ElectricFlow Plugin for ESX</title>
-  <link rel="stylesheet" href=
-  "../../plugins/@PLUGIN_KEY@/pluginhelp.css" type="text/css"
-  media="screen" />
+  <link rel="stylesheet" href="../../plugins/@PLUGIN_KEY@/pluginhelp.css" type="text/css" media="screen" />
 </head>
 
 <body>
@@ -19,9 +14,9 @@
     <h1>VMware ESX</h1>
 
     <p>Plugin Version @PLUGIN_VERSION@</p>
-    <hr style=
-    "margin-left: -10px; margin-top: 10px; height: 1px; width: 100%; color: #5981BD;"
-    noshade="noshade" />		<p>Revised on July 1, 2015</p>
+    <hr style="margin-left: -10px; margin-top: 10px; height: 1px; width: 100%; color: #5981BD;" noshade="noshade" />
+	
+	<p>Revised on July 1, 2015</p>
     <!-- The tool description should answer these kinds of questions:
 What is the tool itself is used for in the development
 process? Who would use this tool? What is the general use-case or
@@ -45,20 +40,16 @@ only if appropriate, such as FOSS - but not commercial software.
 
     <h2>ESX Links</h2>
 
-    <p>More information can be found <a href=
-    "http://www.vmware.com/products/vsphere/esxi-and-esx/index.html">
+    <p>More information can be found <a href="http://www.vmware.com/products/vsphere/esxi-and-esx/index.html">
    here</a>.</p>
 
-    <p>Information about the OVF tool can be found <a href=
-    "http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf">
+    <p>Information about the OVF tool can be found <a href="http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf">
     here.</a></p>
 
-    <p>For some procedures you need to specify the Guest OS ID. Find these values <a href=
-    "http://www.vmware.com/support/developer/converter-sdk/conv50_apireference/vim.vm.GuestOsDescriptor.GuestOsIdentifier.html">
+    <p>For some procedures you need to specify the Guest OS ID. Find these values <a href="http://www.vmware.com/support/developer/converter-sdk/conv50_apireference/vim.vm.GuestOsDescriptor.GuestOsIdentifier.html">
     here</a>.</p>
 
-    <p>OVF manual is available <a href=
-    "http://www.vmware.com/support/developer/ovf/">here.</a></p>
+    <p>OVF manual is available <a href="http://www.vmware.com/support/developer/ovf/">here.</a></p>
 
     <h2>ElectricFlow Integration to VMware ESX and ESXi</h2>
 
@@ -97,8 +88,7 @@ only if appropriate, such as FOSS - but not commercial software.
     In order to execute Import and Export procedures using the ESX
     plugin, the OVF Tool must be installed.</p>
 
-    <p>You can download this utility from the <a href=
-    "http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf">
+    <p>You can download this utility from the <a href="http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf">
     OVF Tool page</a>.<br />
     You must have an account to download this tool. If you do not
     have an account, you can create one for free.</p>
@@ -152,13 +142,12 @@ only if appropriate, such as FOSS - but not commercial software.
     ESXi 5.0.</p>
 
     <h1>Plugin Procedures</h1>
-	<p>IMPORTANT: In the ElectricFlow UI, from the Home page, open the Main Menu, and click <b>Admin</b> > <b>Plugins</b> to open the Plugin Manager.</p>
+	<p>IMPORTANT: In the ElectricFlow UI, from the Home page, open the Main Menu, and click <b>Admin</b> &gt; <b>Plugins</b> to open the Plugin Manager.</p>
     <p>IMPORTANT: For all parameter descriptions below, required
-    parameters are shown in <span class='required'>bold
+    parameters are shown in <span class="required">bold
     italics</span>.</p>
 
-    <div id="CreateConfiguration"><a name='CreateConfiguration' id=
-    "CreateConfiguration"></a>
+    <div id="CreateConfiguration"><a name="CreateConfiguration" id="CreateConfiguration"></a>
 
     <h3>Plugin Configuration</h3>
 
@@ -193,7 +182,7 @@ only if appropriate, such as FOSS - but not commercial software.
 
       <tbody>
         <tr>
-          <td class='required'>Configuration Name</td>
+          <td class="required">Configuration Name</td>
 
           <td>Provide a unique name for the configuration, keeping
           in mind that you may need to create additional
@@ -201,29 +190,28 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 
         <tr>
-          <td class='required'>ESX URL</td>
+          <td class="required">ESX URL</td>
 
           <td>Provide the URL of the ESX server with the form: https://(ip_address|hostname). (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>Credential</td>
+          <td class="required">Credential</td>
 
           <td>Provide the user name and password ElectricFlow uses to
           communicate with the ESX server. (Required)</td>
         </tr>
         
         <tr>
-          <td >Attempt Connection?</td>
+          <td>Attempt Connection?</td>
 
           <td>Attempt a connection to check credentials.</td>
         </tr>
         
       </tbody>
-    </table><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/parameters/configuration_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/configuration_panel.png" /></div>
 
-    <div id="Create"><a name='Create' id="Create"></a>
+    <div id="Create"><a name="Create" id="Create"></a>
 
     <h3>Create</h3>
 
@@ -241,14 +229,14 @@ only if appropriate, such as FOSS - but not commercial software.
 
       <tbody>
         <tr>
-          <td class='required'>ESX Connection</td>
+          <td class="required">ESX Connection</td>
 
           <td>The name of the configuration which holds the
           connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>VM Name</td>
+          <td class="required">VM Name</td>
 
           <td>Name of the virtual machine to be created.
           (Required)</td>
@@ -263,13 +251,13 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 
         <tr>
-          <td class='required'>Host</td>
+          <td class="required">Host</td>
 
           <td>Name of the host. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>Datacenter</td>
+          <td class="required">Datacenter</td>
 
           <td>Name of the datacenter. (Required)</td>
         </tr>
@@ -338,10 +326,9 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/parameters/Create_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Create_panel.png" /></div>
 
-    <div id="Clone"><a name='Clone' id="Clone"></a>
+    <div id="Clone"><a name="Clone" id="Clone"></a>
 
     <h3>Clone</h3>
 
@@ -360,28 +347,28 @@ only if appropriate, such as FOSS - but not commercial software.
 
       <tbody>
         <tr>
-          <td class='required'>ESX Connection</td>
+          <td class="required">ESX Connection</td>
 
           <td>The name of the configuration which holds the
           connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>VM Name</td>
+          <td class="required">VM Name</td>
 
           <td>Name of the virtual machine whose clone is to be
           created. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>VM Clone Name</td>
+          <td class="required">VM Clone Name</td>
 
           <td>Name of the clone virtual machine which will be
           created. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>Host for new VM</td>
+          <td class="required">Host for new VM</td>
 
           <td>Target host for the new virtual machine.
           (Required)</td>
@@ -410,10 +397,9 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/parameters/Clone_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Clone_panel.png" /></div>
 
-    <div id="Relocate"><a name='Relocate' id="Relocate"></a>
+    <div id="Relocate"><a name="Relocate" id="Relocate"></a>
 
     <h3>Relocate</h3>
 
@@ -433,7 +419,7 @@ only if appropriate, such as FOSS - but not commercial software.
 
       <tbody>
         <tr>
-          <td class='required'>ESX Connection</td>
+          <td class="required">ESX Connection</td>
 
           <td>Provide the name of the configuration that contains
           connection information for the ESX server.
@@ -441,7 +427,7 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 
         <tr>
-          <td class='required'>VM Name</td>
+          <td class="required">VM Name</td>
 
           <td>Name of the virtual machine to be relocated.
           (Required)</td>
@@ -455,7 +441,7 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 
         <tr>
-          <td class='required'>Destination Host</td>
+          <td class="required">Destination Host</td>
 
           <td>Target host for the virtual machine. (Required)</td>
         </tr>
@@ -476,10 +462,9 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/parameters/Relocate_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Relocate_panel.png" /></div>
 
-    <div id="Cleanup"><a name='Cleanup' id="Cleanup"></a>
+    <div id="Cleanup"><a name="Cleanup" id="Cleanup"></a>
 
     <h3>Cleanup</h3>
 
@@ -497,14 +482,14 @@ only if appropriate, such as FOSS - but not commercial software.
 
       <tbody>
         <tr>
-          <td class='required'>ESX Connection</td>
+          <td class="required">ESX Connection</td>
 
           <td>The name of the configuration which holds the
           connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>VM Name</td>
+          <td class="required">VM Name</td>
 
           <td>Name of the virtual machine to clean up.
           (Required)</td>
@@ -533,10 +518,9 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/parameters/Cleanup_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Cleanup_panel.png" /></div>
 
-    <div id="Snapshot"><a name='Snapshot' id="Snapshot"></a>
+    <div id="Snapshot"><a name="Snapshot" id="Snapshot"></a>
 
     <h3>Snapshot</h3>
 
@@ -553,21 +537,21 @@ only if appropriate, such as FOSS - but not commercial software.
 
       <tbody>
         <tr>
-          <td class='required'>ESX Connection</td>
+          <td class="required">ESX Connection</td>
 
           <td>The name of the configuration which holds the
           connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>VM Name</td>
+          <td class="required">VM Name</td>
 
           <td>Name of the virtual machine whose snapshot is to be
           created. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>Snapshot Name</td>
+          <td class="required">Snapshot Name</td>
 
           <td>Name of the snapshot to be created. (Required)</td>
         </tr>
@@ -588,10 +572,9 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/parameters/Snapshot_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Snapshot_panel.png" /></div>
 
-    <div id="Revert"><a name='Revert' id="Revert"></a>
+    <div id="Revert"><a name="Revert" id="Revert"></a>
 
     <h3>Revert</h3>
 
@@ -608,20 +591,20 @@ only if appropriate, such as FOSS - but not commercial software.
 
       <tbody>
         <tr>
-          <td class='required'>ESX Connection</td>
+          <td class="required">ESX Connection</td>
 
           <td>The name of the configuration which holds the
           connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>VM Name</td>
+          <td class="required">VM Name</td>
 
           <td>Name of the source virtual machine. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>Snapshot Name</td>
+          <td class="required">Snapshot Name</td>
 
           <td>Name of snapshot to revert to. (Required)</td>
         </tr>
@@ -649,10 +632,9 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/parameters/Revert_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Revert_panel.png" /></div>
 
-    <div id="PowerOn"><a name='PowerOn' id="PowerOn"></a>
+    <div id="PowerOn"><a name="PowerOn" id="PowerOn"></a>
 
     <h3>PowerOn</h3>
 
@@ -671,14 +653,14 @@ only if appropriate, such as FOSS - but not commercial software.
 
       <tbody>
         <tr>
-          <td class='required'>ESX Connection</td>
+          <td class="required">ESX Connection</td>
 
           <td>The name of the configuration which holds the
           connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>VM Name</td>
+          <td class="required">VM Name</td>
 
           <td>Name of the virtual machine to power on.
           (Required)</td>
@@ -729,10 +711,9 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/parameters/PowerOn_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/PowerOn_panel.png" /></div>
 
-    <div id="PowerOff"><a name='PowerOff' id="PowerOff"></a>
+    <div id="PowerOff"><a name="PowerOff" id="PowerOff"></a>
 
     <h3>PowerOff</h3>
 
@@ -749,14 +730,14 @@ only if appropriate, such as FOSS - but not commercial software.
 
       <tbody>
         <tr>
-          <td class='required'>ESX Connection</td>
+          <td class="required">ESX Connection</td>
 
           <td>The name of the configuration which holds the
           connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>VM Name</td>
+          <td class="required">VM Name</td>
 
           <td>Name of the virtual machine to power off.
           (Required)</td>
@@ -778,10 +759,9 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/parameters/PowerOff_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/PowerOff_panel.png" /></div>
 
-    <div id="Shutdown"><a name='Shutdown' id="Shutdown"></a>
+    <div id="Shutdown"><a name="Shutdown" id="Shutdown"></a>
 
     <h3>Shutdown</h3>
 
@@ -798,14 +778,14 @@ only if appropriate, such as FOSS - but not commercial software.
 
       <tbody>
         <tr>
-          <td class='required'>ESX Connection</td>
+          <td class="required">ESX Connection</td>
 
           <td>The name of the configuration which holds the
           connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>VM Name</td>
+          <td class="required">VM Name</td>
 
           <td>Name of the virtual machine to shut down.
           (Required)</td>
@@ -827,10 +807,9 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/parameters/Shutdown_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Shutdown_panel.png" /></div>
 
-    <div id="Suspend"><a name='Suspend' id="Suspend"></a>
+    <div id="Suspend"><a name="Suspend" id="Suspend"></a>
 
     <h3>Suspend</h3>
 
@@ -847,14 +826,14 @@ only if appropriate, such as FOSS - but not commercial software.
 
       <tbody>
         <tr>
-          <td class='required'>ESX Connection</td>
+          <td class="required">ESX Connection</td>
 
           <td>The name of the configuration which holds the
           connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>VM Name</td>
+          <td class="required">VM Name</td>
 
           <td>Name of the virtual machine to suspend.
           (Required)</td>
@@ -876,11 +855,9 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/parameters/Suspend_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Suspend_panel.png" /></div>
 
-    <div id="CreateResourceFromVM"><a name='CreateResourceFromVM'
-    id="CreateResourceFromVM"></a>
+    <div id="CreateResourceFromVM"><a name="CreateResourceFromVM" id="CreateResourceFromVM"></a>
 
     <h3>CreateResourceFromVM</h3>
 
@@ -899,14 +876,14 @@ only if appropriate, such as FOSS - but not commercial software.
 
       <tbody>
         <tr>
-          <td class='required'>ESX Connection</td>
+          <td class="required">ESX Connection</td>
 
           <td>The name of the configuration which holds the
           connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>VM Name</td>
+          <td class="required">VM Name</td>
 
           <td>Name of the virtual machine to get the information
           from. (Required)</td>
@@ -958,11 +935,9 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/parameters/CreateResourceFromVM_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CreateResourceFromVM_panel.png" /></div>
 
-    <div id="GetVMConfiguration"><a name='GetVMConfiguration' id=
-    "GetVMConfiguration"></a>
+    <div id="GetVMConfiguration"><a name="GetVMConfiguration" id="GetVMConfiguration"></a>
 
     <h3>GetVMConfiguration</h3>
 
@@ -982,14 +957,14 @@ only if appropriate, such as FOSS - but not commercial software.
 
       <tbody>
         <tr>
-          <td class='required'>ESX Connection</td>
+          <td class="required">ESX Connection</td>
 
           <td>The name of the configuration which holds the
           connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>VM Name</td>
+          <td class="required">VM Name</td>
 
           <td>Name of the virtual machine to get the information
           from. (Required)</td>
@@ -1019,10 +994,9 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/parameters/GetVMConfiguration_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/GetVMConfiguration_panel.png" /></div>
 
-    <div id="Import"><a name='Import' id="Import"></a>
+    <div id="Import"><a name="Import" id="Import"></a>
 
     <h3>Import</h3>
 
@@ -1042,34 +1016,34 @@ only if appropriate, such as FOSS - but not commercial software.
 
       <tbody>
         <tr>
-          <td class='required'>ESX Connection</td>
+          <td class="required">ESX Connection</td>
 
           <td>The name of the configuration which holds the
           connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>Host</td>
+          <td class="required">Host</td>
 
           <td>Name of the host where virtual machines will be
           imported. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>Datastore</td>
+          <td class="required">Datastore</td>
 
           <td>Name of the datastore to be used. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>VM Name</td>
+          <td class="required">VM Name</td>
 
           <td>Name of the virtual machine to import.
           (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>Source directory</td>
+          <td class="required">Source directory</td>
 
           <td>Absolute path to the directory where OVF packages are
           stored. (Required)</td>
@@ -1091,10 +1065,9 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/parameters/Import_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Import_panel.png" /></div>
 
-    <div id="Export"><a name='Export' id="Export"></a>
+    <div id="Export"><a name="Export" id="Export"></a>
 
     <h3>Export</h3>
 
@@ -1115,40 +1088,40 @@ only if appropriate, such as FOSS - but not commercial software.
 
       <tbody>
         <tr>
-          <td class='required'>ESX Connection</td>
+          <td class="required">ESX Connection</td>
 
           <td>The name of the configuration which holds the
           connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>Host</td>
+          <td class="required">Host</td>
 
           <td>Name of the host where the virtual machine is located.
           (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>Datacenter</td>
+          <td class="required">Datacenter</td>
 
           <td>Name of the datacenter. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>Datastore</td>
+          <td class="required">Datastore</td>
 
           <td>Name of the datastore. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>VM Name</td>
+          <td class="required">VM Name</td>
 
           <td>Name of the virtual machine to export.
           (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>Target directory</td>
+          <td class="required">Target directory</td>
 
           <td>Absoulte path to the directory where virtual machines
           will be exported. (Required)</td>
@@ -1170,10 +1143,9 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/parameters/Export_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Export_panel.png" /></div>
 
-    <div id="RegisterVM"><a name='RegisterVM' id="RegisterVM"></a>
+    <div id="RegisterVM"><a name="RegisterVM" id="RegisterVM"></a>
 
     <h3>RegisterVM</h3>
 
@@ -1191,41 +1163,41 @@ only if appropriate, such as FOSS - but not commercial software.
 
       <tbody>
         <tr>
-          <td class='required'>ESX Connection</td>
+          <td class="required">ESX Connection</td>
 
           <td>The name of the configuration which holds the
           connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>Host</td>
+          <td class="required">Host</td>
 
           <td>Name of the host where the virtual machine will be
           registered. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>Datacenter</td>
+          <td class="required">Datacenter</td>
 
           <td>Name of the datacenter. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>Resource Pool</td>
+          <td class="required">Resource Pool</td>
 
           <td>Name of the resource pool to register virtual
           machine. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>VMX path</td>
+          <td class="required">VMX path</td>
 
           <td>Datastore path to the virtual machine configuration
           file (vmx). (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>VM Name</td>
+          <td class="required">VM Name</td>
 
           <td>Name to be assigned to the virtual machine.
           (Required)</td>
@@ -1238,11 +1210,9 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/parameters/RegisterVM_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/RegisterVM_panel.png" /></div>
 
-    <div id="CloudManagerGrow"><a name='CloudManagerGrow' id=
-    "CloudManagerGrow"></a>
+    <div id="CloudManagerGrow"><a name="CloudManagerGrow" id="CloudManagerGrow"></a>
 
     <h3>CloudManagerGrow</h3>
 
@@ -1261,7 +1231,7 @@ only if appropriate, such as FOSS - but not commercial software.
 
       <tbody>
         <tr>
-          <td class='required'>ESX Connection</td>
+          <td class="required">ESX Connection</td>
 
           <td>The name of the configuration which holds the
           connection information for the ESX server. (Required)</td>
@@ -1282,22 +1252,20 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 
         <tr>
-          <td class='required'>Number of Servers</td>
+          <td class="required">Number of Servers</td>
 
           <td>Number of new servers to power on. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>Resource Pool</td>
+          <td class="required">Resource Pool</td>
 
           <td>Pool name for creating resources. (Required)</td>
         </tr>
       </tbody>
-    </table><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/parameters/CloudManagerGrow_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CloudManagerGrow_panel.png" /></div>
 
-    <div id="CloudManagerShrink"><a name='CloudManagerShrink' id=
-    "CloudManagerShrink"></a>
+    <div id="CloudManagerShrink"><a name="CloudManagerShrink" id="CloudManagerShrink"></a>
 
     <h3>CloudManagerShrink</h3>
 
@@ -1316,24 +1284,22 @@ only if appropriate, such as FOSS - but not commercial software.
 
       <tbody>
         <tr>
-          <td class='required'>ESX Connection</td>
+          <td class="required">ESX Connection</td>
 
           <td>The name of the configuration which holds the
           connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>List of Deployments</td>
+          <td class="required">List of Deployments</td>
 
           <td>A list of deployments (previously created by
           CloudManagerGrow) to stop. (Required)</td>
         </tr>
       </tbody>
-    </table><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/parameters/CloudManagerShrink_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CloudManagerShrink_panel.png" /></div>
 
-    <div id="CloudManagerSync"><a name='CloudManagerSync' id=
-    "CloudManagerSync"></a>
+    <div id="CloudManagerSync"><a name="CloudManagerSync" id="CloudManagerSync"></a>
 
     <h3>CloudManagerSync</h3>
 
@@ -1352,21 +1318,20 @@ only if appropriate, such as FOSS - but not commercial software.
 
       <tbody>
         <tr>
-          <td class='required'>ESX Connection</td>
+          <td class="required">ESX Connection</td>
 
           <td>The name of the configuration which holds the
           connection information for the ESX server. (Required)</td>
         </tr>
 
         <tr>
-          <td class='required'>List of Deployments</td>
+          <td class="required">List of Deployments</td>
 
           <td>A list of deployments(previously created by
           CloudManagerGrow) to check. (Required)</td>
         </tr>
       </tbody>
-    </table><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/parameters/CloudManagerShrink_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CloudManagerShrink_panel.png" /></div>
     
     <h1>Use Cases and Examples</h1>
     <!-- This section is for examples and use cases, including screenshots of the new Parameter Panel with example values filled in.
@@ -1403,8 +1368,7 @@ only if appropriate, such as FOSS - but not commercial software.
     On the right side of the line for the ESX plugin, there is a
     "Configure" link which will open the Configuration page.<br />
     Create a new configuration by specifying the requested
-    parameters:</p><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/create_config.png" />
+    parameters:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/create_config.png" />
 
     <p>Once the configuration is created, you can see it listed in
     "ESX Configurations", and now you are able to manage virtual
@@ -1413,9 +1377,7 @@ only if appropriate, such as FOSS - but not commercial software.
     <h4>PowerOn</h4>
 
     <p>Create a new PowerOn procedure and fill in the requested
-    parameters with real values from your ESX server:</p><img alt=
-    "" src=
-    "../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweron_parameters.png" />
+    parameters with real values from your ESX server:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweron_parameters.png" />
 
     <p>Make sure you selected the "Create Resource?" checkbox.</p>
 
@@ -1423,42 +1385,44 @@ only if appropriate, such as FOSS - but not commercial software.
 
     <p>Create a new command step to use the created resource. In
     this example, we will pick a resource from the pool and just add
-    an ec-perl sleep to use it for 30 seconds.</p><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/consume_parameters.png" />
+    an ec-perl sleep to use it for 30 seconds.</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/consume_parameters.png" />
 
     <h4>Cleanup</h4>
 
     <p>Now that the resource has been used and is ready to be deleted,
     create a Cleanup step and fill in the requested
-    parameters.</p><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/cleanup_parameters.png" />
+    parameters.</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/cleanup_parameters.png" />
 
     <h4>PowerOff</h4>
 
     <p>Now that the resource has been deleted, create a PowerOff
-    step and fill in the requested parameters.</p><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweroff_parameters.png" />
+    step and fill in the requested parameters.</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweroff_parameters.png" />
 
     <h4>Results and outputs</h4>
 
     <p>Once the job finished, you can see the properties stored in
     'Results location'.<br />
-    <img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/job.png" /></p><img alt=""
-    src=
-    "../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/results.png" />
+    <img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/job.png" /></p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/results.png" />
 
-    <p>PowerOn output:</p><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweron_log.png" />
+    <p>PowerOn output:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweron_log.png" />
 
-    <p>Cleanup output:</p><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/cleanup_log.png" />
+    <p>Cleanup output:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/cleanup_log.png" />
 
-    <p>PowerOff output:</p><img alt="" src=
-    "../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweroff_log.png" />
+    <p>PowerOff output:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweroff_log.png" />
 
     <h1>Release Notes</h1>
-    <h2>@PLUGIN_KEY@ 2.1.4</h2>    <ul>      <li>Renamed ElectricCommander to ElectricFlow.</li>    </ul>
+    <h2>@PLUGIN_KEY@ 2.1.5</h2>
+    <ul>
+        <li>Fixed issue with configurations being cached for IE.</li>
+    </ul>
+    <h2>@PLUGIN_KEY@ 2.1.4</h2>
+
+    <ul>
+
+      <li>Renamed ElectricCommander to ElectricFlow.</li>
+
+    </ul>
+
     <h2>@PLUGIN_KEY@ 2.1.3</h2>
     <ul>
       <li>Fixed manifest file.</li>
