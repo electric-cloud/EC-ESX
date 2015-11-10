@@ -52,7 +52,7 @@ my %createresourcefromvm = (
 my %import = (
 			  label       => "ESX - Import",
 			  procedure   => "Import",
-			  description => "Import an OVF package to the ESX server",
+			  description => "Import an OVA/OVF package to the ESX server",
 			  category    => "Resource Management"
 			 );
 
