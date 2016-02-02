@@ -250,6 +250,18 @@
     <xpath>//step[stepName=&quot;sync&quot;]/command</xpath>
   </file>
   <file>
+    <path>ui_forms/listManagedEntity.xml</path>
+    <xpath>//procedure[procedureName=&quot;ListManagedEntity&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
+  </file>
+  <file>
+    <path>vm/listManagedEntity.pl</path>
+    <xpath>//step[stepName=&quot;ListManagedEntity&quot;]/command</xpath>
+  </file>
+  <file>
+    <path>setTimelimit.pl</path>
+    <xpath>//step[stepName=&quot;SetTimelimit&quot;]/command</xpath>
+  </file>
+  <file>
     <path>preamble.pl</path>
     <xpath>//property[propertyName=&quot;preamble&quot;]/value</xpath>
   </file>

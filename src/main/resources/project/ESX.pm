@@ -2113,6 +2113,87 @@ sub getAvailableVM {
     return @$vm_views[0]->name;
 
 }
+################################
+# list - Connect, call list_entities, and disconnect from ESX server
+#
+# Arguments:
+#   Managed Entity Type
+#
+# Returns:
+#   none
+#
+################################
+sub list {
+    print "Listing Managed Entity";
+    my ($self) = @_;
+
+    if ($::gRunTestUseFakeOutput) {
+
+        # Create and return fake output
+        my $out = "";
+        $out .= "Listing Managed Entity '" . $self->opts->{managed_entity_type} . "'...";
+        $out .= "\n";
+        $out .= "Successfully listed managed entity '" . $self->opts->{managed_entity_type} . "'";
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    $self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->list_entity();
+
+    $self->logout();
+}
+
+################################
+# list_entity - List the entities of type $opts->{managed_entity_name}
+#
+# Arguments:
+#   Managed Entity Type
+#
+# Returns:
+#   none
+#
+################################
+sub list_entity {
+    my ($self) = @_;
+    $self->debug_msg(1, 'Listing Managed Entity \'' . $self->opts->{managed_entity_type} . '\'...');
+    eval {
+        my $entity_views = Vim::find_entity_views(view_type => $self->opts->{managed_entity_type});
+
+        if (!$entity_views) {
+            $self->debug_msg(0, 'Managed Entity \'' . $self->opts->{managed_entity_type} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+        #Print the output
+        foreach my $entity_view (@$entity_views) {
+            my $entity_name = $entity_view->name;
+            Util::trace(0, "$entity_name\n");
+        }
+
+        $self->debug_msg(0, 'Successfully Listed Managed Entity \'' . $self->opts->{managed_entity_type} . '\'');
+    };
+    if ($@) {
+        if (ref($@) eq SOAP_FAULT) {
+            $self->debug_msg(0, 'Error listing managed entity \'' . $self->opts->{managed_entity_type} . '\': ');
+
+            if (!$self->print_error(ref($@->detail))) {
+                $self->debug_msg(0, "Managed Entity '" . $self->opts->{managed_entity_type} . "' can't be listed \n" . $@ . EMPTY);
+            }
+        }
+        else {
+            $self->debug_msg(0, "Managed Entity '" . $self->opts->{managed_entity_type} . "' can't be listed \n" . $@ . EMPTY);
+        }
+        $self->opts->{exitcode} = ERROR;
+        return;
+    }
+}
 
 # -------------------------------------------------------------------------
 # Helper functions

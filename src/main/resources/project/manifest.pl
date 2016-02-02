@@ -78,6 +78,11 @@
     ['//step[stepName="shrink"]/command',                                                                               'vm/step.shrink.pl'],
     ['//step[stepName="sync"]/command',                                                                                 'vm/step.sync.pl'],
 
+    ['//procedure[procedureName="ListManagedEntity"]/propertySheet/property[propertyName="ec_parameterForm"]/value',    'ui_forms/listManagedEntity.xml'],
+    ['//step[stepName="ListManagedEntity"]/command',                                                                    'vm/listManagedEntity.pl'],
+    ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
+
+
     #Main files
     ['//property[propertyName="preamble"]/value', 'preamble.pl'],
     ['//property[propertyName="ESX"]/value',      'ESX.pm'],
