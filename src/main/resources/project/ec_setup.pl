@@ -118,7 +118,14 @@ my %snapshot = (
 				description => "Create a snapshot for the specified virtual machine",
 				category    => "Resource Management"
 			   );
-			   
+
+my %listmanagedentity = (
+				label       => "ESX - ListManagedEntity",
+				procedure   => "ListManagedEntity",
+				description => "List the managed-entity type (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.",
+				category    => "Resource Management"
+			   );
+
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Suspend");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Clone");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Cleanup");
@@ -136,6 +143,7 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Shutdown");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Snapshot");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - CloudManagerShrink");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - CloudManagerGrow");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - ListManagedEntity");
 
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend Virtual Machine");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend");
@@ -153,8 +161,9 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Power On Virtu
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Revert");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Shutdown Virtual Machine");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Snapshot");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - ListManagedEntity");
 
-@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot);
+@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listmanagedentity);
 
 my $pluginName = "@PLUGIN_NAME@";
 my $pluginKey = "@PLUGIN_KEY@";
@@ -401,6 +410,15 @@ if ($upgradeAction eq "upgrade") {
                                      {
                                         procedureName => 'CloudManagerSync',
                                         stepName      => 'sync'
+                                     }
+                                    );
+
+            $batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'ListManagedEntity',
+                                        stepName      => 'ListManagedEntity'
                                      }
                                     );
         }
