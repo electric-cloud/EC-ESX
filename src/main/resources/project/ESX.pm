@@ -2195,6 +2195,85 @@ sub list_entity {
     }
 }
 
+################################
+# createFolder - Connect, call create_folder, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(connection_config, folder_name, parent_type) 
+#
+# Returns:
+#   none
+#
+################################
+sub createFolder {
+    print "Creating Folder";
+    my ($self) = @_;
+
+    if ($::gRunTestUseFakeOutput) {
+
+        # Create and return fake output
+        my $out = "";
+        $out .= "Creating Folder '" . $self->opts->{folder_name} . "'...";
+        $out .= "\n";
+        $out .= "Successfully created folder '" . $self->opts->{folder_name} . "'";
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    $self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->create_folder();
+
+    $self->logout();
+}
+
+################################
+# create_folder - Create a folder inside parent of type $opts->{parent_type} and name $opts->{parent_name}
+#
+# Arguments:
+#   Hash(connection_config, folder_name, parent_type)
+#
+# Returns:
+#   none
+#
+################################
+sub create_folder {
+    my ($self) = @_;
+    $self->debug_msg(1, 'Creating Folder \'' . $self->opts->{folder_name} . '\'...');
+    eval {
+        my $parent_view = Vim::find_entity_view(view_type => $self->opts->{parent_type}, filter => { name => $self->opts->{parent_name}});
+
+        if (!$parent_view) {
+            $self->debug_msg(0, 'Parent Entity \'' . $self->opts->{parent_name} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+        $parent_view->CreateFolder(name => $self->opts->{folder_name});
+
+        $self->debug_msg(0, 'Successfully Created Folder \'' . $self->opts->{folder_name} . '\'');
+    };
+    if ($@) {
+        if (ref($@) eq SOAP_FAULT) {
+            $self->debug_msg(0, 'Error creating folder \'' . $self->opts->{folder_name} . '\': ');
+
+            if (!$self->print_error(ref($@->detail))) {
+                $self->debug_msg(0, "Folder '" . $self->opts->{folder_name} . "' can't be created \n" . $@ . EMPTY);
+            }
+        }
+        else {
+            $self->debug_msg(0, "Folder '" . $self->opts->{folder_name} . "' can't be created \n" . $@ . EMPTY);
+        }
+        $self->opts->{exitcode} = ERROR;
+        return;
+    }
+}
+
+
 # -------------------------------------------------------------------------
 # Helper functions
 # -------------------------------------------------------------------------

@@ -82,6 +82,9 @@
     ['//step[stepName="ListManagedEntity"]/command',                                                                    'vm/listManagedEntity.pl'],
     ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
 
+    ['//procedure[procedureName="CreateFolder"]/propertySheet/property[propertyName="ec_parameterForm"]/value',         'ui_forms/createFolder.xml'],
+    ['//step[stepName="CreateFolder"]/command',                                                                         'vm/createFolder.pl'],
+    ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
 
     #Main files
     ['//property[propertyName="preamble"]/value', 'preamble.pl'],

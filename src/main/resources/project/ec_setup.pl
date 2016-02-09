@@ -126,6 +126,13 @@ my %listmanagedentity = (
 				category    => "Resource Management"
 			   );
 
+my %createfolder = (
+				label       => "ESX - CreateFolder",
+				procedure   => "CreateFolder",
+				description => "Create a folder in datacenter or another folder.",
+				category    => "Resource Management"
+			   );
+
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Suspend");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Clone");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Cleanup");
@@ -144,6 +151,7 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Snapshot");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - CloudManagerShrink");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - CloudManagerGrow");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - ListManagedEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - CreateFolder");
 
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend Virtual Machine");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend");
@@ -162,8 +170,9 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Revert");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Shutdown Virtual Machine");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Snapshot");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - ListManagedEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - CreateFolder");
 
-@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listmanagedentity);
+@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listmanagedentity, \%createfolder);
 
 my $pluginName = "@PLUGIN_NAME@";
 my $pluginKey = "@PLUGIN_KEY@";
@@ -419,6 +428,15 @@ if ($upgradeAction eq "upgrade") {
                                      {
                                         procedureName => 'ListManagedEntity',
                                         stepName      => 'ListManagedEntity'
+                                     }
+                                    );
+
+            $batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'CreateFolder',
+                                        stepName      => 'CreateFolder'
                                      }
                                     );
         }
