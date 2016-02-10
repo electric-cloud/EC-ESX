@@ -2319,7 +2319,7 @@ sub delete {
 }
 
 ################################
-# delete_entity - Delete the entities of type $opts->{managed_entity_name}
+# delete_entity - Delete the entity  $opts->{managed_entity_name}
 #
 # Arguments:
 #   Hash(Managed Entity Type, Managed Entity Name)
@@ -2352,6 +2352,83 @@ sub delete_entity {
         }
         else {
             $self->debug_msg(0, "Managed Entity '" . $self->opts->{managed_entity_name} . "' can't be deleted \n" . $@ . EMPTY);
+        }
+        $self->opts->{exitcode} = ERROR;
+        return;
+    }
+}
+
+################################
+# rename - Connect, call rename_entity, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(Managed Entity Type, Managed Entity Old Name, Managed Entity New Name)
+#
+# Returns:
+#   none
+#
+################################
+sub rename {
+    print "Renaming Managed Entity";
+    my ($self) = @_;
+
+    if ($::gRunTestUseFakeOutput) {
+
+        # Create and return fake output
+        my $out = "";
+        $out .= "Renaming Managed Entity '" . $self->opts->{managed_entity_old_name} . "' to '" . $self->opts->{managed_entity_new_name} . "'...";
+        $out .= "\n";
+        $out .= "Successfully renamed managed entity '" . $self->opts->{managed_entity_old_name} . "'";
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    $self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->rename_entity();
+
+    $self->logout();
+}
+
+################################
+# rename_entity - Rename the entity $opts->{managed_entity_old_name}
+#
+# Arguments:
+#   Hash(Managed Entity Type, Managed Entity Old Name, Managed Entity New Name)
+#
+# Returns:
+#   none
+#
+################################
+sub rename_entity {
+    my ($self) = @_;
+    $self->debug_msg(1, 'Renaming Managed Entity \'' . $self->opts->{managed_entity_old_name} . '\' to \'' . $self->opts->{managed_entity_new_name} . '\'...');
+    eval {
+        my $entity_old_view = Vim::find_entity_view(view_type => $self->opts->{managed_entity_type}, filter => { 'name' => $self->opts->{managed_entity_old_name} } );
+
+        if (!$entity_old_view) {
+            $self->debug_msg(0, 'Managed Entity \'' . $self->opts->{managed_entity_old_name} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+        $entity_old_view->Rename(newName => $self->opts->{managed_entity_new_name});
+        $self->debug_msg(0, 'Successfully renamed Managed Entity \'' . $self->opts->{managed_entity_old_name} . '\'');
+    };
+    if ($@) {
+        if (ref($@) eq SOAP_FAULT) {
+            $self->debug_msg(0, 'Error renaming managed entity \'' . $self->opts->{managed_entity_old_name} . '\': ');
+
+            if (!$self->print_error(ref($@->detail))) {
+                $self->debug_msg(0, "Managed Entity '" . $self->opts->{managed_entity_old_name} . "' can't be renamed \n" . $@ . EMPTY);
+            }
+        }
+        else {
+            $self->debug_msg(0, "Managed Entity '" . $self->opts->{managed_entity_old_name} . "' can't be renamed \n" . $@ . EMPTY);
         }
         $self->opts->{exitcode} = ERROR;
         return;
