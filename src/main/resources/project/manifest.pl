@@ -86,6 +86,9 @@
     ['//step[stepName="CreateFolder"]/command',                                                                         'vm/createFolder.pl'],
     ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
 
+    ['//procedure[procedureName="DeleteManagedEntity"]/propertySheet/property[propertyName="ec_parameterForm"]/value',  'ui_forms/deleteManagedEntity.xml'],
+    ['//step[stepName="DeleteManagedEntity"]/command',                                                                  'vm/deleteManagedEntity.pl'],
+    ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
     #Main files
     ['//property[propertyName="preamble"]/value', 'preamble.pl'],
     ['//property[propertyName="ESX"]/value',      'ESX.pm'],

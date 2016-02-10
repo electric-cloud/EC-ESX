@@ -133,6 +133,13 @@ my %createfolder = (
 				category    => "Resource Management"
 			   );
 
+my %deletemanagedentity = (
+				label       => "ESX - DeleteManagedEntity",
+				procedure   => "DeleteManagedEntity",
+				description => "Delete the managed-entity type (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.",
+				category    => "Resource Management"
+			   );
+
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Suspend");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Clone");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Cleanup");
@@ -152,6 +159,7 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - CloudManage
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - CloudManagerGrow");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - ListManagedEntity");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - CreateFolder");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - DeleteManagedEntity");
 
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend Virtual Machine");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend");
@@ -171,8 +179,9 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Shutdown Virtu
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Snapshot");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - ListManagedEntity");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - CreateFolder");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - DeleteManagedEntity");
 
-@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listmanagedentity, \%createfolder);
+@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listmanagedentity, \%createfolder, \%deletemanagedentity);
 
 my $pluginName = "@PLUGIN_NAME@";
 my $pluginKey = "@PLUGIN_KEY@";
@@ -437,6 +446,15 @@ if ($upgradeAction eq "upgrade") {
                                      {
                                         procedureName => 'CreateFolder',
                                         stepName      => 'CreateFolder'
+                                     }
+                                    );
+
+            $batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'DeleteManagedEntity',
+                                        stepName      => 'DeleteManagedEntity'
                                      }
                                     );
         }

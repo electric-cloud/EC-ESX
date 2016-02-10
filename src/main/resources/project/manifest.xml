@@ -274,6 +274,18 @@
     <xpath>//step[stepName=&quot;SetTimelimit&quot;]/command</xpath>
   </file>
   <file>
+    <path>ui_forms/deleteManagedEntity.xml</path>
+    <xpath>//procedure[procedureName=&quot;DeleteManagedEntity&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
+  </file>
+  <file>
+    <path>vm/deleteManagedEntity.pl</path>
+    <xpath>//step[stepName=&quot;DeleteManagedEntity&quot;]/command</xpath>
+  </file>
+  <file>
+    <path>setTimelimit.pl</path>
+    <xpath>//step[stepName=&quot;SetTimelimit&quot;]/command</xpath>
+  </file>
+  <file>
     <path>preamble.pl</path>
     <xpath>//property[propertyName=&quot;preamble&quot;]/value</xpath>
   </file>

@@ -2114,10 +2114,10 @@ sub getAvailableVM {
 
 }
 ################################
-# list - Connect, call list_entities, and disconnect from ESX server
+# list - Connect, call list_entity, and disconnect from ESX server
 #
 # Arguments:
-#   Managed Entity Type
+#   Hash(Managed Entity Type)
 #
 # Returns:
 #   none
@@ -2151,10 +2151,10 @@ sub list {
 }
 
 ################################
-# list_entity - List the entities of type $opts->{managed_entity_name}
+# list_entity - List the entity of type $opts->{managed_entity_name}
 #
 # Arguments:
-#   Managed Entity Type
+#   Hash(Managed Entity Type)
 #
 # Returns:
 #   none
@@ -2281,6 +2281,82 @@ sub create_folder {
     }
 }
 
+################################
+# delete - Connect, call delete_entity, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(Managed Entity Type, Managed Entity Name)
+#
+# Returns:
+#   none
+#
+################################
+sub delete {
+    print "Deleting Managed Entity";
+    my ($self) = @_;
+
+    if ($::gRunTestUseFakeOutput) {
+
+        # Create and return fake output
+        my $out = "";
+        $out .= "Deleting Managed Entity '" . $self->opts->{managed_entity_name} . "'...";
+        $out .= "\n";
+        $out .= "Successfully deleted managed entity '" . $self->opts->{managed_entity_name} . "'";
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    $self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->delete_entity();
+
+    $self->logout();
+}
+
+################################
+# delete_entity - Delete the entities of type $opts->{managed_entity_name}
+#
+# Arguments:
+#   Hash(Managed Entity Type, Managed Entity Name)
+#
+# Returns:
+#   none
+#
+################################
+sub delete_entity {
+    my ($self) = @_;
+    $self->debug_msg(1, 'Deleting Managed Entity \'' . $self->opts->{managed_entity_name} . '\'...');
+    eval {
+        my $entity_view = Vim::find_entity_view(view_type => $self->opts->{managed_entity_type}, filter => { 'name' => $self->opts->{managed_entity_name} } );
+
+        if (!$entity_view) {
+            $self->debug_msg(0, 'Managed Entity \'' . $self->opts->{managed_entity_name} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+        $entity_view->Destroy;
+        $self->debug_msg(0, 'Successfully Deleted Managed Entity \'' . $self->opts->{managed_entity_name} . '\'');
+    };
+    if ($@) {
+        if (ref($@) eq SOAP_FAULT) {
+            $self->debug_msg(0, 'Error deleting managed entity \'' . $self->opts->{managed_entity_name} . '\': ');
+
+            if (!$self->print_error(ref($@->detail))) {
+                $self->debug_msg(0, "Managed Entity '" . $self->opts->{managed_entity_name} . "' can't be deleted \n" . $@ . EMPTY);
+            }
+        }
+        else {
+            $self->debug_msg(0, "Managed Entity '" . $self->opts->{managed_entity_name} . "' can't be deleted \n" . $@ . EMPTY);
+        }
+        $self->opts->{exitcode} = ERROR;
+        return;
+    }
+}
 
 # -------------------------------------------------------------------------
 # Helper functions
