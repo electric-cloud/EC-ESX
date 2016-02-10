@@ -2247,11 +2247,19 @@ sub create_folder {
     $self->debug_msg(1, 'Creating Folder \'' . $self->opts->{folder_name} . '\'...');
     eval {
         my $parent_view = Vim::find_entity_view(view_type => $self->opts->{parent_type}, filter => { name => $self->opts->{parent_name}});
-
         if (!$parent_view) {
             $self->debug_msg(0, 'Parent Entity \'' . $self->opts->{parent_name} . '\' not found');
             $self->opts->{exitcode} = ERROR;
             return;
+        }
+        if ( $self->opts->{parent_type} eq 'Datacenter') {
+            #Overwriting Parent View for getting folder view
+            $parent_view = Vim::find_entity_view(view_type => 'Folder', begin_entity => $parent_view);
+            if (!$parent_view) {
+                $self->debug_msg(0, 'Folder View out of Parent Entity \'' . $self->opts->{parent_name} . '\' not found');
+                $self->opts->{exitcode} = ERROR;
+                return;
+            }
         }
         $parent_view->CreateFolder(name => $self->opts->{folder_name});
 
