@@ -250,12 +250,12 @@
     <xpath>//step[stepName=&quot;sync&quot;]/command</xpath>
   </file>
   <file>
-    <path>ui_forms/listManagedEntity.xml</path>
-    <xpath>//procedure[procedureName=&quot;ListManagedEntity&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
+    <path>ui_forms/listEntity.xml</path>
+    <xpath>//procedure[procedureName=&quot;ListEntity&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
   </file>
   <file>
-    <path>vm/listManagedEntity.pl</path>
-    <xpath>//step[stepName=&quot;ListManagedEntity&quot;]/command</xpath>
+    <path>vm/listEntity.pl</path>
+    <xpath>//step[stepName=&quot;ListEntity&quot;]/command</xpath>
   </file>
   <file>
     <path>setTimelimit.pl</path>
@@ -274,24 +274,24 @@
     <xpath>//step[stepName=&quot;SetTimelimit&quot;]/command</xpath>
   </file>
   <file>
-    <path>ui_forms/deleteManagedEntity.xml</path>
-    <xpath>//procedure[procedureName=&quot;DeleteManagedEntity&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
+    <path>ui_forms/deleteEntity.xml</path>
+    <xpath>//procedure[procedureName=&quot;DeleteEntity&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
   </file>
   <file>
-    <path>vm/deleteManagedEntity.pl</path>
-    <xpath>//step[stepName=&quot;DeleteManagedEntity&quot;]/command</xpath>
+    <path>vm/deleteEntity.pl</path>
+    <xpath>//step[stepName=&quot;DeleteEntity&quot;]/command</xpath>
   </file>
   <file>
     <path>setTimelimit.pl</path>
     <xpath>//step[stepName=&quot;SetTimelimit&quot;]/command</xpath>
   </file>
   <file>
-    <path>ui_forms/renameManagedEntity.xml</path>
-    <xpath>//procedure[procedureName=&quot;RenameManagedEntity&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
+    <path>ui_forms/renameEntity.xml</path>
+    <xpath>//procedure[procedureName=&quot;RenameEntity&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
   </file>
   <file>
-    <path>vm/renameManagedEntity.pl</path>
-    <xpath>//step[stepName=&quot;RenameManagedEntity&quot;]/command</xpath>
+    <path>vm/renameEntity.pl</path>
+    <xpath>//step[stepName=&quot;RenameEntity&quot;]/command</xpath>
   </file>
   <file>
     <path>setTimelimit.pl</path>

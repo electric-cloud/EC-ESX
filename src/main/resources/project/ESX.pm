@@ -2117,23 +2117,23 @@ sub getAvailableVM {
 # list - Connect, call list_entity, and disconnect from ESX server
 #
 # Arguments:
-#   Hash(Managed Entity Type)
+#   Hash(Entity Type)
 #
 # Returns:
 #   none
 #
 ################################
 sub list {
-    print "Listing Managed Entity";
+    print "Listing Entity";
     my ($self) = @_;
 
     if ($::gRunTestUseFakeOutput) {
 
         # Create and return fake output
         my $out = "";
-        $out .= "Listing Managed Entity '" . $self->opts->{managed_entity_type} . "'...";
+        $out .= "Listing Entity '" . $self->opts->{entity_type} . "'...";
         $out .= "\n";
-        $out .= "Successfully listed managed entity '" . $self->opts->{managed_entity_type} . "'";
+        $out .= "Successfully listed entity '" . $self->opts->{entity_type} . "'";
         return $out;
     }
 
@@ -2151,10 +2151,10 @@ sub list {
 }
 
 ################################
-# list_entity - List the entity of type $opts->{managed_entity_name}
+# list_entity - List the entity of type $opts->{entity_name}
 #
 # Arguments:
-#   Hash(Managed Entity Type)
+#   Hash(Entity Type)
 #
 # Returns:
 #   none
@@ -2162,12 +2162,12 @@ sub list {
 ################################
 sub list_entity {
     my ($self) = @_;
-    $self->debug_msg(1, 'Listing Managed Entity \'' . $self->opts->{managed_entity_type} . '\'...');
+    $self->debug_msg(1, 'Listing Entity \'' . $self->opts->{entity_type} . '\'...');
     eval {
-        my $entity_views = Vim::find_entity_views(view_type => $self->opts->{managed_entity_type});
+        my $entity_views = Vim::find_entity_views(view_type => $self->opts->{entity_type});
 
         if (!$entity_views) {
-            $self->debug_msg(0, 'Managed Entity \'' . $self->opts->{managed_entity_type} . '\' not found');
+            $self->debug_msg(0, 'Entity \'' . $self->opts->{entity_type} . '\' not found');
             $self->opts->{exitcode} = ERROR;
             return;
         }
@@ -2177,18 +2177,18 @@ sub list_entity {
             Util::trace(0, "$entity_name\n");
         }
 
-        $self->debug_msg(0, 'Successfully Listed Managed Entity \'' . $self->opts->{managed_entity_type} . '\'');
+        $self->debug_msg(0, 'Successfully Listed Entity \'' . $self->opts->{entity_type} . '\'');
     };
     if ($@) {
         if (ref($@) eq SOAP_FAULT) {
-            $self->debug_msg(0, 'Error listing managed entity \'' . $self->opts->{managed_entity_type} . '\': ');
+            $self->debug_msg(0, 'Error listing entity \'' . $self->opts->{entity_type} . '\': ');
 
             if (!$self->print_error(ref($@->detail))) {
-                $self->debug_msg(0, "Managed Entity '" . $self->opts->{managed_entity_type} . "' can't be listed \n" . $@ . EMPTY);
+                $self->debug_msg(0, "Entity '" . $self->opts->{entity_type} . "' can't be listed \n" . $@ . EMPTY);
             }
         }
         else {
-            $self->debug_msg(0, "Managed Entity '" . $self->opts->{managed_entity_type} . "' can't be listed \n" . $@ . EMPTY);
+            $self->debug_msg(0, "Entity '" . $self->opts->{entity_type} . "' can't be listed \n" . $@ . EMPTY);
         }
         $self->opts->{exitcode} = ERROR;
         return;
@@ -2285,23 +2285,23 @@ sub create_folder {
 # delete - Connect, call delete_entity, and disconnect from ESX server
 #
 # Arguments:
-#   Hash(Managed Entity Type, Managed Entity Name)
+#   Hash(Entity Type, Entity Name)
 #
 # Returns:
 #   none
 #
 ################################
 sub delete {
-    print "Deleting Managed Entity";
+    print "Deleting Entity";
     my ($self) = @_;
 
     if ($::gRunTestUseFakeOutput) {
 
         # Create and return fake output
         my $out = "";
-        $out .= "Deleting Managed Entity '" . $self->opts->{managed_entity_name} . "'...";
+        $out .= "Deleting Entity '" . $self->opts->{entity_name} . "'...";
         $out .= "\n";
-        $out .= "Successfully deleted managed entity '" . $self->opts->{managed_entity_name} . "'";
+        $out .= "Successfully deleted entity '" . $self->opts->{entity_name} . "'";
         return $out;
     }
 
@@ -2319,10 +2319,10 @@ sub delete {
 }
 
 ################################
-# delete_entity - Delete the entity  $opts->{managed_entity_name}
+# delete_entity - Delete the entity  $opts->{entity_name}
 #
 # Arguments:
-#   Hash(Managed Entity Type, Managed Entity Name)
+#   Hash(Entity Type, Entity Name)
 #
 # Returns:
 #   none
@@ -2330,28 +2330,28 @@ sub delete {
 ################################
 sub delete_entity {
     my ($self) = @_;
-    $self->debug_msg(1, 'Deleting Managed Entity \'' . $self->opts->{managed_entity_name} . '\'...');
+    $self->debug_msg(1, 'Deleting Entity \'' . $self->opts->{entity_name} . '\'...');
     eval {
-        my $entity_view = Vim::find_entity_view(view_type => $self->opts->{managed_entity_type}, filter => { 'name' => $self->opts->{managed_entity_name} } );
+        my $entity_view = Vim::find_entity_view(view_type => $self->opts->{entity_type}, filter => { 'name' => $self->opts->{entity_name} } );
 
         if (!$entity_view) {
-            $self->debug_msg(0, 'Managed Entity \'' . $self->opts->{managed_entity_name} . '\' not found');
+            $self->debug_msg(0, 'Entity \'' . $self->opts->{entity_name} . '\' not found');
             $self->opts->{exitcode} = ERROR;
             return;
         }
         $entity_view->Destroy;
-        $self->debug_msg(0, 'Successfully Deleted Managed Entity \'' . $self->opts->{managed_entity_name} . '\'');
+        $self->debug_msg(0, 'Successfully Deleted Entity \'' . $self->opts->{entity_name} . '\'');
     };
     if ($@) {
         if (ref($@) eq SOAP_FAULT) {
-            $self->debug_msg(0, 'Error deleting managed entity \'' . $self->opts->{managed_entity_name} . '\': ');
+            $self->debug_msg(0, 'Error deleting entity \'' . $self->opts->{entity_name} . '\': ');
 
             if (!$self->print_error(ref($@->detail))) {
-                $self->debug_msg(0, "Managed Entity '" . $self->opts->{managed_entity_name} . "' can't be deleted \n" . $@ . EMPTY);
+                $self->debug_msg(0, "Entity '" . $self->opts->{entity_name} . "' can't be deleted \n" . $@ . EMPTY);
             }
         }
         else {
-            $self->debug_msg(0, "Managed Entity '" . $self->opts->{managed_entity_name} . "' can't be deleted \n" . $@ . EMPTY);
+            $self->debug_msg(0, "Entity '" . $self->opts->{entity_name} . "' can't be deleted \n" . $@ . EMPTY);
         }
         $self->opts->{exitcode} = ERROR;
         return;
@@ -2362,23 +2362,23 @@ sub delete_entity {
 # rename - Connect, call rename_entity, and disconnect from ESX server
 #
 # Arguments:
-#   Hash(Managed Entity Type, Managed Entity Old Name, Managed Entity New Name)
+#   Hash(Entity Type, Entity Old Name, Entity New Name)
 #
 # Returns:
 #   none
 #
 ################################
 sub rename {
-    print "Renaming Managed Entity";
+    print "Renaming Entity";
     my ($self) = @_;
 
     if ($::gRunTestUseFakeOutput) {
 
         # Create and return fake output
         my $out = "";
-        $out .= "Renaming Managed Entity '" . $self->opts->{managed_entity_old_name} . "' to '" . $self->opts->{managed_entity_new_name} . "'...";
+        $out .= "Renaming Entity '" . $self->opts->{entity_old_name} . "' to '" . $self->opts->{entity_new_name} . "'...";
         $out .= "\n";
-        $out .= "Successfully renamed managed entity '" . $self->opts->{managed_entity_old_name} . "'";
+        $out .= "Successfully renamed entity '" . $self->opts->{entity_old_name} . "'";
         return $out;
     }
 
@@ -2396,10 +2396,10 @@ sub rename {
 }
 
 ################################
-# rename_entity - Rename the entity $opts->{managed_entity_old_name}
+# rename_entity - Rename the entity $opts->{entity_old_name}
 #
 # Arguments:
-#   Hash(Managed Entity Type, Managed Entity Old Name, Managed Entity New Name)
+#   Hash(Entity Type, Entity Old Name, Entity New Name)
 #
 # Returns:
 #   none
@@ -2407,28 +2407,28 @@ sub rename {
 ################################
 sub rename_entity {
     my ($self) = @_;
-    $self->debug_msg(1, 'Renaming Managed Entity \'' . $self->opts->{managed_entity_old_name} . '\' to \'' . $self->opts->{managed_entity_new_name} . '\'...');
+    $self->debug_msg(1, 'Renaming Entity \'' . $self->opts->{entity_old_name} . '\' to \'' . $self->opts->{entity_new_name} . '\'...');
     eval {
-        my $entity_old_view = Vim::find_entity_view(view_type => $self->opts->{managed_entity_type}, filter => { 'name' => $self->opts->{managed_entity_old_name} } );
+        my $entity_old_view = Vim::find_entity_view(view_type => $self->opts->{entity_type}, filter => { 'name' => $self->opts->{entity_old_name} } );
 
         if (!$entity_old_view) {
-            $self->debug_msg(0, 'Managed Entity \'' . $self->opts->{managed_entity_old_name} . '\' not found');
+            $self->debug_msg(0, 'Entity \'' . $self->opts->{entity_old_name} . '\' not found');
             $self->opts->{exitcode} = ERROR;
             return;
         }
-        $entity_old_view->Rename(newName => $self->opts->{managed_entity_new_name});
-        $self->debug_msg(0, 'Successfully renamed Managed Entity \'' . $self->opts->{managed_entity_old_name} . '\'');
+        $entity_old_view->Rename(newName => $self->opts->{entity_new_name});
+        $self->debug_msg(0, 'Successfully renamed Entity \'' . $self->opts->{entity_old_name} . '\'');
     };
     if ($@) {
         if (ref($@) eq SOAP_FAULT) {
-            $self->debug_msg(0, 'Error renaming managed entity \'' . $self->opts->{managed_entity_old_name} . '\': ');
+            $self->debug_msg(0, 'Error renaming entity \'' . $self->opts->{entity_old_name} . '\': ');
 
             if (!$self->print_error(ref($@->detail))) {
-                $self->debug_msg(0, "Managed Entity '" . $self->opts->{managed_entity_old_name} . "' can't be renamed \n" . $@ . EMPTY);
+                $self->debug_msg(0, "Entity '" . $self->opts->{entity_old_name} . "' can't be renamed \n" . $@ . EMPTY);
             }
         }
         else {
-            $self->debug_msg(0, "Managed Entity '" . $self->opts->{managed_entity_old_name} . "' can't be renamed \n" . $@ . EMPTY);
+            $self->debug_msg(0, "Entity '" . $self->opts->{entity_old_name} . "' can't be renamed \n" . $@ . EMPTY);
         }
         $self->opts->{exitcode} = ERROR;
         return;

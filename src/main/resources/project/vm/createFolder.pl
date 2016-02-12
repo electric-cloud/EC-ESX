@@ -21,7 +21,7 @@ use warnings;
 use strict;
 
 my $opts;
-print "Creating Folder";
+print "Creating Folder\n";
 $opts->{connection_config} = q{$[connection_config]};
 $opts->{parent_type} = q{$[parent_type]};
 $opts->{parent_name} = q{$[parent_name]};

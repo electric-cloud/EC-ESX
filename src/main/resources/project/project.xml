@@ -3915,9 +3915,9 @@
             </step>
         </procedure>
         <procedure>
-            <procedureName>ListManagedEntity</procedureName>
-            <description>List managed-entity type (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem      ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system. </description>
-            <jobNameTemplate>esx-listmanagedentity-$[jobId]</jobNameTemplate>
+            <procedureName>ListEntity</procedureName>
+            <description>List entities of type (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem, ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system. </description>
+            <jobNameTemplate>esx-listentity-$[jobId]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -3939,7 +3939,7 @@
                                     </propertySheet>
                                 </property>
                                 <property>
-                                    <propertyName>managed_entity_type</propertyName>
+                                    <propertyName>entity_type</propertyName>
                                     <propertySheet>
                                         <property>
                                             <propertyName>options</propertyName>
@@ -4097,9 +4097,9 @@
                 <type>entry</type>
             </formalParameter>
             <formalParameter>
-                <formalParameterName>managed_entity_type</formalParameterName>
+                <formalParameterName>entity_type</formalParameterName>
                 <defaultValue/>
-                <description>The managed-entity type to be listed (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.</description>
+                <description>The entity type to be listed (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.</description>
                 <required>1</required>
                 <type>select</type>
             </formalParameter>
@@ -4130,7 +4130,7 @@
                 <timeLimitUnits>minutes</timeLimitUnits>
                 <workingDirectory></workingDirectory>
                 <workspaceName></workspaceName>
-                <procedureName>ListManagedEntity</procedureName>
+                <procedureName>ListEntity</procedureName>
                 <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
                 <propertySheet>
                     <property>
@@ -4146,12 +4146,12 @@
                 </propertySheet>
             </step>
             <step>
-                <stepName>ListManagedEntity</stepName>
+                <stepName>ListEntity</stepName>
                 <alwaysRun>0</alwaysRun>
                 <broadcast>0</broadcast>
                 <command></command>
                 <condition></condition>
-                <description>The managed-entity type to be listed (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem,ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.</description>
+                <description>The entity type to be listed (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem,ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.</description>
                 <errorHandling>failProcedure</errorHandling>
                 <exclusive>0</exclusive>
                 <logFileName></logFileName>
@@ -4165,7 +4165,7 @@
                 <timeLimitUnits>minutes</timeLimitUnits>
                 <workingDirectory></workingDirectory>
                 <workspaceName></workspaceName>
-                <procedureName>ListManagedEntity</procedureName>
+                <procedureName>ListEntity</procedureName>
                 <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
                 <propertySheet>
                     <property>
@@ -4408,9 +4408,9 @@
             </step>
         </procedure>
         <procedure>
-            <procedureName>DeleteManagedEntity</procedureName>
-            <description>Delete managed-entity type (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem, ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system. </description>
-            <jobNameTemplate>esx-deletemanagedentity-$[jobId]</jobNameTemplate>
+            <procedureName>DeleteEntity</procedureName>
+            <description>Delete entity type (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem, ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system. </description>
+            <jobNameTemplate>esx-deleteentity-$[jobId]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -4432,7 +4432,7 @@
                                     </propertySheet>
                                 </property>
                                 <property>
-                                    <propertyName>managed_entity_type</propertyName>
+                                    <propertyName>entity_type</propertyName>
                                     <propertySheet>
                                         <property>
                                             <propertyName>options</propertyName>
@@ -4562,7 +4562,7 @@
                                     </propertySheet>
                                 </property>
                                 <property>
-                                    <propertyName>managed_entity_name</propertyName>
+                                    <propertyName>entity_name</propertyName>
                                     <propertySheet>
                                         <property>
                                             <propertyName>formType</propertyName>
@@ -4600,16 +4600,16 @@
                 <type>entry</type>
             </formalParameter>
             <formalParameter>
-                <formalParameterName>managed_entity_type</formalParameterName>
+                <formalParameterName>entity_type</formalParameterName>
                 <defaultValue/>
-                <description>The managed-entity type to be deleted (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.</description>
+                <description>The entity type to be deleted (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.</description>
                 <required>1</required>
                 <type>select</type>
             </formalParameter>
             <formalParameter>
-                <formalParameterName>managed_entity_name</formalParameterName>
+                <formalParameterName>entity_name</formalParameterName>
                 <defaultValue></defaultValue>
-                <description>The name of the managed entity to be deleted.</description>
+                <description>The name of the entity to be deleted.</description>
                 <required>1</required>
                 <type>entry</type>
             </formalParameter>
@@ -4640,7 +4640,7 @@
                 <timeLimitUnits>minutes</timeLimitUnits>
                 <workingDirectory></workingDirectory>
                 <workspaceName></workspaceName>
-                <procedureName>DeleteManagedEntity</procedureName>
+                <procedureName>DeleteEntity</procedureName>
                 <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
                 <propertySheet>
                     <property>
@@ -4656,12 +4656,12 @@
                 </propertySheet>
             </step>
             <step>
-                <stepName>DeleteManagedEntity</stepName>
+                <stepName>DeleteEntity</stepName>
                 <alwaysRun>0</alwaysRun>
                 <broadcast>0</broadcast>
                 <command></command>
                 <condition></condition>
-                <description>The managed-entity type to be deleted (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.</description>
+                <description>The entity type to be deleted (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.</description>
                 <errorHandling>failProcedure</errorHandling>
                 <exclusive>0</exclusive>
                 <logFileName></logFileName>
@@ -4675,7 +4675,7 @@
                 <timeLimitUnits>minutes</timeLimitUnits>
                 <workingDirectory></workingDirectory>
                 <workspaceName></workspaceName>
-                <procedureName>DeleteManagedEntity</procedureName>
+                <procedureName>DeleteEntity</procedureName>
                 <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
                 <propertySheet>
                     <property>
@@ -4692,9 +4692,9 @@
             </step>
         </procedure>
         <procedure>
-            <procedureName>RenameManagedEntity</procedureName>
-            <description>Rename managed-entity (ClusterComputeResource, Datacenter, Folder, ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system. </description>
-            <jobNameTemplate>esx-renamemanagedentity-$[jobId]</jobNameTemplate>
+            <procedureName>RenameEntity</procedureName>
+            <description>Rename entity (ClusterComputeResource, Datacenter, Folder, ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system. </description>
+            <jobNameTemplate>esx-renameentity-$[jobId]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -4716,7 +4716,7 @@
                                     </propertySheet>
                                 </property>
                                 <property>
-                                    <propertyName>managed_entity_type</propertyName>
+                                    <propertyName>entity_type</propertyName>
                                     <propertySheet>
                                         <property>
                                             <propertyName>options</propertyName>
@@ -4816,7 +4816,7 @@
                                     </propertySheet>
                                 </property>
                                 <property>
-                                    <propertyName>managed_entity_old_name</propertyName>
+                                    <propertyName>entity_old_name</propertyName>
                                     <propertySheet>
                                         <property>
                                             <propertyName>formType</propertyName>
@@ -4826,7 +4826,7 @@
                                     </propertySheet>
                                 </property>
                                 <property>
-                                    <propertyName>managed_entity_new_name</propertyName>
+                                    <propertyName>entity_new_name</propertyName>
                                     <propertySheet>
                                         <property>
                                             <propertyName>formType</propertyName>
@@ -4864,23 +4864,23 @@
                 <type>entry</type>
             </formalParameter>
             <formalParameter>
-                <formalParameterName>managed_entity_type</formalParameterName>
+                <formalParameterName>entity_type</formalParameterName>
                 <defaultValue/>
-                <description>The managed-entity type to be renamed (ClusterComputeResource, Datacenter, Folder, ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.</description>
+                <description>The entity type to be renamed (ClusterComputeResource, Datacenter, Folder, ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.</description>
                 <required>1</required>
                 <type>select</type>
             </formalParameter>
             <formalParameter>
-                <formalParameterName>managed_entity_old_name</formalParameterName>
+                <formalParameterName>entity_old_name</formalParameterName>
                 <defaultValue></defaultValue>
-                <description>Old name of the managed entity.</description>
+                <description>Old name of the entity.</description>
                 <required>1</required>
                 <type>entry</type>
             </formalParameter>
             <formalParameter>
-                <formalParameterName>managed_entity_new_name</formalParameterName>
+                <formalParameterName>entity_new_name</formalParameterName>
                 <defaultValue></defaultValue>
-                <description>New name of the managed entity.</description>
+                <description>New name of the entity.</description>
                 <required>1</required>
                 <type>entry</type>
             </formalParameter>
@@ -4911,7 +4911,7 @@
                 <timeLimitUnits>minutes</timeLimitUnits>
                 <workingDirectory></workingDirectory>
                 <workspaceName></workspaceName>
-                <procedureName>RenameManagedEntity</procedureName>
+                <procedureName>RenameEntity</procedureName>
                 <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
                 <propertySheet>
                     <property>
@@ -4927,12 +4927,12 @@
                 </propertySheet>
             </step>
             <step>
-                <stepName>RenameManagedEntity</stepName>
+                <stepName>RenameEntity</stepName>
                 <alwaysRun>0</alwaysRun>
                 <broadcast>0</broadcast>
                 <command></command>
                 <condition></condition>
-                <description>The managed-entity type to be renamed (ClusterComputeResource, Datacenter, Folder, ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.</description>
+                <description>The entity type to be renamed (ClusterComputeResource, Datacenter, Folder, ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.</description>
                 <errorHandling>failProcedure</errorHandling>
                 <exclusive>0</exclusive>
                 <logFileName></logFileName>
@@ -4946,7 +4946,7 @@
                 <timeLimitUnits>minutes</timeLimitUnits>
                 <workingDirectory></workingDirectory>
                 <workspaceName></workspaceName>
-                <procedureName>RenameManagedEntity</procedureName>
+                <procedureName>RenameEntity</procedureName>
                 <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
                 <propertySheet>
                     <property>

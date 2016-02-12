@@ -15,19 +15,18 @@
 #
 
 ##########################
-# renameManagedEntity.pl
+# deleteEntity.pl
 ##########################
 use warnings;
 use strict;
 
 my $opts;
-print "Renaming Managed Entity";
+print "Deleting Entity\n";
 $opts->{connection_config} = q{$[connection_config]};
-$opts->{managed_entity_type} = q{$[managed_entity_type]};
-$opts->{managed_entity_old_name} = q{$[managed_entity_old_name]};
-$opts->{managed_entity_new_name} = q{$[managed_entity_new_name]};
+$opts->{entity_type} = q{$[entity_type]};
+$opts->{entity_name} = q{$[entity_name]};
 
 $[/myProject/procedure_helpers/preamble]
 
-$gt->rename();
+$gt->delete();
 exit($opts->{exitcode});

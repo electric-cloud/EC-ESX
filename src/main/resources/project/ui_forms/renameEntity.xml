@@ -16,7 +16,7 @@
 
 -->
 <editor>
-    <help>/commander/pages/@PLUGIN_NAME@/@PLUGIN_KEY@_help?s=Administration&amp;ss=Plugins#RenameManagedEntity</help>
+    <help>/commander/pages/@PLUGIN_NAME@/@PLUGIN_KEY@_help?s=Administration&amp;ss=Plugins#RenameEntity</help>
     <formElement>
         <type>entry</type>
         <label>ESX Connection:</label>
@@ -26,10 +26,10 @@
     </formElement>
     <formElement>
         <type>select</type>
-        <label>Managed Entity Type:</label>
-        <property>managed_entity_type</property>
+        <label>Entity Type:</label>
+        <property>entity_type</property>
         <required>1</required>
-        <documentation>The managed-entity type to be renamed (ClusterComputeResource, Datacenter, Folder, ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.</documentation>
+        <documentation>The entity type to be renamed (ClusterComputeResource, Datacenter, Folder, ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.</documentation>
         <option><name>ClusterComputeResource</name><value>ClusterComputeResource</value></option>
         <option><name>Datacenter</name><value>Datacenter</value></option>
         <option><name>Folder</name><value>Folder</value></option>
@@ -38,17 +38,17 @@
     </formElement>
     <formElement>
         <type>entry</type>
-        <label>Managed Entity Old Name:</label>
-        <property>managed_entity_old_name</property>
+        <label>Entity Old Name:</label>
+        <property>entity_old_name</property>
         <required>1</required>
-        <documentation>Old name of the managed entity which is to be renamed.</documentation>
+        <documentation>Old name of the entity which is to be renamed.</documentation>
     </formElement>
     <formElement>
         <type>entry</type>
-        <label>Managed Entity New Name:</label>
-        <property>managed_entity_new_name</property>
+        <label>Entity New Name:</label>
+        <property>entity_new_name</property>
         <required>1</required>
-        <documentation>New name of the managed entity which is to be renamed.</documentation>
+        <documentation>New name of the entity which is to be renamed.</documentation>
     </formElement>
     <formElement>
         <type>entry</type>

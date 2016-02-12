@@ -15,18 +15,17 @@
 #
 
 ##########################
-# deleteManagedEntity.pl
+# listEntity.pl
 ##########################
 use warnings;
 use strict;
 
 my $opts;
-print "Deleting Managed Entity";
+print "Listing Entity\n";
 $opts->{connection_config} = q{$[connection_config]};
-$opts->{managed_entity_type} = q{$[managed_entity_type]};
-$opts->{managed_entity_name} = q{$[managed_entity_name]};
+$opts->{entity_type} = q{$[entity_type]};
 
 $[/myProject/procedure_helpers/preamble]
 
-$gt->delete();
+$gt->list();
 exit($opts->{exitcode});

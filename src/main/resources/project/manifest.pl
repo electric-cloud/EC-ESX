@@ -78,20 +78,20 @@
     ['//step[stepName="shrink"]/command',                                                                               'vm/step.shrink.pl'],
     ['//step[stepName="sync"]/command',                                                                                 'vm/step.sync.pl'],
 
-    ['//procedure[procedureName="ListManagedEntity"]/propertySheet/property[propertyName="ec_parameterForm"]/value',    'ui_forms/listManagedEntity.xml'],
-    ['//step[stepName="ListManagedEntity"]/command',                                                                    'vm/listManagedEntity.pl'],
+    ['//procedure[procedureName="ListEntity"]/propertySheet/property[propertyName="ec_parameterForm"]/value',           'ui_forms/listEntity.xml'],
+    ['//step[stepName="ListEntity"]/command',                                                                           'vm/listEntity.pl'],
     ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
 
     ['//procedure[procedureName="CreateFolder"]/propertySheet/property[propertyName="ec_parameterForm"]/value',         'ui_forms/createFolder.xml'],
     ['//step[stepName="CreateFolder"]/command',                                                                         'vm/createFolder.pl'],
     ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
 
-    ['//procedure[procedureName="DeleteManagedEntity"]/propertySheet/property[propertyName="ec_parameterForm"]/value',  'ui_forms/deleteManagedEntity.xml'],
-    ['//step[stepName="DeleteManagedEntity"]/command',                                                                  'vm/deleteManagedEntity.pl'],
+    ['//procedure[procedureName="DeleteEntity"]/propertySheet/property[propertyName="ec_parameterForm"]/value',         'ui_forms/deleteEntity.xml'],
+    ['//step[stepName="DeleteEntity"]/command',                                                                         'vm/deleteEntity.pl'],
     ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
 
-    ['//procedure[procedureName="RenameManagedEntity"]/propertySheet/property[propertyName="ec_parameterForm"]/value',  'ui_forms/renameManagedEntity.xml'],
-    ['//step[stepName="RenameManagedEntity"]/command',                                                                  'vm/renameManagedEntity.pl'],
+    ['//procedure[procedureName="RenameEntity"]/propertySheet/property[propertyName="ec_parameterForm"]/value',         'ui_forms/renameEntity.xml'],
+    ['//step[stepName="RenameEntity"]/command',                                                                         'vm/renameEntity.pl'],
     ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
     #Main files
     ['//property[propertyName="preamble"]/value', 'preamble.pl'],

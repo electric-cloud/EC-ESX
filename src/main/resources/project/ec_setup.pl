@@ -119,10 +119,10 @@ my %snapshot = (
 				category    => "Resource Management"
 			   );
 
-my %listmanagedentity = (
-				label       => "ESX - ListManagedEntity",
-				procedure   => "ListManagedEntity",
-				description => "List the managed-entity type (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem, ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.",
+my %listentity = (
+				label       => "ESX - ListEntity",
+				procedure   => "ListEntity",
+				description => "List the entity type (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem, ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.",
 				category    => "Resource Management"
 			   );
 
@@ -133,17 +133,17 @@ my %createfolder = (
 				category    => "Resource Management"
 			   );
 
-my %deletemanagedentity = (
-				label       => "ESX - DeleteManagedEntity",
-				procedure   => "DeleteManagedEntity",
-				description => "Delete the managed-entity type (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.",
+my %deleteentity = (
+				label       => "ESX - DeleteEntity",
+				procedure   => "DeleteEntity",
+				description => "Delete the entity type (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.",
 				category    => "Resource Management"
 			   );
 
-my %renamemanagedentity = (
-				label       => "ESX - RenameManagedEntity",
-				procedure   => "RenameManagedEntity",
-				description => "Rename the managed-entity type (ClusterComputeResource, Datacenter, Folder, ResourcePool or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.",
+my %renameentity = (
+				label       => "ESX - RenameEntity",
+				procedure   => "RenameEntity",
+				description => "Rename the entity type (ClusterComputeResource, Datacenter, Folder, ResourcePool or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.",
 				category    => "Resource Management"
 			   );
 
@@ -164,10 +164,10 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Shutdown");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Snapshot");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - CloudManagerShrink");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - CloudManagerGrow");
-$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - ListManagedEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - ListEntity");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - CreateFolder");
-$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - DeleteManagedEntity");
-$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - RenameManagedEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - DeleteEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - RenameEntity");
 
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend Virtual Machine");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend");
@@ -185,12 +185,12 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Power On Virtu
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Revert");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Shutdown Virtual Machine");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Snapshot");
-$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - ListManagedEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - ListEntity");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - CreateFolder");
-$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - DeleteManagedEntity");
-$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - RenameManagedEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - DeleteEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - RenameEntity");
 
-@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listmanagedentity, \%createfolder, \%deletemanagedentity, \%renamemanagedentity);
+@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listentity, \%createfolder, \%deleteentity, \%renameentity);
 
 my $pluginName = "@PLUGIN_NAME@";
 my $pluginKey = "@PLUGIN_KEY@";
@@ -444,8 +444,8 @@ if ($upgradeAction eq "upgrade") {
                                      "\$[/plugins/$pluginName/project]",
                                      $cred,
                                      {
-                                        procedureName => 'ListManagedEntity',
-                                        stepName      => 'ListManagedEntity'
+                                        procedureName => 'ListEntity',
+                                        stepName      => 'ListEntity'
                                      }
                                     );
 
@@ -462,8 +462,8 @@ if ($upgradeAction eq "upgrade") {
                                      "\$[/plugins/$pluginName/project]",
                                      $cred,
                                      {
-                                        procedureName => 'RenameManagedEntity',
-                                        stepName      => 'RenameManagedEntity'
+                                        procedureName => 'RenameEntity',
+                                        stepName      => 'RenameEntity'
                                      }
                                     );
 
