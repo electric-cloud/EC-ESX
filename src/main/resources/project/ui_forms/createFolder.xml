@@ -16,7 +16,7 @@
 
 -->
 <editor>
-    <help>/commander/pages/@PLUGIN_NAME@/@PLUGIN_KEY@_help?s=Administration&amp;ss=Plugins#ListManagedEntity</help>
+    <help>/commander/pages/@PLUGIN_NAME@/@PLUGIN_KEY@_help?s=Administration&amp;ss=Plugins#CreateFolder</help>
     <formElement>
         <type>entry</type>
         <label>ESX Connection:</label>
@@ -26,17 +26,26 @@
     </formElement>
     <formElement>
         <type>select</type>
-        <label>Managed Entity Type:</label>
-        <property>managed_entity_type</property>
+        <label>Parent Type (Folder/Datacenter):</label>
+        <property>parent_type</property>
         <required>1</required>
-        <documentation>The managed-entity type to be listed (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.</documentation>
-        <option><name>ClusterComputeResource</name><value>ClusterComputeResource</value></option>
-        <option><name>ComputeResource</name><value>ComputeResource</value></option>
+        <documentation>The parent (data center or folder) in which folder is to be created.</documentation>
         <option><name>Datacenter</name><value>Datacenter</value></option>
         <option><name>Folder</name><value>Folder</value></option>
-        <option><name>HostSystem</name><value>HostSystem</value></option>
-        <option><name>ResourcePool</name><value>ResourcePool</value></option>
-        <option><name>VirtualMachine</name><value>VirtualMachine</value></option>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Parent Name (Folder/Datacenter Name): </label>
+        <property>parent_name</property>
+        <required>1</required>
+        <documentation>The name of the parent in which folder is to be created.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Folder Name:</label>
+        <property>folder_name</property>
+        <required>1</required>
+        <documentation>Name of the folder to be created.</documentation>
     </formElement>
     <formElement>
         <type>entry</type>

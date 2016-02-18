@@ -119,12 +119,39 @@ my %snapshot = (
 				category    => "Resource Management"
 			   );
 
-my %listmanagedentity = (
-				label       => "ESX - ListManagedEntity",
-				procedure   => "ListManagedEntity",
-				description => "List the managed-entity type (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.",
+my %listentity = (
+				label       => "ESX - ListEntity",
+				procedure   => "ListEntity",
+				description => "List the entity type (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem, ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.",
 				category    => "Resource Management"
 			   );
+
+my %createfolder = (
+				label       => "ESX - CreateFolder",
+				procedure   => "CreateFolder",
+				description => "Create a folder in datacenter or another folder.",
+				category    => "Resource Management"
+			   );
+
+my %deleteentity = (
+				label       => "ESX - DeleteEntity",
+				procedure   => "DeleteEntity",
+				description => "Delete the entity type (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.",
+				category    => "Resource Management"
+			   );
+
+my %renameentity = (
+				label       => "ESX - RenameEntity",
+				procedure   => "RenameEntity",
+				description => "Rename the entity type (ClusterComputeResource, Datacenter, Folder, ResourcePool or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.",
+				category    => "Resource Management"
+			   );
+my %moveentity = (
+                label       => "ESX - MoveEntity",
+                procedure   => "MoveEntity",
+                description => "Move a VM/Folder to another folder.",
+                category    => "Resource Management"
+               );
 
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Suspend");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Clone");
@@ -143,7 +170,11 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Shutdown");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Snapshot");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - CloudManagerShrink");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - CloudManagerGrow");
-$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - ListManagedEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - ListEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - CreateFolder");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - DeleteEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - RenameEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - MoveEntity");
 
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend Virtual Machine");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend");
@@ -161,9 +192,13 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Power On Virtu
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Revert");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Shutdown Virtual Machine");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Snapshot");
-$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - ListManagedEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - ListEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - CreateFolder");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - DeleteEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - RenameEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - MoveEntity");
 
-@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listmanagedentity);
+@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listentity, \%createfolder, \%deleteentity, \%renameentity, \%moveentity);
 
 my $pluginName = "@PLUGIN_NAME@";
 my $pluginKey = "@PLUGIN_KEY@";
@@ -417,10 +452,37 @@ if ($upgradeAction eq "upgrade") {
                                      "\$[/plugins/$pluginName/project]",
                                      $cred,
                                      {
-                                        procedureName => 'ListManagedEntity',
-                                        stepName      => 'ListManagedEntity'
+                                        procedureName => 'ListEntity',
+                                        stepName      => 'ListEntity'
                                      }
                                     );
+
+            $batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'CreateFolder',
+                                        stepName      => 'CreateFolder'
+                                     }
+                                    );
+
+            $batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'RenameEntity',
+                                        stepName      => 'RenameEntity'
+                                     }
+                                    );
+            $batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'MoveEntity',
+                                        stepName      => 'MoveEntity'
+                                     }
+                                    );
+
         }
     }
 }

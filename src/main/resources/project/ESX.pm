@@ -2114,26 +2114,26 @@ sub getAvailableVM {
 
 }
 ################################
-# list - Connect, call list_entities, and disconnect from ESX server
+# list - Connect, call list_entity, and disconnect from ESX server
 #
 # Arguments:
-#   Managed Entity Type
+#   Hash(Entity Type)
 #
 # Returns:
 #   none
 #
 ################################
 sub list {
-    print "Listing Managed Entity";
+    print "Listing Entity";
     my ($self) = @_;
 
     if ($::gRunTestUseFakeOutput) {
 
         # Create and return fake output
         my $out = "";
-        $out .= "Listing Managed Entity '" . $self->opts->{managed_entity_type} . "'...";
+        $out .= "Listing Entity '" . $self->opts->{entity_type} . "'...";
         $out .= "\n";
-        $out .= "Successfully listed managed entity '" . $self->opts->{managed_entity_type} . "'";
+        $out .= "Successfully listed entity '" . $self->opts->{entity_type} . "'";
         return $out;
     }
 
@@ -2151,10 +2151,10 @@ sub list {
 }
 
 ################################
-# list_entity - List the entities of type $opts->{managed_entity_name}
+# list_entity - List the entity of type $opts->{entity_name}
 #
 # Arguments:
-#   Managed Entity Type
+#   Hash(Entity Type)
 #
 # Returns:
 #   none
@@ -2162,12 +2162,12 @@ sub list {
 ################################
 sub list_entity {
     my ($self) = @_;
-    $self->debug_msg(1, 'Listing Managed Entity \'' . $self->opts->{managed_entity_type} . '\'...');
+    $self->debug_msg(1, 'Listing Entity \'' . $self->opts->{entity_type} . '\'...');
     eval {
-        my $entity_views = Vim::find_entity_views(view_type => $self->opts->{managed_entity_type});
+        my $entity_views = Vim::find_entity_views(view_type => $self->opts->{entity_type});
 
         if (!$entity_views) {
-            $self->debug_msg(0, 'Managed Entity \'' . $self->opts->{managed_entity_type} . '\' not found');
+            $self->debug_msg(0, 'Entity \'' . $self->opts->{entity_type} . '\' not found');
             $self->opts->{exitcode} = ERROR;
             return;
         }
@@ -2177,24 +2177,344 @@ sub list_entity {
             Util::trace(0, "$entity_name\n");
         }
 
-        $self->debug_msg(0, 'Successfully Listed Managed Entity \'' . $self->opts->{managed_entity_type} . '\'');
+        $self->debug_msg(0, 'Successfully Listed Entity \'' . $self->opts->{entity_type} . '\'');
     };
     if ($@) {
         if (ref($@) eq SOAP_FAULT) {
-            $self->debug_msg(0, 'Error listing managed entity \'' . $self->opts->{managed_entity_type} . '\': ');
+            $self->debug_msg(0, 'Error listing entity \'' . $self->opts->{entity_type} . '\': ');
 
             if (!$self->print_error(ref($@->detail))) {
-                $self->debug_msg(0, "Managed Entity '" . $self->opts->{managed_entity_type} . "' can't be listed \n" . $@ . EMPTY);
+                $self->debug_msg(0, "Entity '" . $self->opts->{entity_type} . "' can't be listed \n" . $@ . EMPTY);
             }
         }
         else {
-            $self->debug_msg(0, "Managed Entity '" . $self->opts->{managed_entity_type} . "' can't be listed \n" . $@ . EMPTY);
+            $self->debug_msg(0, "Entity '" . $self->opts->{entity_type} . "' can't be listed \n" . $@ . EMPTY);
         }
         $self->opts->{exitcode} = ERROR;
         return;
     }
 }
 
+################################
+# createFolder - Connect, call create_folder, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(connection_config, folder_name, parent_type) 
+#
+# Returns:
+#   none
+#
+################################
+sub createFolder {
+    print "Creating Folder";
+    my ($self) = @_;
+
+    if ($::gRunTestUseFakeOutput) {
+
+        # Create and return fake output
+        my $out = "";
+        $out .= "Creating Folder '" . $self->opts->{folder_name} . "'...";
+        $out .= "\n";
+        $out .= "Successfully created folder '" . $self->opts->{folder_name} . "'";
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    $self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->create_folder();
+
+    $self->logout();
+}
+
+################################
+# create_folder - Create a folder inside parent of type $opts->{parent_type} and name $opts->{parent_name}
+#
+# Arguments:
+#   Hash(connection_config, folder_name, parent_type)
+#
+# Returns:
+#   none
+#
+################################
+sub create_folder {
+    my ($self) = @_;
+    $self->debug_msg(1, 'Creating Folder \'' . $self->opts->{folder_name} . '\'...');
+    eval {
+        my $parent_view = Vim::find_entity_view(view_type => $self->opts->{parent_type}, filter => { name => $self->opts->{parent_name}});
+        if (!$parent_view) {
+            $self->debug_msg(0, 'Parent Entity \'' . $self->opts->{parent_name} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+        if ( $self->opts->{parent_type} eq 'Datacenter') {
+            #Overwriting Parent View for getting folder view
+            $parent_view = Vim::find_entity_view(view_type => 'Folder', begin_entity => $parent_view);
+            if (!$parent_view) {
+                $self->debug_msg(0, 'Folder View out of Parent Entity \'' . $self->opts->{parent_name} . '\' not found');
+                $self->opts->{exitcode} = ERROR;
+                return;
+            }
+        }
+        $parent_view->CreateFolder(name => $self->opts->{folder_name});
+
+        $self->debug_msg(0, 'Successfully Created Folder \'' . $self->opts->{folder_name} . '\'');
+    };
+    if ($@) {
+        if (ref($@) eq SOAP_FAULT) {
+            $self->debug_msg(0, 'Error creating folder \'' . $self->opts->{folder_name} . '\': ');
+
+            if (!$self->print_error(ref($@->detail))) {
+                $self->debug_msg(0, "Folder '" . $self->opts->{folder_name} . "' can't be created \n" . $@ . EMPTY);
+            }
+        }
+        else {
+            $self->debug_msg(0, "Folder '" . $self->opts->{folder_name} . "' can't be created \n" . $@ . EMPTY);
+        }
+        $self->opts->{exitcode} = ERROR;
+        return;
+    }
+}
+
+################################
+# delete - Connect, call delete_entity, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(Entity Type, Entity Name)
+#
+# Returns:
+#   none
+#
+################################
+sub delete {
+    print "Deleting Entity";
+    my ($self) = @_;
+
+    if ($::gRunTestUseFakeOutput) {
+
+        # Create and return fake output
+        my $out = "";
+        $out .= "Deleting Entity '" . $self->opts->{entity_name} . "'...";
+        $out .= "\n";
+        $out .= "Successfully deleted entity '" . $self->opts->{entity_name} . "'";
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    $self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->delete_entity();
+
+    $self->logout();
+}
+
+################################
+# delete_entity - Delete the entity  $opts->{entity_name}
+#
+# Arguments:
+#   Hash(Entity Type, Entity Name)
+#
+# Returns:
+#   none
+#
+################################
+sub delete_entity {
+    my ($self) = @_;
+    $self->debug_msg(1, 'Deleting Entity \'' . $self->opts->{entity_name} . '\'...');
+    eval {
+        my $entity_view = Vim::find_entity_view(view_type => $self->opts->{entity_type}, filter => { 'name' => $self->opts->{entity_name} } );
+
+        if (!$entity_view) {
+            $self->debug_msg(0, 'Entity \'' . $self->opts->{entity_name} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+        $entity_view->Destroy;
+        $self->debug_msg(0, 'Successfully Deleted Entity \'' . $self->opts->{entity_name} . '\'');
+    };
+    if ($@) {
+        if (ref($@) eq SOAP_FAULT) {
+            $self->debug_msg(0, 'Error deleting entity \'' . $self->opts->{entity_name} . '\': ');
+
+            if (!$self->print_error(ref($@->detail))) {
+                $self->debug_msg(0, "Entity '" . $self->opts->{entity_name} . "' can't be deleted \n" . $@ . EMPTY);
+            }
+        }
+        else {
+            $self->debug_msg(0, "Entity '" . $self->opts->{entity_name} . "' can't be deleted \n" . $@ . EMPTY);
+        }
+        $self->opts->{exitcode} = ERROR;
+        return;
+    }
+}
+
+################################
+# rename - Connect, call rename_entity, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(Entity Type, Entity Old Name, Entity New Name)
+#
+# Returns:
+#   none
+#
+################################
+sub rename {
+    print "Renaming Entity";
+    my ($self) = @_;
+
+    if ($::gRunTestUseFakeOutput) {
+
+        # Create and return fake output
+        my $out = "";
+        $out .= "Renaming Entity '" . $self->opts->{entity_old_name} . "' to '" . $self->opts->{entity_new_name} . "'...";
+        $out .= "\n";
+        $out .= "Successfully renamed entity '" . $self->opts->{entity_old_name} . "'";
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    $self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->rename_entity();
+
+    $self->logout();
+}
+
+################################
+# rename_entity - Rename the entity $opts->{entity_old_name}
+#
+# Arguments:
+#   Hash(Entity Type, Entity Old Name, Entity New Name)
+#
+# Returns:
+#   none
+#
+################################
+sub rename_entity {
+    my ($self) = @_;
+    $self->debug_msg(1, 'Renaming Entity \'' . $self->opts->{entity_old_name} . '\' to \'' . $self->opts->{entity_new_name} . '\'...');
+    eval {
+        my $entity_old_view = Vim::find_entity_view(view_type => $self->opts->{entity_type}, filter => { 'name' => $self->opts->{entity_old_name} } );
+
+        if (!$entity_old_view) {
+            $self->debug_msg(0, 'Entity \'' . $self->opts->{entity_old_name} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+        $entity_old_view->Rename(newName => $self->opts->{entity_new_name});
+        $self->debug_msg(0, 'Successfully renamed Entity \'' . $self->opts->{entity_old_name} . '\'');
+    };
+    if ($@) {
+        if (ref($@) eq SOAP_FAULT) {
+            $self->debug_msg(0, 'Error renaming entity \'' . $self->opts->{entity_old_name} . '\': ');
+
+            if (!$self->print_error(ref($@->detail))) {
+                $self->debug_msg(0, "Entity '" . $self->opts->{entity_old_name} . "' can't be renamed \n" . $@ . EMPTY);
+            }
+        }
+        else {
+            $self->debug_msg(0, "Entity '" . $self->opts->{entity_old_name} . "' can't be renamed \n" . $@ . EMPTY);
+        }
+        $self->opts->{exitcode} = ERROR;
+        return;
+    }
+}
+##BEGIN##
+################################
+# moveEntity - Connect, call moveEntity, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(connection_config, destination_name, entity_type)
+#
+# Returns:
+#   none
+#
+################################
+sub moveEntity {
+    print "Moving VM/Folder to destination Folder" . "\n";
+    my ($self) = @_;
+
+    if ($::gRunTestUseFakeOutput) {
+
+        # Create and return fake output
+        my $out = "";
+        $out .= "Moving Entity '" . $self->opts->{entity_name} . "'...";
+        $out .= "\n";
+        $out .= 'Successfully Moved \'' . $self->opts->{entity_name} . '\' to \'' . $self->opts->{destination_name} . '\'';
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    #$self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->move_entity();
+
+    $self->logout();
+}
+
+################################
+# moveEntity - Move an Entity  of type $opts->{Entity_type} and name $opts->{entity_name}
+#
+# Arguments:
+#   Hash(connection_config, destination_name, entity_type)
+#
+# Returns:
+#   none
+#
+################################
+sub move_entity {
+    my ($self) = @_;
+    eval {
+        my $source_view = Vim::find_entity_view(view_type => $self->opts->{entity_type}, filter => { 'name' => $self->opts->{entity_name} } );
+        if (!$source_view) {
+            $self->debug_msg(0, 'source_view\'' . $self->opts->{entity_name} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+        my $destination_view = Vim::find_entity_view(view_type => 'Folder',filter => { 'name' => $self->opts->{destination_name}});
+        if (!$destination_view) {
+            $self->debug_msg(0, 'destination_view\'' . $self->opts->{destination_name} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+        $destination_view->MoveIntoFolder_Task(list => $source_view);
+        $self->debug_msg(0, 'Successfully Moved \'' . $self->opts->{entity_name} . '\' to \'' . $self->opts->{destination_name} . '\'');
+        if ($@) {
+            if (ref($@) eq SOAP_FAULT) {
+                 $self->debug_msg(0, 'Error moving folder \'' . $self->opts->{entity_name} . '\': ');
+
+                 if (!$self->print_error(ref($@->detail))) {
+                     $self->debug_msg(0, "Folder '" . $self->opts->{entity_name} . "' can't be moved \n" . $@ . EMPTY);
+                 }
+            }
+            else {
+                 $self->debug_msg(0, "Folder '" . $self->opts->{entity_name} . "' can't be moved \n" . $@ . EMPTY);
+            }
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+    }
+}
 # -------------------------------------------------------------------------
 # Helper functions
 # -------------------------------------------------------------------------
