@@ -310,6 +310,18 @@
     <xpath>//step[stepName=&quot;SetTimelimit&quot;]/command</xpath>
   </file>
   <file>
+    <path>ui_forms/displayESXSummary.xml</path>
+    <xpath>//procedure[procedureName=&quot;DisplayESXSummary&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
+  </file>
+  <file>
+    <path>vm/displayESXSummary.pl</path>
+    <xpath>//step[stepName=&quot;DisplayESXSummary&quot;]/command</xpath>
+  </file>
+  <file>
+    <path>setTimelimit.pl</path>
+    <xpath>//step[stepName=&quot;SetTimelimit&quot;]/command</xpath>
+  </file>
+  <file>
     <path>preamble.pl</path>
     <xpath>//property[propertyName=&quot;preamble&quot;]/value</xpath>
   </file>
