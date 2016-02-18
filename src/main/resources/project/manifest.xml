@@ -299,11 +299,11 @@
   </file>
   <file>
     <path>ui_forms/moveEntity.xml</path>
-    <xpath>//procedure[procedureName=&quot;moveEntity&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
+    <xpath>//procedure[procedureName=&quot;MoveEntity&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
   </file>
   <file>
     <path>vm/moveEntity.pl</path>
-    <xpath>//step[stepName=&quot;moveEntity&quot;]/command</xpath>
+    <xpath>//step[stepName=&quot;MoveEntity&quot;]/command</xpath>
   </file>
   <file>
     <path>setTimelimit.pl</path>

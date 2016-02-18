@@ -149,7 +149,7 @@ my %renameentity = (
 my %moveentity = (
                 label       => "ESX - MoveEntity",
                 procedure   => "MoveEntity",
-                description => "Move a Vm/Folder to  another folder.",
+                description => "Move a VM/Folder to another folder.",
                 category    => "Resource Management"
                );
 

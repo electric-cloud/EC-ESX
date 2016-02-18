@@ -4987,7 +4987,7 @@
                                     </propertySheet>
                                 </property>
                                 <property>
-                                    <propertyName>Entity Type</propertyName>
+                                    <propertyName>entity_type</propertyName>
                                     <propertySheet>
                                         <property>
                                             <propertyName>options</propertyName>
@@ -5137,7 +5137,7 @@
                 <timeLimitUnits>minutes</timeLimitUnits>
                 <workingDirectory></workingDirectory>
                 <workspaceName></workspaceName>
-                <procedureName>MoveFolder</procedureName>
+                <procedureName>MoveEntity</procedureName>
                 <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
                 <propertySheet>
                     <property>
