@@ -93,6 +93,9 @@
     ['//procedure[procedureName="RenameEntity"]/propertySheet/property[propertyName="ec_parameterForm"]/value',         'ui_forms/renameEntity.xml'],
     ['//step[stepName="RenameEntity"]/command',                                                                         'vm/renameEntity.pl'],
     ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
+    ['//procedure[procedureName="MoveEntity"]/propertySheet/property[propertyName="ec_parameterForm"]/value',           'ui_forms/moveEntity.xml'],
+    ['//step[stepName="MoveEntity"]/command',                                                                           'vm/moveEntity.pl'],
+    ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
     #Main files
     ['//property[propertyName="preamble"]/value', 'preamble.pl'],
     ['//property[propertyName="ESX"]/value',      'ESX.pm'],

@@ -2434,7 +2434,87 @@ sub rename_entity {
         return;
     }
 }
+##BEGIN##
+################################
+# moveEntity - Connect, call moveEntity, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(connection_config, destination_name, entity_type)
+#
+# Returns:
+#   none
+#
+################################
+sub moveEntity {
+    print "Moving VM/Folder to destination Folder" . "\n";
+    my ($self) = @_;
 
+    if ($::gRunTestUseFakeOutput) {
+
+        # Create and return fake output
+        my $out = "";
+        $out .= "Moving Entity '" . $self->opts->{entity_name} . "'...";
+        $out .= "\n";
+        $out .= 'Successfully Moved \'' . $self->opts->{entity_name} . '\' to \'' . $self->opts->{destination_name} . '\'';
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    #$self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->move_entity();
+
+    $self->logout();
+}
+
+################################
+# moveEntity - Move an Entity  of type $opts->{Entity_type} and name $opts->{entity_name}
+#
+# Arguments:
+#   Hash(connection_config, destination_name, entity_type)
+#
+# Returns:
+#   none
+#
+################################
+sub move_entity {
+    my ($self) = @_;
+    eval {
+        my $source_view = Vim::find_entity_view(view_type => $self->opts->{entity_type}, filter => { 'name' => $self->opts->{entity_name} } );
+        if (!$source_view) {
+            $self->debug_msg(0, 'source_view\'' . $self->opts->{entity_name} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+        my $destination_view = Vim::find_entity_view(view_type => 'Folder',filter => { 'name' => $self->opts->{destination_name}});
+        if (!$destination_view) {
+            $self->debug_msg(0, 'destination_view\'' . $self->opts->{destination_name} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+        $destination_view->MoveIntoFolder_Task(list => $source_view);
+        $self->debug_msg(0, 'Successfully Moved \'' . $self->opts->{entity_name} . '\' to \'' . $self->opts->{destination_name} . '\'');
+        if ($@) {
+            if (ref($@) eq SOAP_FAULT) {
+                 $self->debug_msg(0, 'Error moving folder \'' . $self->opts->{entity_name} . '\': ');
+
+                 if (!$self->print_error(ref($@->detail))) {
+                     $self->debug_msg(0, "Folder '" . $self->opts->{entity_name} . "' can't be moved \n" . $@ . EMPTY);
+                 }
+            }
+            else {
+                 $self->debug_msg(0, "Folder '" . $self->opts->{entity_name} . "' can't be moved \n" . $@ . EMPTY);
+            }
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+    }
+}
 # -------------------------------------------------------------------------
 # Helper functions
 # -------------------------------------------------------------------------
