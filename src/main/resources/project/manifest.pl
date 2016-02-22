@@ -96,6 +96,10 @@
     ['//procedure[procedureName="MoveEntity"]/propertySheet/property[propertyName="ec_parameterForm"]/value',           'ui_forms/moveEntity.xml'],
     ['//step[stepName="MoveEntity"]/command',                                                                           'vm/moveEntity.pl'],
     ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
+
+    ['//procedure[procedureName="DisplayESXSummary"]/propertySheet/property[propertyName="ec_parameterForm"]/value',    'ui_forms/displayESXSummary.xml'],
+    ['//step[stepName="DisplayESXSummary"]/command',                                                                    'vm/displayESXSummary.pl'],
+    ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
     #Main files
     ['//property[propertyName="preamble"]/value', 'preamble.pl'],
     ['//property[propertyName="ESX"]/value',      'ESX.pm'],

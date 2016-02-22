@@ -152,7 +152,12 @@ my %moveentity = (
                 description => "Move a VM/Folder to another folder.",
                 category    => "Resource Management"
                );
-
+my %displayesxsummary = (
+                label       => "ESX - DisplayESXSummary",
+                procedure   => "DisplayESXSummary",
+                description => "Displays the summary of the ESX Host.",
+                category    => "Resource Management"
+               );
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Suspend");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Clone");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Cleanup");
@@ -175,6 +180,7 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - CreateFolde
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - DeleteEntity");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - RenameEntity");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - MoveEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - DisplayESXSummary");
 
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend Virtual Machine");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend");
@@ -197,8 +203,9 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - CreateFolder")
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - DeleteEntity");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - RenameEntity");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - MoveEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - DisplayESXSummary");
 
-@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listentity, \%createfolder, \%deleteentity, \%renameentity, \%moveentity);
+@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listentity, \%createfolder, \%deleteentity, \%renameentity, \%moveentity, \%displayesxsummary);
 
 my $pluginName = "@PLUGIN_NAME@";
 my $pluginKey = "@PLUGIN_KEY@";
@@ -480,6 +487,15 @@ if ($upgradeAction eq "upgrade") {
                                      {
                                         procedureName => 'MoveEntity',
                                         stepName      => 'MoveEntity'
+                                     }
+                                    );
+
+            $batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'DisplayESXSummary',
+                                        stepName      => 'DisplayESXSummary'
                                      }
                                     );
 

@@ -2515,6 +2515,91 @@ sub move_entity {
         }
     }
 }
+################################
+# summary - Connect, call display_esx_summary, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(Host Name)
+#
+# Returns:
+#   none
+#
+################################
+sub summary {
+    my ($self) = @_;
+
+    if ($::gRunTestUseFakeOutput) {
+
+        # Create and return fake output
+        my $out = "";
+        $out .= "Displaying summary for Host: '" . $self->opts->{host_name} . "'...";
+        $out .= "\n";
+        $out .= "Successfully displayed summary for Host: '" . $self->opts->{host_name} . "'";
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    $self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->display_esx_summary();
+
+    $self->logout();
+}
+
+################################
+# display_esx_summary - Display the service of host: $opts->{host_name}
+#
+# Arguments:
+#   Hash(Host Name, Show Live Usage, Show Network Info, Show Storage Info)
+#
+# Returns:
+#   none
+#
+################################
+sub display_esx_summary {
+    my ($self) = @_;
+    $self->debug_msg(1, 'Displaying summary for Host: \'' . $self->opts->{host_name} . '\'...');
+    eval {
+        my $host = Vim::find_entity_view(view_type => 'HostSystem', filter => { name => $self->opts->{host_name}});
+        if (!$host) {
+            $self->debug_msg(0, 'Host: \'' . $self->opts->{host_name} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+        $self->{'host'} = $host;
+        display_esx_general_info($self);
+        if ( $self->opts->{live_usage} == '1' ) {
+            display_esx_resource_info($self);
+        }
+        if ( $self->opts->{network_info} == '1' ) {
+            display_esx_network_info($self);
+        }
+        if ( $self->opts->{storage_info} == '1' ) {
+            display_esx_storage_info($self);
+        }
+        $self->debug_msg(0, 'Successfully displayed summary for Host: \'' . $self->opts->{host_name} . '\'');
+    };
+    if ($@) {
+        if (ref($@) eq SOAP_FAULT) {
+            $self->debug_msg(0, 'Error displaying summary for \'' . $self->opts->{host_name} . '\': ');
+
+            if (!$self->print_error(ref($@->detail))) {
+                $self->debug_msg(0, "Summary for '" . $self->opts->{host_name} . "' can't be displayed \n" . $@ . EMPTY);
+            }
+        }
+        else {
+            $self->debug_msg(0, "Summary for '" . $self->opts->{host_name} . "' can't be displayed \n" . $@ . EMPTY);
+        }
+        $self->opts->{exitcode} = ERROR;
+        return;
+    }
+}
+
 # -------------------------------------------------------------------------
 # Helper functions
 # -------------------------------------------------------------------------
@@ -2853,3 +2938,159 @@ sub debug_msg {
     if ($self->opts->{Debug} >= $errlev) { print "$msg\n"; }
 }
 
+use constant STORAGE_MULTIPLIER => 1073741824;  # 1024*1024*1024 (to convert to GB)
+
+###############################
+# display_esx_general_info 
+#
+# Arguments: host_view
+#
+# Returns:
+#   none
+#
+################################
+sub display_esx_general_info {
+    my ($self) = @_;
+    my $host = $self->{'host'};
+    print "-----------------------------------------GENERAL INFORMATION----------------------------------------\n";
+    print "Host Name               : " . $host->summary->config->name . "\n";
+    print "Host Vendor             : " . $host->summary->hardware->vendor . "\n";
+    print "Boot Time               : " . $host->runtime->bootTime . "\n";
+    print "CPU Speed               : " . $host->summary->hardware->cpuMhz . " MHz\n";
+    print "CPU-Model               : " . $host->summary->hardware->cpuModel . "\n";
+    print "Model                   : " . $host->summary->hardware->model . "\n";
+    my $totalMemory = $host->summary->hardware->memorySize/STORAGE_MULTIPLIER;
+    print "Total Memory            : " . $totalMemory . " GB\n";
+    print "Number of CPU Cores     : " . $host->summary->hardware->numCpuCores . "\n";
+    print "Number of CPU Pkgs      : " . $host->summary->hardware->numCpuPkgs . "\n";
+    print "Number of CPU Threads   : " . $host->summary->hardware->numCpuThreads . "\n";
+    print "HyperThreading Available: " . ($host->config->hyperThread->available ? "YES" : "NO") . "\n";
+    print "HyperThreading Active   : " . ($host->config->hyperThread->active ? "YES" : "NO") . "\n";
+    if (defined ($host->summary->config->product)) {
+        print "Product Name            : " . ${$host->summary->config->product}{'name'} . "\n";
+        print "Software On Host        : " . ${$host->summary->config->product}{'fullName'} . "\n";
+        print "Product Vendor          : " . ${$host->summary->config->product}{'vendor'} . "\n";
+        print "Product Version         : " . ${$host->summary->config->product}{'version'} . "\n";
+    }
+
+    print "vMotion Enabled         : " . ($host->summary->config->vmotionEnabled ? "YES" : "NO") . "\n";
+    print "Number of NICs          : " . $host->summary->hardware->numNics . "\n";
+    print "Number of HBAs          : " . $host->summary->hardware->numHBAs . "\n";
+    print "UUID                    : " . $host->summary->hardware->uuid . "\n";
+    print "-----------------------------------------------------------------------------------------------------\n\n";
+}
+
+###############################
+# display_esx_resource_info 
+#
+# Arguments: host_view
+#
+# Returns:
+#   none
+#
+################################
+sub display_esx_resource_info {
+    my ($self) = @_;
+    my $host = $self->{'host'};
+    print "-----------------------------------------RESOURCE INFORMATION----------------------------------------\n";
+    print "Overall CPU Usage       : " . $host->summary->quickStats->overallCpuUsage . " MHz\n";
+    print "Overall Memory Usage    : " . $host->summary->quickStats->overallMemoryUsage . "\n";
+    print "-----------------------------------------------------------------------------------------------------\n\n";
+}
+
+###############################
+# display_esx_network_info 
+#
+# Arguments: host_view
+#
+# Returns:
+#   none
+#
+################################
+sub display_esx_network_info {
+    my ($self) = @_;
+    my $host = $self->{'host'};
+    print "-----------------------------------------NETWORK INFORMATION-----------------------------------------\n";
+    ## GATEWAY ##
+    my $network_system;
+    eval { $network_system = Vim::get_view(mo_ref => $host->configManager->networkSystem); };
+    if ($network_system->ipRouteConfig->defaultGateway) {
+        print "    IP Default Gateway : " . $network_system->ipRouteConfig->defaultGateway . "\n";
+    }
+
+    ## DNS ##
+    my $dns_add = $host->config->network->dnsConfig->address;
+
+    print "    DNS Address : \n";
+    foreach(@$dns_add) {
+        print "        " . $_ . "\n";
+    }
+
+    print "    NIC Details : \n";
+    my $nics = $host->config->network->pnic;
+    foreach my $nic (@$nics) {
+        print "        NIC Device :" . $nic->device . "\n";
+        print "            NIC PCI                       :" . $nic->pci . "\n";
+        print "            NIC Driver                    :" . $nic->driver . "\n";
+        if ($nic->linkSpeed) {
+            print "            NIC Mode of Channel Operation :" . ($nic->linkSpeed->duplex ?  "FULL-DUPLEX" : "HALF-DUPLEX"). "\n";
+            print "            NIC Link Speed Mb             :" . $nic->linkSpeed->speedMb . "\n";
+        }
+        print "            NIC Wake On Lan Supported     :" . $nic->wakeOnLanSupported . "\n";
+    }
+    print "-----------------------------------------------------------------------------------------------------\n\n";
+}
+
+###############################
+# display_esx_storage_info 
+#
+# Arguments: host_view
+#
+# Returns:
+#   none
+#
+################################
+sub display_esx_storage_info {
+    my ($self) = @_;
+    my $host = $self->{'host'};
+    print "-----------------------------------------STORAGE INFORMATION-----------------------------------------\n";
+    print "------------------------DATASTORE------------------------\n";
+    my $ds_views = Vim::get_views (mo_ref_array => $host->datastore);
+    foreach my $ds (@$ds_views) {
+        my $ds_row = "";
+        if($ds->summary->accessible) {
+            #capture unique datastores seen in cluster
+            print "Datastore Name             : " . $ds->info->name . "\n";
+            print "    Datastore Accessible       : " . ($ds->summary->accessible ? "YES" : "NO") . "\n";
+            print "    Datastore URL              : " . $ds->info->url . "\n";
+            print "    Datastore Type             : " . $ds->summary->type . "\n";
+            if ( ($ds->summary->freeSpace gt 0) || ($ds->summary->capacity gt 0) ) {
+                my $capacity = $ds->summary->capacity/STORAGE_MULTIPLIER;
+                my $free_space = $ds->summary->freeSpace/STORAGE_MULTIPLIER;
+                my $used_space = $capacity - $free_space;
+                my $percent_used_space = ($used_space/$capacity)*100;
+                print "    Datastore Capacity         : " . $capacity . " MB \n";
+                print "    Datastore FreeSpace        : " . $free_space . " MB \n";
+                print "    Datastore UsedSpace        : " . $used_space . " MB \n";
+                print "    Datastore PercentUsedSpace : " . $percent_used_space . " %\n";
+            }
+        }
+    }
+
+    print "------------------------LUN------------------------\n";
+    my $luns = $host->config->storageDevice->scsiLun;
+    foreach my $lun (@$luns) {
+                my $lun_row = "";
+                if($lun->isa('HostScsiDisk')) {
+                    print "LUN UID               : " . $lun->uuid . "\n";
+                    print "LUN Canonical Name    : " . $lun->canonicalName . "\n";
+                    print "LUN Queue Depth       : " . $lun->queueDepth . "\n";
+                    my $states = $lun->operationalState;
+                    print "LUN Operational State : ";
+                    foreach (@$states) {
+                        print $_ . "\n";
+                    }
+                }
+    }
+    print "-----------------------------------------------------------------------------------------------------\n\n";
+}
