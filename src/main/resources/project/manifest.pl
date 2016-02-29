@@ -100,6 +100,14 @@
     ['//procedure[procedureName="DisplayESXSummary"]/propertySheet/property[propertyName="ec_parameterForm"]/value',    'ui_forms/displayESXSummary.xml'],
     ['//step[stepName="DisplayESXSummary"]/command',                                                                    'vm/displayESXSummary.pl'],
     ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
+	
+	['//procedure[procedureName="CreateResourcepool"]/propertySheet/property[propertyName="ec_parameterForm"]/value',   'ui_forms/createResourcepool.xml'],
+    ['//step[stepName="CreateResourcepool"]/command',                                                                   'vm/createResourcepool.pl'],
+    ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
+    
+	['//procedure[procedureName="EditResourcepool"]/propertySheet/property[propertyName="ec_parameterForm"]/value',     'ui_forms/editResourcepool.xml'],
+    ['//step[stepName="EditResourcepool"]/command',                                                                     'vm/editResourcepool.pl'],
+    ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
     #Main files
     ['//property[propertyName="preamble"]/value', 'preamble.pl'],
     ['//property[propertyName="ESX"]/value',      'ESX.pm'],

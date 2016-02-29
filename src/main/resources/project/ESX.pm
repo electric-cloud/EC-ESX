@@ -2599,7 +2599,168 @@ sub display_esx_summary {
         return;
     }
 }
+##BEGIN##
+################################
+# createResourcepool - Connect, call createResourcepool, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(connection_config,resourcepool_name,parent_resourcepool_name,cpu_shares,mem_shares)
+#
+# Returns:
+#   none
+#
+################################
+sub createResourcepool {
+    print "Creating Resoucepool" . "\n";
+    my ($self) = @_;
+	if ($::gRunTestUseFakeOutput) {
 
+        # Create and return fake output
+        my $out = "";
+        $out .= "Creating Resoucepool'" . $self->opts->{resourcepool_name} . "'...";
+        $out .= "\n";
+		#$out .= 'Successfully created \'' . $self->opts->{resourcepool_name} . '\' in \'' . $self->opts->{parent_resourcepool_name} . '\'';
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    #$self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->create_resoucepool();
+
+    $self->logout();
+}
+
+################################
+# createResourcepool - Creating a resoucepool of name $opts->{resourcepool_name}
+#
+# Arguments:
+#   Hash(connection_config,resourcepool_name,parent_resourcepool_name,cpu_shares,mem_shares)
+#
+# Returns:
+#   none
+#
+################################
+sub create_resoucepool {
+    my ($self) = @_;
+    eval {
+		my $parent_pool_view = Vim::find_entity_view(view_type => 'ResourcePool',filter => { 'name' => $self->opts->{parent_resourcepool_name} } );
+		if (!$parent_pool_view) {
+        $self->debug_msg(0, 'parent_pool_view\'' . $self->opts->{parent_resourcepool_name} . '\' not found');
+        $self->opts->{exitcode} = ERROR;
+        return;
+        }
+		my $sharesLevel = SharesLevel->new($self->opts->{cpu_shares});
+		my $memLevel    = SharesLevel->new($self->opts->{mem_shares});
+		my $cpuShares   = SharesInfo->new(shares => 0, level => $sharesLevel);
+        my $memShares   = SharesInfo->new(shares => 0, level => $memLevel);
+        my $cpuAllocation = ResourceAllocationInfo->new(expandableReservation => 'true', limit => -1, reservation => 0, shares => 		   $cpuShares);
+        my $memoryAllocation = ResourceAllocationInfo->new(expandableReservation => 'true', limit => -1, reservation => 0, shares => $memShares);
+		my $rp_spec = ResourceConfigSpec->new(cpuAllocation => $cpuAllocation, memoryAllocation => $memoryAllocation);
+		my $newRP = $parent_pool_view->CreateResourcePool(name => $self->opts->{resourcepool_name}, spec => $rp_spec);
+		$self->debug_msg(0, 'Successfully Created \'' . $self->opts->{resourcepool_name} . '\' in \'' . $self->opts->{parent_resourcepool_name} . '\'');
+        if ($@) {
+            if (ref($@) eq SOAP_FAULT) {
+                 $self->debug_msg(0, 'Error Creating resoucepool \'' . $self->opts->{resourcepool_name} . '\': ');
+
+                 if (!$self->print_error(ref($@->detail))) {
+                     $self->debug_msg(0, "Resoucepool '" . $self->opts->{resourcepool_name} . "' can't be Created \n" . $@ . EMPTY);
+                 }
+            }
+            else {
+                 $self->debug_msg(0, "Resoucepool '" . $self->opts->{resourcepool_name} . "' can't be Created \n" . $@ . EMPTY);
+            }
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+    }
+}
+##BEGIN##
+################################
+# editResourcepool - Connect, call editResourcepool, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(connection_config,edit_resourcepool_name,edit_parent_resourcepool_name,edit_cpu_shares,edit_mem_shares)
+#
+# Returns:
+#   none
+#
+################################
+sub editResourcepool {
+    print "Editing Resoucepool" . "\n";
+    my ($self) = @_;
+	if ($::gRunTestUseFakeOutput) {
+
+        # Create and return fake output
+        my $out = "";
+        $out .= "Editing Resoucepool'" . $self->opts->{edit_resourcepool_name} . "'...";
+        $out .= "\n";
+		$out .= 'Successfully Edited \'' . $self->opts->{edit_resourcepool_name} . '\' in \'' . $self->opts->{edit_parent_resourcepool_name} . '\'';
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    #$self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->edit_resoucepool();
+
+    $self->logout();
+}
+
+################################
+# editResourcepool - Editing a resoucepool of name $opts->{edit_resourcepool_name} to $opts->{modified_resourcepool_name}
+#
+# Arguments:
+#   Hash(connection_config,edit_resourcepool_name,edit_parent_resourcepool_name,edit_cpu_shares,edit_mem_shares)
+#
+# Returns:
+#   none
+#
+################################
+sub edit_resoucepool {
+    my ($self) = @_;
+    eval {
+		my $parent_pool_view = Vim::find_entity_view(view_type => 'ResourcePool',filter => { 'name' => $self->opts->{edit_parent_resourcepool_name} } );
+		if (!$parent_pool_view) {
+        $self->debug_msg(0, 'parent_pool_view\'' . $self->opts->{edit_parent_resourcepool_name} . '\' not found');
+        $self->opts->{exitcode} = ERROR;
+        return;
+        }
+		my $sharesLevel = SharesLevel->new($self->opts->{edit_cpu_shares});
+		my $memLevel    = SharesLevel->new($self->opts->{edit_mem_shares});
+		my $cpuShares   = SharesInfo->new(shares => 0, level => $sharesLevel);
+        my $memShares   = SharesInfo->new(shares => 0, level => $memLevel);
+        my $cpuAllocation = ResourceAllocationInfo->new(expandableReservation => 'true', limit => -1, reservation => 0, shares => $cpuShares);
+        my $memoryAllocation = ResourceAllocationInfo->new(expandableReservation => 'true', limit => -1, reservation => 0, shares => $memShares);
+		my $rp_spec = ResourceConfigSpec->new(cpuAllocation => $cpuAllocation, memoryAllocation => $memoryAllocation);
+		my $newRP = $parent_pool_view->UpdateConfig(name => $self->opts->{edit_resourcepool_name}, config => $rp_spec);
+		$self->debug_msg(0, 'Successfully Edited \'' . $self->opts->{edit_parent_resourcepool_name} . '\' to \'' . $self->opts->{edit_resourcepool_name} . '\'');
+        if ($@) {
+            if (ref($@) eq SOAP_FAULT) {
+                 $self->debug_msg(0, 'Error While Editing resoucepool \'' . $self->opts->{edit_resourcepool_name} . '\': ');
+
+                 if (!$self->print_error(ref($@->detail))) {
+                     $self->debug_msg(0, "Resoucepool '" . $self->opts->{edit_resourcepool_name} . "' can't be Edited \n" . $@ . EMPTY);
+                 }
+            }
+            else {
+                 $self->debug_msg(0, "Resoucepool '" . $self->opts->{edit_resourcepool_name} . "' can't be Edited \n" . $@ . EMPTY);
+            }
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+    }
+}
 # -------------------------------------------------------------------------
 # Helper functions
 # -------------------------------------------------------------------------
