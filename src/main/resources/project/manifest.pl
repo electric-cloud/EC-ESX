@@ -108,7 +108,15 @@
 	['//procedure[procedureName="EditResourcepool"]/propertySheet/property[propertyName="ec_parameterForm"]/value',     'ui_forms/editResourcepool.xml'],
     ['//step[stepName="EditResourcepool"]/command',                                                                     'vm/editResourcepool.pl'],
     ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
-    #Main files
+    
+	['//procedure[procedureName="ListSnapshot"]/propertySheet/property[propertyName="ec_parameterForm"]/value',         'ui_forms/listSnapshot.xml'],
+    ['//step[stepName="ListSnapshot"]/command',                                                                         'vm/listSnapshot.pl'],
+    ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
+	
+	'//procedure[procedureName="RemoveSnapshot"]/propertySheet/property[propertyName="ec_parameterForm"]/value',          'ui_forms/removeSnapshot.xml'],
+    ['//step[stepName="RemoveSnapshot"]/command',                                                                         'vm/removeSnapshot.pl'],
+    ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
+	#Main files
     ['//property[propertyName="preamble"]/value', 'preamble.pl'],
     ['//property[propertyName="ESX"]/value',      'ESX.pm'],
     ['//property[propertyName="ec_setup"]/value', 'ec_setup.pl'],

@@ -170,6 +170,18 @@ my %editresourcepool = (
                 description => "Edit a resourcepool.",
                 category    => "Resource Management"
                );
+my %listsnapshot = (
+                label       => "ESX - ListSnapshot",
+                procedure   => "ListSnapshot",
+                description => "List Snapshots inside VM.",
+                category    => "Resource Management"
+               );
+my %removesnapshot = (
+                label       => "ESX - RemoveSnapshot",
+                procedure   => "RemoveSnapshot",
+                description => "Remove one or all  Snapshots inside VM.",
+                category    => "Resource Management"
+               ); 	 			   
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Suspend");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Clone");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Cleanup");
@@ -195,6 +207,8 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - MoveEntity"
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - DisplayESXSummary");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - CreateResourcepool");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - EditResourcepool");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - ListSnapshot");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - RemoveSnapshot");
 
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend Virtual Machine");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend");
@@ -220,8 +234,10 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - MoveEntity");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - DisplayESXSummary");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - CreateResourcepool");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - EditResourcepool");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - ListSnapshot");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - RemoveSnapshot");
 
-@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listentity, \%createfolder, \%deleteentity, \%renameentity, \%moveentity, \%displayesxsummary,\%createresourcepool,\%editresourcepool);
+@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listentity, \%createfolder, \%deleteentity, \%renameentity, \%moveentity, \%displayesxsummary,\%createresourcepool,\%editresourcepool,\%listsnapshot,\%removesnapshot);
 
 my $pluginName = "@PLUGIN_NAME@";
 my $pluginKey = "@PLUGIN_KEY@";
@@ -529,8 +545,23 @@ if ($upgradeAction eq "upgrade") {
                                         procedureName => 'EditResourcepool',
                                         stepName      => 'EditResourcepool'
                                      }
+                                    );                        
+			$batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'ListSnapshot',
+                                        stepName      => 'ListSnapshot'
+                                     }
                                     );
-
+			$batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'RemoveSnapshot',
+                                        stepName      => 'RemoveSnapshot'
+                                     }
+                                    );						
         }
     }
 }

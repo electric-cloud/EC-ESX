@@ -33,10 +33,11 @@ package ESX;
 # -------------------------------------------------------------------------
 use lib $ENV{COMMANDER_PLUGINS} . '/@PLUGIN_NAME@/agent/lib';
 
-use warnings;
+#use warnings;
 use strict;
 use ElectricCommander;
 use ElectricCommander::PropDB;
+use ElectricCommander::PropDB qw(/myProject/libs);
 
 # -------------------------------------------------------------------------
 # Constants
@@ -2695,7 +2696,6 @@ sub editResourcepool {
     print "Editing Resoucepool" . "\n";
     my ($self) = @_;
 	if ($::gRunTestUseFakeOutput) {
-
         # Create and return fake output
         my $out = "";
         $out .= "Editing Resoucepool'" . $self->opts->{edit_resourcepool_name} . "'...";
@@ -2761,6 +2761,243 @@ sub edit_resoucepool {
         }
     }
 }
+##BEGIN##
+################################
+# listSnapshot - Connect, call listSnapshot, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(connection_config,esx_vmname)
+#
+# Returns:
+#   none
+#
+sub listSnapshot {
+    print "Listing Snapshots" . "\n";
+    my ($self) = @_;
+	if ($::gRunTestUseFakeOutput) {
+
+        # Create and return fake output
+        my $out = "";
+        #$out .= "Listing Snapshots for VIRTUAL_MACHINE'" . $self->opts->{esx_vmname} . "'...";
+        $out .= "\n";
+		#$out .= 'Successfully Listed Snapshot for VM\'' . $self->opts->{esx_vmname} . '\' in \'' . $self->opts->{esx_vmname} . '\'';
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    #$self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->list_snapshot();
+
+    $self->logout();
+}
+################################
+# listSnapshot - Listing snapshots of Vm of  name $opts->{esx_vmname} 
+#
+# Arguments:
+#   Hash(connection_config,esx_vmname)
+#
+# Returns:
+#   none
+#
+################################
+sub list_snapshot {
+    my ($self) = @_;
+    $self->debug_msg(0, 'Listing Snapshots of VM \'' . $self->opts->{esx_vmname} . '\'...');
+	my $view = Vim::find_entity_view(view_type => 'VirtualMachine',filter => { 'name' => $self->opts->{esx_vmname} } );
+        if (!$view) {
+			$self->debug_msg(0, 'Virtual Machine\'' . $self->opts->{esx_vmname} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }  
+    eval {
+		my $vm_views = Vim::find_entity_views(view_type => 'VirtualMachine',filter => { 'name' => $self->opts->{esx_vmname} } );
+        if (!$vm_views) {
+			$self->debug_msg(0, 'Virtual Machine\'' . $self->opts->{esx_vmname} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+		foreach (@$vm_views) {
+        my $count = 0;
+        my $snapshots = $_->snapshot;
+        if(defined $snapshots) {
+	    Util::trace(0,"\nSnapshots for Virtual Machine ".$self->opts->{esx_vmname}. "\n");
+		print_tree ($_->snapshot->currentSnapshot, " " , $_->snapshot->rootSnapshotList);
+		$self->debug_msg(0, 'Successfully Listed Snapshots for VM \'' . $self->opts->{esx_vmname} . '\'');
+	   }
+       else
+	   {
+	   $self->debug_msg(0, 'NO Snapshots available for VM \'' . $self->opts->{esx_vmname} . '\'');
+	   }
+    }
+    if ($@) {
+        if (ref($@) eq SOAP_FAULT) {
+            $self->debug_msg(0, 'Error listing Snapshots of VM \'' . $self->opts->{esx_vmname} . '\': ');
+
+            if (!$self->print_error(ref($@->detail))) {
+                $self->debug_msg(0, "VM '" . $self->opts->{esx_vmname} . "' can't be listed \n" . $@ . EMPTY);
+            }
+        }
+        else {
+            $self->debug_msg(0, "VM '" . $self->opts->{esx_vmname} . "' can't be listed \n" . $@ . EMPTY);
+        }
+        $self->opts->{exitcode} = ERROR;
+        return;
+    }
+	}
+}
+sub print_tree
+	{
+		my ($ref, $str, $tree) = @_;
+		my $head = " ";
+		foreach my $node (@$tree) 
+		{
+		$head = ($ref->value eq $node->snapshot->value) ? " " : " " if (defined $ref);
+		my $quiesced = ($node->quiesced) ? "Y" : "N";
+		printf "%s%-48.48s%16.16s %s %s\n", $head, $str.$node->name ;
+		print_tree ($ref, $str . " ", $node->childSnapshotList);
+		}
+		return;
+	}
+################################
+# Remove - Connect, call remove_snapshot, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(connection_config,esx_vmname,esx_snapshotname)
+#
+# Returns:
+#   none
+#
+################################
+sub removeSnapshot {
+    print "Removing Snapshots";
+    my ($self) = @_;
+
+    if ($::gRunTestUseFakeOutput) {
+
+        # Create and return fake output
+        my $out = "";
+        $out .= "Removing  Snapshots '" . $self->opts->{esx_snapshotname} . "'...";
+        $out .= "\n";
+        $out .= "Successfully Removed Snapshots '" . $self->opts->{esx_snapshotname} . "'";
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    $self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->remove_snapshot();
+
+    $self->logout();
+}
+
+################################
+# remove_snapshot - Remove the Snapshot  $opts->{esx_snapshotname}
+#
+# Arguments:
+#   Hash(connection_config,esx_vmname,esx_snapshotname)
+#
+# Returns:
+#   none
+#
+################################
+sub remove_snapshot {
+    my ($self) = @_;
+	my $view = Vim::find_entity_view(view_type => 'VirtualMachine',filter => { 'name' => $self->opts->{esx_vmname} } );
+        if (!$view) {
+			$self->debug_msg(0, 'Virtual Machine\'' . $self->opts->{esx_vmname} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }  
+	if(($self->opts->{all}) eq "1")
+	{
+ 	 $self->debug_msg(1, 'Removing Snapshots \'' . $self->opts->{esx_snapshotname} . '\'...');
+	 my $vm_views = Vim::find_entity_views(view_type => 'VirtualMachine',filter => { 'name' => $self->opts->{esx_vmname} } );
+	 foreach (@$vm_views) 
+	  {
+     my $snapshots = $_->snapshot;
+     if(defined $snapshots)
+	  {
+		eval 
+		{
+        $_->RemoveAllSnapshots();
+        Util::trace(0, "\n\nOperation :: Remove All Snapshot For Virtual Machine ". $self->opts->{esx_vmname}. " completed sucessfully\n");
+		};
+        
+      }
+	  else {
+            $self->debug_msg(0, 'NO Snapshots available for VM \'' . $self->opts->{esx_vmname} . '\'');
+        }
+      
+	 }
+	  if ($@) {
+        if (ref($@) eq SOAP_FAULT) {
+            $self->debug_msg(0, 'Error Removing all Snapshots of VM \'' . $self->opts->{esx_vmname} . '\': ');
+
+            if (!$self->print_error(ref($@->detail))) {
+                $self->debug_msg(0, "Snapshots belongs from VM '" . $self->opts->{esx_vmname} . "' can't be removed \n" . $@ . EMPTY);
+            }
+        }
+        else {
+            $self->debug_msg(0, "Snapshots belongs from VM '" . $self->opts->{esx_vmname} . "' can't be removed \n" . $@ . EMPTY);
+        }
+        $self->opts->{exitcode} = ERROR;
+        return;
+    }
+	}
+	else
+	{
+    my $vm_views = Vim::find_entity_views(view_type => VIRTUAL_MACHINE,
+                                        filter    => { 'name' => $self->opts->{esx_vmname} });
+
+    if (!$vm_views) {
+        $self->debug_msg(0, 'Virtual machine \'' . $self->opts->{esx_vmname} . '\' not found');
+        $self->opts->{exitcode} = ERROR;
+        return;
+    }
+	foreach (@$vm_views) {
+      my $ref = undef;
+      my $nRefs = 0;
+      
+      if(defined $_->snapshot) {
+         ($ref, $nRefs) =
+            find_snapshot($_->snapshot->rootSnapshotList, $self->opts->{esx_snapshotname});
+      }
+      
+      if (defined $ref && $nRefs == 1) {
+         my $snapshot = Vim::get_view (mo_ref =>$ref->snapshot);
+         eval {
+            $snapshot->RemoveSnapshot(removeChildren => 0);
+             Util::trace(0, "\nOperation :: Remove Snapshot ". $self->opts->{esx_snapshotname} . " For Virtual Machine ".$self->opts->{esx_vmname}." completed sucessfully\n");
+         };
+      }
+   }
+    if ($@) {
+        if (ref($@) eq SOAP_FAULT) {
+            $self->debug_msg(0, 'Error Removing Snapshot from VM \'' . $self->opts->{esx_vmname} . '\': ');
+
+            if (!$self->print_error(ref($@->detail))) {
+                $self->debug_msg(0, "Snapshot from VM '" . $self->opts->{esx_vmname} . "' can't be removed \n" . $@ . EMPTY);
+            }
+        }
+        else {
+            $self->debug_msg(0, "Snapshot from VM '" . $self->opts->{esx_vmname} . "' can't be removed \n" . $@ . EMPTY);
+        }
+        $self->opts->{exitcode} = ERROR;
+        return;
+    }
+	}
+ }
 # -------------------------------------------------------------------------
 # Helper functions
 # -------------------------------------------------------------------------
@@ -3023,7 +3260,21 @@ sub find_snapshot_name {
     }
     return ($ref, $count);
 }
-
+sub find_snapshot {
+   my ($tree, $name) = @_;
+   my $ref = undef;
+   my $count = 0;
+   foreach my $node (@$tree) {
+      if ($node->name eq $name) {
+         $ref = $node;
+         $count++;
+      }
+      my ($subRef, $subCount) = find_snapshot($node->childSnapshotList, $name);
+      $count = $count + $subCount;
+      $ref = $subRef if ($subCount);
+   }
+   return ($ref, $count);
+}  
 ###############################
 # pingResource - Use commander to ping a resource
 #
