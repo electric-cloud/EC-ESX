@@ -322,6 +322,54 @@
     <xpath>//step[stepName=&quot;SetTimelimit&quot;]/command</xpath>
   </file>
   <file>
+	<path>ui_forms/createResourcepool.xml</path>
+	<xpath>//procedure[procedureName=&quot;CreateResourcepool&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
+	</file>
+	<file>
+	<path>vm/createResourcepool.pl</path>
+	<xpath>//step[stepName=&quot;CreateResourcepool&quot;]/command</xpath>
+	</file>
+	<file>
+	<path>setTimelimit.pl</path>
+	<xpath>//step[stepName=&quot;SetTimelimit&quot;]/command</xpath>
+  </file>
+  <file>
+	<path>ui_forms/editResourcepool.xml</path>
+	<xpath>//procedure[procedureName=&quot;EditResourcepool&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
+  </file>
+  <file>
+	<path>vm/editResourcepool.pl</path>
+	<xpath>//step[stepName=&quot;EditResourcepool&quot;]/command</xpath>
+  </file>
+  <file>
+	<path>setTimelimit.pl</path>
+	<xpath>//step[stepName=&quot;SetTimelimit&quot;]/command</xpath>
+  </file>
+  <file>
+	<path>ui_forms/listSnapshot.xml</path>
+	<xpath>//procedure[procedureName=&quot;ListSnapshot&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
+  </file>
+  <file>
+	<path>vm/listSnapshot.pl</path>
+	<xpath>//step[stepName=&quot;ListSnapshot&quot;]/command</xpath>
+  </file>
+  <file>
+	<path>setTimelimit.pl</path>
+	<xpath>//step[stepName=&quot;SetTimelimit&quot;]/command</xpath>
+  </file>
+   <file>
+	<path>ui_forms/removeSnapshot.xml</path>
+	<xpath>//procedure[procedureName=&quot;RemoveSnapshot&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
+  </file>
+  <file>
+	<path>vm/removeSnapshot.pl</path>
+	<xpath>//step[stepName=&quot;RemoveSnapshot&quot;]/command</xpath>
+  </file>
+  <file>
+	<path>setTimelimit.pl</path>
+	<xpath>//step[stepName=&quot;SetTimelimit&quot;]/command</xpath>
+  </file>
+  <file>
     <path>preamble.pl</path>
     <xpath>//property[propertyName=&quot;preamble&quot;]/value</xpath>
   </file>
