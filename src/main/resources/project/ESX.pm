@@ -3131,13 +3131,13 @@ sub listDevices {
 sub fetchController {
     my ($self) = @_;
     my $deviceLimit;
-    if ( $self->opts->{controllerType} eq 'SCSI' ) {
+    if ( $self->opts->{controller_type} eq 'SCSI' ) {
         $deviceLimit = 15;
     }
-    elsif ( $self->opts->{controllerType} eq 'SATA' ) {
+    elsif ( $self->opts->{controller_type} eq 'SATA' ) {
         $deviceLimit = 30;
     }
-    elsif ( $self->opts->{controllerType} eq 'IDE' ) {
+    elsif ( $self->opts->{controller_type} eq 'IDE' ) {
         $deviceLimit = 2;
     }
     if ($self->fetchDevices()){
