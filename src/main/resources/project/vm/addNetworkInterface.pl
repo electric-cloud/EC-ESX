@@ -23,7 +23,6 @@ use strict;
 my $opts;
 print "Adding Network Interface\n";
 $opts->{connection_config} = q{$[connection_config]};
-$opts->{host_name} = q{$[host_name]};
 $opts->{vm_name} = q{$[vm_name]};
 $opts->{network} = q{$[network]};
 

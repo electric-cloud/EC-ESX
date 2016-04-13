@@ -26,13 +26,6 @@
     </formElement>
     <formElement>
         <type>entry</type>
-        <label>Host Name:</label>
-        <property>host_name</property>
-        <required>1</required>
-        <documentation>The name of the host on which created CD/DVD ROM VM is present.</documentation>
-    </formElement>
-    <formElement>
-        <type>entry</type>
         <label>VM Name:</label>
         <property>vm_name</property>
         <required>1</required>

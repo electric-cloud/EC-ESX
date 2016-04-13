@@ -24,7 +24,6 @@ my $opts;
 print "Adding CD/DVD ROM\n";
 $opts->{connection_config} = q{$[connection_config]};
 $opts->{iso_image} = q{$[iso_image]};
-$opts->{host_name} = q{$[host_name]};
 $opts->{vm_name} = q{$[vm_name]};
 $opts->{backing_type} = q{$[backing_type]};
 $opts->{controller_type} = q{$[controller_type]};

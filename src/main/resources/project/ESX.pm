@@ -3009,23 +3009,21 @@ sub remove_snapshot {
 sub getVirtualMachineView {
     my ($self) = @_;
     print "Getting Virtual Machine View: " . $self->opts->{vm_name} . " and host " . $self->opts->{host_name} . "\n";
-    #eval{
-        my $hostView = Vim::find_entity_view(
-            view_type => HOST_SYSTEM,
-            filter    => { 'name' => $self->opts->{host_name} }
+    my $hostView = Vim::find_entity_view(
+        view_type => HOST_SYSTEM,
+        filter    => { 'name' => $self->opts->{host_name} }
+    );
+    if ($hostView) {
+        my $vmView = Vim::find_entity_view(
+            view_type    => VIRTUAL_MACHINE,
+            filter       => { 'name' => $self->opts->{vm_name} },
+            begin_entity => $hostView
         );
-        if ($hostView) {
-            my $vmView = Vim::find_entity_view(
-                view_type    => VIRTUAL_MACHINE,
-                filter       => { 'name' => $self->opts->{vm_name} },
-                begin_entity => $hostView
-            );
-            if ($vmView) {
-                $self->opts->{vm_view} = $vmView;
-                return SUCCESS;
-            }
+        if ($vmView) {
+            $self->opts->{vm_view} = $vmView;
+            return SUCCESS;
         }
-        #};
+    }
     print "Can't find vm view: "
       . $self->opts->{vm_name}
       . " in host: "
@@ -3315,7 +3313,7 @@ sub addCdDvdROM {
         }
         print "Got vm view. Going for fetching controller configurations"
           . "\n";
-        $self->opts->{device_type} = 'CD\DVD drive';
+        $self->opts->{device_type} = $self->opts->{controller_type};
         if($self->fetchController()){
             print "Can't find controller" . "\n";
             return;

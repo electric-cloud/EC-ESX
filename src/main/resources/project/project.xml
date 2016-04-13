@@ -100,6 +100,16 @@
                                     </propertySheet>
                                 </property>
                                 <property>
+                                    <propertyName>host_name</propertyName>
+                                    <propertySheet>
+                                        <property>
+                                            <propertyName>formType</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>standard</value>
+                                        </property>
+                                    </propertySheet>
+                                </property>
+                                <property>
                                     <propertyName>credential</propertyName>
                                     <propertySheet>
                                         <property>
@@ -156,6 +166,13 @@
                 <formalParameterName>esx_url</formalParameterName>
                 <defaultValue></defaultValue>
                 <description>Url of ESX server</description>
+                <required>1</required>
+                <type>entry</type>
+            </formalParameter>
+            <formalParameter>
+                <formalParameterName>host_name</formalParameterName>
+                <defaultValue></defaultValue>
+                <description>Name/IP of the host present on ESX Server.</description>
                 <required>1</required>
                 <type>entry</type>
             </formalParameter>
@@ -6495,16 +6512,6 @@
                                     </propertySheet>
                                 </property>
                                 <property>
-                                    <propertyName>host_name</propertyName>
-                                    <propertySheet>
-                                        <property>
-                                            <propertyName>formType</propertyName>
-                                            <expandable>1</expandable>
-                                            <value>standard</value>
-                                        </property>
-                                    </propertySheet>
-                                </property>
-                                <property>
                                     <propertyName>vm_name</propertyName>
                                     <propertySheet>
                                         <property>
@@ -6619,13 +6626,6 @@
                 <formalParameterName>connection_config</formalParameterName>
                 <defaultValue></defaultValue>
                 <description>The name of the configuration which holds the connection information for ESX server.</description>
-                <required>1</required>
-                <type>entry</type>
-            </formalParameter>
-            <formalParameter>
-                <formalParameterName>host_name</formalParameterName>
-                <defaultValue></defaultValue>
-                <description>The name of the ESX host.</description>
                 <required>1</required>
                 <type>entry</type>
             </formalParameter>
@@ -6753,16 +6753,6 @@
                                     </propertySheet>
                                 </property>
                                 <property>
-                                    <propertyName>host_name</propertyName>
-                                    <propertySheet>
-                                        <property>
-                                            <propertyName>formType</propertyName>
-                                            <expandable>1</expandable>
-                                            <value>standard</value>
-                                        </property>
-                                    </propertySheet>
-                                </property>
-                                <property>
                                     <propertyName>vm_name</propertyName>
                                     <propertySheet>
                                         <property>
@@ -6881,13 +6871,6 @@
                 <type>entry</type>
             </formalParameter>
             <formalParameter>
-                <formalParameterName>host_name</formalParameterName>
-                <defaultValue></defaultValue>
-                <description>The name of the ESX host.</description>
-                <required>1</required>
-                <type>entry</type>
-            </formalParameter>
-            <formalParameter>
                 <formalParameterName>vm_name</formalParameterName>
                 <defaultValue></defaultValue>
                 <description>The name of the virtual machine.</description>
@@ -7002,16 +6985,6 @@
                             <propertySheet>
                                 <property>
                                     <propertyName>connection_config</propertyName>
-                                    <propertySheet>
-                                        <property>
-                                            <propertyName>formType</propertyName>
-                                            <expandable>1</expandable>
-                                            <value>standard</value>
-                                        </property>
-                                    </propertySheet>
-                                </property>
-                                <property>
-                                    <propertyName>host_name</propertyName>
                                     <propertySheet>
                                         <property>
                                             <propertyName>formType</propertyName>
@@ -7194,13 +7167,6 @@
                 <type>entry</type>
             </formalParameter>
             <formalParameter>
-                <formalParameterName>host_name</formalParameterName>
-                <defaultValue></defaultValue>
-                <description>The name of the ESX host.</description>
-                <required>1</required>
-                <type>entry</type>
-            </formalParameter>
-            <formalParameter>
                 <formalParameterName>vm_name</formalParameterName>
                 <defaultValue></defaultValue>
                 <description>The name of the virtual machine.</description>
@@ -7331,16 +7297,6 @@
                                     </propertySheet>
                                 </property>
                                 <property>
-                                    <propertyName>host_name</propertyName>
-                                    <propertySheet>
-                                        <property>
-                                            <propertyName>formType</propertyName>
-                                            <expandable>1</expandable>
-                                            <value>standard</value>
-                                        </property>
-                                    </propertySheet>
-                                </property>
-                                <property>
                                     <propertyName>vm_name</propertyName>
                                     <propertySheet>
                                         <property>
@@ -7385,13 +7341,6 @@
                 <formalParameterName>connection_config</formalParameterName>
                 <defaultValue></defaultValue>
                 <description>The name of the configuration which holds the connection information for ESX server.</description>
-                <required>1</required>
-                <type>entry</type>
-            </formalParameter>
-            <formalParameter>
-                <formalParameterName>host_name</formalParameterName>
-                <defaultValue></defaultValue>
-                <description>The name of the ESX host.</description>
                 <required>1</required>
                 <type>entry</type>
             </formalParameter>

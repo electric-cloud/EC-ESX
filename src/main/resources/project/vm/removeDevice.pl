@@ -25,7 +25,6 @@ print "Removing Device\n";
 $opts->{connection_config} = q{$[connection_config]};
 $opts->{device_type} = q{$[device_type]};
 $opts->{device_name} = q{$[device_name]};
-$opts->{host_name} = q{$[host_name]};
 $opts->{vm_name} = q{$[vm_name]};
 
 $[/myProject/procedure_helpers/preamble]
