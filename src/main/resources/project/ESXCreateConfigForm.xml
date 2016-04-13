@@ -33,6 +33,14 @@
         <required>1</required>
     </formElement>
     <formElement>
+        <type>entry</type>
+        <label>Host Name:</label>
+        <property>host_name</property>
+        <value/>
+        <documentation>Name/IP of the host present on ESX Server.</documentation>
+        <required>1</required>
+    </formElement>
+    <formElement>
         <type>credential</type>
         <label>Login as:</label>
         <property>credential</property>

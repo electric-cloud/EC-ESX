@@ -181,7 +181,31 @@ my %removesnapshot = (
                 procedure   => "RemoveSnapshot",
                 description => "Remove one or all  Snapshots inside VM.",
                 category    => "Resource Management"
-               ); 	 			   
+               );
+my %addcddvddrive = (
+                label       => "ESX - AddCdDvdDrive",
+                procedure   => "AddCdDvdDrive",
+                description => "Add CD/DVD Drive inside VM.",
+                category    => "Resource Management"
+               );
+my %addnetworkinterface = (
+                label       => "ESX - AddNetworkInterface",
+                procedure   => "AddNetworkInterface",
+                description => "Add Network interface inside VM.",
+                category    => "Resource Management"
+               );
+my %listdevice = (
+                label       => "ESX - ListDevice",
+                procedure   => "ListDevice",
+                description => "List device inside VM.",
+                category    => "Resource Management"
+               );
+my %removedevice = (
+                label       => "ESX - RemoveDevice",
+                procedure   => "RemoveDevice",
+                description => "Remove devices inside VM.",
+                category    => "Resource Management"
+               );
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Suspend");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Clone");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Cleanup");
@@ -209,6 +233,10 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - CreateResou
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - EditResourcepool");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - ListSnapshot");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - RemoveSnapshot");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - AddCdDvdDrive");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - AddNetworkInterface");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - ListDevice");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - RemoveDevice");
 
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend Virtual Machine");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend");
@@ -236,8 +264,12 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - CreateResource
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - EditResourcepool");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - ListSnapshot");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - RemoveSnapshot");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - AddCdDvdDrive");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - AddNetworkInterface");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - ListDevice");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - RemoveDevice");
 
-@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listentity, \%createfolder, \%deleteentity, \%renameentity, \%moveentity, \%displayesxsummary,\%createresourcepool,\%editresourcepool,\%listsnapshot,\%removesnapshot);
+@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listentity, \%createfolder, \%deleteentity, \%renameentity, \%moveentity, \%displayesxsummary,\%createresourcepool,\%editresourcepool,\%listsnapshot,\%removesnapshot, \%addcddvddrive, \%addnetworkinterface, \%listdevice, \%removedevice);
 
 my $pluginName = "@PLUGIN_NAME@";
 my $pluginKey = "@PLUGIN_KEY@";
@@ -530,7 +562,7 @@ if ($upgradeAction eq "upgrade") {
                                         stepName      => 'DisplayESXSummary'
                                      }
                                     );
-			$batch->attachCredential(
+            $batch->attachCredential(
                                      "\$[/plugins/$pluginName/project]",
                                      $cred,
                                      {
@@ -538,7 +570,7 @@ if ($upgradeAction eq "upgrade") {
                                         stepName      => 'CreateResourcepool'
                                      }
                                     );
-			$batch->attachCredential(
+            $batch->attachCredential(
                                      "\$[/plugins/$pluginName/project]",
                                      $cred,
                                      {
@@ -546,7 +578,7 @@ if ($upgradeAction eq "upgrade") {
                                         stepName      => 'EditResourcepool'
                                      }
                                     );                        
-			$batch->attachCredential(
+            $batch->attachCredential(
                                      "\$[/plugins/$pluginName/project]",
                                      $cred,
                                      {
@@ -554,18 +586,46 @@ if ($upgradeAction eq "upgrade") {
                                         stepName      => 'ListSnapshot'
                                      }
                                     );
-			$batch->attachCredential(
+            $batch->attachCredential(
                                      "\$[/plugins/$pluginName/project]",
                                      $cred,
                                      {
                                         procedureName => 'RemoveSnapshot',
                                         stepName      => 'RemoveSnapshot'
                                      }
-                                    );						
+                                    );
+            $batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'AddCdDvdDrive',
+                                        stepName      => 'addCdDvdDrive'
+                                     }
+                                    );
+            $batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'AddNetworkInterface',
+                                        stepName      => 'addNetworkInterface'
+                                     }
+                                    );
+            $batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'ListDevice',
+                                        stepName      => 'listDevice'
+                                     }
+                                    );
+            $batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'RemoveDevice',
+                                        stepName      => 'RemoveDevice'
+                                     }
+                                    );
         }
     }
 }
-    
-	
-	
-        
