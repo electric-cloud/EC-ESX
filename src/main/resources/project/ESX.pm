@@ -2998,6 +2998,424 @@ sub remove_snapshot {
     }
 	}
  }
+
+#########################################
+#Arguments:
+#    host: host name
+#    vm: vm name
+#Returns:
+#    vm view
+##########################################
+sub getVirtualMachineView {
+    my ($self) = @_;
+    print "Getting Virtual Machine View: " . $self->opts->{vm_name} . " and host " . $self->opts->{host_name} . "\n";
+    #eval{
+        my $hostView = Vim::find_entity_view(
+            view_type => HOST_SYSTEM,
+            filter    => { 'name' => $self->opts->{host_name} }
+        );
+        if ($hostView) {
+            my $vmView = Vim::find_entity_view(
+                view_type    => VIRTUAL_MACHINE,
+                filter       => { 'name' => $self->opts->{vm_name} },
+                begin_entity => $hostView
+            );
+            if ($vmView) {
+                $self->opts->{vm_view} = $vmView;
+                return SUCCESS;
+            }
+        }
+        #};
+    print "Can't find vm view: "
+      . $self->opts->{vm_name}
+      . " in host: "
+      . $self->opts->{host_name} . "\n";
+
+    $self->opts->{exitcode} = ERROR;
+    return ERROR;
+}
+
+sub fetchDevices {
+    my ($self) = @_;
+    my @devices;
+    my $input;
+    my $matcher;
+    print "Going for finding " . $self->opts->{device_type} . "\n";
+    foreach my $device ( @{ $self->opts->{vm_view}->config->hardware->device } ) {
+        $input = $device->deviceInfo->label;
+        $matcher = $self->opts->{device_type};
+        if ( $input =~ /$matcher/ ) {
+            push @devices, $device;
+        }
+    }
+    if(not @devices)
+    {
+        $self->opts->{exitcode} = ERROR;
+        print "Could not obtain device of type: " . $self->opts->{device_type} . "\n";
+        return ERROR;
+    }
+    print "Obtained device of type: " . $self->opts->{device_type} . "\n";
+    #Store array Reference
+    $self->opts->{devices} = \@devices;
+    return SUCCESS;
+}
+
+sub listDevices {
+    my ($self) = @_;
+    print "Going for listing "
+      . $self->opts->{device_type} . ": "
+      . $self->opts->{device_name}
+      . " present on VM: "
+      . $self->opts->{vm_name}
+      . " and host: "
+      . $self->opts->{host_name} . "\n";
+
+    #Set default values
+    $self->initialize();
+    $self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    if($self->getVirtualMachineView()){
+        print "Can't find Virtual Machine view" . "\n";
+        return;
+    }
+    if ($self->fetchDevices()){
+        print "Can't fetch devices" . "\n";
+        return;
+    }
+
+    print
+      "======================================================================"
+      . "\n";
+
+    foreach my $device (@{$self->opts->{devices}}){
+        #If deviceName is given then list only that one and if not given list all devices of that type
+
+        my %deviceMap = %{$device};
+        if ( ( not $self->opts->{device_name} )
+            or $deviceMap{deviceInfo}{label} eq $self->opts->{device_name} )
+        {
+            print "Device Name: " . $device->deviceInfo->label . "\n";
+            print "Device Info: ";
+            print exists $deviceMap{backing}{fileName}
+              ? $deviceMap{backing}{fileName}
+              : $deviceMap{backing}{deviceName};
+            print "\n";
+            print "Backing: "
+              . substr( ref( $deviceMap{backing} ), 0, -4 ) . "\n";
+            if ( exists $deviceMap{capacityInKB} ) {
+                print "Capacity In KB: " . $deviceMap{capacityInKB} . "\n";
+            }
+            if ( exists $deviceMap{backing}{thinProvisioned} ) {
+
+                my $thinProvisioned =
+                  $deviceMap{backing}{thinProvisioned} ? "True" : "False";
+                print "Thin Provisioned: " . $thinProvisioned . "\n";
+            }
+            if ( exists $deviceMap{backing}{diskMode} ) {
+                print "Disk Mode: " . $deviceMap{backing}{diskMode} . "\n";
+            }
+            if ( exists $deviceMap{macAddress} ) {
+                print "MAC Address: " . $deviceMap{macAddress} . "\n";
+            }
+            print
+              "======================================================================"
+              . "\n";
+        }
+    }
+    $self->logout();
+}
+
+#https://www.vmware.com/pdf/vsphere6/r60/vsphere-60-configuration-maximums.pdf
+sub fetchController {
+    my ($self) = @_;
+    my $deviceLimit;
+    if ( $self->opts->{controllerType} eq 'SCSI' ) {
+        $deviceLimit = 15;
+    }
+    elsif ( $self->opts->{controllerType} eq 'SATA' ) {
+        $deviceLimit = 30;
+    }
+    elsif ( $self->opts->{controllerType} eq 'IDE' ) {
+        $deviceLimit = 2;
+    }
+    if ($self->fetchDevices()){
+        print "Can't fetch devices" . "\n";
+        return;
+    }
+    foreach my $device (@{$self->opts->{devices}}){
+        my %deviceMap = %{$device};
+        if (   ( not exists $deviceMap{device} )
+            or ( @{ $deviceMap{device} } < $deviceLimit ) )
+        {
+            print "Controller "
+              . $deviceMap{deviceInfo}{label}
+              . " is free" . "\n";
+            $self->opts->{controller} = $device;
+            return SUCCESS;
+        }
+        else {
+            print "Controller "
+              . $deviceMap{deviceInfo}{label}
+              . " is not free" . "\n";
+        }
+    }
+    return ERROR;
+}
+
+sub getNetworkInterfaceConfig {
+    my %args = @_;
+    my $backingInfo =
+      VirtualEthernetCardNetworkBackingInfo->new(
+        deviceName => $args{network} );
+    return VirtualPCNet32->new(
+        key     => -1,
+        backing => $backingInfo
+    );
+}
+
+#########################################
+#Arguments:
+#    controller: Controller Map
+#    backingType: Passthrough, AtApi, ISOImage
+#########################################
+sub getCdDvdDriveConfig {
+    my %args = @_;
+    my $backingInfo;
+    if ( $args{backingType} eq "passThrough" ) {
+        $backingInfo = VirtualCdromRemotePassthroughBackingInfo->new(
+            deviceName => $args{deviceName},
+            exclusive  => "FALSE"
+        );
+    }
+    elsif ( $args{backingType} eq "atApi" ) {
+        $backingInfo =
+          VirtualCdromRemoteAtapiBackingInfo->new(
+            deviceName => $args{deviceName} );
+    }
+    elsif ( $args{backingType} eq "isoImage" ) {
+        $backingInfo =
+          VirtualCdromIsoBackingInfo->new( fileName => $args{isoPath} );
+    }
+
+    return VirtualCdrom->new(
+        controllerKey => $args{controller}->key,
+        key           => -1,
+        deviceInfo =>
+          Description->new( label => $args{deviceName}, summary => '111' ),
+        backing => $backingInfo
+    );
+
+}
+
+sub deviceManager {
+    my %args       = @_;
+    eval{
+        my @deviceSpec = VirtualDeviceConfigSpec->new(
+            operation => $args{operation},
+            device    => $args{deviceConfig}
+        );
+        if ( !@deviceSpec ) {
+            print "Cannot get device specifications" . "\n";
+        }
+        else {
+            my $vmSpec =
+              VirtualMachineConfigSpec->new( deviceChange => \@deviceSpec );
+            $args{vmView}->ReconfigVM( spec => $vmSpec );
+        }
+    };
+}
+
+sub addNetworkInterface {
+    my ($self) = @_;
+    print "Going for adding Network Interface in network "
+      . $self->opts->{network}
+      . " to VM: "
+      . $self->opts->{vm_name}
+      . " present on host: "
+      . $self->opts->{host_name} . "\n";
+
+    #Set default values
+    $self->initialize();
+    $self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+
+    my $operation = VirtualDeviceConfigSpecOperation->new('add');
+    if ($operation) {
+        if($self->getVirtualMachineView()){
+            print "Can't find Virtual Machine view" . "\n";
+            return;
+        }
+        print
+          "Got vm view. Going for fetching network interface configurations"
+          . "\n";
+        my $networkInterfaceConfig =
+          getNetworkInterfaceConfig( network => $self->opts->{network} );
+        if ($networkInterfaceConfig) {
+            print
+"Got network interface configurations. Going for applying configurations to VM"
+              . "\n";
+            deviceManager(
+                deviceConfig => $networkInterfaceConfig,
+                operation    => $operation,
+                vmView       => $self->opts->{vm_view}
+            );
+            print "Successfully added network interface to VM: "
+              . $self->opts->{vm_name} . "\n";
+
+            $self->logout();
+            return;
+        }
+    }
+    print "Not able to add network interface to VM: "
+      . $self->opts->{vm_name} . "\n";
+    $self->opts->{exitcode} = ERROR;
+    $self->logout();
+    return;
+}
+
+sub addCdDvdROM {
+    my ($self) = @_;
+    print "Going for adding CD/DVD ROM: "
+      . " [Backing Type: "
+      . $self->opts->{backing_type}
+      . ", Controller Type: "
+      . $self->opts->{controller_type}
+      . "] to VM: "
+      . $self->opts->{vm_name}
+      . " present on host: "
+      . $self->opts->{host_name} . "\n";
+
+    #Set default values
+    $self->initialize();
+    $self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    if($self->opts->{backing_type} eq "isoImage"){
+        if(not $self->opts->{iso_image}){
+            print "ISO Image Path can't ber empty for IsoImage backing type" . "\n";
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+    }
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+    my $operation = VirtualDeviceConfigSpecOperation->new('add');
+    if ($operation) {
+        if($self->getVirtualMachineView()){
+            print "Can't find Virtual Machine view" . "\n";
+            return;
+        }
+        print "Got vm view. Going for fetching controller configurations"
+          . "\n";
+        $self->opts->{device_type} = 'CD\DVD drive';
+        if($self->fetchController()){
+            print "Can't find controller" . "\n";
+            return;
+        }
+        print
+"Got controller configurations. Going for fetching cd configurations"
+          . "\n";
+        my $cdConfig = getCdDvdDriveConfig(
+            controller  => $self->opts->{controller},
+            deviceName  => $self->opts->{vm_name},
+            backingType => $self->opts->{backing_type},
+            isoPath     => $self->opts->{iso_image}
+        );
+        if ($cdConfig) {
+            print
+"Got cdconfigurations. Going for applying configurations to VM"
+              . "\n";
+            deviceManager(
+                deviceConfig => $cdConfig,
+                operation    => $operation,
+                vmView       => $self->opts->{vm_view}
+            );
+            print "Successfully added CD/DVD ROM to VM: "
+              . $self->opts->{vm_name} . "\n";
+            $self->logout();
+            return;
+        }
+    }
+
+    print "Not able to add CD/DVD ROM to VM: "
+      . $self->opts->{vm_name} . "\n";
+    $self->opts->{exitcode} = ERROR;
+    $self->logout();
+    return;
+}
+
+sub removeDevice {
+    my ($self) = @_;
+    print "Going for removing device: "
+      . $self->opts->{device_name}
+      . " from VM: "
+      . $self->opts->{vm_name}
+      . " present on host: "
+      . $self->opts->{host_name} . "\n";
+
+    #Set default values
+    $self->initialize();
+    $self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    my $operationRemove = VirtualDeviceConfigSpecOperation->new('remove');
+    my $operationDestroy = VirtualDeviceConfigSpecOperation->new('destroy');
+
+    if ($operationRemove) {
+        if($self->getVirtualMachineView()){
+            print "Can't find Virtual Machine view" . "\n";
+            return;
+        }
+        print "Got vm view. Going for fetching device configurations"
+          . "\n";
+
+        if ($self->fetchDevices()){
+            print "Can't fetch devices" . "\n";
+            return;
+        }
+        foreach my $deviceConfig (@{$self->opts->{devices}}){
+            if ( ( not $self->opts->{device_name} )
+                or $deviceConfig->deviceInfo->label eq $self->opts->{device_name} )
+            {
+                deviceManager(
+                    deviceConfig => $deviceConfig,
+                    operation    => $operationRemove,
+                    vmView       => $self->opts->{vm_view}
+                );
+                #Remove device traces from ESX
+                deviceManager(
+                    deviceConfig => $deviceConfig,
+                    operation    => $operationDestroy,
+                    vmView       => $self->opts->{vm_view}
+                );
+                print "Successfully removed device: "
+                  . $self->opts->{device_name}
+                  . " from VM: "
+                  . $self->opts->{vm_name} . "\n";
+                $self->logout();
+                return;
+            }
+        }
+    }
+    print "Not able to remove device: "
+      . $self->opts->{device_name}
+      . " from VM: "
+      . $self->opts->{vm_name} . "\n";
+    $self->opts->{exitcode} = ERROR;
+    $self->logout();
+    return;
+}
 # -------------------------------------------------------------------------
 # Helper functions
 # -------------------------------------------------------------------------

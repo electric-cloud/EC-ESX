@@ -370,6 +370,54 @@
 	<xpath>//step[stepName=&quot;SetTimelimit&quot;]/command</xpath>
   </file>
   <file>
+	<path>ui_forms/addCdDvdDrive.xml</path>
+	<xpath>//procedure[procedureName=&quot;AddCdDvdDrive&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
+  </file>
+  <file>
+	<path>vm/addCdDvdDrive.pl</path>
+	<xpath>//step[stepName=&quot;addCdDvdDrive&quot;]/command</xpath>
+  </file>
+  <file>
+	<path>setTimelimit.pl</path>
+	<xpath>//step[stepName=&quot;SetTimelimit&quot;]/command</xpath>
+  </file>
+  <file>
+	<path>ui_forms/addNetworkInterface.xml</path>
+	<xpath>//procedure[procedureName=&quot;AddNetworkInterface&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
+  </file>
+  <file>
+	<path>vm/addNetworkInterface.pl</path>
+	<xpath>//step[stepName=&quot;addNetworkInterface&quot;]/command</xpath>
+  </file>
+  <file>
+	<path>setTimelimit.pl</path>
+	<xpath>//step[stepName=&quot;SetTimelimit&quot;]/command</xpath>
+  </file>
+  <file>
+	<path>ui_forms/listDevice.xml</path>
+	<xpath>//procedure[procedureName=&quot;ListDevice&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
+  </file>
+  <file>
+	<path>vm/listDevice.pl</path>
+	<xpath>//step[stepName=&quot;listDevice&quot;]/command</xpath>
+  </file>
+  <file>
+	<path>setTimelimit.pl</path>
+	<xpath>//step[stepName=&quot;SetTimelimit&quot;]/command</xpath>
+  </file>
+  <file>
+	<path>ui_forms/removeDevice.xml</path>
+	<xpath>//procedure[procedureName=&quot;RemoveDevice&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
+  </file>
+  <file>
+	<path>vm/removeDevice.pl</path>
+	<xpath>//step[stepName=&quot;removeDevice&quot;]/command</xpath>
+  </file>
+  <file>
+	<path>setTimelimit.pl</path>
+	<xpath>//step[stepName=&quot;SetTimelimit&quot;]/command</xpath>
+  </file>
+  <file>
     <path>preamble.pl</path>
     <xpath>//property[propertyName=&quot;preamble&quot;]/value</xpath>
   </file>
