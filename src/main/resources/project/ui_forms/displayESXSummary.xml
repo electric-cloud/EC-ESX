@@ -1,0 +1,68 @@
+<!--
+
+     Copyright 2015 Electric Cloud, Inc.
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+
+-->
+<editor>
+    <help>/commander/pages/@PLUGIN_NAME@/@PLUGIN_KEY@_help?s=Administration&amp;ss=Plugins#DisplayESXSummary</help>
+    <formElement>
+        <type>entry</type>
+        <label>ESX Connection:</label>
+        <property>connection_config</property>
+        <required>1</required>
+        <documentation>The name of the configuration which holds the connection information for ESX server.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>ESX Host Name: </label>
+        <property>host_name</property>
+        <required>1</required>
+        <documentation>The name of the ESX Host whose summary is to be displayed.</documentation>
+    </formElement>
+    <formElement>
+        <type>checkbox</type>
+        <label>Show Live CPU/Memory Usage:</label>
+        <property>live_usage</property>
+        <required>0</required>
+        <documentation>Displays the live usage of CPU and Memory.</documentation>
+        <checkedValue>1</checkedValue>
+        <uncheckedValue>0</uncheckedValue>
+    </formElement>
+    <formElement>
+        <type>checkbox</type>
+        <label>Display Network Details:</label>
+        <property>network_info</property>
+        <required>0</required>
+        <documentation>Displays the network details of the ESX host.</documentation>
+        <checkedValue>1</checkedValue>
+        <uncheckedValue>0</uncheckedValue>
+    </formElement>
+    <formElement>
+        <type>checkbox</type>
+        <label>Display Storage Details:</label>
+        <property>storage_info</property>
+        <required>0</required>
+        <documentation>Displays the storage details of the ESX host.</documentation>
+        <checkedValue>1</checkedValue>
+        <uncheckedValue>0</uncheckedValue>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>JobStep Timeout:</label>
+        <property>esx_timeout</property>
+        <required>0</required>
+        <documentation>Timeout for the step execution in minutes. Blank means no timeout.</documentation>
+    </formElement>
+</editor>

@@ -118,7 +118,70 @@ my %snapshot = (
 				description => "Create a snapshot for the specified virtual machine",
 				category    => "Resource Management"
 			   );
-			   
+
+my %listentity = (
+				label       => "ESX - ListEntity",
+				procedure   => "ListEntity",
+				description => "List the entity type (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem, ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.",
+				category    => "Resource Management"
+			   );
+
+my %createfolder = (
+				label       => "ESX - CreateFolder",
+				procedure   => "CreateFolder",
+				description => "Create a folder in datacenter or another folder.",
+				category    => "Resource Management"
+			   );
+
+my %deleteentity = (
+				label       => "ESX - DeleteEntity",
+				procedure   => "DeleteEntity",
+				description => "Delete the entity type (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.",
+				category    => "Resource Management"
+			   );
+
+my %renameentity = (
+				label       => "ESX - RenameEntity",
+				procedure   => "RenameEntity",
+				description => "Rename the entity type (ClusterComputeResource, Datacenter, Folder, ResourcePool or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.",
+				category    => "Resource Management"
+			   );
+my %moveentity = (
+                label       => "ESX - MoveEntity",
+                procedure   => "MoveEntity",
+                description => "Move a VM/Folder to another folder.",
+                category    => "Resource Management"
+               );
+my %displayesxsummary = (
+                label       => "ESX - DisplayESXSummary",
+                procedure   => "DisplayESXSummary",
+                description => "Displays the summary of the ESX Host.",
+                category    => "Resource Management"
+               );
+my %createresourcepool = (
+                label       => "ESX - CreateResourcepool",
+                procedure   => "CreateResourcepool",
+                description => "Create a resourcepool.",
+                category    => "Resource Management"
+               );  
+my %editresourcepool = (
+                label       => "ESX - EditResourcepool",
+                procedure   => "EditResourcepool",
+                description => "Edit a resourcepool.",
+                category    => "Resource Management"
+               );
+my %listsnapshot = (
+                label       => "ESX - ListSnapshot",
+                procedure   => "ListSnapshot",
+                description => "List Snapshots inside VM.",
+                category    => "Resource Management"
+               );
+my %removesnapshot = (
+                label       => "ESX - RemoveSnapshot",
+                procedure   => "RemoveSnapshot",
+                description => "Remove one or all  Snapshots inside VM.",
+                category    => "Resource Management"
+               ); 	 			   
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Suspend");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Clone");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Cleanup");
@@ -136,6 +199,16 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Shutdown");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Snapshot");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - CloudManagerShrink");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - CloudManagerGrow");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - ListEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - CreateFolder");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - DeleteEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - RenameEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - MoveEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - DisplayESXSummary");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - CreateResourcepool");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - EditResourcepool");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - ListSnapshot");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - RemoveSnapshot");
 
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend Virtual Machine");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend");
@@ -153,8 +226,18 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Power On Virtu
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Revert");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Shutdown Virtual Machine");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Snapshot");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - ListEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - CreateFolder");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - DeleteEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - RenameEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - MoveEntity");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - DisplayESXSummary");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - CreateResourcepool");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - EditResourcepool");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - ListSnapshot");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - RemoveSnapshot");
 
-@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot);
+@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listentity, \%createfolder, \%deleteentity, \%renameentity, \%moveentity, \%displayesxsummary,\%createresourcepool,\%editresourcepool,\%listsnapshot,\%removesnapshot);
 
 my $pluginName = "@PLUGIN_NAME@";
 my $pluginKey = "@PLUGIN_KEY@";
@@ -403,6 +486,82 @@ if ($upgradeAction eq "upgrade") {
                                         stepName      => 'sync'
                                      }
                                     );
+
+            $batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'ListEntity',
+                                        stepName      => 'ListEntity'
+                                     }
+                                    );
+
+            $batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'CreateFolder',
+                                        stepName      => 'CreateFolder'
+                                     }
+                                    );
+
+            $batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'RenameEntity',
+                                        stepName      => 'RenameEntity'
+                                     }
+                                    );
+            $batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'MoveEntity',
+                                        stepName      => 'MoveEntity'
+                                     }
+                                    );
+
+            $batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'DisplayESXSummary',
+                                        stepName      => 'DisplayESXSummary'
+                                     }
+                                    );
+			$batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'CreateResourcepool',
+                                        stepName      => 'CreateResourcepool'
+                                     }
+                                    );
+			$batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'EditResourcepool',
+                                        stepName      => 'EditResourcepool'
+                                     }
+                                    );                        
+			$batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'ListSnapshot',
+                                        stepName      => 'ListSnapshot'
+                                     }
+                                    );
+			$batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'RemoveSnapshot',
+                                        stepName      => 'RemoveSnapshot'
+                                     }
+                                    );						
         }
     }
 }

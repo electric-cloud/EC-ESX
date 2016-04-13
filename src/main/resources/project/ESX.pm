@@ -33,10 +33,11 @@ package ESX;
 # -------------------------------------------------------------------------
 use lib $ENV{COMMANDER_PLUGINS} . '/@PLUGIN_NAME@/agent/lib';
 
-use warnings;
+#use warnings;
 use strict;
 use ElectricCommander;
 use ElectricCommander::PropDB;
+use ElectricCommander::PropDB qw(/myProject/libs);
 
 # -------------------------------------------------------------------------
 # Constants
@@ -2113,7 +2114,890 @@ sub getAvailableVM {
     return @$vm_views[0]->name;
 
 }
+################################
+# list - Connect, call list_entity, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(Entity Type)
+#
+# Returns:
+#   none
+#
+################################
+sub list {
+    print "Listing Entity";
+    my ($self) = @_;
 
+    if ($::gRunTestUseFakeOutput) {
+
+        # Create and return fake output
+        my $out = "";
+        $out .= "Listing Entity '" . $self->opts->{entity_type} . "'...";
+        $out .= "\n";
+        $out .= "Successfully listed entity '" . $self->opts->{entity_type} . "'";
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    $self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->list_entity();
+
+    $self->logout();
+}
+
+################################
+# list_entity - List the entity of type $opts->{entity_name}
+#
+# Arguments:
+#   Hash(Entity Type)
+#
+# Returns:
+#   none
+#
+################################
+sub list_entity {
+    my ($self) = @_;
+    $self->debug_msg(1, 'Listing Entity \'' . $self->opts->{entity_type} . '\'...');
+    eval {
+        my $entity_views = Vim::find_entity_views(view_type => $self->opts->{entity_type});
+
+        if (!$entity_views) {
+            $self->debug_msg(0, 'Entity \'' . $self->opts->{entity_type} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+        #Print the output
+        foreach my $entity_view (@$entity_views) {
+            my $entity_name = $entity_view->name;
+            Util::trace(0, "$entity_name\n");
+        }
+
+        $self->debug_msg(0, 'Successfully Listed Entity \'' . $self->opts->{entity_type} . '\'');
+    };
+    if ($@) {
+        if (ref($@) eq SOAP_FAULT) {
+            $self->debug_msg(0, 'Error listing entity \'' . $self->opts->{entity_type} . '\': ');
+
+            if (!$self->print_error(ref($@->detail))) {
+                $self->debug_msg(0, "Entity '" . $self->opts->{entity_type} . "' can't be listed \n" . $@ . EMPTY);
+            }
+        }
+        else {
+            $self->debug_msg(0, "Entity '" . $self->opts->{entity_type} . "' can't be listed \n" . $@ . EMPTY);
+        }
+        $self->opts->{exitcode} = ERROR;
+        return;
+    }
+}
+
+################################
+# createFolder - Connect, call create_folder, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(connection_config, folder_name, parent_type) 
+#
+# Returns:
+#   none
+#
+################################
+sub createFolder {
+    print "Creating Folder";
+    my ($self) = @_;
+
+    if ($::gRunTestUseFakeOutput) {
+
+        # Create and return fake output
+        my $out = "";
+        $out .= "Creating Folder '" . $self->opts->{folder_name} . "'...";
+        $out .= "\n";
+        $out .= "Successfully created folder '" . $self->opts->{folder_name} . "'";
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    $self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->create_folder();
+
+    $self->logout();
+}
+
+################################
+# create_folder - Create a folder inside parent of type $opts->{parent_type} and name $opts->{parent_name}
+#
+# Arguments:
+#   Hash(connection_config, folder_name, parent_type)
+#
+# Returns:
+#   none
+#
+################################
+sub create_folder {
+    my ($self) = @_;
+    $self->debug_msg(1, 'Creating Folder \'' . $self->opts->{folder_name} . '\'...');
+    eval {
+        my $parent_view = Vim::find_entity_view(view_type => $self->opts->{parent_type}, filter => { name => $self->opts->{parent_name}});
+        if (!$parent_view) {
+            $self->debug_msg(0, 'Parent Entity \'' . $self->opts->{parent_name} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+        if ( $self->opts->{parent_type} eq 'Datacenter') {
+            #Overwriting Parent View for getting folder view
+            $parent_view = Vim::find_entity_view(view_type => 'Folder', begin_entity => $parent_view);
+            if (!$parent_view) {
+                $self->debug_msg(0, 'Folder View out of Parent Entity \'' . $self->opts->{parent_name} . '\' not found');
+                $self->opts->{exitcode} = ERROR;
+                return;
+            }
+        }
+        $parent_view->CreateFolder(name => $self->opts->{folder_name});
+
+        $self->debug_msg(0, 'Successfully Created Folder \'' . $self->opts->{folder_name} . '\'');
+    };
+    if ($@) {
+        if (ref($@) eq SOAP_FAULT) {
+            $self->debug_msg(0, 'Error creating folder \'' . $self->opts->{folder_name} . '\': ');
+
+            if (!$self->print_error(ref($@->detail))) {
+                $self->debug_msg(0, "Folder '" . $self->opts->{folder_name} . "' can't be created \n" . $@ . EMPTY);
+            }
+        }
+        else {
+            $self->debug_msg(0, "Folder '" . $self->opts->{folder_name} . "' can't be created \n" . $@ . EMPTY);
+        }
+        $self->opts->{exitcode} = ERROR;
+        return;
+    }
+}
+
+################################
+# delete - Connect, call delete_entity, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(Entity Type, Entity Name)
+#
+# Returns:
+#   none
+#
+################################
+sub delete {
+    print "Deleting Entity";
+    my ($self) = @_;
+
+    if ($::gRunTestUseFakeOutput) {
+
+        # Create and return fake output
+        my $out = "";
+        $out .= "Deleting Entity '" . $self->opts->{entity_name} . "'...";
+        $out .= "\n";
+        $out .= "Successfully deleted entity '" . $self->opts->{entity_name} . "'";
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    $self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->delete_entity();
+
+    $self->logout();
+}
+
+################################
+# delete_entity - Delete the entity  $opts->{entity_name}
+#
+# Arguments:
+#   Hash(Entity Type, Entity Name)
+#
+# Returns:
+#   none
+#
+################################
+sub delete_entity {
+    my ($self) = @_;
+    $self->debug_msg(1, 'Deleting Entity \'' . $self->opts->{entity_name} . '\'...');
+    eval {
+        my $entity_view = Vim::find_entity_view(view_type => $self->opts->{entity_type}, filter => { 'name' => $self->opts->{entity_name} } );
+
+        if (!$entity_view) {
+            $self->debug_msg(0, 'Entity \'' . $self->opts->{entity_name} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+        $entity_view->Destroy;
+        $self->debug_msg(0, 'Successfully Deleted Entity \'' . $self->opts->{entity_name} . '\'');
+    };
+    if ($@) {
+        if (ref($@) eq SOAP_FAULT) {
+            $self->debug_msg(0, 'Error deleting entity \'' . $self->opts->{entity_name} . '\': ');
+
+            if (!$self->print_error(ref($@->detail))) {
+                $self->debug_msg(0, "Entity '" . $self->opts->{entity_name} . "' can't be deleted \n" . $@ . EMPTY);
+            }
+        }
+        else {
+            $self->debug_msg(0, "Entity '" . $self->opts->{entity_name} . "' can't be deleted \n" . $@ . EMPTY);
+        }
+        $self->opts->{exitcode} = ERROR;
+        return;
+    }
+}
+
+################################
+# rename - Connect, call rename_entity, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(Entity Type, Entity Old Name, Entity New Name)
+#
+# Returns:
+#   none
+#
+################################
+sub rename {
+    print "Renaming Entity";
+    my ($self) = @_;
+
+    if ($::gRunTestUseFakeOutput) {
+
+        # Create and return fake output
+        my $out = "";
+        $out .= "Renaming Entity '" . $self->opts->{entity_old_name} . "' to '" . $self->opts->{entity_new_name} . "'...";
+        $out .= "\n";
+        $out .= "Successfully renamed entity '" . $self->opts->{entity_old_name} . "'";
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    $self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->rename_entity();
+
+    $self->logout();
+}
+
+################################
+# rename_entity - Rename the entity $opts->{entity_old_name}
+#
+# Arguments:
+#   Hash(Entity Type, Entity Old Name, Entity New Name)
+#
+# Returns:
+#   none
+#
+################################
+sub rename_entity {
+    my ($self) = @_;
+    $self->debug_msg(1, 'Renaming Entity \'' . $self->opts->{entity_old_name} . '\' to \'' . $self->opts->{entity_new_name} . '\'...');
+    eval {
+        my $entity_old_view = Vim::find_entity_view(view_type => $self->opts->{entity_type}, filter => { 'name' => $self->opts->{entity_old_name} } );
+
+        if (!$entity_old_view) {
+            $self->debug_msg(0, 'Entity \'' . $self->opts->{entity_old_name} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+        $entity_old_view->Rename(newName => $self->opts->{entity_new_name});
+        $self->debug_msg(0, 'Successfully renamed Entity \'' . $self->opts->{entity_old_name} . '\'');
+    };
+    if ($@) {
+        if (ref($@) eq SOAP_FAULT) {
+            $self->debug_msg(0, 'Error renaming entity \'' . $self->opts->{entity_old_name} . '\': ');
+
+            if (!$self->print_error(ref($@->detail))) {
+                $self->debug_msg(0, "Entity '" . $self->opts->{entity_old_name} . "' can't be renamed \n" . $@ . EMPTY);
+            }
+        }
+        else {
+            $self->debug_msg(0, "Entity '" . $self->opts->{entity_old_name} . "' can't be renamed \n" . $@ . EMPTY);
+        }
+        $self->opts->{exitcode} = ERROR;
+        return;
+    }
+}
+##BEGIN##
+################################
+# moveEntity - Connect, call moveEntity, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(connection_config, destination_name, entity_type)
+#
+# Returns:
+#   none
+#
+################################
+sub moveEntity {
+    print "Moving VM/Folder to destination Folder" . "\n";
+    my ($self) = @_;
+
+    if ($::gRunTestUseFakeOutput) {
+
+        # Create and return fake output
+        my $out = "";
+        $out .= "Moving Entity '" . $self->opts->{entity_name} . "'...";
+        $out .= "\n";
+        $out .= 'Successfully Moved \'' . $self->opts->{entity_name} . '\' to \'' . $self->opts->{destination_name} . '\'';
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    #$self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->move_entity();
+
+    $self->logout();
+}
+
+################################
+# moveEntity - Move an Entity  of type $opts->{Entity_type} and name $opts->{entity_name}
+#
+# Arguments:
+#   Hash(connection_config, destination_name, entity_type)
+#
+# Returns:
+#   none
+#
+################################
+sub move_entity {
+    my ($self) = @_;
+    eval {
+        my $source_view = Vim::find_entity_view(view_type => $self->opts->{entity_type}, filter => { 'name' => $self->opts->{entity_name} } );
+        if (!$source_view) {
+            $self->debug_msg(0, 'source_view\'' . $self->opts->{entity_name} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+        my $destination_view = Vim::find_entity_view(view_type => 'Folder',filter => { 'name' => $self->opts->{destination_name}});
+        if (!$destination_view) {
+            $self->debug_msg(0, 'destination_view\'' . $self->opts->{destination_name} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+        $destination_view->MoveIntoFolder_Task(list => $source_view);
+        $self->debug_msg(0, 'Successfully Moved \'' . $self->opts->{entity_name} . '\' to \'' . $self->opts->{destination_name} . '\'');
+        if ($@) {
+            if (ref($@) eq SOAP_FAULT) {
+                 $self->debug_msg(0, 'Error moving folder \'' . $self->opts->{entity_name} . '\': ');
+
+                 if (!$self->print_error(ref($@->detail))) {
+                     $self->debug_msg(0, "Folder '" . $self->opts->{entity_name} . "' can't be moved \n" . $@ . EMPTY);
+                 }
+            }
+            else {
+                 $self->debug_msg(0, "Folder '" . $self->opts->{entity_name} . "' can't be moved \n" . $@ . EMPTY);
+            }
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+    }
+}
+################################
+# summary - Connect, call display_esx_summary, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(Host Name)
+#
+# Returns:
+#   none
+#
+################################
+sub summary {
+    my ($self) = @_;
+
+    if ($::gRunTestUseFakeOutput) {
+
+        # Create and return fake output
+        my $out = "";
+        $out .= "Displaying summary for Host: '" . $self->opts->{host_name} . "'...";
+        $out .= "\n";
+        $out .= "Successfully displayed summary for Host: '" . $self->opts->{host_name} . "'";
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    $self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->display_esx_summary();
+
+    $self->logout();
+}
+
+################################
+# display_esx_summary - Display the service of host: $opts->{host_name}
+#
+# Arguments:
+#   Hash(Host Name, Show Live Usage, Show Network Info, Show Storage Info)
+#
+# Returns:
+#   none
+#
+################################
+sub display_esx_summary {
+    my ($self) = @_;
+    $self->debug_msg(1, 'Displaying summary for Host: \'' . $self->opts->{host_name} . '\'...');
+    eval {
+        my $host = Vim::find_entity_view(view_type => 'HostSystem', filter => { name => $self->opts->{host_name}});
+        if (!$host) {
+            $self->debug_msg(0, 'Host: \'' . $self->opts->{host_name} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+        $self->{'host'} = $host;
+        display_esx_general_info($self);
+        if ( $self->opts->{live_usage} == '1' ) {
+            display_esx_resource_info($self);
+        }
+        if ( $self->opts->{network_info} == '1' ) {
+            display_esx_network_info($self);
+        }
+        if ( $self->opts->{storage_info} == '1' ) {
+            display_esx_storage_info($self);
+        }
+        $self->debug_msg(0, 'Successfully displayed summary for Host: \'' . $self->opts->{host_name} . '\'');
+    };
+    if ($@) {
+        if (ref($@) eq SOAP_FAULT) {
+            $self->debug_msg(0, 'Error displaying summary for \'' . $self->opts->{host_name} . '\': ');
+
+            if (!$self->print_error(ref($@->detail))) {
+                $self->debug_msg(0, "Summary for '" . $self->opts->{host_name} . "' can't be displayed \n" . $@ . EMPTY);
+            }
+        }
+        else {
+            $self->debug_msg(0, "Summary for '" . $self->opts->{host_name} . "' can't be displayed \n" . $@ . EMPTY);
+        }
+        $self->opts->{exitcode} = ERROR;
+        return;
+    }
+}
+##BEGIN##
+################################
+# createResourcepool - Connect, call createResourcepool, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(connection_config,resourcepool_name,parent_resourcepool_name,cpu_shares,mem_shares)
+#
+# Returns:
+#   none
+#
+################################
+sub createResourcepool {
+    print "Creating Resoucepool" . "\n";
+    my ($self) = @_;
+	if ($::gRunTestUseFakeOutput) {
+
+        # Create and return fake output
+        my $out = "";
+        $out .= "Creating Resoucepool'" . $self->opts->{resourcepool_name} . "'...";
+        $out .= "\n";
+		#$out .= 'Successfully created \'' . $self->opts->{resourcepool_name} . '\' in \'' . $self->opts->{parent_resourcepool_name} . '\'';
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    #$self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->create_resoucepool();
+
+    $self->logout();
+}
+
+################################
+# createResourcepool - Creating a resoucepool of name $opts->{resourcepool_name}
+#
+# Arguments:
+#   Hash(connection_config,resourcepool_name,parent_resourcepool_name,cpu_shares,mem_shares)
+#
+# Returns:
+#   none
+#
+################################
+sub create_resoucepool {
+    my ($self) = @_;
+    eval {
+		my $parent_pool_view = Vim::find_entity_view(view_type => 'ResourcePool',filter => { 'name' => $self->opts->{parent_resourcepool_name} } );
+		if (!$parent_pool_view) {
+        $self->debug_msg(0, 'parent_pool_view\'' . $self->opts->{parent_resourcepool_name} . '\' not found');
+        $self->opts->{exitcode} = ERROR;
+        return;
+        }
+		my $sharesLevel = SharesLevel->new($self->opts->{cpu_shares});
+		my $memLevel    = SharesLevel->new($self->opts->{mem_shares});
+		my $cpuShares   = SharesInfo->new(shares => 0, level => $sharesLevel);
+        my $memShares   = SharesInfo->new(shares => 0, level => $memLevel);
+        my $cpuAllocation = ResourceAllocationInfo->new(expandableReservation => 'true', limit => -1, reservation => 0, shares => 		   $cpuShares);
+        my $memoryAllocation = ResourceAllocationInfo->new(expandableReservation => 'true', limit => -1, reservation => 0, shares => $memShares);
+		my $rp_spec = ResourceConfigSpec->new(cpuAllocation => $cpuAllocation, memoryAllocation => $memoryAllocation);
+		my $newRP = $parent_pool_view->CreateResourcePool(name => $self->opts->{resourcepool_name}, spec => $rp_spec);
+		$self->debug_msg(0, 'Successfully Created \'' . $self->opts->{resourcepool_name} . '\' in \'' . $self->opts->{parent_resourcepool_name} . '\'');
+        if ($@) {
+            if (ref($@) eq SOAP_FAULT) {
+                 $self->debug_msg(0, 'Error Creating resoucepool \'' . $self->opts->{resourcepool_name} . '\': ');
+
+                 if (!$self->print_error(ref($@->detail))) {
+                     $self->debug_msg(0, "Resoucepool '" . $self->opts->{resourcepool_name} . "' can't be Created \n" . $@ . EMPTY);
+                 }
+            }
+            else {
+                 $self->debug_msg(0, "Resoucepool '" . $self->opts->{resourcepool_name} . "' can't be Created \n" . $@ . EMPTY);
+            }
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+    }
+}
+##BEGIN##
+################################
+# editResourcepool - Connect, call editResourcepool, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(connection_config,edit_resourcepool_name,edit_parent_resourcepool_name,edit_cpu_shares,edit_mem_shares)
+#
+# Returns:
+#   none
+#
+################################
+sub editResourcepool {
+    print "Editing Resoucepool" . "\n";
+    my ($self) = @_;
+	if ($::gRunTestUseFakeOutput) {
+        # Create and return fake output
+        my $out = "";
+        $out .= "Editing Resoucepool'" . $self->opts->{edit_resourcepool_name} . "'...";
+        $out .= "\n";
+		$out .= 'Successfully Edited \'' . $self->opts->{edit_resourcepool_name} . '\' in \'' . $self->opts->{edit_parent_resourcepool_name} . '\'';
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    #$self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->edit_resoucepool();
+
+    $self->logout();
+}
+
+################################
+# editResourcepool - Editing a resoucepool of name $opts->{edit_resourcepool_name} to $opts->{modified_resourcepool_name}
+#
+# Arguments:
+#   Hash(connection_config,edit_resourcepool_name,edit_parent_resourcepool_name,edit_cpu_shares,edit_mem_shares)
+#
+# Returns:
+#   none
+#
+################################
+sub edit_resoucepool {
+    my ($self) = @_;
+    eval {
+		my $parent_pool_view = Vim::find_entity_view(view_type => 'ResourcePool',filter => { 'name' => $self->opts->{edit_parent_resourcepool_name} } );
+		if (!$parent_pool_view) {
+        $self->debug_msg(0, 'parent_pool_view\'' . $self->opts->{edit_parent_resourcepool_name} . '\' not found');
+        $self->opts->{exitcode} = ERROR;
+        return;
+        }
+		my $sharesLevel = SharesLevel->new($self->opts->{edit_cpu_shares});
+		my $memLevel    = SharesLevel->new($self->opts->{edit_mem_shares});
+		my $cpuShares   = SharesInfo->new(shares => 0, level => $sharesLevel);
+        my $memShares   = SharesInfo->new(shares => 0, level => $memLevel);
+        my $cpuAllocation = ResourceAllocationInfo->new(expandableReservation => 'true', limit => -1, reservation => 0, shares => $cpuShares);
+        my $memoryAllocation = ResourceAllocationInfo->new(expandableReservation => 'true', limit => -1, reservation => 0, shares => $memShares);
+		my $rp_spec = ResourceConfigSpec->new(cpuAllocation => $cpuAllocation, memoryAllocation => $memoryAllocation);
+		my $newRP = $parent_pool_view->UpdateConfig(name => $self->opts->{edit_resourcepool_name}, config => $rp_spec);
+		$self->debug_msg(0, 'Successfully Edited \'' . $self->opts->{edit_parent_resourcepool_name} . '\' to \'' . $self->opts->{edit_resourcepool_name} . '\'');
+        if ($@) {
+            if (ref($@) eq SOAP_FAULT) {
+                 $self->debug_msg(0, 'Error While Editing resoucepool \'' . $self->opts->{edit_resourcepool_name} . '\': ');
+
+                 if (!$self->print_error(ref($@->detail))) {
+                     $self->debug_msg(0, "Resoucepool '" . $self->opts->{edit_resourcepool_name} . "' can't be Edited \n" . $@ . EMPTY);
+                 }
+            }
+            else {
+                 $self->debug_msg(0, "Resoucepool '" . $self->opts->{edit_resourcepool_name} . "' can't be Edited \n" . $@ . EMPTY);
+            }
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+    }
+}
+##BEGIN##
+################################
+# listSnapshot - Connect, call listSnapshot, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(connection_config,esx_vmname)
+#
+# Returns:
+#   none
+#
+sub listSnapshot {
+    print "Listing Snapshots" . "\n";
+    my ($self) = @_;
+	if ($::gRunTestUseFakeOutput) {
+
+        # Create and return fake output
+        my $out = "";
+        #$out .= "Listing Snapshots for VIRTUAL_MACHINE'" . $self->opts->{esx_vmname} . "'...";
+        $out .= "\n";
+		#$out .= 'Successfully Listed Snapshot for VM\'' . $self->opts->{esx_vmname} . '\' in \'' . $self->opts->{esx_vmname} . '\'';
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    #$self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->list_snapshot();
+
+    $self->logout();
+}
+################################
+# listSnapshot - Listing snapshots of Vm of  name $opts->{esx_vmname} 
+#
+# Arguments:
+#   Hash(connection_config,esx_vmname)
+#
+# Returns:
+#   none
+#
+################################
+sub list_snapshot {
+    my ($self) = @_;
+    $self->debug_msg(0, 'Listing Snapshots of VM \'' . $self->opts->{esx_vmname} . '\'...');
+	my $view = Vim::find_entity_view(view_type => 'VirtualMachine',filter => { 'name' => $self->opts->{esx_vmname} } );
+        if (!$view) {
+			$self->debug_msg(0, 'Virtual Machine\'' . $self->opts->{esx_vmname} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }  
+    eval {
+		my $vm_views = Vim::find_entity_views(view_type => 'VirtualMachine',filter => { 'name' => $self->opts->{esx_vmname} } );
+        if (!$vm_views) {
+			$self->debug_msg(0, 'Virtual Machine\'' . $self->opts->{esx_vmname} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+		foreach (@$vm_views) {
+        my $count = 0;
+        my $snapshots = $_->snapshot;
+        if(defined $snapshots) {
+	    Util::trace(0,"\nSnapshots for Virtual Machine ".$self->opts->{esx_vmname}. "\n");
+		print_tree ($_->snapshot->currentSnapshot, " " , $_->snapshot->rootSnapshotList);
+		$self->debug_msg(0, 'Successfully Listed Snapshots for VM \'' . $self->opts->{esx_vmname} . '\'');
+	   }
+       else
+	   {
+	   $self->debug_msg(0, 'NO Snapshots available for VM \'' . $self->opts->{esx_vmname} . '\'');
+	   }
+    }
+    if ($@) {
+        if (ref($@) eq SOAP_FAULT) {
+            $self->debug_msg(0, 'Error listing Snapshots of VM \'' . $self->opts->{esx_vmname} . '\': ');
+
+            if (!$self->print_error(ref($@->detail))) {
+                $self->debug_msg(0, "VM '" . $self->opts->{esx_vmname} . "' can't be listed \n" . $@ . EMPTY);
+            }
+        }
+        else {
+            $self->debug_msg(0, "VM '" . $self->opts->{esx_vmname} . "' can't be listed \n" . $@ . EMPTY);
+        }
+        $self->opts->{exitcode} = ERROR;
+        return;
+    }
+	}
+}
+sub print_tree
+	{
+		my ($ref, $str, $tree) = @_;
+		my $head = " ";
+		foreach my $node (@$tree) 
+		{
+		$head = ($ref->value eq $node->snapshot->value) ? " " : " " if (defined $ref);
+		my $quiesced = ($node->quiesced) ? "Y" : "N";
+		printf "%s%-48.48s%16.16s %s %s\n", $head, $str.$node->name ;
+		print_tree ($ref, $str . " ", $node->childSnapshotList);
+		}
+		return;
+	}
+################################
+# Remove - Connect, call remove_snapshot, and disconnect from ESX server
+#
+# Arguments:
+#   Hash(connection_config,esx_vmname,esx_snapshotname)
+#
+# Returns:
+#   none
+#
+################################
+sub removeSnapshot {
+    print "Removing Snapshots";
+    my ($self) = @_;
+
+    if ($::gRunTestUseFakeOutput) {
+
+        # Create and return fake output
+        my $out = "";
+        $out .= "Removing  Snapshots '" . $self->opts->{esx_snapshotname} . "'...";
+        $out .= "\n";
+        $out .= "Successfully Removed Snapshots '" . $self->opts->{esx_snapshotname} . "'";
+        return $out;
+    }
+
+    #Set default values
+    $self->initialize();
+    $self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    $self->remove_snapshot();
+
+    $self->logout();
+}
+
+################################
+# remove_snapshot - Remove the Snapshot  $opts->{esx_snapshotname}
+#
+# Arguments:
+#   Hash(connection_config,esx_vmname,esx_snapshotname)
+#
+# Returns:
+#   none
+#
+################################
+sub remove_snapshot {
+    my ($self) = @_;
+	my $view = Vim::find_entity_view(view_type => 'VirtualMachine',filter => { 'name' => $self->opts->{esx_vmname} } );
+        if (!$view) {
+			$self->debug_msg(0, 'Virtual Machine\'' . $self->opts->{esx_vmname} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }  
+	if(($self->opts->{all}) eq "1")
+	{
+ 	 $self->debug_msg(1, 'Removing Snapshots \'' . $self->opts->{esx_snapshotname} . '\'...');
+	 my $vm_views = Vim::find_entity_views(view_type => 'VirtualMachine',filter => { 'name' => $self->opts->{esx_vmname} } );
+	 foreach (@$vm_views) 
+	  {
+     my $snapshots = $_->snapshot;
+     if(defined $snapshots)
+	  {
+		eval 
+		{
+        $_->RemoveAllSnapshots();
+        Util::trace(0, "\n\nOperation :: Remove All Snapshot For Virtual Machine ". $self->opts->{esx_vmname}. " completed sucessfully\n");
+		};
+        
+      }
+	  else {
+            $self->debug_msg(0, 'NO Snapshots available for VM \'' . $self->opts->{esx_vmname} . '\'');
+        }
+      
+	 }
+	  if ($@) {
+        if (ref($@) eq SOAP_FAULT) {
+            $self->debug_msg(0, 'Error Removing all Snapshots of VM \'' . $self->opts->{esx_vmname} . '\': ');
+
+            if (!$self->print_error(ref($@->detail))) {
+                $self->debug_msg(0, "Snapshots belongs from VM '" . $self->opts->{esx_vmname} . "' can't be removed \n" . $@ . EMPTY);
+            }
+        }
+        else {
+            $self->debug_msg(0, "Snapshots belongs from VM '" . $self->opts->{esx_vmname} . "' can't be removed \n" . $@ . EMPTY);
+        }
+        $self->opts->{exitcode} = ERROR;
+        return;
+    }
+	}
+	else
+	{
+    my $vm_views = Vim::find_entity_views(view_type => VIRTUAL_MACHINE,
+                                        filter    => { 'name' => $self->opts->{esx_vmname} });
+
+    if (!$vm_views) {
+        $self->debug_msg(0, 'Virtual machine \'' . $self->opts->{esx_vmname} . '\' not found');
+        $self->opts->{exitcode} = ERROR;
+        return;
+    }
+	foreach (@$vm_views) {
+      my $ref = undef;
+      my $nRefs = 0;
+      
+      if(defined $_->snapshot) {
+         ($ref, $nRefs) =
+            find_snapshot($_->snapshot->rootSnapshotList, $self->opts->{esx_snapshotname});
+      }
+      
+      if (defined $ref && $nRefs == 1) {
+         my $snapshot = Vim::get_view (mo_ref =>$ref->snapshot);
+         eval {
+            $snapshot->RemoveSnapshot(removeChildren => 0);
+             Util::trace(0, "\nOperation :: Remove Snapshot ". $self->opts->{esx_snapshotname} . " For Virtual Machine ".$self->opts->{esx_vmname}." completed sucessfully\n");
+         };
+      }
+   }
+    if ($@) {
+        if (ref($@) eq SOAP_FAULT) {
+            $self->debug_msg(0, 'Error Removing Snapshot from VM \'' . $self->opts->{esx_vmname} . '\': ');
+
+            if (!$self->print_error(ref($@->detail))) {
+                $self->debug_msg(0, "Snapshot from VM '" . $self->opts->{esx_vmname} . "' can't be removed \n" . $@ . EMPTY);
+            }
+        }
+        else {
+            $self->debug_msg(0, "Snapshot from VM '" . $self->opts->{esx_vmname} . "' can't be removed \n" . $@ . EMPTY);
+        }
+        $self->opts->{exitcode} = ERROR;
+        return;
+    }
+	}
+ }
 # -------------------------------------------------------------------------
 # Helper functions
 # -------------------------------------------------------------------------
@@ -2376,7 +3260,21 @@ sub find_snapshot_name {
     }
     return ($ref, $count);
 }
-
+sub find_snapshot {
+   my ($tree, $name) = @_;
+   my $ref = undef;
+   my $count = 0;
+   foreach my $node (@$tree) {
+      if ($node->name eq $name) {
+         $ref = $node;
+         $count++;
+      }
+      my ($subRef, $subCount) = find_snapshot($node->childSnapshotList, $name);
+      $count = $count + $subCount;
+      $ref = $subRef if ($subCount);
+   }
+   return ($ref, $count);
+}  
 ###############################
 # pingResource - Use commander to ping a resource
 #
@@ -2452,3 +3350,159 @@ sub debug_msg {
     if ($self->opts->{Debug} >= $errlev) { print "$msg\n"; }
 }
 
+use constant STORAGE_MULTIPLIER => 1073741824;  # 1024*1024*1024 (to convert to GB)
+
+###############################
+# display_esx_general_info 
+#
+# Arguments: host_view
+#
+# Returns:
+#   none
+#
+################################
+sub display_esx_general_info {
+    my ($self) = @_;
+    my $host = $self->{'host'};
+    print "-----------------------------------------GENERAL INFORMATION----------------------------------------\n";
+    print "Host Name               : " . $host->summary->config->name . "\n";
+    print "Host Vendor             : " . $host->summary->hardware->vendor . "\n";
+    print "Boot Time               : " . $host->runtime->bootTime . "\n";
+    print "CPU Speed               : " . $host->summary->hardware->cpuMhz . " MHz\n";
+    print "CPU-Model               : " . $host->summary->hardware->cpuModel . "\n";
+    print "Model                   : " . $host->summary->hardware->model . "\n";
+    my $totalMemory = $host->summary->hardware->memorySize/STORAGE_MULTIPLIER;
+    print "Total Memory            : " . $totalMemory . " GB\n";
+    print "Number of CPU Cores     : " . $host->summary->hardware->numCpuCores . "\n";
+    print "Number of CPU Pkgs      : " . $host->summary->hardware->numCpuPkgs . "\n";
+    print "Number of CPU Threads   : " . $host->summary->hardware->numCpuThreads . "\n";
+    print "HyperThreading Available: " . ($host->config->hyperThread->available ? "YES" : "NO") . "\n";
+    print "HyperThreading Active   : " . ($host->config->hyperThread->active ? "YES" : "NO") . "\n";
+    if (defined ($host->summary->config->product)) {
+        print "Product Name            : " . ${$host->summary->config->product}{'name'} . "\n";
+        print "Software On Host        : " . ${$host->summary->config->product}{'fullName'} . "\n";
+        print "Product Vendor          : " . ${$host->summary->config->product}{'vendor'} . "\n";
+        print "Product Version         : " . ${$host->summary->config->product}{'version'} . "\n";
+    }
+
+    print "vMotion Enabled         : " . ($host->summary->config->vmotionEnabled ? "YES" : "NO") . "\n";
+    print "Number of NICs          : " . $host->summary->hardware->numNics . "\n";
+    print "Number of HBAs          : " . $host->summary->hardware->numHBAs . "\n";
+    print "UUID                    : " . $host->summary->hardware->uuid . "\n";
+    print "-----------------------------------------------------------------------------------------------------\n\n";
+}
+
+###############################
+# display_esx_resource_info 
+#
+# Arguments: host_view
+#
+# Returns:
+#   none
+#
+################################
+sub display_esx_resource_info {
+    my ($self) = @_;
+    my $host = $self->{'host'};
+    print "-----------------------------------------RESOURCE INFORMATION----------------------------------------\n";
+    print "Overall CPU Usage       : " . $host->summary->quickStats->overallCpuUsage . " MHz\n";
+    print "Overall Memory Usage    : " . $host->summary->quickStats->overallMemoryUsage . "\n";
+    print "-----------------------------------------------------------------------------------------------------\n\n";
+}
+
+###############################
+# display_esx_network_info 
+#
+# Arguments: host_view
+#
+# Returns:
+#   none
+#
+################################
+sub display_esx_network_info {
+    my ($self) = @_;
+    my $host = $self->{'host'};
+    print "-----------------------------------------NETWORK INFORMATION-----------------------------------------\n";
+    ## GATEWAY ##
+    my $network_system;
+    eval { $network_system = Vim::get_view(mo_ref => $host->configManager->networkSystem); };
+    if ($network_system->ipRouteConfig->defaultGateway) {
+        print "    IP Default Gateway : " . $network_system->ipRouteConfig->defaultGateway . "\n";
+    }
+
+    ## DNS ##
+    my $dns_add = $host->config->network->dnsConfig->address;
+
+    print "    DNS Address : \n";
+    foreach(@$dns_add) {
+        print "        " . $_ . "\n";
+    }
+
+    print "    NIC Details : \n";
+    my $nics = $host->config->network->pnic;
+    foreach my $nic (@$nics) {
+        print "        NIC Device :" . $nic->device . "\n";
+        print "            NIC PCI                       :" . $nic->pci . "\n";
+        print "            NIC Driver                    :" . $nic->driver . "\n";
+        if ($nic->linkSpeed) {
+            print "            NIC Mode of Channel Operation :" . ($nic->linkSpeed->duplex ?  "FULL-DUPLEX" : "HALF-DUPLEX"). "\n";
+            print "            NIC Link Speed Mb             :" . $nic->linkSpeed->speedMb . "\n";
+        }
+        print "            NIC Wake On Lan Supported     :" . $nic->wakeOnLanSupported . "\n";
+    }
+    print "-----------------------------------------------------------------------------------------------------\n\n";
+}
+
+###############################
+# display_esx_storage_info 
+#
+# Arguments: host_view
+#
+# Returns:
+#   none
+#
+################################
+sub display_esx_storage_info {
+    my ($self) = @_;
+    my $host = $self->{'host'};
+    print "-----------------------------------------STORAGE INFORMATION-----------------------------------------\n";
+    print "------------------------DATASTORE------------------------\n";
+    my $ds_views = Vim::get_views (mo_ref_array => $host->datastore);
+    foreach my $ds (@$ds_views) {
+        my $ds_row = "";
+        if($ds->summary->accessible) {
+            #capture unique datastores seen in cluster
+            print "Datastore Name             : " . $ds->info->name . "\n";
+            print "    Datastore Accessible       : " . ($ds->summary->accessible ? "YES" : "NO") . "\n";
+            print "    Datastore URL              : " . $ds->info->url . "\n";
+            print "    Datastore Type             : " . $ds->summary->type . "\n";
+            if ( ($ds->summary->freeSpace gt 0) || ($ds->summary->capacity gt 0) ) {
+                my $capacity = $ds->summary->capacity/STORAGE_MULTIPLIER;
+                my $free_space = $ds->summary->freeSpace/STORAGE_MULTIPLIER;
+                my $used_space = $capacity - $free_space;
+                my $percent_used_space = ($used_space/$capacity)*100;
+                print "    Datastore Capacity         : " . $capacity . " MB \n";
+                print "    Datastore FreeSpace        : " . $free_space . " MB \n";
+                print "    Datastore UsedSpace        : " . $used_space . " MB \n";
+                print "    Datastore PercentUsedSpace : " . $percent_used_space . " %\n";
+            }
+        }
+    }
+
+    print "------------------------LUN------------------------\n";
+    my $luns = $host->config->storageDevice->scsiLun;
+    foreach my $lun (@$luns) {
+                my $lun_row = "";
+                if($lun->isa('HostScsiDisk')) {
+                    print "LUN UID               : " . $lun->uuid . "\n";
+                    print "LUN Canonical Name    : " . $lun->canonicalName . "\n";
+                    print "LUN Queue Depth       : " . $lun->queueDepth . "\n";
+                    my $states = $lun->operationalState;
+                    print "LUN Operational State : ";
+                    foreach (@$states) {
+                        print $_ . "\n";
+                    }
+                }
+    }
+    print "-----------------------------------------------------------------------------------------------------\n\n";
+}
