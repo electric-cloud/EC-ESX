@@ -206,6 +206,13 @@ my %removedevice = (
                 description => "Remove devices inside VM.",
                 category    => "Resource Management"
                );
+my %addharddisk = (
+                label       => "ESX - AddHardDisk",
+                procedure   => "AddHardDisk",
+                description => "Adding a virtual Disk inside VM.",
+                category    => "Resource Management"
+               );
+
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Suspend");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Clone");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Cleanup");
@@ -237,6 +244,7 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - AddCdDvdDri
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - AddNetworkInterface");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - ListDevice");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - RemoveDevice");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - AddHardDisk");
 
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend Virtual Machine");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend");
@@ -268,8 +276,9 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - AddCdDvdDrive"
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - AddNetworkInterface");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - ListDevice");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - RemoveDevice");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - AddHardDisk");
 
-@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listentity, \%createfolder, \%deleteentity, \%renameentity, \%moveentity, \%displayesxsummary,\%createresourcepool,\%editresourcepool,\%listsnapshot,\%removesnapshot, \%addcddvddrive, \%addnetworkinterface, \%listdevice, \%removedevice);
+@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listentity, \%createfolder, \%deleteentity, \%renameentity, \%moveentity, \%displayesxsummary,\%createresourcepool,\%editresourcepool,\%listsnapshot,\%removesnapshot, \%addcddvddrive, \%addnetworkinterface, \%listdevice, \%removedevice, \%addharddisk);
 
 my $pluginName = "@PLUGIN_NAME@";
 my $pluginKey = "@PLUGIN_KEY@";
@@ -624,6 +633,14 @@ if ($upgradeAction eq "upgrade") {
                                      {
                                         procedureName => 'RemoveDevice',
                                         stepName      => 'RemoveDevice'
+                                     }
+                                    );
+            $batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'AddHardDisk',
+                                        stepName      => 'AddHardDisk'
                                      }
                                     );
         }
