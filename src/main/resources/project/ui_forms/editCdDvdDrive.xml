@@ -16,13 +16,20 @@
 
 -->
 <editor>
-    <help>/commander/pages/@PLUGIN_NAME@/@PLUGIN_KEY@_help?s=Administration&amp;ss=Plugins#AddCdDvdDrive</help>
+    <help>/commander/pages/@PLUGIN_NAME@/@PLUGIN_KEY@_help?s=Administration&amp;ss=Plugins#EditCdDvdDrive</help>
     <formElement>
         <type>entry</type>
         <label>ESX Connection:</label>
         <property>connection_config</property>
         <required>1</required>
         <documentation>The name of the configuration which holds the connection information for ESX server.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>CD/DVD Drive Name:</label>
+        <property>device_name</property>
+        <required>1</required>
+        <documentation>The name of the CD/DVD Drive which need to be edited.</documentation>
     </formElement>
     <formElement>
         <type>entry</type>
@@ -42,7 +49,7 @@
         <type>select</type>
         <label>Backing Type:</label>
         <property>backing_type</property>
-        <required>1</required>
+        <required>0</required>
         <documentation>The backing type of created CD/DVD Drive (Passthrough, AtApi, ISO Image).</documentation>
         <option><name>PassThrough</name><value>passThrough</value></option>
         <option><name>AtApi</name><value>atApi</value></option>
@@ -52,7 +59,7 @@
         <type>select</type>
         <label>Controller Type:</label>
         <property>controller_type</property>
-        <required>1</required>
+        <required>0</required>
         <documentation>The type of controller for created CD/DVD Drive (SATA, IDE).</documentation>
         <option><name>SATA</name><value>SATA</value></option>
         <option><name>IDE</name><value>IDE</value></option>

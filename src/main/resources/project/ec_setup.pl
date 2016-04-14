@@ -185,7 +185,13 @@ my %removesnapshot = (
 my %addcddvddrive = (
                 label       => "ESX - AddCdDvdDrive",
                 procedure   => "AddCdDvdDrive",
-                description => "Add CD/DVD Drive inside VM.",
+                description => "Add CD/DVD Drive in VM.",
+                category    => "Resource Management"
+               );
+my %editcddvddrive = (
+                label       => "ESX - EditCdDvdDrive",
+                procedure   => "EditCdDvdDrive",
+                description => "Edit already existing CD/DVD Drive in VM.",
                 category    => "Resource Management"
                );
 my %addnetworkinterface = (
@@ -241,6 +247,7 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - EditResourc
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - ListSnapshot");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - RemoveSnapshot");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - AddCdDvdDrive");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - EditCdDvdDrive");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - AddNetworkInterface");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - ListDevice");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - RemoveDevice");
@@ -273,12 +280,13 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - EditResourcepo
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - ListSnapshot");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - RemoveSnapshot");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - AddCdDvdDrive");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - EditCdDvdDrive");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - AddNetworkInterface");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - ListDevice");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - RemoveDevice");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - AddHardDisk");
 
-@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listentity, \%createfolder, \%deleteentity, \%renameentity, \%moveentity, \%displayesxsummary,\%createresourcepool,\%editresourcepool,\%listsnapshot,\%removesnapshot, \%addcddvddrive, \%addnetworkinterface, \%listdevice, \%removedevice, \%addharddisk);
+@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listentity, \%createfolder, \%deleteentity, \%renameentity, \%moveentity, \%displayesxsummary,\%createresourcepool,\%editresourcepool,\%listsnapshot,\%removesnapshot, \%addcddvddrive, \%editcddvddrive, \%addnetworkinterface, \%listdevice, \%removedevice, \%addharddisk);
 
 my $pluginName = "@PLUGIN_NAME@";
 my $pluginKey = "@PLUGIN_KEY@";
@@ -609,6 +617,14 @@ if ($upgradeAction eq "upgrade") {
                                      {
                                         procedureName => 'AddCdDvdDrive',
                                         stepName      => 'addCdDvdDrive'
+                                     }
+                                    );
+            $batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'EditCdDvdDrive',
+                                        stepName      => 'editCdDvdDrive'
                                      }
                                     );
             $batch->attachCredential(

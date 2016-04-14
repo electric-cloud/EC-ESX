@@ -382,6 +382,18 @@
 	<xpath>//step[stepName=&quot;SetTimelimit&quot;]/command</xpath>
   </file>
   <file>
+	<path>ui_forms/editCdDvdDrive.xml</path>
+	<xpath>//procedure[procedureName=&quot;EditCdDvdDrive&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
+  </file>
+  <file>
+	<path>vm/editCdDvdDrive.pl</path>
+	<xpath>//step[stepName=&quot;editCdDvdDrive&quot;]/command</xpath>
+  </file>
+  <file>
+	<path>setTimelimit.pl</path>
+	<xpath>//step[stepName=&quot;SetTimelimit&quot;]/command</xpath>
+  </file>
+  <file>
 	<path>ui_forms/addNetworkInterface.xml</path>
 	<xpath>//procedure[procedureName=&quot;AddNetworkInterface&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
   </file>

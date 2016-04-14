@@ -3180,9 +3180,10 @@ sub getNetworkInterfaceConfig {
 #    controller: Controller Map
 #    backingType: Passthrough, AtApi, ISOImage
 #########################################
-sub getCdDvdDriveConfig {
+sub getCdDvdBackingInfo {
     my %args = @_;
     my $backingInfo;
+    print "Going for obtaining backing info for backing type: " . $args{backingType} . "\n";
     if ( $args{backingType} eq "passThrough" ) {
         $backingInfo = VirtualCdromRemotePassthroughBackingInfo->new(
             deviceName => $args{deviceName},
@@ -3198,15 +3199,7 @@ sub getCdDvdDriveConfig {
         $backingInfo =
           VirtualCdromIsoBackingInfo->new( fileName => $args{isoPath} );
     }
-
-    return VirtualCdrom->new(
-        controllerKey => $args{controller}->key,
-        key           => -1,
-        deviceInfo =>
-          Description->new( label => $args{deviceName}, summary => '111' ),
-        backing => $backingInfo
-    );
-
+    return $backingInfo;
 }
 
 sub deviceManager {
@@ -3321,9 +3314,9 @@ sub addNetworkInterface {
     return;
 }
 
-sub addCdDvdROM {
+sub addOrEditCdDvdDrive {
     my ($self) = @_;
-    print "Going for adding CD/DVD ROM: "
+    print "Going for adding/editing CD/DVD Drive: "
       . " [Backing Type: "
       . $self->opts->{backing_type}
       . ", Controller Type: "
@@ -3347,42 +3340,97 @@ sub addCdDvdROM {
     }
     $self->login();
     if ($self->opts->{exitcode}) { return; }
-    my $operation = VirtualDeviceConfigSpecOperation->new('add');
-    if ($operation) {
-        if($self->getVirtualMachineView()){
-            print "Can't find Virtual Machine view" . "\n";
+    my $operation;
+    my $cdConfig;
+    my $oldCdConfig;
+    my $deviceName;
+
+    if($self->getVirtualMachineView()){
+        print "Can't find Virtual Machine view" . "\n";
+        return;
+    }
+    if($self->opts->{edit}){
+        print "Going for editing already existing CD/DVD: " . $self->opts->{device_name} . "\n";
+        $operation = VirtualDeviceConfigSpecOperation->new('edit');
+        $self->opts->{device_type} = 'CD/DVD drive';
+        if ($self->fetchDevices()){
+            print "Can't fetch devices" . "\n";
             return;
         }
-        print "Got vm view. Going for fetching controller configurations"
-          . "\n";
+        foreach my $device (@{$self->opts->{devices}}){
+            if ( $device->deviceInfo->label eq $self->opts->{device_name} )
+            {
+                print "Device found. Populating context for " . $self->opts->{device_name} . "\n";
+                $oldCdConfig = $device;
+            }
+        }
+        if(not $oldCdConfig){
+            $self->opts->{exitcode} = ERROR;
+            print "Could not obtain CD/DVD drive config for " . $self->opts->{device_name} . "\n";
+            return ERROR;
+        }
+        $deviceName = $self->opts->{device_name};
+    }
+    else{
+        print "Going for adding new device" . "\n";
+        $operation = VirtualDeviceConfigSpecOperation->new('add');
+        $deviceName = $self->opts->{vm_name} . "_" . time();
+    }
+
+    my $controllerKey;
+
+    if($self->opts->{controller_type}){
+        #For finding controller device
         $self->opts->{device_type} = $self->opts->{controller_type};
         if($self->fetchController()){
             print "Can't find controller" . "\n";
             return;
         }
-        print
-"Got controller configurations. Going for fetching cd configurations"
-          . "\n";
-        my $cdConfig = getCdDvdDriveConfig(
-            controller  => $self->opts->{controller},
-            deviceName  => $self->opts->{vm_name},
+        $controllerKey = $self->opts->{controller}->key;
+    }
+    else{
+        $controllerKey = $oldCdConfig->controllerKey;
+    }
+
+    my $backingInfo;
+    if($self->opts->{backing_type}){
+        $backingInfo = getCdDvdBackingInfo(
+            deviceName  => $deviceName,
             backingType => $self->opts->{backing_type},
             isoPath     => $self->opts->{iso_image}
         );
-        if ($cdConfig) {
-            print
-"Got cdconfigurations. Going for applying configurations to VM"
-              . "\n";
-            deviceManager(
-                deviceConfig => $cdConfig,
-                operation    => $operation,
-                vmView       => $self->opts->{vm_view}
-            );
-            print "Successfully added CD/DVD ROM to VM: "
-              . $self->opts->{vm_name} . "\n";
-            $self->logout();
-            return;
-        }
+    }
+    else{
+        $backingInfo = $oldCdConfig->backing;
+    }
+
+    if($self->opts->{edit}){
+        $cdConfig = $oldCdConfig;
+        $cdConfig->backing($backingInfo);
+        $cdConfig->controllerKey($controllerKey);
+    }
+    else{
+        $cdConfig = VirtualCdrom->new(
+            controllerKey => $controllerKey,
+            key           => -1,
+            deviceInfo =>
+              Description->new( label => $deviceName, summary => '111' ),
+            backing => $backingInfo
+        );
+    }
+    if ($cdConfig) {
+        print
+"Got cd/dvd drive configurations. Going for applying configurations to VM"
+          . "\n";
+        deviceManager(
+            deviceConfig => $cdConfig,
+            operation    => $operation,
+            vmView       => $self->opts->{vm_view}
+        );
+        print "Successfully added/edited CD/DVD Drive to VM: "
+          . $self->opts->{vm_name} . "\n";
+        $self->logout();
+        return;
     }
 
     print "Not able to add CD/DVD ROM to VM: "
