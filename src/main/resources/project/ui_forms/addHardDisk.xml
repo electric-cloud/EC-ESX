@@ -1,0 +1,86 @@
+<!--
+
+     Copyright 2015 Electric Cloud, Inc.
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+
+-->
+<editor>
+    <help>/commander/pages/@PLUGIN_NAME@/@PLUGIN_KEY@_help?s=Administration&amp;ss=Plugins#AddHardDisk</help>
+    <formElement>
+        <type>entry</type>
+        <label>ESX Connection:</label>
+        <property>connection_config</property>
+        <required>1</required>
+        <documentation>The name of the configuration which holds the connection information for ESX server.</documentation>
+    </formElement>
+	<!-- <formElement>
+        <type>entry</type>
+        <label>ESX HostName:</label>
+        <property>esx_host_name</property>
+        <required>1</required>
+        <documentation>The name of the Host.</documentation>
+    </formElement> -->
+	<formElement>
+        <type>entry</type>
+        <label>Vm Name:</label>
+        <property>vm_name</property>
+        <required>1</required>
+        <documentation>The name of the VM.</documentation>
+    </formElement>	
+	<formElement>
+        <type>entry</type>
+        <label>HardDisk Size:</label>
+        <property>esx_hdsize</property>
+        <required>1</required>
+        <documentation>The size of the HardDisk.</documentation>
+    </formElement>
+    <formElement>
+        <type>select</type>
+        <label>Disk Provisioning (thick/thin):</label>
+        <property>esx_hd_provisioning</property>
+        <required>1</required>
+        <documentation>Can only use at the time of create.You cannot change the provisioning once created.Thick virtual disk that supports clustering features such as Fault Tolerance.Space required for the virtual disk is allocated at creation time. In contrast to the flat format, the data remaining on the physical device is zeroed out when the virtual disk is created. It might take much longer to create disks in this format than to create other types of disks.Thin disk provisioning is using the format to save storage space. For the thin disk, you provision as much datastore space as the disk would require based on the value that you enter for the disk size. However, the thin disk starts small and at first, uses only as much datastore space as the disk needs for its initial operations.
+		</documentation>
+        <option><name>thick</name><value>thick</value></option>
+        <option><name>thin</name><value>thin</value></option>
+    </formElement>
+    <formElement>
+        <type>select</type>
+        <label>Controller Type(SCSI/IDE): </label>
+        <property>controller_type</property>
+        <required>1</required>
+        <documentation>By default, two Integrated Drive Electronics (IDE) interfaces are presented to the virtual machine. The IDE interface (controller) is a standard way for storage devices (Floppy drives, hard drives and CD-ROM drives) to connect to the virtual machine.To access virtual disks, a virtual machine uses virtual SCSI controllers. These virtual controllers appear to a virtual machine as different types of controllers, including BusLogic Parallel, LSI Logic Parallel, LSI Logic SAS, and VMware Paravirtual. You can add a SCSI controller, change the SCSI controller type, and select bus sharing for a virtual machine.
+		</documentation>
+		<option><name>SCSI</name><value>SCSI</value></option>
+        <option><name>IDE</name><value>SCSI</value></option>
+    </formElement>
+    <formElement>
+        <type>select</type>
+        <label>Storage Mode:</label>
+        <property>esx_hd_storagemode</property>
+        <required>1</required>
+        <documentation>Disks in persistent mode behave like conventional disks on your physical computer. All data written to a disk in persistent mode are written permanently to the disk.Changes to disks in nonpersistent mode are discarded when you power off or reset the virtual machine. With nonpersistent mode, you can restart the virtual machine with a virtual disk in the same state every time. Changes to the disk are written to and read from a redo log file that is deleted when you power off or reset.
+		</documentation>
+		<option><name>Indepedent Persistent</name><value>independent_persistent</value></option>
+        <option><name>Indepedent NonPersistent</name><value>independent_nonpersistent</value></option>
+        <option><name>Depedent</name><value>persistent</value></option>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>JobStep Timeout:</label>
+        <property>esx_timeout</property>
+        <required>0</required>
+        <documentation>Timeout for the step execution in minutes. Blank means no timeout.</documentation>
+    </formElement>
+</editor>

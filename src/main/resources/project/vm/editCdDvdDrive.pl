@@ -15,19 +15,20 @@
 #
 
 ##########################
-# addCdDvdDrive.pl
+# editCdDvdDrive.pl
 ##########################
 use warnings;
 use strict;
 
 my $opts;
-print "Adding CD/DVD Drive\n";
+print "Editing already existing CD/DVD Drive\n";
 $opts->{connection_config} = q{$[connection_config]};
+$opts->{device_name} = q{$[device_name]};
 $opts->{iso_image} = q{$[iso_image]};
 $opts->{vm_name} = q{$[vm_name]};
 $opts->{backing_type} = q{$[backing_type]};
 $opts->{controller_type} = q{$[controller_type]};
-$opts->{edit} = 0;
+$opts->{edit} = 1;
 
 $[/myProject/procedure_helpers/preamble]
 

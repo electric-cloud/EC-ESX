@@ -119,6 +119,9 @@
     ['//procedure[procedureName="AddCdDvdDrive"]/propertySheet/property[propertyName="ec_parameterForm"]/value',        'ui_forms/addCdDvdDrive.xml'],
     ['//step[stepName="addCdDvdDrive"]/command',                                                                        'vm/addCdDvdDrive.pl'],
     ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
+    ['//procedure[procedureName="EditCdDvdDrive"]/propertySheet/property[propertyName="ec_parameterForm"]/value',       'ui_forms/editCdDvdDrive.xml'],
+    ['//step[stepName="editCdDvdDrive"]/command',                                                                       'vm/editCdDvdDrive.pl'],
+    ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
     ['//procedure[procedureName="AddNetworkInterface"]/propertySheet/property[propertyName="ec_parameterForm"]/value',  'ui_forms/addNetworkInterface.xml'],
     ['//step[stepName="addNetworkInterface"]/command',                                                                  'vm/addNetworkInterface.pl'],
     ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
@@ -128,7 +131,9 @@
     ['//procedure[procedureName="RemoveDevice"]/propertySheet/property[propertyName="ec_parameterForm"]/value',         'ui_forms/removeDevice.xml'],
     ['//step[stepName="removeDevice"]/command',                                                                         'vm/removeDevice.pl'],
     ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
-
+'//procedure[procedureName="AddHardDisk"]/propertySheet/property[propertyName="ec_parameterForm"]/value',               'ui_forms/addHardDisk.xml'],
+    ['//step[stepName="AddHardDisk"]/command',                                                                          'vm/addHardDisk.pl'],
+    ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
 	#Main files
     ['//property[propertyName="preamble"]/value', 'preamble.pl'],
     ['//property[propertyName="ESX"]/value',      'ESX.pm'],

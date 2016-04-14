@@ -3180,9 +3180,10 @@ sub getNetworkInterfaceConfig {
 #    controller: Controller Map
 #    backingType: Passthrough, AtApi, ISOImage
 #########################################
-sub getCdDvdDriveConfig {
+sub getCdDvdBackingInfo {
     my %args = @_;
     my $backingInfo;
+    print "Going for obtaining backing info for backing type: " . $args{backingType} . "\n";
     if ( $args{backingType} eq "passThrough" ) {
         $backingInfo = VirtualCdromRemotePassthroughBackingInfo->new(
             deviceName => $args{deviceName},
@@ -3198,24 +3199,27 @@ sub getCdDvdDriveConfig {
         $backingInfo =
           VirtualCdromIsoBackingInfo->new( fileName => $args{isoPath} );
     }
-
-    return VirtualCdrom->new(
-        controllerKey => $args{controller}->key,
-        key           => -1,
-        deviceInfo =>
-          Description->new( label => $args{deviceName}, summary => '111' ),
-        backing => $backingInfo
-    );
-
+    return $backingInfo;
 }
 
 sub deviceManager {
     my %args       = @_;
     eval{
-        my @deviceSpec = VirtualDeviceConfigSpec->new(
-            operation => $args{operation},
-            device    => $args{deviceConfig}
-        );
+        my @deviceSpec;
+        if($args{fileOperation}){
+            @deviceSpec = VirtualDeviceConfigSpec->new(
+                operation => $args{operation},
+                device    => $args{deviceConfig},
+                fileOperation    => $args{fileOperation}
+            );
+        }
+        else{
+            @deviceSpec = VirtualDeviceConfigSpec->new(
+                operation => $args{operation},
+                device    => $args{deviceConfig}
+            );
+        }
+
         if ( !@deviceSpec ) {
             print "Cannot get device specifications" . "\n";
         }
@@ -3225,6 +3229,37 @@ sub deviceManager {
             $args{vmView}->ReconfigVM( spec => $vmSpec );
         }
     };
+    if ($@) {
+      if (ref($@) eq 'SoapFault') {
+         if (ref($@->detail) eq 'FileAlreadyExists') {
+            Util::trace(0,"Operation failed because file already exists.");
+         }
+         elsif (ref($@->detail) eq 'InvalidName') {
+            Util::trace(0,"If the specified name is invalid.");
+         }
+         elsif (ref($@->detail) eq 'InvalidDeviceBacking') {
+            Util::trace(0,"Incompatible device backing specified for device.");
+         }
+         elsif (ref($@->detail) eq 'InvalidDeviceSpec') {
+            Util::trace(0,"Invalid backing info spec.");
+         }
+         elsif (ref($@->detail) eq 'InvalidPowerState') {
+            Util::trace(0,"Attempted operation cannot be performed on the current state.");
+         }
+         elsif (ref($@->detail) eq 'GenericVmConfigFault') {
+            Util::trace(0,"Unable to configure virtual device.");
+         }
+         elsif (ref($@->detail) eq 'NoDiskSpace') {
+            Util::trace(0,"Insufficient disk space on datastore.");
+         }
+         else {
+            Util::trace(0,"Fault : " . $@);
+         }
+      }
+      else {
+         Util::trace(0,"Fault : " . $@);
+      }
+   }
 }
 
 sub addNetworkInterface {
@@ -3279,9 +3314,9 @@ sub addNetworkInterface {
     return;
 }
 
-sub addCdDvdROM {
+sub addOrEditCdDvdDrive {
     my ($self) = @_;
-    print "Going for adding CD/DVD ROM: "
+    print "Going for adding/editing CD/DVD Drive: "
       . " [Backing Type: "
       . $self->opts->{backing_type}
       . ", Controller Type: "
@@ -3305,42 +3340,97 @@ sub addCdDvdROM {
     }
     $self->login();
     if ($self->opts->{exitcode}) { return; }
-    my $operation = VirtualDeviceConfigSpecOperation->new('add');
-    if ($operation) {
-        if($self->getVirtualMachineView()){
-            print "Can't find Virtual Machine view" . "\n";
+    my $operation;
+    my $cdConfig;
+    my $oldCdConfig;
+    my $deviceName;
+
+    if($self->getVirtualMachineView()){
+        print "Can't find Virtual Machine view" . "\n";
+        return;
+    }
+    if($self->opts->{edit}){
+        print "Going for editing already existing CD/DVD: " . $self->opts->{device_name} . "\n";
+        $operation = VirtualDeviceConfigSpecOperation->new('edit');
+        $self->opts->{device_type} = 'CD/DVD drive';
+        if ($self->fetchDevices()){
+            print "Can't fetch devices" . "\n";
             return;
         }
-        print "Got vm view. Going for fetching controller configurations"
-          . "\n";
+        foreach my $device (@{$self->opts->{devices}}){
+            if ( $device->deviceInfo->label eq $self->opts->{device_name} )
+            {
+                print "Device found. Populating context for " . $self->opts->{device_name} . "\n";
+                $oldCdConfig = $device;
+            }
+        }
+        if(not $oldCdConfig){
+            $self->opts->{exitcode} = ERROR;
+            print "Could not obtain CD/DVD drive config for " . $self->opts->{device_name} . "\n";
+            return ERROR;
+        }
+        $deviceName = $self->opts->{device_name};
+    }
+    else{
+        print "Going for adding new device" . "\n";
+        $operation = VirtualDeviceConfigSpecOperation->new('add');
+        $deviceName = $self->opts->{vm_name} . "_" . time();
+    }
+
+    my $controllerKey;
+
+    if($self->opts->{controller_type}){
+        #For finding controller device
         $self->opts->{device_type} = $self->opts->{controller_type};
         if($self->fetchController()){
             print "Can't find controller" . "\n";
             return;
         }
-        print
-"Got controller configurations. Going for fetching cd configurations"
-          . "\n";
-        my $cdConfig = getCdDvdDriveConfig(
-            controller  => $self->opts->{controller},
-            deviceName  => $self->opts->{vm_name},
+        $controllerKey = $self->opts->{controller}->key;
+    }
+    else{
+        $controllerKey = $oldCdConfig->controllerKey;
+    }
+
+    my $backingInfo;
+    if($self->opts->{backing_type}){
+        $backingInfo = getCdDvdBackingInfo(
+            deviceName  => $deviceName,
             backingType => $self->opts->{backing_type},
             isoPath     => $self->opts->{iso_image}
         );
-        if ($cdConfig) {
-            print
-"Got cdconfigurations. Going for applying configurations to VM"
-              . "\n";
-            deviceManager(
-                deviceConfig => $cdConfig,
-                operation    => $operation,
-                vmView       => $self->opts->{vm_view}
-            );
-            print "Successfully added CD/DVD ROM to VM: "
-              . $self->opts->{vm_name} . "\n";
-            $self->logout();
-            return;
-        }
+    }
+    else{
+        $backingInfo = $oldCdConfig->backing;
+    }
+
+    if($self->opts->{edit}){
+        $cdConfig = $oldCdConfig;
+        $cdConfig->backing($backingInfo);
+        $cdConfig->controllerKey($controllerKey);
+    }
+    else{
+        $cdConfig = VirtualCdrom->new(
+            controllerKey => $controllerKey,
+            key           => -1,
+            deviceInfo =>
+              Description->new( label => $deviceName, summary => '111' ),
+            backing => $backingInfo
+        );
+    }
+    if ($cdConfig) {
+        print
+"Got cd/dvd drive configurations. Going for applying configurations to VM"
+          . "\n";
+        deviceManager(
+            deviceConfig => $cdConfig,
+            operation    => $operation,
+            vmView       => $self->opts->{vm_view}
+        );
+        print "Successfully added/edited CD/DVD Drive to VM: "
+          . $self->opts->{vm_name} . "\n";
+        $self->logout();
+        return;
     }
 
     print "Not able to add CD/DVD ROM to VM: "
@@ -3413,6 +3503,121 @@ sub removeDevice {
     $self->opts->{exitcode} = ERROR;
     $self->logout();
     return;
+}
+sub addHardDisk {
+    my ($self) = @_;
+    print "Going for adding Hard Disk : "
+      . ", Controller Type: "
+      . $self->opts->{controller_type}
+      . "] to VM: "
+      . $self->opts->{vm_name}
+      . " present on host: "
+      . $self->opts->{host_name} . "\n";
+
+    #Set default values
+    $self->initialize();
+    $self->debug_msg(0, '---------------------------------------------------------------------');
+
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    my $operation = VirtualDeviceConfigSpecOperation->new('add');
+    if ($operation) {
+
+        if($self->getVirtualMachineView()){
+            print "Can't find Virtual Machine view" . "\n";
+            return;
+        }
+
+        print "Got vm view. Going for fetching controller configurations"
+          . "\n";
+        $self->opts->{device_type} = $self->opts->{controller_type};
+        if($self->fetchController()){
+            print "Can't find controller" . "\n";
+            return;
+        }
+    my $controllerKey = $self->opts->{controller}->key;
+    # Set new unit number (7 cannot be used, and limit is 15)
+    my $unitNumber;
+    my 	$vm_vdisk_number = $self->opts->{controller}->unitNumber + 1;
+    if ($vm_vdisk_number < 7) {
+        $unitNumber = $vm_vdisk_number;
+    }
+    elsif ($vm_vdisk_number == 15) {
+        die "ERR: one SCSI controller cannot have more than 15 virtual disks\n";
+    }
+    else {
+        $unitNumber = $vm_vdisk_number + 1;
+    }
+    my $size =$self->opts->{esx_hdsize} * 1024;
+    my $diskMode;
+    my $source_fileName =$self->opts->{vm_name}."_" . time() . ".vmdk";
+    my $fileName = generateFilename(vm_view => $self->opts->{vm_view}, vm_name => $self->opts->{vm_name}, filename => $source_fileName);
+    Util::trace(0,"\nAdding new hard disk with file name $fileName . . .");
+    my $hdConfig ;
+    $hdConfig = getVdiskConfig(backingtype => 'regular',
+                             diskMode =>$self->opts->{esx_hd_storagemode},
+                             fileName => $fileName,
+                             controllerKey => $controllerKey,
+                             unitNumber => $unitNumber,
+                             size => $size,
+    diskProvision =>$self->opts->{esx_hd_provisioning});
+    deviceManager(
+        deviceConfig => $hdConfig,
+        operation    => $operation,
+        fileOperation => VirtualDeviceConfigSpecFileOperation->new('create'),
+        vmView       => $self->opts->{vm_view}
+    );
+
+    print "Successfully added Hard drive to VM: "
+      . $self->opts->{vm_name} . "\n";
+    $self->logout();
+    return;
+    }
+
+    print "Not able to add Hard Disk to VM: "
+      . $self->opts->{vm_name} . "\n";
+    $self->opts->{exitcode} = ERROR;
+        $self->logout();
+        return;
+}
+
+sub generateFilename {
+   my %args = @_;
+   my $path = $args{vm_view}->config->files->vmPathName;
+   my $name = $args{vm_name} . "/" . $args{filename};
+
+   $path =~ /^(\[.*\])/;
+   my $fileName = "$1/$name";
+   $fileName .= ".vmdk" unless ($fileName =~ /\.vmdk$/);
+   return $fileName;
+}
+
+sub getVdiskConfig {
+   my %args = @_;
+   print "Creating Virtual Hard Disk. DiskMode: " . $args{diskMode} . " , FileName: " . $args{fileName} . " , ControllerKey: " . $args{controllerKey} . " , UnitNumber: " . $args{unitNumber} . ", Size: " . $args{size} . ", BackingType: " . $args{backingtype} . " , DiskProvision: " . $args{diskProvision} . "\n";
+   my $backingInfo;
+   if($args{backingtype} eq "regular") {
+       if($args{diskProvision} eq "thin")
+       {
+           print"\n Enter into provision class having disk_provision" . $args{diskProvision} . "\n";
+           my $thinProvisioned="true";
+           $backingInfo = VirtualDiskFlatVer2BackingInfo->new(diskMode => $args{diskMode},
+                                                                   fileName => $args{fileName},
+                                                                   thinProvisioned=>$thinProvisioned);
+       }
+       else
+       {
+           $backingInfo = VirtualDiskFlatVer2BackingInfo->new(diskMode => $args{diskMode},
+                                                                    fileName => $args{fileName});
+       }
+   }
+   my $diskConfig = VirtualDisk->new(controllerKey => $args{controllerKey},
+                               unitNumber => $args{unitNumber},
+                               key => -1,
+                               backing => $backingInfo,
+                               capacityInKB => $args{size});
+   return $diskConfig;
 }
 # -------------------------------------------------------------------------
 # Helper functions
