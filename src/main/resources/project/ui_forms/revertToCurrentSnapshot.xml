@@ -31,13 +31,6 @@
         <required>1</required>
         <documentation>Name of the virtual machine where you want to see the snapshots.</documentation>
     </formElement>
-	<formElement>
-        <type>entry</type>
-        <label>Goto Snapshot Name :</label>
-        <property>esx_snapshotname</property>
-        <required>1</required>
-        <documentation>Goto a Specific Snapshot in a Particular Vm.</documentation>
-    </formElement>
     <formElement>
         <type>entry</type>
         <label>JobStep Timeout:</label>

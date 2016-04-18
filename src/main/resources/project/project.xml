@@ -8123,9 +8123,9 @@
             </step>
         </procedure>
 		<procedure>
-            <procedureName>GotoSnapshot</procedureName>
-            <description>Goto a Specific Snapshot in a Particular Virtual Machine</description>
-            <jobNameTemplate>esx-gotosnapshot-$[jobId]</jobNameTemplate>
+            <procedureName>RevertToCurrentSnapshot</procedureName>
+            <description>Reverting to the current snapshot for a single virtual machine</description>
+            <jobNameTemplate>esx-reverttocurrentsnapshot-$[jobId]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -8148,16 +8148,6 @@
                                 </property>
 								<property>
                                     <propertyName>esx_vmname</propertyName>
-                                    <propertySheet>
-                                        <property>
-                                            <propertyName>formType</propertyName>
-                                            <expandable>1</expandable>
-                                            <value>standard</value>
-                                        </property>
-                                    </propertySheet>
-                                </property>
-								<property>
-                                    <propertyName>esx_snapshotname</propertyName>
                                     <propertySheet>
                                         <property>
                                             <propertyName>formType</propertyName>
@@ -8201,13 +8191,6 @@
                 <required>1</required>
                 <type>entry</type>
             </formalParameter>
-			<formalParameter>
-                <formalParameterName>esx_snapshotname</formalParameterName>
-                <defaultValue></defaultValue>
-                <description>Goto a Specific Snapshot in a Particular Vm.</description>
-                <required>1</required>
-                <type>entry</type>
-            </formalParameter>
             <formalParameter>
                 <formalParameterName>esx_timeout</formalParameterName>
                 <defaultValue></defaultValue>
@@ -8235,7 +8218,7 @@
                 <timeLimitUnits>minutes</timeLimitUnits>
                 <workingDirectory></workingDirectory>
                 <workspaceName></workspaceName>
-                <procedureName>GotoSnapshot</procedureName>
+                <procedureName>RevertToCurrentSnapshot</procedureName>
                 <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
                 <propertySheet>
                     <property>
@@ -8251,12 +8234,12 @@
                 </propertySheet>
             </step>
             <step>
-                <stepName>GotoSnapshot</stepName>
+                <stepName>RevertToCurrentSnapshot</stepName>
                 <alwaysRun>0</alwaysRun>
                 <broadcast>0</broadcast>
                 <command></command>
                 <condition></condition>
-                <description>Goto a Specific Snapshot in a Particular Vm.</description>
+                <description>Reverting to the current snapshot for a single virtual machine.</description>
                 <errorHandling>failProcedure</errorHandling>
                 <exclusive>0</exclusive>
                 <logFileName></logFileName>
@@ -8270,7 +8253,7 @@
                 <timeLimitUnits>minutes</timeLimitUnits>
                 <workingDirectory></workingDirectory>
                 <workspaceName></workspaceName>
-                <procedureName>GotoSnapshot</procedureName>
+                <procedureName>RevertToCurrentSnapshot</procedureName>
                 <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
                 <propertySheet>
                     <property>

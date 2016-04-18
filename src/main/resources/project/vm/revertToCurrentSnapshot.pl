@@ -24,9 +24,6 @@ my $opts;
 print "Goto to a specific Snapshot\n";
 $opts->{connection_config} = q{$[connection_config]};
 $opts->{esx_vmname} = q{$[esx_vmname]};
-$opts->{esx_snapshotname} = q{$[esx_snapshotname]};
-
 $[/myProject/procedure_helpers/preamble]
-
-$gt->gotoSnapshot();
+$gt->revertToCurrentSnapshot();
 exit($opts->{exitcode});

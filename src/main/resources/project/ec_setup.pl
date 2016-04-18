@@ -218,10 +218,10 @@ my %addharddisk = (
                 description => "Adding a virtual Disk inside VM.",
                 category    => "Resource Management"
                );
-my %gotosnapshot = (
-                label       => "ESX - GotoSnapshot",
-                procedure   => "GotoSnapshot",
-                description => "Goto a Specific Snapshot in a Particular Vm.",
+my %reverttocurrentsnapshot = (
+                label       => "ESX - RevertToCurrentSnapshot",
+                procedure   => "RevertToCurrentSnapshot",
+                description => "Reverting to the current snapshot for a single virtual machine.",
                 category    => "Resource Management"
                );
 my %changeCpuMemAllocation = (
@@ -263,7 +263,7 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - AddNetworkI
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - ListDevice");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - RemoveDevice");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - AddHardDisk");
-$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - GotoSnapshot");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - RevertToCurrentSnapshot");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - ChangeCpuMemAllocation");
 
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend Virtual Machine");
@@ -298,10 +298,10 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - AddNetworkInte
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - ListDevice");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - RemoveDevice");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - AddHardDisk");
-$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - GotoSnapshot");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - RevertToCurrentSnapshot");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - ChangeCpuMemAllocation");
 
-@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listentity, \%createfolder, \%deleteentity, \%renameentity, \%moveentity, \%displayesxsummary,\%createresourcepool,\%editresourcepool,\%listsnapshot,\%removesnapshot, \%addcddvddrive, \%editcddvddrive, \%addnetworkinterface, \%listdevice, \%removedevice, \%addharddisk,\%gotosnapshot, \%changeCpuMemAllocation);
+@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listentity, \%createfolder, \%deleteentity, \%renameentity, \%moveentity, \%displayesxsummary,\%createresourcepool,\%editresourcepool,\%listsnapshot,\%removesnapshot, \%addcddvddrive, \%editcddvddrive, \%addnetworkinterface, \%listdevice, \%removedevice, \%addharddisk,\%reverttocurrentsnapshot, \%changeCpuMemAllocation);
 
 my $pluginName = "@PLUGIN_NAME@";
 my $pluginKey = "@PLUGIN_KEY@";
@@ -678,8 +678,8 @@ if ($upgradeAction eq "upgrade") {
                                      "\$[/plugins/$pluginName/project]",
                                      $cred,
                                      {
-                                        procedureName => 'GotoSnapshot',
-                                        stepName      => 'GotoSnapshot'
+                                        procedureName => 'RevertToCurrentSnapshot',
+                                        stepName      => 'RevertToCurrentSnapshot'
                                      }
                                     );
             $batch->attachCredential(
