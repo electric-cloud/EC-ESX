@@ -138,6 +138,10 @@
 	['//procedure[procedureName="GotoSnapshot"]/propertySheet/property[propertyName="ec_parameterForm"]/value',         'ui_forms/gotoSnapshot.xml'],
     ['//step[stepName="GotoSnapshot"]/command',                                                                         'vm/gotoSnapshot.pl'],
     ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
+    ['//procedure[procedureName="ChangeCpuMemAllocation"]/propertySheet/property[propertyName="ec_parameterForm"]/value','ui_forms/changeCpuMemAllocation.xml'],
+    ['//step[stepName="changeCpuMemAllocation"]/command',                                                                    'vm/changeCpuMemAllocation.pl'],
+    ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
+
 	#Main files
     ['//property[propertyName="preamble"]/value', 'preamble.pl'],
     ['//property[propertyName="ESX"]/value',      'ESX.pm'],

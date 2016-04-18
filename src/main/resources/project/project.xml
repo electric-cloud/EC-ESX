@@ -8124,7 +8124,7 @@
         </procedure>
 		<procedure>
             <procedureName>GotoSnapshot</procedureName>
-            <description>Goto a Specific Snapshot in a Particular Vm..</description>
+            <description>Goto a Specific Snapshot in a Particular Virtual Machine</description>
             <jobNameTemplate>esx-gotosnapshot-$[jobId]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
@@ -8271,6 +8271,187 @@
                 <workingDirectory></workingDirectory>
                 <workspaceName></workspaceName>
                 <procedureName>GotoSnapshot</procedureName>
+                <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+                <propertySheet>
+                    <property>
+                        <propertyName>ec_customEditorData</propertyName>
+                        <propertySheet>
+                            <property>
+                                <propertyName>formType</propertyName>
+                                <expandable>1</expandable>
+                                <value>command</value>
+                            </property>
+                        </propertySheet>
+                    </property>
+                </propertySheet>
+            </step>
+        </procedure>
+        <procedure>
+            <procedureName>ChangeCpuMemAllocation</procedureName>
+            <description>Change Cpu/Memory allocation for a Virtual Machine.</description>
+            <jobNameTemplate>esx-changeCpuMemAllocation-$[jobId]</jobNameTemplate>
+            <resourceName></resourceName>
+            <workspaceName></workspaceName>
+            <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+            <propertySheet>
+                <property>
+                    <propertyName>ec_customEditorData</propertyName>
+                    <propertySheet>
+                        <property>
+                            <propertyName>parameters</propertyName>
+                            <propertySheet>
+                                <property>
+                                    <propertyName>connection_config</propertyName>
+                                    <propertySheet>
+                                        <property>
+                                            <propertyName>formType</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>standard</value>
+                                        </property>
+                                    </propertySheet>
+                                </property>
+                                <property>
+                                    <propertyName>vm_name</propertyName>
+                                    <propertySheet>
+                                        <property>
+                                            <propertyName>formType</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>standard</value>
+                                        </property>
+                                    </propertySheet>
+                                </property>
+                                <property>
+                                    <propertyName>num_cpu</propertyName>
+                                    <propertySheet>
+                                        <property>
+                                            <propertyName>formType</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>standard</value>
+                                        </property>
+                                    </propertySheet>
+                                </property>
+                                <property>
+                                    <propertyName>memory_mb</propertyName>
+                                    <propertySheet>
+                                        <property>
+                                            <propertyName>formType</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>standard</value>
+                                        </property>
+                                    </propertySheet>
+                                </property>
+                                <property>
+                                    <propertyName>esx_timeout</propertyName>
+                                    <propertySheet>
+                                        <property>
+                                            <propertyName>formType</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>standard</value>
+                                        </property>
+                                    </propertySheet>
+                                </property>
+                            </propertySheet>
+                        </property>
+                    </propertySheet>
+                </property>
+                <property>
+                    <propertyName>ec_parameterForm</propertyName>
+                    <description></description>
+                    <expandable>1</expandable>
+                    <value></value>
+                </property>
+            </propertySheet>
+            <formalParameter>
+                <formalParameterName>connection_config</formalParameterName>
+                <defaultValue></defaultValue>
+                <description>The name of the configuration which holds the connection information for ESX server.</description>
+                <required>1</required>
+                <type>entry</type>
+            </formalParameter>
+            <formalParameter>
+                <formalParameterName>vm_name</formalParameterName>
+                <defaultValue></defaultValue>
+                <description>The name of the virtual machine for which CPU/Memory have to be changed.</description>
+                <required>1</required>
+                <type>entry</type>
+            </formalParameter>
+            <formalParameter>
+                <formalParameterName>num_cpu</formalParameterName>
+                <defaultValue/>
+                <description>Number of virtual processors in a virtual machine.</description>
+                <required>0</required>
+                <type>select</type>
+            </formalParameter>
+            <formalParameter>
+                <formalParameterName>memory_mb</formalParameterName>
+                <defaultValue></defaultValue>
+                <description>Size of a virtual machine's memory, in MB.</description>
+                <required>0</required>
+                <type>entry</type>
+            </formalParameter>
+            <formalParameter>
+                <formalParameterName>esx_timeout</formalParameterName>
+                <defaultValue></defaultValue>
+                <description>Timeout for the step execution in minutes. Blank means no timeout.</description>
+                <required>0</required>
+                <type>entry</type>
+            </formalParameter>
+            <step>
+                <stepName>SetTimelimit</stepName>
+                <alwaysRun>0</alwaysRun>
+                <broadcast>0</broadcast>
+                <command></command>
+                <condition></condition>
+                <description>Set the timelimit for the next step</description>
+                <errorHandling>failProcedure</errorHandling>
+                <exclusive>0</exclusive>
+                <logFileName></logFileName>
+                <parallel>0</parallel>
+                <postProcessor>postp</postProcessor>
+                <releaseExclusive>0</releaseExclusive>
+                <resourceName></resourceName>
+                <retries>0</retries>
+                <shell>ec-perl</shell>
+                <timeLimit></timeLimit>
+                <timeLimitUnits>minutes</timeLimitUnits>
+                <workingDirectory></workingDirectory>
+                <workspaceName></workspaceName>
+                <procedureName>ChangeCpuMemAllocation</procedureName>
+                <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
+                <propertySheet>
+                    <property>
+                        <propertyName>ec_customEditorData</propertyName>
+                        <propertySheet>
+                            <property>
+                                <propertyName>formType</propertyName>
+                                <expandable>1</expandable>
+                                <value>command</value>
+                            </property>
+                        </propertySheet>
+                    </property>
+                </propertySheet>
+            </step>
+            <step>
+                <stepName>changeCpuMemAllocation</stepName>
+                <alwaysRun>0</alwaysRun>
+                <broadcast>0</broadcast>
+                <command></command>
+                <condition></condition>
+                <description>Change Cpu/Memory Allocation for VM.</description>
+                <errorHandling>failProcedure</errorHandling>
+                <exclusive>0</exclusive>
+                <logFileName></logFileName>
+                <parallel>0</parallel>
+                <postProcessor>postp</postProcessor>
+                <releaseExclusive>0</releaseExclusive>
+                <resourceName></resourceName>
+                <retries>0</retries>
+                <shell>ec-perl</shell>
+                <timeLimit>$[/myCall/esx_timelimit]</timeLimit>
+                <timeLimitUnits>minutes</timeLimitUnits>
+                <workingDirectory></workingDirectory>
+                <workspaceName></workspaceName>
+                <procedureName>changeCpuMemAllocation</procedureName>
                 <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
                 <propertySheet>
                     <property>

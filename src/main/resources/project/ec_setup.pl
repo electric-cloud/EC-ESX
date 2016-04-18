@@ -224,7 +224,12 @@ my %gotosnapshot = (
                 description => "Goto a Specific Snapshot in a Particular Vm.",
                 category    => "Resource Management"
                );
-
+my %changeCpuMemAllocation = (
+                label       => "ESX - ChangeCpuMemAllocation",
+                procedure   => "ChangeCpuMemAllocation",
+                description => "Change Cpu/Memory Allocation for a VM.",
+                category    => "Resource Management"
+               );
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Suspend");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Clone");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Cleanup");
@@ -259,6 +264,7 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - ListDevice"
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - RemoveDevice");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - AddHardDisk");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - GotoSnapshot");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - ChangeCpuMemAllocation");
 
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend Virtual Machine");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend");
@@ -293,8 +299,9 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - ListDevice");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - RemoveDevice");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - AddHardDisk");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - GotoSnapshot");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - ChangeCpuMemAllocation");
 
-@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listentity, \%createfolder, \%deleteentity, \%renameentity, \%moveentity, \%displayesxsummary,\%createresourcepool,\%editresourcepool,\%listsnapshot,\%removesnapshot, \%addcddvddrive, \%editcddvddrive, \%addnetworkinterface, \%listdevice, \%removedevice, \%addharddisk,\%gotosnapshot);
+@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listentity, \%createfolder, \%deleteentity, \%renameentity, \%moveentity, \%displayesxsummary,\%createresourcepool,\%editresourcepool,\%listsnapshot,\%removesnapshot, \%addcddvddrive, \%editcddvddrive, \%addnetworkinterface, \%listdevice, \%removedevice, \%addharddisk,\%gotosnapshot, \%changeCpuMemAllocation);
 
 my $pluginName = "@PLUGIN_NAME@";
 my $pluginKey = "@PLUGIN_KEY@";
@@ -674,7 +681,15 @@ if ($upgradeAction eq "upgrade") {
                                         procedureName => 'GotoSnapshot',
                                         stepName      => 'GotoSnapshot'
                                      }
-                                    );									
+                                    );
+            $batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'ChangeCpuMemAllocation',
+                                        stepName      => 'changeCpuMemAllocation'
+                                     }
+                                    );
         }
     }
 }

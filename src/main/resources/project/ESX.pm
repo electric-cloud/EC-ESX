@@ -3206,6 +3206,7 @@ sub deviceManager {
     my %args       = @_;
     eval{
         my @deviceSpec;
+        my $vmSpec;
         if($args{fileOperation}){
             @deviceSpec = VirtualDeviceConfigSpec->new(
                 operation => $args{operation},
@@ -3213,21 +3214,39 @@ sub deviceManager {
                 fileOperation    => $args{fileOperation}
             );
         }
-        else{
+        elsif($args{deviceConfig}){
             @deviceSpec = VirtualDeviceConfigSpec->new(
                 operation => $args{operation},
                 device    => $args{deviceConfig}
             );
         }
+        else{
+            print "Device configurations not required." . "\n";
+        } 
 
-        if ( !@deviceSpec ) {
-            print "Cannot get device specifications" . "\n";
+        if($args{memoryMB} && $args{numCPUs}) {
+           print "Change CPU and Memory-Added in reconfiguring VM" . "\n";
+           $vmSpec = VirtualMachineConfigSpec->new(numCPUs => $args{numCPUs},
+                                                   memoryMB=>$args{memoryMB});
+        }
+        elsif($args{memoryMB}) {
+           print "Changing Memory-Added in reconfiguring VM" . "\n";
+           $vmSpec = VirtualMachineConfigSpec->new(memoryMB=>$args{memoryMB});
+        }
+        elsif($args{numCPUs}) {
+           print "Change CPU-Added in reconfiguring VM" . "\n";
+           $vmSpec = VirtualMachineConfigSpec->new(numCPUs => $args{numCPUs});
+        }
+        elsif(@deviceSpec) {
+           print "Add/edit device-Added in reconfiguring VM" . "\n";
+           $vmSpec = VirtualMachineConfigSpec->new(deviceChange => \@deviceSpec);
         }
         else {
-            my $vmSpec =
-              VirtualMachineConfigSpec->new( deviceChange => \@deviceSpec );
-            $args{vmView}->ReconfigVM( spec => $vmSpec );
+           Util::trace(0,"\nNo reconfiguration performed as there "
+                       . "is no device config spec created.\n");
+           return;
         }
+        $args{vmView}->ReconfigVM( spec => $vmSpec );
     };
     if ($@) {
       if (ref($@) eq 'SoapFault') {
@@ -3436,6 +3455,42 @@ sub addOrEditCdDvdDrive {
     print "Not able to add CD/DVD ROM to VM: "
       . $self->opts->{vm_name} . "\n";
     $self->opts->{exitcode} = ERROR;
+    $self->logout();
+    return;
+}
+
+sub changeCpuMemAllocation {
+    my ($self) = @_;
+    print "Going for changing CPU to: "
+      . $self->opts->{num_cpu}
+      . " and Memory to: "
+      . $self->opts->{memory_mb}
+      . " for VM: "
+      . $self->opts->{vm_name}
+      . " present on host: "
+      . $self->opts->{host_name} . "\n";
+
+    #Set default values
+    $self->initialize();
+    $self->debug_msg(0, '---------------------------------------------------------------------');
+
+    #Login with VMWare service
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    if($self->getVirtualMachineView()){
+        print "Can't find Virtual Machine view" . "\n";
+        return;
+    }
+
+    deviceManager(
+        numCPUs => $self->opts->{num_cpu},
+        memoryMB => $self->opts->{memory_mb},
+        vmView => $self->opts->{vm_view}
+    );
+
+    print "Successfully changed CPU/Mem Shares for VM: "
+      . $self->opts->{vm_name} . "\n";
     $self->logout();
     return;
 }

@@ -454,6 +454,18 @@
 	<xpath>//step[stepName=&quot;SetTimelimit&quot;]/command</xpath>
   </file>
   <file>
+	<path>ui_forms/changeCpuMemAllocation.xml</path>
+	<xpath>//procedure[procedureName=&quot;ChangeCpuMemAllocation&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
+  </file>
+  <file>
+	<path>vm/changeCpuMemAllocation.pl</path>
+	<xpath>//step[stepName=&quot;changeCpuMemAllocation&quot;]/command</xpath>
+  </file>
+  <file>
+	<path>setTimelimit.pl</path>
+	<xpath>//step[stepName=&quot;SetTimelimit&quot;]/command</xpath>
+  </file>
+  <file>
     <path>preamble.pl</path>
     <xpath>//property[propertyName=&quot;preamble&quot;]/value</xpath>
   </file>
