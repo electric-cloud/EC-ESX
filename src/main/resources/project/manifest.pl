@@ -131,8 +131,12 @@
     ['//procedure[procedureName="RemoveDevice"]/propertySheet/property[propertyName="ec_parameterForm"]/value',         'ui_forms/removeDevice.xml'],
     ['//step[stepName="removeDevice"]/command',                                                                         'vm/removeDevice.pl'],
     ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
-'//procedure[procedureName="AddHardDisk"]/propertySheet/property[propertyName="ec_parameterForm"]/value',               'ui_forms/addHardDisk.xml'],
+    ['//procedure[procedureName="AddHardDisk"]/propertySheet/property[propertyName="ec_parameterForm"]/value',          'ui_forms/addHardDisk.xml'],
     ['//step[stepName="AddHardDisk"]/command',                                                                          'vm/addHardDisk.pl'],
+    ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
+	
+	['//procedure[procedureName="GotoSnapshot"]/propertySheet/property[propertyName="ec_parameterForm"]/value',         'ui_forms/gotoSnapshot.xml'],
+    ['//step[stepName="GotoSnapshot"]/command',                                                                         'vm/gotoSnapshot.pl'],
     ['//step[stepName="SetTimelimit"]/command',                                                                         'setTimelimit.pl'],
 	#Main files
     ['//property[propertyName="preamble"]/value', 'preamble.pl'],

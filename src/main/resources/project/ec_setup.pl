@@ -218,6 +218,12 @@ my %addharddisk = (
                 description => "Adding a virtual Disk inside VM.",
                 category    => "Resource Management"
                );
+my %gotosnapshot = (
+                label       => "ESX - GotoSnapshot",
+                procedure   => "GotoSnapshot",
+                description => "Goto a Specific Snapshot in a Particular Vm.",
+                category    => "Resource Management"
+               );
 
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Suspend");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - Clone");
@@ -252,6 +258,7 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - AddNetworkI
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - ListDevice");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - RemoveDevice");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - AddHardDisk");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/EC-ESX - GotoSnapshot");
 
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend Virtual Machine");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - Suspend");
@@ -285,8 +292,9 @@ $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - AddNetworkInte
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - ListDevice");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - RemoveDevice");
 $batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - AddHardDisk");
+$batch->deleteProperty("/server/ec_customEditors/pickerStep/ESX - GotoSnapshot");
 
-@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listentity, \%createfolder, \%deleteentity, \%renameentity, \%moveentity, \%displayesxsummary,\%createresourcepool,\%editresourcepool,\%listsnapshot,\%removesnapshot, \%addcddvddrive, \%editcddvddrive, \%addnetworkinterface, \%listdevice, \%removedevice, \%addharddisk);
+@::createStepPickerSteps = (\%suspend, \%cleanup, \%clone, \%create, \%createresourcefromvm, \%import, \%getvmconfiguration, \%export, \%relocate, \%registervm, \%poweroff, \%poweron, \%revert, \%shutdown, \%snapshot, \%listentity, \%createfolder, \%deleteentity, \%renameentity, \%moveentity, \%displayesxsummary,\%createresourcepool,\%editresourcepool,\%listsnapshot,\%removesnapshot, \%addcddvddrive, \%editcddvddrive, \%addnetworkinterface, \%listdevice, \%removedevice, \%addharddisk,\%gotosnapshot);
 
 my $pluginName = "@PLUGIN_NAME@";
 my $pluginKey = "@PLUGIN_KEY@";
@@ -659,6 +667,14 @@ if ($upgradeAction eq "upgrade") {
                                         stepName      => 'AddHardDisk'
                                      }
                                     );
+            $batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'GotoSnapshot',
+                                        stepName      => 'GotoSnapshot'
+                                     }
+                                    );									
         }
     }
 }

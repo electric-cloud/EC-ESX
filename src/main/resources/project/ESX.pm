@@ -3581,6 +3581,95 @@ sub addHardDisk {
         $self->logout();
         return;
 }
+sub gotoSnapshot {
+    my ($self) = @_;
+    print "Going for adding SnapShot  "
+      . $self->opts->{esx_snapshotname}
+      . "to VM: "
+      . $self->opts->{esx_vmname}
+      . " present on host: "
+      . $self->opts->{host_name} . "\n";
+
+    #Set default values
+    $self->initialize();
+    $self->debug_msg(0, '---------------------------------------------------------------------');
+
+    $self->login();
+    if ($self->opts->{exitcode}) { return; }
+
+    my $vm_views = Vim::find_entity_views(view_type => 'VirtualMachine',filter => { name => $self->opts->{esx_vmname}});
+	if ($#{$vm_views} != 0) {
+      Util::trace(0, "Virtual machine "." ". $self->opts->{esx_vmname} ." "." not unique.\n");
+      return;
+    }
+    foreach (@$vm_views) {
+      my $mor_host = $_->runtime->host;
+	  #print "\n My Host -".Dumper($mor_host)."\n";
+      my $hostname = Vim::get_view(mo_ref => $mor_host)->name;
+      #print "\n My Host -".Dumper($mor_host)."\n";
+	  my $ref = undef;
+      my $nRefs = 0;
+	  #print "\n Defined Snapshot-". $_->snapshot."\n";
+      if(defined $_->snapshot) {
+      ($ref, $nRefs) =find_snapshot($_->snapshot->rootSnapshotList,  $self->opts->{esx_snapshotname});
+      }
+      if (defined $ref && $nRefs == 1) {
+         my $snapshot = Vim::get_view (mo_ref =>$ref->snapshot);
+		 #print "Snapshot".Dumper($snapshot)."\n";
+         eval{
+            $snapshot->RevertToSnapshot();
+            Util::trace(0, "\nOperation :: Revert To Snapshot "
+                           . $self->opts->{esx_snapshotname}
+                           . " For Virtual Machine ". $_->name
+                           . " completed sucessfully under host ".$hostname
+                           . "\n");
+         };
+         if ($@) {
+            if (ref($@) eq 'SoapFault') {
+               if(ref($@->detail) eq 'InvalidState') {
+                  Util::trace(0,"\nOperation cannot be performed in the current state
+                                of the virtual machine");
+               }
+               elsif(ref($@->detail) eq 'NotSupported') {
+                  Util::trace(0,"\nHost product does not support snapshots.");
+               }
+               elsif(ref($@->detail) eq 'InvalidPowerState') {
+                  Util::trace(0,"\nOperation cannot be performed in the current power state
+                                of the virtual machine.");
+               }
+               elsif(ref($@->detail) eq 'InsufficientResourcesFault') {
+                  Util::trace(0,"\nOperation would violate a resource usage policy.");
+               }
+               elsif(ref($@->detail) eq 'HostNotConnected') {
+                  Util::trace(0,"\nHost not connected.");
+               }
+               else {
+                  Util::trace(0, "\nFault: " . $@ . "\n\n");
+               }
+            }
+            else {
+               Util::trace(0, "\nFault: " . $@ . "\n\n");
+            }
+         }
+      }
+      else {
+         if ($nRefs > 1) {
+            Util::trace(0,"\nMore than one snapshot exits with name "
+                           . $self->opts->{esx_snapshotname}. "  in Virtual Machine ". $_->name
+                           ." under host ". $hostname
+                           ."\n");
+         }
+         if($nRefs == 0 ) {
+            Util::trace(0,"\nSnapshot Not Found with name  "
+                           .$self->opts->{esx_snapshotname}. " in Virtual Machine ". $_->name
+                           ." under host ". $hostname
+                           ."\n");
+         }
+      }
+   }
+    $self->logout();
+    return;
+}
 
 sub generateFilename {
    my %args = @_;
