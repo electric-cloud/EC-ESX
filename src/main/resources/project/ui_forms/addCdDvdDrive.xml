@@ -1,0 +1,67 @@
+<!--
+
+     Copyright 2015 Electric Cloud, Inc.
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+
+-->
+<editor>
+    <help>/commander/pages/@PLUGIN_NAME@/@PLUGIN_KEY@_help?s=Administration&amp;ss=Plugins#AddCdDvdDrive</help>
+    <formElement>
+        <type>entry</type>
+        <label>ESX Connection:</label>
+        <property>connection_config</property>
+        <required>1</required>
+        <documentation>The name of the configuration which holds the connection information for ESX server.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>VM Name:</label>
+        <property>vm_name</property>
+        <required>1</required>
+        <documentation>The name of the VM on which CD/DVD Drive is attached.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>ISO Image:</label>
+        <property>iso_image</property>
+        <required>0</required>
+        <documentation>The path of ISO Image. Will be used only for ISO Image Type.</documentation>
+    </formElement>
+    <formElement>
+        <type>select</type>
+        <label>Backing Type:</label>
+        <property>backing_type</property>
+        <required>1</required>
+        <documentation>The backing type of created CD/DVD Drive (Passthrough, AtApi, ISO Image).</documentation>
+        <option><name>PassThrough</name><value>passThrough</value></option>
+        <option><name>AtApi</name><value>atApi</value></option>
+        <option><name>IsoImage</name><value>isoImage</value></option>
+    </formElement>
+    <formElement>
+        <type>select</type>
+        <label>Controller Type:</label>
+        <property>controller_type</property>
+        <required>1</required>
+        <documentation>The type of controller for created CD/DVD Drive (SATA, IDE).</documentation>
+        <option><name>SATA</name><value>SATA</value></option>
+        <option><name>IDE</name><value>IDE</value></option>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>JobStep Timeout:</label>
+        <property>esx_timeout</property>
+        <required>0</required>
+        <documentation>Timeout for the step execution in minutes. Blank means no timeout.</documentation>
+    </formElement>
+</editor>

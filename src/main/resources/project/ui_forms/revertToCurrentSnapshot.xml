@@ -16,28 +16,26 @@
 
 -->
 <editor>
-	<formElement>
+    <help>/commander/pages/@PLUGIN_NAME@/@PLUGIN_KEY@_help?s=Administration&amp;ss=Plugins#ListEntity</help>
+    <formElement>
         <type>entry</type>
-        <label>ESX Url:</label>
-        <property>esx_url</property>
-        <value/>
-        <documentation>Provide the URL of the ESX server with the form: https://(ip_address|hostname). </documentation>
+        <label>ESX Connection:</label>
+        <property>connection_config</property>
         <required>1</required>
+        <documentation>The name of the configuration which holds the connection information for ESX server.</documentation>
     </formElement>
 	<formElement>
         <type>entry</type>
-        <label>Host Name:</label>
-        <property>host_name</property>
-        <value/>
-        <documentation>Name/IP of the host present on ESX Server. </documentation>
+        <label>VM Name:</label>
+        <property>esx_vmname</property>
         <required>1</required>
+        <documentation>Name of the virtual machine where you want to see the snapshots.</documentation>
     </formElement>
     <formElement>
-        <type>credential</type>
-        <label>Login as:</label>
-        <property>credential</property>
-        <value/>
+        <type>entry</type>
+        <label>JobStep Timeout:</label>
+        <property>esx_timeout</property>
         <required>0</required>
-        <documentation>ESX username/password.</documentation>
+        <documentation>Timeout for the step execution in minutes. Blank means no timeout.</documentation>
     </formElement>
 </editor>
