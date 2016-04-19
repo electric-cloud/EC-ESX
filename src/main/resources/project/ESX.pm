@@ -1816,9 +1816,11 @@ sub import {
 
         # Create and return fake output
         my $out = "";
-        $out .= "Importing OVF package...";
+        $out .= "Importing OVA/OVF package...";
         $out .= "\n";
-        $out .= "Opening OVF source: " . $self->opts->{esx_ovf_file};
+        $out .= "Opening OVA/OVF source: " . $self->opts->{esx_ovf_file};
+        $out .= "Selecting OVA/OVF file type: " . $self->opts->{esx_import_file_type};
+        $out .= "Opening source directory: " . $self->opts->{esx_source_directory};
         $out .= "Opening VI target: " . "vi://" . $self->opts->{esx_user} . ":" . $self->opts->{esx_pass} . "@" . $self->opts->{esx_host} . "/";
         $out .= "Deploying to VI: " . "vi://" . $self->opts->{esx_user} . "@" . $self->opts->{esx_host} . "/";
         $out .= "Disk progress: 0%\nDisk progress: 1%\nDisk progress: 96%\nDisk progress: 97%\nDisk progress: 99%\nDisk Transfer Completed";
@@ -1832,21 +1834,31 @@ sub import {
     $self->debug_msg(0, '---------------------------------------------------------------------');
 
     if ($self->opts->{esx_number_of_vms} == DEFAULT_NUMBER_OF_VMS) {
-        $self->opts->{esx_ovf_file} = CURRENT_DIRECTORY . '/' . $self->opts->{esx_vmname} . '/' . $self->opts->{esx_vmname} . '.ovf';
+        if ($self->opts->{esx_import_file_type} eq "ovf") {
+            $self->opts->{esx_ovf_file} = $self->opts->{esx_source_directory} . '/' . $self->opts->{esx_vmname} . '/' . $self->opts->{esx_vmname} . '.ovf';
+        }
+        if ($self->opts->{esx_import_file_type} eq "ova") {
+            $self->opts->{esx_ovf_file} = $self->opts->{esx_source_directory} . '/' . $self->opts->{esx_vmname} . '.ova';
+        }
         $self->import_vm();
     }
     else {
         my $vm_number;
         for (my $i = 0; $i < $self->opts->{esx_number_of_vms}; $i++) {
             $vm_number = $i + 1;
-            $self->opts->{esx_ovf_file} = CURRENT_DIRECTORY . '/' . $self->opts->{esx_vmname} . "_$vm_number/" . $self->opts->{esx_vmname} . "_$vm_number.ovf";
+            if ($self->opts->{esx_import_file_type} eq "ovf") {
+                $self->opts->{esx_ovf_file} = $self->opts->{esx_source_directory} . '/' . $self->opts->{esx_vmname} . "_$vm_number/" . $self->opts->{esx_vmname} . "_$vm_number.ovf";
+            }
+            if ($self->opts->{esx_import_file_type} eq "ova") {
+                $self->opts->{esx_ovf_file} = $self->opts->{esx_source_directory} . '/' . $self->opts->{esx_vmname} . "_$vm_number.ova";
+            }
             $self->import_vm();
         }
     }
 }
 
 ################################
-# import_vm - Import an OVF package to the ESX server using ovftool
+# import_vm - Import an OVA/OVF package to the ESX server using ovftool
 #
 # Arguments:
 #   none
@@ -1858,9 +1870,9 @@ sub import {
 sub import_vm {
     my ($self) = @_;
 
-    # Call ovftool to import OVF package
-    $self->debug_msg(1, 'Importing OVF package...');
-    my $command = 'ovftool --datastore=' . $self->opts->{esx_datastore} . ' "' . $self->opts->{esx_ovf_file} . '" "vi://' . $self->opts->{esx_user} . ':' . $self->opts->{esx_pass} . '@' . $self->opts->{esx_host} . '/"';
+    # Call ovftool to import OVA/OVF package
+    $self->debug_msg(1, 'Importing OVA/OVF package...');
+    my $command = 'ovftool --disableVerification --noSSLVerify --datastore=' . $self->opts->{esx_datastore} . ' "' . $self->opts->{esx_ovf_file} . '" "vi://' . $self->opts->{esx_user} . ':' . $self->opts->{esx_pass} . '@' . $self->opts->{esx_host} . '/"';
     system($command);
 }
 
@@ -1925,7 +1937,7 @@ sub export_vm {
 
     # Call ovftool to export virtual machine
     $self->debug_msg(1, 'Exporting virtual machine...');
-    my $command = 'ovftool "vi://' . $self->opts->{esx_user} . ':' . $self->opts->{esx_pass} . '@' . $self->opts->{esx_host} . '/' . $self->opts->{esx_datacenter} . '?ds=[' . $self->opts->{esx_datastore} . '] ' . $self->opts->{esx_source} . '" "' . CURRENT_DIRECTORY . '"';
+    my $command = 'ovftool --disableVerification --noSSLVerify "vi://' . $self->opts->{esx_user} . ':' . $self->opts->{esx_pass} . '@' . $self->opts->{esx_host} . '/' . $self->opts->{esx_datacenter} . '?ds=[' . $self->opts->{esx_datastore} . '] ' . $self->opts->{esx_source} . '" "' . CURRENT_DIRECTORY . '"';
     system($command);
 }
 

@@ -39,18 +39,27 @@
         <documentation>Name of the datastore to be used.</documentation>
     </formElement>
     <formElement>
+        <type>select</type>
+        <label>Select Import File Type:</label>
+        <property>esx_import_file_type</property>
+        <required>1</required>
+        <documentation>Import file type to be used.</documentation>
+        <option><name>OVA</name><value>ova</value></option>
+        <option><name>OVF</name><value>ovf</value></option>
+    </formElement>
+    <formElement>
         <type>entry</type>
         <label>VM Name:</label>
         <property>esx_vmname</property>
         <required>1</required>
         <documentation>Name of the virtual machine to import.</documentation>
-    </formElement> 
+    </formElement>
     <formElement>
         <type>entry</type>
         <label>Source directory:</label>
         <property>esx_source_directory</property>
-        <documentation>Absoulte path to the directory where OVF packages are stored.</documentation>
-        <required>1</required>
+        <documentation>Absolute path to the directory where OVA/OVF packages are stored.</documentation>
+        <required>0</required>
     </formElement>
     <formElement>
         <type>entry</type>
