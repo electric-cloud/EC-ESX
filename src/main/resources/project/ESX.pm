@@ -1832,14 +1832,14 @@ sub import {
     $self->debug_msg(0, '---------------------------------------------------------------------');
 
     if ($self->opts->{esx_number_of_vms} == DEFAULT_NUMBER_OF_VMS) {
-        $self->opts->{esx_ovf_file} = CURRENT_DIRECTORY . '/' . $self->opts->{esx_vmname} . '/' . $self->opts->{esx_vmname} . '.ovf';
+        #$self->opts->{esx_ovf_file} = CURRENT_DIRECTORY . '/' . $self->opts->{esx_vmname} . '/' . $self->opts->{esx_vmname} . '.ovf';
         $self->import_vm();
     }
     else {
         my $vm_number;
         for (my $i = 0; $i < $self->opts->{esx_number_of_vms}; $i++) {
             $vm_number = $i + 1;
-            $self->opts->{esx_ovf_file} = CURRENT_DIRECTORY . '/' . $self->opts->{esx_vmname} . "_$vm_number/" . $self->opts->{esx_vmname} . "_$vm_number.ovf";
+            #$self->opts->{esx_ovf_file} = CURRENT_DIRECTORY . '/' . $self->opts->{esx_vmname} . "_$vm_number/" . $self->opts->{esx_vmname} . "_$vm_number.ovf";
             $self->import_vm();
         }
     }
@@ -1860,7 +1860,10 @@ sub import_vm {
 
     # Call ovftool to import OVF package
     $self->debug_msg(1, 'Importing OVF package...');
-    my $command = 'ovftool --datastore=' . $self->opts->{esx_datastore} . ' "' . $self->opts->{esx_ovf_file} . '" "vi://' . $self->opts->{esx_user} . ':' . $self->opts->{esx_pass} . '@' . $self->opts->{esx_host} . '/"';
+    $self->opts->{esx_url} =~ m{https://(.*)};
+    my $esx_server = $1;
+    my $command = $self->opts->{ovftool_path} . ' --noSSLVerify --datastore=' . $self->opts->{esx_datastore} . ' -n=' . $self->opts->{esx_vmname} . ' ' . $self->opts->{esx_source_directory} . ' vi://' . $self->opts->{esx_user} . ':' . $self->opts->{esx_pass} . '@' . $esx_server . '?ip=' . $self->opts->{esx_host};
+    $self->debug_msg(1, 'Executing command: ' . $command);
     system($command);
 }
 
@@ -1924,8 +1927,10 @@ sub export_vm {
     my ($self) = @_;
 
     # Call ovftool to export virtual machine
+    #
     $self->debug_msg(1, 'Exporting virtual machine...');
-    my $command = 'ovftool "vi://' . $self->opts->{esx_user} . ':' . $self->opts->{esx_pass} . '@' . $self->opts->{esx_host} . '/' . $self->opts->{esx_datacenter} . '?ds=[' . $self->opts->{esx_datastore} . '] ' . $self->opts->{esx_source} . '" "' . CURRENT_DIRECTORY . '"';
+    my $command =  $self->opts->{ovftool_path} . ' --noSSLVerify vi://' . $self->opts->{esx_user} . ':' . $self->opts->{esx_pass} . '@' . $self->opts->{esx_host} . '/' . $self->opts->{esx_datacenter} . '?ds=[' . $self->opts->{esx_datastore} . ']/' . $self->opts->{esx_source} . ' ' . $self->opts->{esx_target_directory};
+    $self->debug_msg(1, 'Executing command: ' . $command);
     system($command);
 }
 
@@ -3807,7 +3812,7 @@ sub print_error {
 sub create_conf_spec {
     my ($self) = @_;
 
-    my $controller = VirtualBusLogicController->new(
+    my $controller = VirtualLsiLogicController->new(
                                                     key       => 0,
                                                     device    => [0],
                                                     busNumber => 0,
