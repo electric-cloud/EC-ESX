@@ -26,6 +26,13 @@
     </formElement>
     <formElement>
         <type>entry</type>
+        <label>OVF Tool Path:</label>
+        <property>ovftool_path</property>
+        <required>1</required>
+        <documentation>Path of the ovf tool.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
         <label>Host:</label>
         <property>esx_host</property>
         <required>1</required>

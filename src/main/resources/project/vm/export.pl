@@ -24,6 +24,7 @@ my $opts;
 
 $opts->{connection_config} = q{$[connection_config]};
 $opts->{esx_host} = q{$[esx_host]};
+$opts->{ovftool_path} = q{$[ovftool_path]};
 $opts->{esx_datacenter} = q{$[esx_datacenter]};
 $opts->{esx_datastore} = q{$[esx_datastore]};
 $opts->{esx_vmname} = q{$[esx_vmname]};

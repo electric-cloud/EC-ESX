@@ -2945,6 +2945,16 @@
                                     </propertySheet>
                                 </property>
                                 <property>
+                                    <propertyName>ovftool_path</propertyName>
+                                    <propertySheet>
+                                        <property>
+                                            <propertyName>formType</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>standard</value>
+                                        </property>
+                                    </propertySheet>
+                                </property>
+                                <property>
                                     <propertyName>esx_host</propertyName>
                                     <propertySheet>
                                         <property>
@@ -3019,6 +3029,13 @@
                 <formalParameterName>connection_config</formalParameterName>
                 <defaultValue></defaultValue>
                 <description>The name of the configuration which holds the connection information for ESX server.</description>
+                <required>1</required>
+                <type>entry</type>
+            </formalParameter>
+            <formalParameter>
+                <formalParameterName>ovftool_path</formalParameterName>
+                <defaultValue>ovftool</defaultValue>
+                <description>Path of the ovftool.</description>
                 <required>1</required>
                 <type>entry</type>
             </formalParameter>
@@ -3117,7 +3134,6 @@
                 <shell>ec-perl</shell>
                 <timeLimit>$[/myCall/esx_timelimit]</timeLimit>
                 <timeLimitUnits>minutes</timeLimitUnits>
-                <workingDirectory>$[esx_source_directory]</workingDirectory>
                 <workspaceName></workspaceName>
                 <procedureName>Import</procedureName>
                 <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
@@ -3161,6 +3177,16 @@
                                 </property>
                                 <property>
                                     <propertyName>esx_host</propertyName>
+                                    <propertySheet>
+                                        <property>
+                                            <propertyName>formType</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>standard</value>
+                                        </property>
+                                    </propertySheet>
+                                </property>
+                                <property>
+                                    <propertyName>ovftool_path</propertyName>
                                     <propertySheet>
                                         <property>
                                             <propertyName>formType</propertyName>
@@ -3244,6 +3270,13 @@
                 <formalParameterName>connection_config</formalParameterName>
                 <defaultValue></defaultValue>
                 <description>The name of the configuration which holds the connection information for ESX server.</description>
+                <required>1</required>
+                <type>entry</type>
+            </formalParameter>
+            <formalParameter>
+                <formalParameterName>ovftool_path</formalParameterName>
+                <defaultValue>ovftool</defaultValue>
+                <description>Path of the ovftool.</description>
                 <required>1</required>
                 <type>entry</type>
             </formalParameter>

@@ -1832,14 +1832,14 @@ sub import {
     $self->debug_msg(0, '---------------------------------------------------------------------');
 
     if ($self->opts->{esx_number_of_vms} == DEFAULT_NUMBER_OF_VMS) {
-        $self->opts->{esx_ovf_file} = CURRENT_DIRECTORY . '/' . $self->opts->{esx_vmname} . '/' . $self->opts->{esx_vmname} . '.ovf';
+        #$self->opts->{esx_ovf_file} = CURRENT_DIRECTORY . '/' . $self->opts->{esx_vmname} . '/' . $self->opts->{esx_vmname} . '.ovf';
         $self->import_vm();
     }
     else {
         my $vm_number;
         for (my $i = 0; $i < $self->opts->{esx_number_of_vms}; $i++) {
             $vm_number = $i + 1;
-            $self->opts->{esx_ovf_file} = CURRENT_DIRECTORY . '/' . $self->opts->{esx_vmname} . "_$vm_number/" . $self->opts->{esx_vmname} . "_$vm_number.ovf";
+            #$self->opts->{esx_ovf_file} = CURRENT_DIRECTORY . '/' . $self->opts->{esx_vmname} . "_$vm_number/" . $self->opts->{esx_vmname} . "_$vm_number.ovf";
             $self->import_vm();
         }
     }
@@ -1860,7 +1860,10 @@ sub import_vm {
 
     # Call ovftool to import OVF package
     $self->debug_msg(1, 'Importing OVF package...');
-    my $command = 'ovftool --datastore=' . $self->opts->{esx_datastore} . ' "' . $self->opts->{esx_ovf_file} . '" "vi://' . $self->opts->{esx_user} . ':' . $self->opts->{esx_pass} . '@' . $self->opts->{esx_host} . '/"';
+    $self->opts->{esx_url} =~ m{https://(.*)};
+    my $esx_server = $1;
+    my $command = $self->opts->{ovftool_path} . ' --noSSLVerify --datastore=' . $self->opts->{esx_datastore} . ' -n=' . $self->opts->{esx_vmname} . ' ' . $self->opts->{esx_source_directory} . ' vi://' . $self->opts->{esx_user} . ':' . $self->opts->{esx_pass} . '@' . $esx_server . '?ip=' . $self->opts->{esx_host};
+    $self->debug_msg(1, 'Executing command: ' . $command);
     system($command);
 }
 
@@ -1924,8 +1927,10 @@ sub export_vm {
     my ($self) = @_;
 
     # Call ovftool to export virtual machine
+    #
     $self->debug_msg(1, 'Exporting virtual machine...');
-    my $command = 'ovftool "vi://' . $self->opts->{esx_user} . ':' . $self->opts->{esx_pass} . '@' . $self->opts->{esx_host} . '/' . $self->opts->{esx_datacenter} . '?ds=[' . $self->opts->{esx_datastore} . '] ' . $self->opts->{esx_source} . '" "' . CURRENT_DIRECTORY . '"';
+    my $command =  $self->opts->{ovftool_path} . ' --noSSLVerify vi://' . $self->opts->{esx_user} . ':' . $self->opts->{esx_pass} . '@' . $self->opts->{esx_host} . '/' . $self->opts->{esx_datacenter} . '?ds=[' . $self->opts->{esx_datastore} . ']/' . $self->opts->{esx_source} . ' ' . $self->opts->{esx_target_directory};
+    $self->debug_msg(1, 'Executing command: ' . $command);
     system($command);
 }
 
@@ -2548,8 +2553,14 @@ sub summary {
     if ($self->opts->{exitcode}) { return; }
 
     $self->display_esx_summary();
-
+    $self->myCmdr->setProperty('/myJob/summary', $self->opts->{summary});
     $self->logout();
+}
+
+sub logger{
+    my ($self, $debugLevel, $message) = @_;
+    $self->debug_msg($debugLevel, $message);
+    $self->opts->{summary} .= $message . "\n"; 
 }
 
 ################################
@@ -2564,11 +2575,14 @@ sub summary {
 ################################
 sub display_esx_summary {
     my ($self) = @_;
-    $self->debug_msg(1, 'Displaying summary for Host: \'' . $self->opts->{host_name} . '\'...');
+    my $message;
+    $self->opts->{summary} = "";
+    $self->logger(1, 'Displaying summary for Host: \'' . $self->opts->{host_name} . '\'...');
+    
     eval {
         my $host = Vim::find_entity_view(view_type => 'HostSystem', filter => { name => $self->opts->{host_name}});
         if (!$host) {
-            $self->debug_msg(0, 'Host: \'' . $self->opts->{host_name} . '\' not found');
+            $self->logger(0, 'Host: \'' . $self->opts->{host_name} . '\' not found');
             $self->opts->{exitcode} = ERROR;
             return;
         }
@@ -2583,18 +2597,18 @@ sub display_esx_summary {
         if ( $self->opts->{storage_info} == '1' ) {
             display_esx_storage_info($self);
         }
-        $self->debug_msg(0, 'Successfully displayed summary for Host: \'' . $self->opts->{host_name} . '\'');
+        $self->logger(0, 'Successfully displayed summary for Host: \'' . $self->opts->{host_name} . '\'');
     };
     if ($@) {
         if (ref($@) eq SOAP_FAULT) {
-            $self->debug_msg(0, 'Error displaying summary for \'' . $self->opts->{host_name} . '\': ');
+            $self->logger(0, 'Error displaying summary for \'' . $self->opts->{host_name} . '\': ');
 
             if (!$self->print_error(ref($@->detail))) {
-                $self->debug_msg(0, "Summary for '" . $self->opts->{host_name} . "' can't be displayed \n" . $@ . EMPTY);
+                $self->logger(0, "Summary for '" . $self->opts->{host_name} . "' can't be displayed \n" . $@ . EMPTY);
             }
         }
         else {
-            $self->debug_msg(0, "Summary for '" . $self->opts->{host_name} . "' can't be displayed \n" . $@ . EMPTY);
+            $self->logger(0, "Summary for '" . $self->opts->{host_name} . "' can't be displayed \n" . $@ . EMPTY);
         }
         $self->opts->{exitcode} = ERROR;
         return;
@@ -3798,7 +3812,7 @@ sub print_error {
 sub create_conf_spec {
     my ($self) = @_;
 
-    my $controller = VirtualBusLogicController->new(
+    my $controller = VirtualLsiLogicController->new(
                                                     key       => 0,
                                                     device    => [0],
                                                     busNumber => 0,
@@ -4106,32 +4120,32 @@ use constant STORAGE_MULTIPLIER => 1073741824;  # 1024*1024*1024 (to convert to 
 sub display_esx_general_info {
     my ($self) = @_;
     my $host = $self->{'host'};
-    print "-----------------------------------------GENERAL INFORMATION----------------------------------------\n";
-    print "Host Name               : " . $host->summary->config->name . "\n";
-    print "Host Vendor             : " . $host->summary->hardware->vendor . "\n";
-    print "Boot Time               : " . $host->runtime->bootTime . "\n";
-    print "CPU Speed               : " . $host->summary->hardware->cpuMhz . " MHz\n";
-    print "CPU-Model               : " . $host->summary->hardware->cpuModel . "\n";
-    print "Model                   : " . $host->summary->hardware->model . "\n";
+    $self->logger(0, "-----------------------------------------GENERAL INFORMATION----------------------------------------");
+    $self->logger(0, "Host Name               : " . $host->summary->config->name);
+    $self->logger(0, "Host Vendor             : " . $host->summary->hardware->vendor);
+    $self->logger(0, "Boot Time               : " . $host->runtime->bootTime);
+    $self->logger(0, "CPU Speed               : " . $host->summary->hardware->cpuMhz . " MHz");
+    $self->logger(0, "CPU-Model               : " . $host->summary->hardware->cpuModel);
+    $self->logger(0, "Model                   : " . $host->summary->hardware->model);
     my $totalMemory = $host->summary->hardware->memorySize/STORAGE_MULTIPLIER;
-    print "Total Memory            : " . $totalMemory . " GB\n";
-    print "Number of CPU Cores     : " . $host->summary->hardware->numCpuCores . "\n";
-    print "Number of CPU Pkgs      : " . $host->summary->hardware->numCpuPkgs . "\n";
-    print "Number of CPU Threads   : " . $host->summary->hardware->numCpuThreads . "\n";
-    print "HyperThreading Available: " . ($host->config->hyperThread->available ? "YES" : "NO") . "\n";
-    print "HyperThreading Active   : " . ($host->config->hyperThread->active ? "YES" : "NO") . "\n";
+    $self->logger(0, "Total Memory            : " . $totalMemory . " GB");
+    $self->logger(0, "Number of CPU Cores     : " . $host->summary->hardware->numCpuCores);
+    $self->logger(0, "Number of CPU Pkgs      : " . $host->summary->hardware->numCpuPkgs);
+    $self->logger(0, "Number of CPU Threads   : " . $host->summary->hardware->numCpuThreads);
+    $self->logger(0, "HyperThreading Available: " . ($host->config->hyperThread->available ? "YES" : "NO"));
+    $self->logger(0, "HyperThreading Active   : " . ($host->config->hyperThread->active ? "YES" : "NO"));
     if (defined ($host->summary->config->product)) {
-        print "Product Name            : " . ${$host->summary->config->product}{'name'} . "\n";
-        print "Software On Host        : " . ${$host->summary->config->product}{'fullName'} . "\n";
-        print "Product Vendor          : " . ${$host->summary->config->product}{'vendor'} . "\n";
-        print "Product Version         : " . ${$host->summary->config->product}{'version'} . "\n";
+        $self->logger(0, "Product Name            : " . ${$host->summary->config->product}{'name'});
+        $self->logger(0, "Software On Host        : " . ${$host->summary->config->product}{'fullName'});
+        $self->logger(0, "Product Vendor          : " . ${$host->summary->config->product}{'vendor'});
+        $self->logger(0, "Product Version         : " . ${$host->summary->config->product}{'version'});
     }
 
-    print "vMotion Enabled         : " . ($host->summary->config->vmotionEnabled ? "YES" : "NO") . "\n";
-    print "Number of NICs          : " . $host->summary->hardware->numNics . "\n";
-    print "Number of HBAs          : " . $host->summary->hardware->numHBAs . "\n";
-    print "UUID                    : " . $host->summary->hardware->uuid . "\n";
-    print "-----------------------------------------------------------------------------------------------------\n\n";
+    $self->logger(0, "vMotion Enabled         : " . ($host->summary->config->vmotionEnabled ? "YES" : "NO"));
+    $self->logger(0, "Number of NICs          : " . $host->summary->hardware->numNics);
+    $self->logger(0, "Number of HBAs          : " . $host->summary->hardware->numHBAs);
+    $self->logger(0, "UUID                    : " . $host->summary->hardware->uuid);
+    $self->logger(0, "-----------------------------------------------------------------------------------------------------");
 }
 
 ###############################
@@ -4146,10 +4160,10 @@ sub display_esx_general_info {
 sub display_esx_resource_info {
     my ($self) = @_;
     my $host = $self->{'host'};
-    print "-----------------------------------------RESOURCE INFORMATION----------------------------------------\n";
-    print "Overall CPU Usage       : " . $host->summary->quickStats->overallCpuUsage . " MHz\n";
-    print "Overall Memory Usage    : " . $host->summary->quickStats->overallMemoryUsage . "\n";
-    print "-----------------------------------------------------------------------------------------------------\n\n";
+    $self->logger(0, "-----------------------------------------RESOURCE INFORMATION----------------------------------------");
+    $self->logger(0, "Overall CPU Usage       : " . $host->summary->quickStats->overallCpuUsage . " MHz");
+    $self->logger(0, "Overall Memory Usage    : " . $host->summary->quickStats->overallMemoryUsage . "MB");
+    $self->logger(0, "-----------------------------------------------------------------------------------------------------");
 }
 
 ###############################
@@ -4169,30 +4183,30 @@ sub display_esx_network_info {
     my $network_system;
     eval { $network_system = Vim::get_view(mo_ref => $host->configManager->networkSystem); };
     if ($network_system->ipRouteConfig->defaultGateway) {
-        print "    IP Default Gateway : " . $network_system->ipRouteConfig->defaultGateway . "\n";
+        $self->logger(0, "IP Default Gateway : " . $network_system->ipRouteConfig->defaultGateway);
     }
 
     ## DNS ##
     my $dns_add = $host->config->network->dnsConfig->address;
 
-    print "    DNS Address : \n";
+    $self->logger(0,  "    DNS Address : ");
     foreach(@$dns_add) {
-        print "        " . $_ . "\n";
+        $self->logger(0, "        " . $_);
     }
 
-    print "    NIC Details : \n";
+    $self->logger(0, "    NIC Details : ");
     my $nics = $host->config->network->pnic;
     foreach my $nic (@$nics) {
-        print "        NIC Device :" . $nic->device . "\n";
-        print "            NIC PCI                       :" . $nic->pci . "\n";
-        print "            NIC Driver                    :" . $nic->driver . "\n";
+        $self->logger(0,  "        NIC Device :" . $nic->device);
+        $self->logger(0,  "            NIC PCI                       :" . $nic->pci);
+        $self->logger(0,  "            NIC Driver                    :" . $nic->driver);
         if ($nic->linkSpeed) {
-            print "            NIC Mode of Channel Operation :" . ($nic->linkSpeed->duplex ?  "FULL-DUPLEX" : "HALF-DUPLEX"). "\n";
-            print "            NIC Link Speed Mb             :" . $nic->linkSpeed->speedMb . "\n";
+            $self->logger(0, "            NIC Mode of Channel Operation :" . ($nic->linkSpeed->duplex ?  "FULL-DUPLEX" : "HALF-DUPLEX"));
+            $self->logger(0, "            NIC Link Speed Mb             :" . $nic->linkSpeed->speedMb);
         }
-        print "            NIC Wake On Lan Supported     :" . $nic->wakeOnLanSupported . "\n";
+        $self->logger(0, "            NIC Wake On Lan Supported     :" . $nic->wakeOnLanSupported);
     }
-    print "-----------------------------------------------------------------------------------------------------\n\n";
+    $self->logger(0, "-----------------------------------------------------------------------------------------------------");
 }
 
 ###############################
@@ -4207,44 +4221,44 @@ sub display_esx_network_info {
 sub display_esx_storage_info {
     my ($self) = @_;
     my $host = $self->{'host'};
-    print "-----------------------------------------STORAGE INFORMATION-----------------------------------------\n";
-    print "------------------------DATASTORE------------------------\n";
+    $self->logger(0, "-----------------------------------------STORAGE INFORMATION-----------------------------------------");
+    $self->logger(0, "------------------------DATASTORE------------------------");
     my $ds_views = Vim::get_views (mo_ref_array => $host->datastore);
     foreach my $ds (@$ds_views) {
         my $ds_row = "";
         if($ds->summary->accessible) {
             #capture unique datastores seen in cluster
-            print "Datastore Name             : " . $ds->info->name . "\n";
-            print "    Datastore Accessible       : " . ($ds->summary->accessible ? "YES" : "NO") . "\n";
-            print "    Datastore URL              : " . $ds->info->url . "\n";
-            print "    Datastore Type             : " . $ds->summary->type . "\n";
+            $self->logger(0, "Datastore Name             : " . $ds->info->name);
+            $self->logger(0, "    Datastore Accessible       : " . ($ds->summary->accessible ? "YES" : "NO"));
+            $self->logger(0, "    Datastore URL              : " . $ds->info->url);
+            $self->logger(0, "    Datastore Type             : " . $ds->summary->type);
             if ( ($ds->summary->freeSpace gt 0) || ($ds->summary->capacity gt 0) ) {
                 my $capacity = $ds->summary->capacity/STORAGE_MULTIPLIER;
                 my $free_space = $ds->summary->freeSpace/STORAGE_MULTIPLIER;
                 my $used_space = $capacity - $free_space;
                 my $percent_used_space = ($used_space/$capacity)*100;
-                print "    Datastore Capacity         : " . $capacity . " MB \n";
-                print "    Datastore FreeSpace        : " . $free_space . " MB \n";
-                print "    Datastore UsedSpace        : " . $used_space . " MB \n";
-                print "    Datastore PercentUsedSpace : " . $percent_used_space . " %\n";
+                $self->logger(0, "    Datastore Capacity         : " . $capacity . " GB");
+                $self->logger(0, "    Datastore FreeSpace        : " . $free_space . " GB");
+                $self->logger(0, "    Datastore UsedSpace        : " . $used_space . " GB");
+                $self->logger(0, "    Datastore PercentUsedSpace : " . $percent_used_space . " %");
             }
         }
     }
 
-    print "------------------------LUN------------------------\n";
+    $self->logger(0, "------------------------LUN------------------------");
     my $luns = $host->config->storageDevice->scsiLun;
     foreach my $lun (@$luns) {
                 my $lun_row = "";
                 if($lun->isa('HostScsiDisk')) {
-                    print "LUN UID               : " . $lun->uuid . "\n";
-                    print "LUN Canonical Name    : " . $lun->canonicalName . "\n";
-                    print "LUN Queue Depth       : " . $lun->queueDepth . "\n";
+                    $self->logger(0, "LUN UID               : " . $lun->uuid);
+                    $self->logger(0, "LUN Canonical Name    : " . $lun->canonicalName);
+                    $self->logger(0, "LUN Queue Depth       : " . $lun->queueDepth);
                     my $states = $lun->operationalState;
                     print "LUN Operational State : ";
                     foreach (@$states) {
-                        print $_ . "\n";
+                        $self->logger(0, $_);
                     }
                 }
     }
-    print "-----------------------------------------------------------------------------------------------------\n\n";
+    $self->logger(0, "-----------------------------------------------------------------------------------------------------");
 }
