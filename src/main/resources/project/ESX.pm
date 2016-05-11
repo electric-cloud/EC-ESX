@@ -3156,7 +3156,7 @@ sub fetchController {
     }
     if ($self->fetchDevices()){
         print "Can't fetch devices" . "\n";
-        return;
+        return ERROR;
     }
     foreach my $device (@{$self->opts->{devices}}){
         my %deviceMap = %{$device};
@@ -3527,7 +3527,6 @@ sub removeDevice {
     if ($self->opts->{exitcode}) { return; }
 
     my $operationRemove = VirtualDeviceConfigSpecOperation->new('remove');
-    my $operationDestroy = VirtualDeviceConfigSpecOperation->new('destroy');
 
     if ($operationRemove) {
         if($self->getVirtualMachineView()){
@@ -3548,12 +3547,6 @@ sub removeDevice {
                 deviceManager(
                     deviceConfig => $deviceConfig,
                     operation    => $operationRemove,
-                    vmView       => $self->opts->{vm_view}
-                );
-                #Remove device traces from ESX
-                deviceManager(
-                    deviceConfig => $deviceConfig,
-                    operation    => $operationDestroy,
                     vmView       => $self->opts->{vm_view}
                 );
                 print "Successfully removed device: "
@@ -3652,8 +3645,7 @@ sub addHardDisk {
 }
 sub revertToCurrentSnapshot {
     my ($self) = @_;
-    print "Going for revert SnapShot  "
-      . "to VM: "
+    print "Going for reverting to current snapshot for VM: "
       . $self->opts->{esx_vmname}
       . " present on host: "
       . $self->opts->{host_name} . "\n";

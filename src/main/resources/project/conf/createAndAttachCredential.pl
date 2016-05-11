@@ -241,6 +241,179 @@ $xpath = $ec->attachCredential(
                               );
 $errors .= $ec->checkAllErrors($xpath);
 
+
+
+$xpath = $ec->attachCredential(
+                               $projName,
+                               $credName,
+                               {
+                                  procedureName => 'ListEntity',
+                                  stepName      => 'ListEntity'
+                               }
+                              );
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential(
+                               $projName,
+                               $credName,
+                               {
+                                  procedureName => 'CreateFolder',
+                                  stepName      => 'CreateFolder'
+                               }
+                              );
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential(
+                               $projName,
+                               $credName,
+                               {
+                                  procedureName => 'RenameEntity',
+                                  stepName      => 'RenameEntity'
+                               }
+                              );
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential(
+                               $projName,
+                               $credName,
+                               {
+                                  procedureName => 'MoveEntity',
+                                  stepName      => 'MoveEntity'
+                               }
+                              );
+$errors .= $ec->checkAllErrors($xpath);
+
+
+$xpath = $ec->attachCredential(
+                               $projName,
+                               $credName,
+                               {
+                                  procedureName => 'DisplayESXSummary',
+                                  stepName      => 'DisplayESXSummary'
+                               }
+                              );
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential(
+                               $projName,
+                               $credName,
+                               {
+                                  procedureName => 'CreateResourcepool',
+                                  stepName      => 'CreateResourcepool'
+                               }
+                              );
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential(
+                               $projName,
+                               $credName,
+                               {
+                                  procedureName => 'EditResourcepool',
+                                  stepName      => 'EditResourcepool'
+                               }
+                              );
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential(
+                               $projName,
+                               $credName,
+                               {
+                                  procedureName => 'ListSnapshot',
+                                  stepName      => 'ListSnapshot'
+                               }
+                              );
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential(
+                               $projName,
+                               $credName,
+                               {
+                                  procedureName => 'RemoveSnapshot',
+                                  stepName      => 'RemoveSnapshot'
+                               }
+                              );
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential(
+                               $projName,
+                               $credName,
+                               {
+                                  procedureName => 'AddCdDvdDrive',
+                                  stepName      => 'addCdDvdDrive'
+                               }
+                              );
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential(
+                               $projName,
+                               $credName,
+                               {
+                                  procedureName => 'EditCdDvdDrive',
+                                  stepName      => 'editCdDvdDrive'
+                               }
+                              );
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential(
+                               $projName,
+                               $credName,
+                               {
+                                  procedureName => 'AddNetworkInterface',
+                                  stepName      => 'addNetworkInterface'
+                               }
+                              );
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential(
+                               $projName,
+                               $credName,
+                               {
+                                  procedureName => 'ListDevice',
+                                  stepName      => 'listDevice'
+                               }
+                              );
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential(
+                               $projName,
+                               $credName,
+                               {
+                                  procedureName => 'RemoveDevice',
+                                  stepName      => 'RemoveDevice'
+                               }
+                              );
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential(
+                               $projName,
+                               $credName,
+                               {
+                                  procedureName => 'AddHardDisk',
+                                  stepName      => 'AddHardDisk'
+                               }
+                              );
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential(
+                               $projName,
+                               $credName,
+                               {
+                                  procedureName => 'RevertToCurrentSnapshot',
+                                  stepName      => 'RevertToCurrentSnapshot'
+                               }
+                              );
+$errors .= $ec->checkAllErrors($xpath);
+
+$xpath = $ec->attachCredential(
+                               $projName,
+                               $credName,
+                               {
+                                  procedureName => 'ChangeCpuMemAllocation',
+                                  stepName      => 'changeCpuMemAllocation'
+                               }
+                              );
+$errors .= $ec->checkAllErrors($xpath);
+
 if ("$errors" ne "") {
 
     # Cleanup the partially created configuration we just created
