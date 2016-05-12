@@ -3156,6 +3156,7 @@ sub fetchController {
     }
     if ($self->fetchDevices()){
         print "Can't fetch devices" . "\n";
+        $self->opts->{exitcode} = ERROR;
         return ERROR;
     }
     foreach my $device (@{$self->opts->{devices}}){
@@ -3175,6 +3176,7 @@ sub fetchController {
               . " is not free" . "\n";
         }
     }
+    $self->opts->{exitcode} = ERROR;
     return ERROR;
 }
 
@@ -3512,7 +3514,7 @@ sub changeCpuMemAllocation {
 sub removeDevice {
     my ($self) = @_;
     print "Going for removing device: "
-      . $self->opts->{device_name}
+      . $self->opts->{device_type}
       . " from VM: "
       . $self->opts->{vm_name}
       . " present on host: "
@@ -3550,22 +3552,23 @@ sub removeDevice {
                     vmView       => $self->opts->{vm_view}
                 );
                 print "Successfully removed device: "
-                  . $self->opts->{device_name}
+                  . $deviceConfig->deviceInfo->label
                   . " from VM: "
                   . $self->opts->{vm_name} . "\n";
-                $self->logout();
-                return;
             }
         }
+        $self->logout();
+        return;
     }
     print "Not able to remove device: "
-      . $self->opts->{device_name}
+      . $self->opts->{device_type}
       . " from VM: "
       . $self->opts->{vm_name} . "\n";
     $self->opts->{exitcode} = ERROR;
     $self->logout();
     return;
 }
+
 sub addHardDisk {
     my ($self) = @_;
     print "Going for adding Hard Disk : "
@@ -3646,7 +3649,7 @@ sub addHardDisk {
 sub revertToCurrentSnapshot {
     my ($self) = @_;
     print "Going for reverting to current snapshot for VM: "
-      . $self->opts->{esx_vmname}
+      . $self->opts->{vm_name}
       . " present on host: "
       . $self->opts->{host_name} . "\n";
 
@@ -3657,21 +3660,20 @@ sub revertToCurrentSnapshot {
     $self->login();
     if ($self->opts->{exitcode}) { return; }
 
-    my $vm_views = Vim::find_entity_views(view_type => 'VirtualMachine',filter => { name => $self->opts->{esx_vmname}});
-	if ($#{$vm_views} != 0) {
-      Util::trace(0, "Virtual machine "." ". $self->opts->{esx_vmname} ." "." not unique.\n");
-      return;
+    if($self->getVirtualMachineView()){
+        print "Can't find Virtual Machine view" . "\n";
+        return;
     }
-	foreach (@$vm_views) {
-   
-     my $mor_host = $_->runtime->host;
-     my $hostname = Vim::get_view(mo_ref => $mor_host)->name;
+    print "Got vm view."
+      . "\n";
+
+     my $hostname = Vim::get_view(mo_ref => $self->opts->{vm_view}->runtime->host)->name;
    
      eval {
-        $_->RevertToCurrentSnapshot();
+        $self->opts->{vm_view}->RevertToCurrentSnapshot();
         Util::trace(0, "\nOperation :: Revert To Current Snapshot For Virtual "
-                         . "Machine " . $_->name
-                         ." completed sucessfully under host ".$hostname
+                         . "Machine " . $self->opts->{vm_view}->name
+                         ." completed sucessfully under host ". $hostname
                          . "\n");
      };
      if ($@) {
@@ -3704,7 +3706,6 @@ sub revertToCurrentSnapshot {
            Util::trace(0, "\nFault: " . $@ . "\n\n");
         }
      }
-    }
     $self->logout();
     return;
 }

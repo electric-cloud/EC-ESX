@@ -23,7 +23,7 @@ use strict;
 my $opts;
 print "Goto to a specific Snapshot\n";
 $opts->{connection_config} = q{$[connection_config]};
-$opts->{esx_vmname} = q{$[esx_vmname]};
+$opts->{vm_name} = q{$[esx_vmname]};
 $[/myProject/procedure_helpers/preamble]
 $gt->revertToCurrentSnapshot();
 exit($opts->{exitcode});
