@@ -16,7 +16,7 @@
     <p>Plugin Version @PLUGIN_VERSION@</p>
     <hr style="margin-left: -10px; margin-top: 10px; height: 1px; width: 100%; color: #5981BD;" noshade="noshade" />
 	
-	<p>Revised on July 1, 2015</p>
+	<p>Revised on April 1, 2016</p>
     <!-- The tool description should answer these kinds of questions:
 What is the tool itself is used for in the development
 process? Who would use this tool? What is the general use-case or
@@ -209,7 +209,7 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
         
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/configuration_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/configuration_panel.png" /></div>
 
     <div id="Create"><a name="Create" id="Create"></a>
 
@@ -326,7 +326,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Create_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/Create_panel.png" /></div>
 
     <div id="Clone"><a name="Clone" id="Clone"></a>
 
@@ -397,7 +397,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Clone_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/Clone_panel.png" /></div>
 
     <div id="Relocate"><a name="Relocate" id="Relocate"></a>
 
@@ -462,7 +462,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Relocate_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/Relocate_panel.png" /></div>
 
     <div id="Cleanup"><a name="Cleanup" id="Cleanup"></a>
 
@@ -518,7 +518,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Cleanup_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/Cleanup_panel.png" /></div>
 
     <div id="Snapshot"><a name="Snapshot" id="Snapshot"></a>
 
@@ -572,7 +572,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Snapshot_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/Snapshot_panel.png" /></div>
 
     <div id="Revert"><a name="Revert" id="Revert"></a>
 
@@ -632,7 +632,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Revert_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/Revert_panel.png" /></div>
 
     <div id="PowerOn"><a name="PowerOn" id="PowerOn"></a>
 
@@ -711,7 +711,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/PowerOn_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/PowerOn_panel.png" /></div>
 
     <div id="PowerOff"><a name="PowerOff" id="PowerOff"></a>
 
@@ -759,7 +759,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/PowerOff_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/PowerOff_panel.png" /></div>
 
     <div id="Shutdown"><a name="Shutdown" id="Shutdown"></a>
 
@@ -807,7 +807,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Shutdown_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/Shutdown_panel.png" /></div>
 
     <div id="Suspend"><a name="Suspend" id="Suspend"></a>
 
@@ -855,7 +855,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Suspend_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/Suspend_panel.png" /></div>
 
     <div id="CreateResourceFromVM"><a name="CreateResourceFromVM" id="CreateResourceFromVM"></a>
 
@@ -935,7 +935,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CreateResourceFromVM_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/CreateResourceFromVM_panel.png" /></div>
 
     <div id="GetVMConfiguration"><a name="GetVMConfiguration" id="GetVMConfiguration"></a>
 
@@ -994,7 +994,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/GetVMConfiguration_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/GetVMConfiguration_panel.png" /></div>
 
     <div id="Import"><a name="Import" id="Import"></a>
 
@@ -1065,7 +1065,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Import_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/Import_panel.png" /></div>
 
     <div id="Export"><a name="Export" id="Export"></a>
 
@@ -1143,7 +1143,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Export_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/Export_panel.png" /></div>
 
     <div id="RegisterVM"><a name="RegisterVM" id="RegisterVM"></a>
 
@@ -1210,7 +1210,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/RegisterVM_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/RegisterVM_panel.png" /></div>
 
     <div id="CloudManagerGrow"><a name="CloudManagerGrow" id="CloudManagerGrow"></a>
 
@@ -1263,7 +1263,7 @@ only if appropriate, such as FOSS - but not commercial software.
           <td>Pool name for creating resources. (Required)</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CloudManagerGrow_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/CloudManagerGrow_panel.png" /></div>
 
     <div id="CloudManagerShrink"><a name="CloudManagerShrink" id="CloudManagerShrink"></a>
 
@@ -1297,7 +1297,7 @@ only if appropriate, such as FOSS - but not commercial software.
           CloudManagerGrow) to stop. (Required)</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CloudManagerShrink_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/CloudManagerShrink_panel.png" /></div>
 
     <div id="CloudManagerSync"><a name="CloudManagerSync" id="CloudManagerSync"></a>
 
@@ -1331,8 +1331,924 @@ only if appropriate, such as FOSS - but not commercial software.
           CloudManagerGrow) to check. (Required)</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CloudManagerShrink_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/CloudManagerShrink_panel.png" /></div>
+	
+    <div id="CreateResourcePool"><a name="CreateResourcePool" id="CreateResourcePool"></a>
+	
+    <h3>CreateResourcePool</h3>
+
+    <p>This procedure allows the plugin to create a new resource pool.</p>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+
+          <th>Description</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td class="required">ESX Connection</td>
+
+          <td>The name of the configuration which holds the
+          connection information for the ESX server. (Required)</td>
+        </tr>
+
+        <tr>
+          <td class="required">Resourcepool Name</td>
+
+          <td>Name of the new ResourcePool to be created. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">Parent Resourcepool Name</td>
+
+          <td>Name of the parent ResourcePool. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">CPUShare</td>
+
+          <td>Shares define how much access you get to CPU resources. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">MemShare</td>
+
+          <td>Shares define how much access you get to Memory resource . (Required)</td>
+        </tr>
+		
+        <tr>
+          <td>JobStep Timeout</td>
+
+          <td>Timeout for the step execution in minutes. Blank
+          means no timeout.</td>
+        </tr>
+		
+      </tbody>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/CreateResourcePool_panel.png" /></div>
     
+    <div id="EditResourcePool"><a name="EditResourcePool" id="EditResourcePool"></a>
+	
+    <h3>EditResourcePool</h3>
+
+    <p>This procedure allows the plugin to edit an existing resource pool.</p>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+
+          <th>Description</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td class="required">ESX Connection</td>
+
+          <td>The name of the configuration which holds the
+          connection information for the ESX server. (Required)</td>
+        </tr>
+
+        <tr>
+          <td class="required">New Resourcepool Name</td>
+
+          <td>New Name of the ResourcePool to be edited. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">Existing Resourcepool Name</td>
+
+          <td>Old Name of the ResourcePool. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">CPUShare</td>
+
+          <td>Shares define how much access you get to CPU resources. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">MemShare</td>
+
+          <td>Shares define how much access you get to Memory resource . (Required)</td>
+        </tr>
+		
+        <tr>
+          <td>JobStep Timeout</td>
+
+          <td>Timeout for the step execution in minutes. Blank
+          means no timeout.</td>
+        </tr>
+		
+      </tbody>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/EditResourcePool_panel.png" /></div>
+	
+    <div id="ListEntity"><a name="ListEntity" id="ListEntity"></a>
+	
+    <h3>ListEntity</h3>
+
+    <p>This procedure allows the plugin to list the objects of a specified Entity.</p>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+
+          <th>Description</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td class="required">ESX Connection</td>
+
+          <td>The name of the configuration which holds the
+          connection information for the ESX server. (Required)</td>
+        </tr>
+
+         <tr>
+          <td class="required">Entity Type</td>
+
+          <td>The entity type to be listed (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem,
+		  ResourcePool, or VirtualMachine) present on the target VirtualCenter 
+		  Server or ESX Server system. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td>JobStep Timeout</td>
+
+          <td>Timeout for the step execution in minutes. Blank
+          means no timeout.</td>
+        </tr>
+		
+      </tbody>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/ListEntity_panel.png" /></div>
+	
+    <div id="DeleteEntity"><a name="DeleteEntity" id="DeleteEntity"></a>
+	
+    <h3>DeleteEntity</h3>
+
+    <p>This procedure allows the plugin to delete the specified object of an Entity.</p>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+
+          <th>Description</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td class="required">ESX Connection</td>
+
+          <td>The name of the configuration which holds the
+          connection information for the ESX server. (Required)</td>
+        </tr>
+
+         <tr>
+          <td class="required">Entity Type</td>
+
+          <td>The entity type to be listed (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem,
+		  ResourcePool, or VirtualMachine) present on the target VirtualCenter 
+		  Server or ESX Server system. (Required)</td>
+        </tr>
+		
+         <tr>
+          <td class="required">Entity Name</td>
+
+          <td>The name of the entity which is to be deleted. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td>JobStep Timeout</td>
+
+          <td>Timeout for the step execution in minutes. Blank
+          means no timeout.</td>
+        </tr>
+		
+      </tbody>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/DeleteEntity_panel.png" /></div>
+	
+    <div id="CreateFolder"><a name="CreateFolder" id="CreateFolder"></a>
+	
+    <h3>CreateFolder</h3>
+
+    <p>This procedure allows the plugin to create a new folder.</p>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+
+          <th>Description</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td class="required">ESX Connection</td>
+
+          <td>The name of the configuration which holds the
+          connection information for the ESX server. (Required)</td>
+        </tr>
+
+        <tr>
+          <td class="required">Parent Type (Folder/Datacenter)</td>
+
+          <td>The parent (data center or folder) in which folder is to be created. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">Parent Name (Folder/Datacenter Name)</td>
+
+          <td>The name of the parent in which folder is to be created. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">Folder Name</td>
+
+          <td>Name of the folder to be created. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td>JobStep Timeout</td>
+
+          <td>Timeout for the step execution in minutes. Blank
+          means no timeout.</td>
+        </tr>
+		
+      </tbody>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/CreateFolder_panel.png" /></div>
+	
+    <div id="RenameEntity"><a name="RenameEntity" id="RenameEntity"></a>
+	
+    <h3>RenameEntity</h3>
+
+    <p>This procedure allows the plugin to rename the specified object of an entity.</p>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+
+          <th>Description</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td class="required">ESX Connection</td>
+
+          <td>The name of the configuration which holds the
+          connection information for the ESX server. (Required)</td>
+        </tr>
+
+        <tr>
+          <td class="required">Entity Type</td>
+
+          <td>The entity type to be renamed (ClusterComputeResource, Datacenter, Folder, ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">Entity Old Name</td>
+
+          <td>Old name of the entity which is to be renamed. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">Entity New Name</td>
+
+          <td>New name of the entity. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td>JobStep Timeout</td>
+
+          <td>Timeout for the step execution in minutes. Blank
+          means no timeout.</td>
+        </tr>
+		
+      </tbody>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/RenameEntity_panel.png" /></div>
+	
+    <div id="MoveEntity"><a name="MoveEntity" id="MoveEntity"></a>
+	
+    <h3>MoveEntity</h3>
+
+    <p>This procedure allows the plugin to move the specified object of an entity.</p>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+
+          <th>Description</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td class="required">ESX Connection</td>
+
+          <td>The name of the configuration which holds the
+          connection information for the ESX server. (Required)</td>
+        </tr>
+
+        <tr>
+          <td class="required">Entity Type (Folder/VM)</td>
+
+          <td>The parent (data center or VM) which need to be moved. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">Entity Name (Folder/VM Name)</td>
+
+          <td>The name of the Entity which need to be moved. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">Destination Folder Name</td>
+
+          <td>Name of the destination folder. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td>JobStep Timeout</td>
+
+          <td>Timeout for the step execution in minutes. Blank
+          means no timeout.</td>
+        </tr>
+		
+      </tbody>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/MoveEntity_panel.png" /></div>
+	
+    <div id="DisplayESXSummary"><a name="DisplayESXSummary" id="DisplayESXSummary"></a>
+	
+    <h3>DisplayESXSummary</h3>
+
+    <p>This procedure allows the plugin to Display the Summary of a specified host.</p>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+
+          <th>Description</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td class="required">ESX Connection</td>
+
+          <td>The name of the configuration which holds the
+          connection information for the ESX server. (Required)</td>
+        </tr>
+
+        <tr>
+          <td class="required">ESX Hostname</td>
+
+          <td>The name of the ESX Host whose summary is to be displayed. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">Show Live CPU/Memory Usage</td>
+
+          <td>Displays the live usage of CPU and Memory. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">Display Network Details</td>
+
+          <td>Displays the network details of the ESX host. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">Display Storage Details</td>
+
+          <td>Displays the storage details of the ESX host. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td>JobStep Timeout</td>
+
+          <td>Timeout for the step execution in minutes. Blank
+          means no timeout.</td>
+        </tr>
+		
+      </tbody>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/DisplayESXSummary_panel.png" /></div>
+	
+    <div id="ChangeCpuMemAllocation"><a name="ChangeCpuMemAllocation" id="ChangeCpuMemAllocation"></a>
+	
+    <h3>ChangeCpuMemAllocation</h3>
+
+    <p>Change Cpu/Memory allocation for a Virtual Machine.</p>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+
+          <th>Description</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td class="required">ESX Connection</td>
+
+          <td>The name of the configuration which holds the
+          connection information for the ESX server. (Required)</td>
+        </tr>
+
+        <tr>
+          <td class="required">Virtual Machine Name</td>
+
+          <td>The name of the VM for which CPU/Memory has to be changed.</td>
+        </tr>
+		
+        <tr>
+          <td class="required">Number of CPUs</td>
+
+          <td>Number of virtual processors in a virtual machine. </td>
+        </tr>
+		
+        <tr>
+          <td class="required">Memory</td>
+
+          <td>Size of a virtual machine's memory, in MB.</td>
+        </tr>
+	
+        <tr>
+          <td>JobStep Timeout</td>
+
+          <td>Timeout for the step execution in minutes. Blank
+          means no timeout.</td>
+        </tr>
+		
+      </tbody>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/ChangeCpuMemAllocation_panel.png" /></div>
+
+
+
+	<div id="AddHardDisk"><a name="	AddHardDisk" id="AddHardDisk"></a>
+	
+    <h3>AddHardDisk</h3>
+
+    <p>This procedure allows the plugin to Adding HardDisk for a VM.</p>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+
+          <th>Description</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td class="required">ESX Connection</td>
+
+          <td>The name of the configuration which holds the
+          connection information for the ESX server. (Required)</td>
+        </tr>
+
+        <tr>
+          <td class="required">Vm Name</td>
+
+          <td>The name of the Vm. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">HardDisk Size</td>
+
+          <td>The size of the HardDisk you want to add. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">Disk Provision(thick/thin)</td>
+
+          <td>Can only use at the time of create.You cannot change the provisioning once created.Thick virtual disk that supports clustering features such as Fault Tolerance.Space required for the virtual disk is allocated at creation time. In contrast to the flat format, the data remaining on the physical device is zeroed out when the virtual disk is created. It might take much longer to create disks in this format than to create other types of disks.Thin disk provisioning is using the format to save storage space. For the thin disk, you provision as much datastore space as the disk would require based on the value that you enter for the disk size. However, the thin disk starts small and at first, uses only as much datastore space as the disk needs for its initial operations. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">Controller Type(SCSI/IDE)</td>
+
+          <td>Currently we supports only SCSI.By default, two Integrated Drive Electronics (IDE) interfaces are presented to the virtual machine. The IDE interface (controller) is a standard way for storage devices (Floppy drives, hard drives and CD-ROM drives) to connect to the virtual machine.To access virtual disks, a virtual machine uses virtual SCSI controllers. These virtual controllers appear to a virtual machine as different types of controllers, including BusLogic Parallel, LSI Logic Parallel, LSI Logic SAS, and VMware Paravirtual. You can add a SCSI controller, change the SCSI controller type, and select bus sharing for a virtual machine.. (Required)</td>
+        </tr>
+		
+		<tr>
+         <td class="required">Storage Mode(Independent Persistent/Independent NonPersistent/Dependent)</td>
+
+         <td>Disks in persistent mode behave like conventional disks on your physical computer. All data written to a disk in persistent mode are written permanently to the disk.Changes to disks in nonpersistent mode are discarded when you power off or reset the virtual machine. With nonpersistent mode, you can restart the virtual machine with a virtual disk in the same state every time. Changes to the disk are written to and read from a redo log file that is deleted when you power off or reset. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td>JobStep Timeout</td>
+
+          <td>Timeout for the step execution in minutes. Blank
+          means no timeout.</td>
+        </tr>
+		
+      </tbody>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/AddHardDisk_panel.png" /></div>
+	
+	<div id="AddCdDvdDrive"><a name="AddCdDvdDrive" id="AddCdDvdDrive"></a>
+	
+    <h3>AddCdDvdDrive</h3>
+
+    <p>This procedure allows the plugin to add CD/DVD drive to VM..</p>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+
+          <th>Description</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td class="required">ESX Connection</td>
+
+          <td>The name of the configuration which holds the
+          connection information for the ESX server. (Required)</td>
+        </tr>
+
+        <tr>
+          <td class="required">Vm Name</td>
+
+          <td>The name of the Vm. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">ISO Image</td>
+
+          <td>The ISO Image Path. Will be used only for ISO Image Type.</td>
+        </tr>
+		
+        <tr>
+          <td class="required">Backing Type(PassThrough/AtApi/IsoImage)</td>
+
+          <td>Backing Type for the CD/DVD Drive. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">Controller Type(SATA/IDE)</td>
+
+          <td>Type of controller for the CD/DVD Drive.Required)</td>
+        </tr>
+		
+        <tr>
+          <td>JobStep Timeout</td>
+
+          <td>Timeout for the step execution in minutes. Blank
+          means no timeout.</td>
+        </tr>
+		
+      </tbody>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/AddCdDvdDrive_panel.png" /></div>
+	
+	<div id="AddNetworkInterface"><a name="AddNetworkInterface" id="AddNetworkInterface"></a>
+	
+    <h3>AddNetworkInterface</h3>
+
+    <p>This procedure allows the plugin to add  Network adapter .</p>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+
+          <th>Description</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td class="required">ESX Connection</td>
+
+          <td>The name of the configuration which holds the
+          connection information for the ESX server. (Required)</td>
+        </tr>
+
+        <tr>
+          <td class="required">Vm Name</td>
+
+          <td>The name of the Vm. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">Network</td>
+
+          <td>The network in which network interface to be added.</td>
+        </tr>
+
+        <tr>
+          <td>JobStep Timeout</td>
+
+          <td>Timeout for the step execution in minutes. Blank
+          means no timeout.</td>
+        </tr>
+		
+      </tbody>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/AddCdDvdDrive_panel.png" /></div>
+	
+	<div id="EditCdDvdDrive"><a name="EditCdDvdDrive" id="EditCdDvdDrive"></a>
+	
+    <h3>EditCdDvdDrive</h3>
+
+    <p>This procedure allows the plugin to edit already existing CD/DVD Drive on VM. .</p>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+
+          <th>Description</th>
+        </tr>
+      </thead>
+
+      <tbody>
+		<tr>
+          <td class="required">ESX Connection</td>
+
+          <td>The name of the configuration which holds the
+          connection information for the ESX server. (Required)</td>
+        </tr>
+		
+		<tr>
+          <td class="required">CD/DVD Drive Name</td>
+
+          <td>The name of the existing CD/DVD drive which need to be edited. (Required)</td>
+        </tr>
+		
+		<tr>
+          <td class="required">VM Name:</td>
+
+          <td>The name of the VM on which CD/DVD Drive is attached.(Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">ISO Image</td>
+
+          <td>The path of ISO Image. Will be used only for ISO Image Type.</td>
+        </tr>
+		
+        <tr>
+          <td class="required">Backing Type</td>
+
+          <td>The backing type of created CD/DVD Drive (Passthrough, AtApi, ISO Image)..</td>
+        </tr>
+		
+		<tr>
+          <td class="required">Controller Type</td>
+
+          <td>The type of controller for created CD/DVD Drive (SATA, IDE).</td>
+        </tr>
+		
+        <tr>
+          <td>JobStep Timeout</td>
+
+          <td>Timeout for the step execution in minutes. Blank
+          means no timeout.</td>
+        </tr>
+		
+      </tbody>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/EditCdDvdDrive_panel.png" /></div>
+	
+	<div id="ListDevice"><a name="ListDevice" id="ListDevice"></a>
+	
+    <h3>ListDevice</h3>
+
+    <p>List devices of specific type(CD/DVD drive, Hard disk, Network adapter).</p>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+
+          <th>Description</th>
+        </tr>
+      </thead>
+
+      <tbody>
+		<tr>
+          <td class="required">ESX Connection</td>
+
+          <td>The name of the configuration which holds the
+          connection information for the ESX server. (Required)</td>
+        </tr>
+		
+		<tr>
+          <td class="required">VM Name</td>
+
+          <td>The name of the VM on which device is attached. (Required)</td>
+        </tr>
+		
+		<tr>
+          <td class="required">Device Type</td>
+
+          <td>The device type to be listed (CD/DVD ROM, Hard disk, Network adapter).(Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">Device Name</td>
+
+          <td>The name of the device which is to be listed. If left blank all devices of above mentioned type will be listed.</td>
+        </tr>
+		
+        <tr>
+          <td>JobStep Timeout</td>
+
+          <td>Timeout for the step execution in minutes. Blank
+          means no timeout.</td>
+        </tr>
+		
+      </tbody>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/ListDevice_panel.png" /></div>
+
+	<div id="RemoveDevice"><a name="RemoveDevice" id="RemoveDevice"></a>
+	
+    <h3>RemoveDevice</h3>
+
+    <p>Remove devices of specific type.</p>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+
+          <th>Description</th>
+        </tr>
+      </thead>
+
+      <tbody>
+		<tr>
+          <td class="required">ESX Connection</td>
+
+          <td>The name of the configuration which holds the
+          connection information for the ESX server. (Required)</td>
+        </tr>
+		
+		<tr>
+          <td class="required">VM Name</td>
+
+          <td>The name of the VM on which device is attached. (Required)</td>
+        </tr>
+		
+		<tr>
+          <td class="required">Device Type</td>
+
+          <td>The device type to be listed (CD/DVD ROM, Hard disk, Network adapter).(Required)</td>
+        </tr>
+		
+        <tr>
+          <td class="required">Device Name</td>
+
+          <td>The name of the device which is to be listed. If left blank all devices of above mentioned type will be listed.</td>
+        </tr>
+		
+        <tr>
+          <td>JobStep Timeout</td>
+
+          <td>Timeout for the step execution in minutes. Blank
+          means no timeout.</td>
+        </tr>
+		
+      </tbody>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/RemoveDevice_panel.png" /></div>
+
+	<div id="ListSnapshot"><a name="ListSnapshot" id="ListSnapshot"></a>
+	
+    <h3>ListSnapshot</h3>
+
+    <p>List all snapshots inside a VM..</p>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+
+          <th>Description</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td class="required">ESX Connection</td>
+
+          <td>The name of the configuration which holds the
+          connection information for the ESX server. (Required)</td>
+        </tr>
+        
+		<tr>
+          <td class="required">VM Name</td>
+
+          <td>The name of the VM on which device is attached. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td>JobStep Timeout</td>
+
+          <td>Timeout for the step execution in minutes. Blank
+          means no timeout.</td>
+        </tr>
+		
+      </tbody>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/ListSnapshot_panel.png" /></div>
+	
+	<div id="RemoveSnapshot"><a name="RemoveSnapshot" id="RemoveSnapshot"></a>
+	
+    <h3>RemoveSnapshot</h3>
+
+    <p>Remove any particular snapshot or  all snapshots inside VM.</p>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+
+          <th>Description</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td class="required">ESX Connection</td>
+
+          <td>The name of the configuration which holds the
+          connection information for the ESX server. (Required)</td>
+        </tr>
+        
+		<tr>
+          <td class="required">VM Name</td>
+
+          <td>The name of the VM on which device is attached. (Required)</td>
+        </tr>	<tr>
+        
+		<td class="required">Snapshot Name</td>
+
+          <td>Name of the snapshot you want to remove.If you want to remove all the snapshots provide 'all' in the textbox option. (Required)</td>
+        </tr>
+		<tr>
+		<td class="required">All</td>
+
+          <td>If you want to remove all the snapshots provide 'all' in the textbox option. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td>JobStep Timeout</td>
+
+          <td>Timeout for the step execution in minutes. Blank
+          means no timeout.</td>
+        </tr>
+		
+      </tbody>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/RemoveSnapshot_panel.png" /></div>
+	
+	<div id="RevertToCurrentSnapshot"><a name="RevertToCurrentSnapshot" id="RevertToCurrentSnapshot"></a>
+	
+    <h3>RevertToCurrentSnapshot</h3>
+
+    <p>Revert Back to current snapshot after running this procedure.</p>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th>Parameter</th>
+
+          <th>Description</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td class="required">ESX Connection</td>
+
+          <td>The name of the configuration which holds the
+          connection information for the ESX server. (Required)</td>
+        </tr>
+		
+        <tr>
+          <td>JobStep Timeout</td>
+
+          <td>Timeout for the step execution in minutes. Blank
+          means no timeout.</td>
+        </tr>
+		
+      </tbody>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/RevertToCurrentSnapshot_panel.png" /></div>
+	
     <h1>Use Cases and Examples</h1>
     <!-- This section is for examples and use cases, including screenshots of the new Parameter Panel with example values filled in.
         Unfortunately, I can't tell you what exactly to put here, but it's OK to put what seems like too much! Include both parameter
@@ -1368,7 +2284,7 @@ only if appropriate, such as FOSS - but not commercial software.
     On the right side of the line for the ESX plugin, there is a
     "Configure" link which will open the Configuration page.<br />
     Create a new configuration by specifying the requested
-    parameters:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/create_config.png" />
+    parameters:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/create_config.png" />
 
     <p>Once the configuration is created, you can see it listed in
     "ESX Configurations", and now you are able to manage virtual
@@ -1377,7 +2293,7 @@ only if appropriate, such as FOSS - but not commercial software.
     <h4>PowerOn</h4>
 
     <p>Create a new PowerOn procedure and fill in the requested
-    parameters with real values from your ESX server:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweron_parameters.png" />
+    parameters with real values from your ESX server:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/poweron_parameters.png" />
 
     <p>Make sure you selected the "Create Resource?" checkbox.</p>
 
@@ -1385,32 +2301,58 @@ only if appropriate, such as FOSS - but not commercial software.
 
     <p>Create a new command step to use the created resource. In
     this example, we will pick a resource from the pool and just add
-    an ec-perl sleep to use it for 30 seconds.</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/consume_parameters.png" />
+    an ec-perl sleep to use it for 30 seconds.</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/consume_parameters.png" />
 
     <h4>Cleanup</h4>
 
     <p>Now that the resource has been used and is ready to be deleted,
     create a Cleanup step and fill in the requested
-    parameters.</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/cleanup_parameters.png" />
+    parameters.</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/cleanup_parameters.png" />
 
     <h4>PowerOff</h4>
 
     <p>Now that the resource has been deleted, create a PowerOff
-    step and fill in the requested parameters.</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweroff_parameters.png" />
+    step and fill in the requested parameters.</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/poweroff_parameters.png" />
 
     <h4>Results and outputs</h4>
 
     <p>Once the job finished, you can see the properties stored in
     'Results location'.<br />
-    <img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/job.png" /></p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/results.png" />
+    <img alt="" src="../../plugins/@PLUGIN_KEY@/images/job.png" /></p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/results.png" />
 
-    <p>PowerOn output:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweron_log.png" />
+    <p>PowerOn output:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/poweron_log.png" />
 
-    <p>Cleanup output:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/cleanup_log.png" />
+    <p>Cleanup output:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/cleanup_log.png" />
 
-    <p>PowerOff output:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweroff_log.png" />
+    <p>PowerOff output:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/poweroff_log.png" />
 
     <h1>Release Notes</h1>
+    <h2>@PLUGIN_KEY@ 2.2.0</h2>
+
+    <ul>
+        <p>Added the following new procedures:</p>
+<li>AddCdDvdDrive</li> 					
+<li>AddHardDisk</li>				
+<li>AddNetworkInterface</li>
+<li>ChangeCpuMemAllocation</li>
+<li>CreateFolder</li>
+<li>CreateResourcepool</li>
+<li>DeleteEntity</li>
+<li>DisplayESXSummary</li>
+<li>EditCdDvdDrive</li>
+<li>EditResourcepool</li>
+<li>ListDevice</li>
+<li>ListEntity</li>
+<li>ListSnapshot</li>
+<li>MoveEntity</li>
+<li>RemoveDevice</li>
+<li>RemoveSnapshot</li>
+<li>RenameEntity</li>
+<li>RevertToCurrentSnapshot</li>
+
+		
+    </ul>
+
     <h2>@PLUGIN_KEY@ 2.1.5</h2>
     <ul>
         <li>Fixed issue with configurations being cached for IE.</li>
