@@ -283,6 +283,15 @@ $xpath = $ec->attachCredential(
                               );
 $errors .= $ec->checkAllErrors($xpath);
 
+$xpath = $ec->attachCredential(
+                               $projName,
+                               $credName,
+                               {
+                                  procedureName => 'DeleteEntity',
+                                  stepName      => 'DeleteEntity'
+                               }
+                              );
+$errors .= $ec->checkAllErrors($xpath);
 
 $xpath = $ec->attachCredential(
                                $projName,
