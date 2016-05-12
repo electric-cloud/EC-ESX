@@ -30,21 +30,21 @@
         <label>Resourcepool Name:</label>
         <property>resourcepool_name</property>
         <required>1</required>
-        <documentation>Name of the parent ResourcePool.</documentation>
+        <documentation>Name of the Resource Pool to be created.</documentation>
     </formElement>
 	<formElement>
         <type>entry</type>
         <label>Parent Resourcepool Name:</label>
         <property>parent_resourcepool_name</property>
         <required>1</required>
-        <documentation>Name of the destination folder.</documentation>
+        <documentation>Name of the Parent Resource Pool in which new Resource Pool is to be created.</documentation>
     </formElement>
     <formElement>
         <type>select</type>
         <label>CpuShare:</label>
         <property>cpu_shares</property>
         <required>1</required>
-        <documentation>Shares define how much access you get to a resource ..</documentation>
+        <documentation>Shares define how much access you get to a resource.</documentation>
         <option><name>low</name><value>low</value></option>
         <option><name>normal</name><value>normal</value></option>
 		<option><name>high</name><value>high</value></option>
@@ -55,7 +55,7 @@
         <label>MemShare:</label>
         <property>mem_shares</property>
         <required>1</required>
-        <documentation>Shares define how much access you get to a resource ..</documentation>
+        <documentation>Shares define how much access you get to a resource.</documentation>
         <option><name>low</name><value>low</value></option>
         <option><name>normal</name><value>normal</value></option>
 		<option><name>high</name><value>high</value></option>

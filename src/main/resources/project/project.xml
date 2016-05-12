@@ -6074,28 +6074,28 @@
             <formalParameter>
                 <formalParameterName>edit_resourcepool_name</formalParameterName>
                 <defaultValue/>
-                <description>The name of the resourcepool which you want to edit.</description>
+                <description>The changed name of the resourcepool.</description>
                 <required>1</required>
                 <type>select</type>
             </formalParameter>
             <formalParameter>
                 <formalParameterName>edit_parent_resourcepool_name</formalParameterName>
                 <defaultValue></defaultValue>
-                <description>The name of the Parent Resorcepool inside which you want to edit your resourcepool.It can be Resources or any existing resourcepool</description>
+                <description>The existing name of the Resourcepool.</description>
                 <required>1</required>
                 <type>entry</type>
             </formalParameter>
             <formalParameter>
                 <formalParameterName>edit_cpu_shares</formalParameterName>
                 <defaultValue></defaultValue>
-                <description>Shares are typically specified as High, Normal,Low or Custom with respect to cpu</description>
+                <description>Shares are typically specified as High, Normal, Low or Custom with respect to cpu</description>
                 <required>1</required>
                 <type>entry</type>
             </formalParameter>
 			<formalParameter>
                 <formalParameterName>edit_mem_shares</formalParameterName>
                 <defaultValue></defaultValue>
-                <description>Shares are typically specified as High, Normal,Low or Custom with respect to memory</description>
+                <description>Shares are typically specified as High, Normal, Low or Custom with respect to memory</description>
                 <required>1</required>
                 <type>entry</type>
             </formalParameter>

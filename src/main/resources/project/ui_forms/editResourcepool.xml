@@ -30,14 +30,14 @@
         <label>New Resourcepool Name:</label>
         <property>edit_resourcepool_name</property>
         <required>1</required>
-        <documentation>After editing Name of the parent ResourcePool.</documentation>
+        <documentation>Changed name of the ResourcePool.</documentation>
     </formElement>
 	<formElement>
         <type>entry</type>
         <label>Existing Resourcepool Name:</label>
         <property>edit_parent_resourcepool_name</property>
         <required>1</required>
-        <documentation>Name of the destination folder.</documentation>
+        <documentation>Name of the existing ResourcePool which need to be edited.</documentation>
     </formElement>
     <formElement>
         <type>select</type>
