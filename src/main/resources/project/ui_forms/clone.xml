@@ -49,8 +49,8 @@
         <type>entry</type>
         <label>Datastore:</label>
         <property>esx_datastore</property>
-        <required>0</required>
-        <documentation>Name of the datastore. Default: Datastore with the most free space.</documentation>
+        <required>1</required>
+        <documentation>Name of the datastore.</documentation>
     </formElement>
     <formElement>
         <type>entry</type>

@@ -598,8 +598,8 @@
             <formalParameter>
                 <formalParameterName>esx_datastore</formalParameterName>
                 <defaultValue></defaultValue>
-                <description>Name of the datastore. Default: Any accessible datastore with free space greater than the disksize specified.</description>
-                <required>0</required>
+                <description>Name of the datastore.</description>
+                <required>1</required>
                 <type>entry</type>
             </formalParameter>
             <formalParameter>
@@ -876,8 +876,8 @@
             <formalParameter>
                 <formalParameterName>esx_datastore</formalParameterName>
                 <defaultValue></defaultValue>
-                <description>Name of the datastore. Default: Datastore with the most free space.</description>
-                <required>0</required>
+                <description>Name of the datastore.</description>
+                <required>1</required>
                 <type>entry</type>
             </formalParameter>
             <formalParameter>

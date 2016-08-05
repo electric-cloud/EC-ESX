@@ -1929,7 +1929,7 @@ sub export_vm {
     # Call ovftool to export virtual machine
     #
     $self->debug_msg(1, 'Exporting virtual machine...');
-    my $command =  $self->opts->{ovftool_path} . ' --noSSLVerify vi://' . $self->opts->{esx_user} . ':' . $self->opts->{esx_pass} . '@' . $self->opts->{esx_host} . '/' . $self->opts->{esx_datacenter} . '?ds=[' . $self->opts->{esx_datastore} . ']/' . $self->opts->{esx_source} . ' ' . $self->opts->{esx_target_directory};
+    my $command =  $self->opts->{ovftool_path} . ' --disableVerification --noSSLVerify vi://' . $self->opts->{esx_user} . ':' . $self->opts->{esx_pass} . '@' . $self->opts->{esx_host} . '/' . $self->opts->{esx_datacenter} . '?ds=[' . $self->opts->{esx_datastore} . ']/' . $self->opts->{esx_source} . ' ' . $self->opts->{esx_target_directory};
     $self->debug_msg(1, 'Executing command: ' . $command);
     system($command);
 }

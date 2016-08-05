@@ -35,8 +35,8 @@
         <type>entry</type>
         <label>Datastore:</label>
         <property>esx_datastore</property>
-        <required>0</required>
-        <documentation>Name of the datastore. Default: Any accessible datastore with free space greater than the disksize specified.</documentation>
+        <required>1</required>
+        <documentation>Name of the datastore.</documentation>
     </formElement>
     <formElement>
         <type>entry</type>
