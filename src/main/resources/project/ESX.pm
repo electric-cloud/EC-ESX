@@ -35,6 +35,8 @@ use lib $ENV{COMMANDER_PLUGINS} . '/@PLUGIN_NAME@/agent/lib';
 
 #use warnings;
 use strict;
+use Carp;
+use Data::Dumper;
 use ElectricCommander;
 use ElectricCommander::PropDB;
 use ElectricCommander::PropDB qw(/myProject/libs);
@@ -3013,6 +3015,41 @@ sub remove_snapshot {
 	}
  }
 
+
+sub get_exact_vm {
+    my ($self, $vm_path) = @_;
+
+    print "Looking for vm with exact path...\n";
+    my $vm_name = $vm_path->{vm_name};
+    my $vms = Vim::find_entity_views(
+        view_type => VIRTUAL_MACHINE,
+        filter => {
+            name => $vm_name
+        }
+    );
+    print "Found vms: " . scalar(@$vms) . "\n";
+    unless (scalar @$vms) {
+        print "No vms found\n";
+        return undef;
+    }
+
+
+    my $expected_path = join '/', @{$vm_path->{vm_reverse_path}};
+    $expected_path = slash_it($expected_path);
+    print "Expected path: " . $expected_path . "\n";
+    for my $vm (@$vms) {
+        my $folder = $vm->{parent};
+        $folder = Vim::get_view(mo_ref => $folder);
+        my $folder_paths = build_folders_path($folder, []);
+        my $scalar_folder_path = make_folders_path_scalar($folder_paths);
+        print "Scalar folder path: " . $scalar_folder_path . "\n";
+        if ($scalar_folder_path eq $expected_path) {
+            print "Desired VM found...\n";
+            return $vm;
+        }
+    }
+    return undef;
+}
 #########################################
 #Arguments:
 #    host: host name
@@ -3023,11 +3060,26 @@ sub remove_snapshot {
 sub getVirtualMachineView {
     my ($self) = @_;
     print "Getting Virtual Machine View: " . $self->opts->{vm_name} . " and host " . $self->opts->{host_name} . "\n";
+    my $vm_path = split_vm_name($self->opts->{vm_name});
+    if ($vm_path->{vm_path}) {
+        print "Found exact vm path. Working on it..." . "\n";
+        my $vm_view = $self->get_exact_vm($vm_path);
+        $self->opts->{vm_view} = $vm_view;
+        if (!$vm_view) {
+            print "ERROR: No vms was found\n";
+            exit 1;
+        }
+        return;
+    }
     my $hostView = Vim::find_entity_view(
         view_type => HOST_SYSTEM,
         filter    => { 'name' => $self->opts->{host_name} }
     );
     if ($hostView) {
+        if (!$self->is_unique_view_name(VIRTUAL_MACHINE, $self->opts->{vm_name})) {
+            print "ERROR: There are more than one vm with the same name, please, be more exact";
+            exit 1;
+        }
         my $vmView = Vim::find_entity_view(
             view_type    => VIRTUAL_MACHINE,
             filter       => { 'name' => $self->opts->{vm_name} },
@@ -3045,6 +3097,28 @@ sub getVirtualMachineView {
 
     $self->opts->{exitcode} = ERROR;
     return ERROR;
+}
+
+
+sub is_unique_view_name {
+    my ($self, $view_type, $name) = @_;
+
+    my $views;
+    eval {
+        $views = Vim::find_entity_views(
+            view_type => $view_type,
+            filter => {'name' => $name},
+            # properties => ['name']
+        );
+        1;
+    };
+    if (!$views) {
+        return 1;
+    }
+    if (scalar @$views <= 1) {
+        return 1;
+    }
+    return 0;
 }
 
 sub fetchDevices {
@@ -4254,4 +4328,56 @@ sub display_esx_storage_info {
                 }
     }
     $self->logger(0, "-----------------------------------------------------------------------------------------------------");
+}
+
+sub make_folders_path_scalar {
+    my ($map) = @_;
+    pop @$map;
+    my $path = join '/', map {$_ = $_->{name}} @$map;
+    $path = slash_it($path);
+    return $path;
+}
+
+sub slash_it {
+    my ($string) = @_;
+
+    if ($string !~ m/^\//s) {
+        $string = '/' . $string;
+    }
+    if ($string !~ m/\/$/s) {
+        $string .= '/';
+    }
+    return $string
+}
+
+sub build_folders_path {
+    my ($folder_view, $acc) = @_;
+    push @$acc, {name => $folder_view->{name}, mo_ref => $folder_view->{mo_ref}};
+    my $parent = $folder_view->{parent};
+    if (!$parent || $parent->{type} ne 'Folder') {
+        return $acc;
+    }
+    else {
+        my $t = Vim::get_view(mo_ref => $parent);
+        build_folders_path($t, $acc);
+    }
+}
+
+sub split_vm_name {
+    my $name = shift;
+
+    my @path = grep {$_} split /\//, $name;
+    my $retval = {
+        vm_name => pop @path,
+        vm_path => '',
+        vm_reverse_path => '',
+    };
+
+    if (scalar @path > 1) {
+        my @reverse_path = reverse @path;
+        $retval->{vm_path} = \@path;
+        $retval->{vm_reverse_path} = \@reverse_path;
+    }
+
+    return $retval;
 }
