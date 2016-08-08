@@ -1123,7 +1123,7 @@ only if appropriate, such as FOSS - but not commercial software.
         <tr>
           <td class="required">Target directory</td>
 
-          <td>Absoulte path to the directory where virtual machines
+          <td>Absolute path to the directory where virtual machines
           will be exported. (Required)</td>
         </tr>
 
