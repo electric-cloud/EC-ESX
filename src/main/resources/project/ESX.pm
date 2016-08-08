@@ -2788,10 +2788,10 @@ sub edit_resoucepool {
 #   none
 #
 sub listSnapshot {
-    print "Listing Snapshots" . "\n";
     my ($self) = @_;
-	if ($::gRunTestUseFakeOutput) {
 
+    print "Listing Snapshots" . "\n";
+	if ($::gRunTestUseFakeOutput) {
         # Create and return fake output
         my $out = "";
         #$out .= "Listing Snapshots for VIRTUAL_MACHINE'" . $self->opts->{esx_vmname} . "'...";
@@ -2806,7 +2806,9 @@ sub listSnapshot {
 
     #Login with VMWare service
     $self->login();
-    if ($self->opts->{exitcode}) { return; }
+    if ($self->opts->{exitcode}) {
+        return;
+    }
 
     $self->list_snapshot();
 
@@ -2824,62 +2826,82 @@ sub listSnapshot {
 ################################
 sub list_snapshot {
     my ($self) = @_;
+
     $self->debug_msg(0, 'Listing Snapshots of VM \'' . $self->opts->{esx_vmname} . '\'...');
-	my $view = Vim::find_entity_view(view_type => 'VirtualMachine',filter => { 'name' => $self->opts->{esx_vmname} } );
-        if (!$view) {
-			$self->debug_msg(0, 'Virtual Machine\'' . $self->opts->{esx_vmname} . '\' not found');
-            $self->opts->{exitcode} = ERROR;
-            return;
-        }  
+	my $view = Vim::find_entity_view(
+        view_type => 'VirtualMachine',
+        filter => {
+            name => $self->opts->{esx_vmname}
+        }
+    );
+    if (!$view) {
+        $self->debug_msg(0, 'Virtual Machine\'' . $self->opts->{esx_vmname} . '\' not found');
+        $self->opts->{exitcode} = ERROR;
+        return;
+    }
     eval {
-		my $vm_views = Vim::find_entity_views(view_type => 'VirtualMachine',filter => { 'name' => $self->opts->{esx_vmname} } );
+		my $vm_views = Vim::find_entity_views(
+            view_type => 'VirtualMachine',
+            filter => {
+                name => $self->opts->{esx_vmname}
+            }
+        );
         if (!$vm_views) {
 			$self->debug_msg(0, 'Virtual Machine\'' . $self->opts->{esx_vmname} . '\' not found');
             $self->opts->{exitcode} = ERROR;
             return;
         }
 		foreach (@$vm_views) {
-        my $count = 0;
-        my $snapshots = $_->snapshot;
-        if(defined $snapshots) {
-	    Util::trace(0,"\nSnapshots for Virtual Machine ".$self->opts->{esx_vmname}. "\n");
-		print_tree ($_->snapshot->currentSnapshot, " " , $_->snapshot->rootSnapshotList);
-		$self->debug_msg(0, 'Successfully Listed Snapshots for VM \'' . $self->opts->{esx_vmname} . '\'');
-	   }
-       else
-	   {
-	   $self->debug_msg(0, 'NO Snapshots available for VM \'' . $self->opts->{esx_vmname} . '\'');
-	   }
-    }
-    if ($@) {
-        if (ref($@) eq SOAP_FAULT) {
-            $self->debug_msg(0, 'Error listing Snapshots of VM \'' . $self->opts->{esx_vmname} . '\': ');
-
-            if (!$self->print_error(ref($@->detail))) {
-                $self->debug_msg(0, "VM '" . $self->opts->{esx_vmname} . "' can't be listed \n" . $@ . EMPTY);
+            my $count = 0;
+            my $snapshots = $_->snapshot;
+            if(defined $snapshots) {
+                Util::trace(0,"\nSnapshots for Virtual Machine ".$self->opts->{esx_vmname}. "\n");
+                my $current_snapshot = $_->snapshot->currentSnapshot();
+                my $current_snapshot_view = Vim::get_view(mo_ref => $current_snapshot);
+                my $current_snapshot_ref = $current_snapshot_view->{mo_ref}->{value};
+                $current_snapshot_ref ||= '';
+                print_tree($_->snapshot->currentSnapshot, " " , $_->snapshot->rootSnapshotList, $current_snapshot_ref);
+                $self->debug_msg(0, 'Successfully Listed Snapshots for VM \'' . $self->opts->{esx_vmname} . '\'');
+            }
+            else {
+                $self->debug_msg(0, 'NO Snapshots available for VM \'' . $self->opts->{esx_vmname} . '\'');
             }
         }
-        else {
-            $self->debug_msg(0, "VM '" . $self->opts->{esx_vmname} . "' can't be listed \n" . $@ . EMPTY);
+        if ($@) {
+            if (ref($@) eq SOAP_FAULT) {
+                $self->debug_msg(0, 'Error listing Snapshots of VM \'' . $self->opts->{esx_vmname} . '\': ');
+                if (!$self->print_error(ref($@->detail))) {
+                    $self->debug_msg(0, "VM '" . $self->opts->{esx_vmname} . "' can't be listed \n" . $@ . EMPTY);
+                }
+            }
+            else {
+                $self->debug_msg(0, "VM '" . $self->opts->{esx_vmname} . "' can't be listed \n" . $@ . EMPTY);
+            }
+            $self->opts->{exitcode} = ERROR;
+            return;
         }
-        $self->opts->{exitcode} = ERROR;
-        return;
-    }
 	}
 }
-sub print_tree
-	{
-		my ($ref, $str, $tree) = @_;
-		my $head = " ";
-		foreach my $node (@$tree) 
-		{
+
+
+sub print_tree {
+    my ($ref, $str, $tree, $current_snapshot_ref) = @_;
+
+    $current_snapshot_ref ||= '';
+    my $head = " ";
+    foreach my $node (@$tree) {
 		$head = ($ref->value eq $node->snapshot->value) ? " " : " " if (defined $ref);
 		my $quiesced = ($node->quiesced) ? "Y" : "N";
-		printf "%s%-48.48s%16.16s %s %s\n", $head, $str.$node->name ;
-		print_tree ($ref, $str . " ", $node->childSnapshotList);
-		}
-		return;
-	}
+        my $name = $node->name();
+        if ($node->snapshot->value() eq $current_snapshot_ref) {
+            $name .= " #current";
+        }
+		printf "%s%-48.48s%16.16s %s %s\n", $head, $str . $name;
+		print_tree ($ref, $str . " ", $node->childSnapshotList, $current_snapshot_ref);
+    }
+    return;
+}
+
 ################################
 # Remove - Connect, call remove_snapshot, and disconnect from ESX server
 #
@@ -4376,4 +4398,13 @@ sub split_vm_name {
     }
 
     return $retval;
+}
+
+sub in_array {
+    my ($what, @where) = @_;
+
+    for my $e (@where) {
+        return 1 if $what eq $e;
+    }
+    return 0;
 }
