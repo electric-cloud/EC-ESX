@@ -2951,86 +2951,83 @@ sub removeSnapshot {
 ################################
 sub remove_snapshot {
     my ($self) = @_;
-    my $view = Vim::find_entity_view(view_type => 'VirtualMachine',filter => { 'name' => $self->opts->{esx_vmname} } );
-    if (!$view) {
-        $self->debug_msg(0, 'Virtual Machine\'' . $self->opts->{esx_vmname} . '\' not found');
-        $self->opts->{exitcode} = ERROR;
-        return;
+
+    # let's get virtual machine view;
+    my ($vm_name, $snapshot_name) = ($self->opts->{esx_vmname}, $self->opts->{esx_snapshotname});
+
+    my $vm_path = split_vm_name($vm_name);
+    my $vm_view;
+    # after split vm_path contains path to the vm
+    if ($vm_path->{vm_path}) {
+        $vm_view = $self->get_exact_vm($vm_path);
     }
-	if ($self->opts->{all} eq "1") {
-        $self->debug_msg(1, 'Removing Snapshots \'' . $self->opts->{esx_snapshotname} . '\'...');
-        my $vm_views = Vim::find_entity_views(view_type => 'VirtualMachine',filter => { 'name' => $self->opts->{esx_vmname} } );
-        foreach (@$vm_views) {
-            my $snapshots = $_->snapshot;
-            if(defined $snapshots) {
-                eval {
-                    $_->RemoveAllSnapshots();
-                    Util::trace(0, "\n\nOperation :: Remove All Snapshot For Virtual Machine ". $self->opts->{esx_vmname}. " completed sucessfully\n");
-                };
-            }
-            else {
-                $self->debug_msg(0, 'NO Snapshots available for VM \'' . $self->opts->{esx_vmname} . '\'');
-            }
-        }
-        if ($@) {
-            if (ref($@) eq SOAP_FAULT) {
-                $self->debug_msg(0, 'Error Removing all Snapshots of VM \'' . $self->opts->{esx_vmname} . '\': ');
-                if (!$self->print_error(ref($@->detail))) {
-                    $self->debug_msg(0, "Snapshots belongs from VM '" . $self->opts->{esx_vmname} . "' can't be removed \n" . $@ . EMPTY);
-                }
-            }
-            else {
-                $self->debug_msg(0, "Snapshots belongs from VM '" . $self->opts->{esx_vmname} . "' can't be removed \n" . $@ . EMPTY);
-            }
-            $self->opts->{exitcode} = ERROR;
-            return;
-        }
-	}
-	else {
-        my $vm_views = Vim::find_entity_views(
+    # if no, let's try regular mechanism by vm's name
+    else {
+        my $vms = Vim::find_entity_views(
             view_type => VIRTUAL_MACHINE,
-            filter    => {
-                'name' => $self->opts->{esx_vmname}
+            filter => {
+                name => $self->opts->{esx_vmname},
             }
         );
-        if (!$vm_views) {
-            $self->debug_msg(0, 'Virtual machine \'' . $self->opts->{esx_vmname} . '\' not found');
-            $self->opts->{exitcode} = ERROR;
-            return;
+        if (scalar @$vms > 1) {
+            print "ERROR: There are more than vm with name $vm_name, please, provide full path to vm\n";
+            exit 1;
         }
-        foreach (@$vm_views) {
-            my $ref = undef;
-            my $nRefs = 0;
-            if(defined $_->snapshot) {
-                ($ref, $nRefs) = find_snapshot($_->snapshot->rootSnapshotList, $self->opts->{esx_snapshotname});
-            }
-            if (defined $ref && $nRefs == 1) {
-                my $snapshot = Vim::get_view (mo_ref =>$ref->snapshot);
-                eval {
-                    $snapshot->RemoveSnapshot(removeChildren => 0);
-                    Util::trace(0, "\nOperation :: Remove Snapshot ". $self->opts->{esx_snapshotname} . " For Virtual Machine ".$self->opts->{esx_vmname}." completed sucessfully\n");
-                };
-            }
-            elsif ($nRefs > 1) {
-                printf 'Found more than 1 VM snapshot(s) (%s) with provided name (%s)...%s', $nRefs, $self->opts->{esx_vmname}, "\n";
-                print "If there are more than one snapshot to remove, please, use All option\n";
-                exit 1;
+        elsif (! @$vms) {
+            print "There is no vm with name $vm_name\n";
+            exit 1;
+        }
+        # 1 vm found
+        $vm_view = $vms->[0];
+    }
+    # now we have vm view, and we can check snapshots.
+    my $snapshot = $vm_view->snapshot();
+    if (!$snapshot) {
+        print "There are no snapshots for vm $vm_name\n";
+        exit 1;
+    }
+    my $cond = $snapshot->{rootSnapshotList};
+
+    my $snapshots_array = [];
+    get_snapshots($cond, $snapshot_name, $snapshots_array);
+    @$snapshots_array = map {delete $_->{name}; $_} @$snapshots_array;
+    if (!@$snapshots_array) {
+        print "There is no snapshot with $snapshot_name name";
+        exit 1;
+    }
+
+    # so, now we have a list of snapshots with provided name
+    my $opts = $self->opts();
+    my $sc = scalar @$snapshots_array;
+    if ($sc > 1 && !$opts->{all}) {
+
+        print "Found more than one snapshots ($sc) with name $snapshot_name\n";
+        print "If you need to delete all snapshots with that name, please, use All option\n";
+        exit 1;
+    }
+    for my $elem (@$snapshots_array) {
+        Vim::get_view(mo_ref => $elem)->RemoveSnapshot(removeChildren => 0);
+    }
+    print "Removed $sc snapshots successfully...\n";
+}
+
+
+sub get_snapshots {
+    my ($tree, $name, $acc) = @_;
+
+    for my $elem (@$tree) {
+        if ($elem->{snapshot}) {
+            $elem->{snapshot}->{name} = $elem->{name};
+            push @$acc, $elem->{snapshot};
+            if ($elem->{childSnapshotList}) {
+                get_snapshots($elem->{childSnapshotList}, $name, $acc);
             }
         }
-        if ($@) {
-            if (ref($@) eq SOAP_FAULT) {
-                $self->debug_msg(0, 'Error Removing Snapshot from VM \'' . $self->opts->{esx_vmname} . '\': ');
-                if (!$self->print_error(ref($@->detail))) {
-                    $self->debug_msg(0, "Snapshot from VM '" . $self->opts->{esx_vmname} . "' can't be removed \n" . $@ . EMPTY);
-                }
-            }
-            else {
-                $self->debug_msg(0, "Snapshot from VM '" . $self->opts->{esx_vmname} . "' can't be removed \n" . $@ . EMPTY);
-            }
-            $self->opts->{exitcode} = ERROR;
-            return;
-        }
-	}
+    }
+    if ($name) {
+        @$acc = grep {$_->{name} eq $name} @$acc;
+    }
+
 }
 
 
@@ -4115,7 +4112,24 @@ sub find_snapshot {
       $ref = $subRef if ($subCount);
    }
    return ($ref, $count);
-}  
+}
+
+sub find_all_snapshots {
+    my ($tree, $name, $acc) = @_;
+    my $ref = undef;
+    my $count = 0;
+    foreach my $node (@$tree) {
+        if ($node->name eq $name) {
+            $ref = $node;
+            push @$acc, $ref->snapshot;
+            $count++;
+        }
+        my ($subRef, $subCount) = find_all_snapshots($node->childSnapshotList, $name, $acc);
+        $count = $count + $subCount;
+        $ref = $subRef if ($subCount);
+    }
+    return $acc;
+}
 ###############################
 # pingResource - Use commander to ping a resource
 #

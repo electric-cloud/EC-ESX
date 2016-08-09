@@ -6432,7 +6432,7 @@
                 <formalParameterName>esx_snapshotname</formalParameterName>
                 <defaultValue></defaultValue>
                 <description>Name of the Snapshot.</description>
-                <required>1</required>
+                <required>0</required>
                 <type>entry</type>
             </formalParameter>
 			<formalParameter>

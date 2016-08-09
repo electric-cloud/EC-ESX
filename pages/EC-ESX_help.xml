@@ -2196,9 +2196,9 @@ only if appropriate, such as FOSS - but not commercial software.
           <td>The name of the VM on which device is attached. (Required)</td>
         </tr>	<tr>
         
-		<td class="required">Snapshot Name</td>
+		<td>Snapshot Name</td>
 
-          <td>Name of the snapshot you want to remove.If you want to remove all the snapshots provide 'all' in the textbox option. (Required)</td>
+          <td>Name of the snapshot you want to remove. If you want to remove all the snapshots provide 'all' in the textbox option. If you want to remove all snapshot with provided name, provide snapshot name and check 'All' checkbox.</td>
         </tr>
 		<tr>
 		<td class="required">All</td>

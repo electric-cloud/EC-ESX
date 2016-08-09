@@ -35,7 +35,7 @@
         <type>entry</type>
         <label>Snapshot Name:</label>
         <property>esx_snapshotname</property>
-        <required>1</required>
+        <required>0</required>
         <documentation>Name of the snapshot you want to remove.If you want to remove all the snapshots provide 'all' in the textbox option.</documentation>
     </formElement>
 	<formElement>
