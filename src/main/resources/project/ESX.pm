@@ -1096,8 +1096,25 @@ sub snapshot {
 sub snapshot_vm {
     my ($self) = @_;
 
-    my $vm_view = Vim::find_entity_view(view_type => VIRTUAL_MACHINE,
-                                        filter    => { 'name' => $self->opts->{esx_vmname} });
+    my ($vm_view, $vm_name) = (undef, $self->opts->{esx_vmname});
+    my $vm_path = split_vm_name($self->opts->{esx_vmname});
+    if ($vm_path->{vm_path}) {
+        $vm_view = $self->get_exact_vm($vm_path);
+    }
+    else {
+        my $vm_views = Vim::find_entity_views(
+            view_type => VIRTUAL_MACHINE,
+            filter    => { 'name' => $self->opts->{esx_vmname}}
+        );
+        if (scalar @$vm_views > 1) {
+            print "ERROR: There are more than vm with name $vm_name, please, provide full path to vm\n";
+            exit 1;
+        }
+        elsif (scalar @$vm_views == 1) {
+            $vm_view = $vm_views->[0];
+        }
+    }
+
 
     if (!$vm_view) {
         $self->debug_msg(0, 'Virtual machine \'' . $self->opts->{esx_vmname} . '\' not found');
