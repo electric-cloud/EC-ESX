@@ -2368,9 +2368,10 @@ sub delete {
 sub delete_entity {
     my ($self) = @_;
     $self->debug_msg(1, 'Deleting Entity \'' . $self->opts->{entity_name} . '\'...');
+    my $entity_type = $self->opts->{entity_type};
+    my $entity_name = $self->opts->{entity_name};
     eval {
-        my $entity_view = Vim::find_entity_view(view_type => $self->opts->{entity_type}, filter => { 'name' => $self->opts->{entity_name} } );
-
+        my $entity_view = $self->get_exact_entity($entity_type, $entity_name);
         if (!$entity_view) {
             $self->debug_msg(0, 'Entity \'' . $self->opts->{entity_name} . '\' not found');
             $self->opts->{exitcode} = ERROR;
@@ -2380,12 +2381,20 @@ sub delete_entity {
         $self->debug_msg(0, 'Successfully Deleted Entity \'' . $self->opts->{entity_name} . '\'');
     };
     if ($@) {
+        my $err = $@;
         if (ref($@) eq SOAP_FAULT) {
             $self->debug_msg(0, 'Error deleting entity \'' . $self->opts->{entity_name} . '\': ');
 
             if (!$self->print_error(ref($@->detail))) {
                 $self->debug_msg(0, "Entity '" . $self->opts->{entity_name} . "' can't be deleted \n" . $@ . EMPTY);
             }
+        }
+        elsif ($err =~ m/No entities found/) {
+            $self->debug_msg(0, "There is no entity with the name $entity_name and type $entity_type\n");
+        }
+        elsif ($err =~ m/More than one entity found/ ) {
+            # Asking user to specify fully qualified name of the entity
+            $self->debug_msg(0, "ERROR: there is more than one entity with the name $entity_name and type $entity_type\n");
         }
         else {
             $self->debug_msg(0, "Entity '" . $self->opts->{entity_name} . "' can't be deleted \n" . $@ . EMPTY);
@@ -2468,7 +2477,7 @@ sub rename_entity {
             }
         }
         elsif ($err =~ m/No entities found/) {
-            $self->debug_msg(0, "There is no enity with the name $old_entity_name and type $old_entity_type\n");
+            $self->debug_msg(0, "There is no entity with the name $old_entity_name and type $old_entity_type\n");
         }
         elsif ($err =~ m/More than one entity found/ ) {
             # Asking user to specify fully qualified name of the entity
@@ -4537,7 +4546,7 @@ sub split_entity_name {
     unless( scalar @parts ) {
         return $retval;
     }
-    
+
     my @reverse_path = reverse @parts;
     $retval->{entity_reverse_path} = \@reverse_path;
     $retval->{entity_path} = \@parts;
