@@ -690,6 +690,14 @@ if ($upgradeAction eq "upgrade") {
                                         stepName      => 'changeCpuMemAllocation'
                                      }
                                     );
+            $batch->attachCredential(
+                                     "\$[/plugins/$pluginName/project]",
+                                     $cred,
+                                     {
+                                        procedureName => 'DeleteEntity',
+                                        stepName      => 'DeleteEntity'
+                                     }
+                                    );
         }
     }
 }
