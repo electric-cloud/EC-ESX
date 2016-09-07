@@ -2435,8 +2435,11 @@ sub rename {
 sub rename_entity {
     my ($self) = @_;
     $self->debug_msg(1, 'Renaming Entity \'' . $self->opts->{entity_old_name} . '\' to \'' . $self->opts->{entity_new_name} . '\'...');
+    my $old_entity_type = $self->opts->{entity_type};
+    my $old_entity_name = $self->opts->{entity_old_name};
     eval {
-        my $entity_old_view = Vim::find_entity_view(view_type => $self->opts->{entity_type}, filter => { 'name' => $self->opts->{entity_old_name} } );
+        my $entity_old_view = $self->get_exact_entity($old_entity_type, $old_entity_name);
+        # TODO new function should not return undef under normal circumstances, so the next block is going to be removed
         if (!$entity_old_view) {
             $self->debug_msg(0, 'Entity \'' . $self->opts->{entity_old_name} . '\' not found');
             $self->opts->{exitcode} = ERROR;
@@ -2446,12 +2449,20 @@ sub rename_entity {
         $self->debug_msg(0, 'Successfully renamed Entity \'' . $self->opts->{entity_old_name} . '\'');
     };
     if ($@) {
+        my $err = $@;
         if (ref($@) eq SOAP_FAULT) {
             $self->debug_msg(0, 'Error renaming entity \'' . $self->opts->{entity_old_name} . '\': ');
 
             if (!$self->print_error(ref($@->detail))) {
                 $self->debug_msg(0, "Entity '" . $self->opts->{entity_old_name} . "' can't be renamed \n" . $@ . EMPTY);
             }
+        }
+        elsif ($err =~ m/No entities found/) {
+            $self->debug_msg(0, "There is no enity with the name $old_entity_name and type $old_entity_type\n");
+        }
+        elsif ($err =~ m/More than one entity found/ ) {
+            # Asking user to specify fully qualified name of the entity
+            $self->debug_msg(0, "ERROR: there is more than one entity with the name $old_entity_name and type $old_entity_type\n");
         }
         else {
             $self->debug_msg(0, "Entity '" . $self->opts->{entity_old_name} . "' can't be renamed \n" . $@ . EMPTY);
@@ -3106,7 +3117,7 @@ sub get_exact_vm {
 #     };
 
 sub get_exact_entity {
-    my ($self, $entity_type, $full_name) = @_;
+    my ($self, $entity_type, $full_name, %filter ) = @_;
 
     croak 'No entity type' unless $entity_type;
     croak 'No entity name' unless $full_name;
@@ -3118,7 +3129,8 @@ sub get_exact_entity {
     my $entities = Vim::find_entity_views(
         view_type => $entity_type,
         filter => {
-            name => $entity_name
+            %filter,
+            name => $entity_name,
         }
     );
     print "Found vms: " . scalar(@$entities) . "\n";
@@ -4483,7 +4495,9 @@ sub build_folders_path {
     my $parent = $folder_view->{parent};
 
     # Folders, Resource pools and apps can be nested
-    if (!$parent || $parent->{type} ne FOLDER && $parent->{type} ne RESOURCE_POOL && $parent->{type} ne VIRTUAL_APP ) {
+    # Parenthesis below are needed for better reading only
+    if (!$parent || 
+        ( $parent->{type} ne FOLDER && $parent->{type} ne RESOURCE_POOL && $parent->{type} ne VIRTUAL_APP ) ) {
         return $acc;
     }
     else {
