@@ -209,7 +209,7 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
         
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/configuration_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/configuration_panel.png" /></div>
 
     <div id="Create"><a name="Create" id="Create"></a>
 
@@ -326,7 +326,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/Create_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Create_panel.png" /></div>
 
     <div id="Clone"><a name="Clone" id="Clone"></a>
 
@@ -397,7 +397,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/Clone_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Clone_panel.png" /></div>
 
     <div id="Relocate"><a name="Relocate" id="Relocate"></a>
 
@@ -462,7 +462,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/Relocate_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Relocate_panel.png" /></div>
 
     <div id="Cleanup"><a name="Cleanup" id="Cleanup"></a>
 
@@ -518,7 +518,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/Cleanup_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Cleanup_panel.png" /></div>
 
     <div id="Snapshot"><a name="Snapshot" id="Snapshot"></a>
 
@@ -572,7 +572,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/Snapshot_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Snapshot_panel.png" /></div>
 
     <div id="Revert"><a name="Revert" id="Revert"></a>
 
@@ -632,7 +632,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/Revert_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Revert_panel.png" /></div>
 
     <div id="PowerOn"><a name="PowerOn" id="PowerOn"></a>
 
@@ -711,7 +711,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/PowerOn_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/PowerOn_panel.png" /></div>
 
     <div id="PowerOff"><a name="PowerOff" id="PowerOff"></a>
 
@@ -759,7 +759,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/PowerOff_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/PowerOff_panel.png" /></div>
 
     <div id="Shutdown"><a name="Shutdown" id="Shutdown"></a>
 
@@ -807,7 +807,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/Shutdown_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Shutdown_panel.png" /></div>
 
     <div id="Suspend"><a name="Suspend" id="Suspend"></a>
 
@@ -855,7 +855,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/Suspend_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Suspend_panel.png" /></div>
 
     <div id="CreateResourceFromVM"><a name="CreateResourceFromVM" id="CreateResourceFromVM"></a>
 
@@ -935,7 +935,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/CreateResourceFromVM_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CreateResourceFromVM_panel.png" /></div>
 
     <div id="GetVMConfiguration"><a name="GetVMConfiguration" id="GetVMConfiguration"></a>
 
@@ -994,7 +994,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/GetVMConfiguration_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/GetVMConfiguration_panel.png" /></div>
 
     <div id="Import"><a name="Import" id="Import"></a>
 
@@ -1065,7 +1065,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/Import_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Import_panel.png" /></div>
 
     <div id="Export"><a name="Export" id="Export"></a>
 
@@ -1143,7 +1143,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/Export_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Export_panel.png" /></div>
 
     <div id="RegisterVM"><a name="RegisterVM" id="RegisterVM"></a>
 
@@ -1210,7 +1210,7 @@ only if appropriate, such as FOSS - but not commercial software.
           means no timeout.</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/RegisterVM_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/RegisterVM_panel.png" /></div>
 
     <div id="CloudManagerGrow"><a name="CloudManagerGrow" id="CloudManagerGrow"></a>
 
@@ -1263,7 +1263,7 @@ only if appropriate, such as FOSS - but not commercial software.
           <td>Pool name for creating resources. (Required)</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/CloudManagerGrow_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CloudManagerGrow_panel.png" /></div>
 
     <div id="CloudManagerShrink"><a name="CloudManagerShrink" id="CloudManagerShrink"></a>
 
@@ -1297,7 +1297,7 @@ only if appropriate, such as FOSS - but not commercial software.
           CloudManagerGrow) to stop. (Required)</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/CloudManagerShrink_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CloudManagerShrink_panel.png" /></div>
 
     <div id="CloudManagerSync"><a name="CloudManagerSync" id="CloudManagerSync"></a>
 
@@ -1331,7 +1331,7 @@ only if appropriate, such as FOSS - but not commercial software.
           CloudManagerGrow) to check. (Required)</td>
         </tr>
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/CloudManagerShrink_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CloudManagerShrink_panel.png" /></div>
 	
     <div id="CreateResourcePool"><a name="CreateResourcePool" id="CreateResourcePool"></a>
 	
@@ -1388,7 +1388,7 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 		
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/CreateResourcePool_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CreateResourcePool_panel.png" /></div>
     
     <div id="EditResourcePool"><a name="EditResourcePool" id="EditResourcePool"></a>
 	
@@ -1445,7 +1445,7 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 		
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/EditResourcePool_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/EditResourcePool_panel.png" /></div>
 	
     <div id="ListEntity"><a name="ListEntity" id="ListEntity"></a>
 	
@@ -1486,7 +1486,7 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 		
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/ListEntity_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/ListEntity_panel.png" /></div>
 	
     <div id="DeleteEntity"><a name="DeleteEntity" id="DeleteEntity"></a>
 	
@@ -1533,7 +1533,7 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 		
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/DeleteEntity_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/DeleteEntity_panel.png" /></div>
 	
     <div id="CreateFolder"><a name="CreateFolder" id="CreateFolder"></a>
 	
@@ -1584,7 +1584,7 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 		
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/CreateFolder_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CreateFolder_panel.png" /></div>
 	
     <div id="RenameEntity"><a name="RenameEntity" id="RenameEntity"></a>
 	
@@ -1635,7 +1635,7 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 		
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/RenameEntity_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/RenameEntity_panel.png" /></div>
 	
     <div id="MoveEntity"><a name="MoveEntity" id="MoveEntity"></a>
 	
@@ -1686,7 +1686,7 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 		
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/MoveEntity_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/MoveEntity_panel.png" /></div>
 	
     <div id="DisplayESXSummary"><a name="DisplayESXSummary" id="DisplayESXSummary"></a>
 	
@@ -1743,7 +1743,7 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 		
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/DisplayESXSummary_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/DisplayESXSummary_panel.png" /></div>
 	
     <div id="ChangeCpuMemAllocation"><a name="ChangeCpuMemAllocation" id="ChangeCpuMemAllocation"></a>
 	
@@ -1794,7 +1794,7 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 		
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/ChangeCpuMemAllocation_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/ChangeCpuMemAllocation_panel.png" /></div>
 
 
 
@@ -1859,7 +1859,7 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 		
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/AddHardDisk_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/AddHardDisk_panel.png" /></div>
 	
 	<div id="AddCdDvdDrive"><a name="AddCdDvdDrive" id="AddCdDvdDrive"></a>
 	
@@ -1916,7 +1916,7 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 		
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/AddCdDvdDrive_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/AddCdDvdDrive_panel.png" /></div>
 	
 	<div id="AddNetworkInterface"><a name="AddNetworkInterface" id="AddNetworkInterface"></a>
 	
@@ -1961,7 +1961,7 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 		
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/AddCdDvdDrive_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/AddCdDvdDrive_panel.png" /></div>
 	
 	<div id="EditCdDvdDrive"><a name="EditCdDvdDrive" id="EditCdDvdDrive"></a>
 	
@@ -2024,7 +2024,7 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 		
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/EditCdDvdDrive_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/EditCdDvdDrive_panel.png" /></div>
 	
 	<div id="ListDevice"><a name="ListDevice" id="ListDevice"></a>
 	
@@ -2075,7 +2075,7 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 		
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/ListDevice_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/ListDevice_panel.png" /></div>
 
 	<div id="RemoveDevice"><a name="RemoveDevice" id="RemoveDevice"></a>
 	
@@ -2126,7 +2126,7 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 		
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/RemoveDevice_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/RemoveDevice_panel.png" /></div>
 
 	<div id="ListSnapshot"><a name="ListSnapshot" id="ListSnapshot"></a>
 	
@@ -2165,7 +2165,7 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 		
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/ListSnapshot_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/ListSnapshot_panel.png" /></div>
 	
 	<div id="RemoveSnapshot"><a name="RemoveSnapshot" id="RemoveSnapshot"></a>
 	
@@ -2214,7 +2214,7 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 		
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/RemoveSnapshot_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/RemoveSnapshot_panel.png" /></div>
 	
 	<div id="RevertToCurrentSnapshot"><a name="RevertToCurrentSnapshot" id="RevertToCurrentSnapshot"></a>
 	
@@ -2247,7 +2247,7 @@ only if appropriate, such as FOSS - but not commercial software.
         </tr>
 		
       </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/RevertToCurrentSnapshot_panel.png" /></div>
+    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/RevertToCurrentSnapshot_panel.png" /></div>
 	
     <h1>Use Cases and Examples</h1>
     <!-- This section is for examples and use cases, including screenshots of the new Parameter Panel with example values filled in.
@@ -2284,7 +2284,7 @@ only if appropriate, such as FOSS - but not commercial software.
     On the right side of the line for the ESX plugin, there is a
     "Configure" link which will open the Configuration page.<br />
     Create a new configuration by specifying the requested
-    parameters:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/create_config.png" />
+    parameters:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/create_config.png" />
 
     <p>Once the configuration is created, you can see it listed in
     "ESX Configurations", and now you are able to manage virtual
@@ -2293,7 +2293,7 @@ only if appropriate, such as FOSS - but not commercial software.
     <h4>PowerOn</h4>
 
     <p>Create a new PowerOn procedure and fill in the requested
-    parameters with real values from your ESX server:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/poweron_parameters.png" />
+    parameters with real values from your ESX server:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweron_parameters.png" />
 
     <p>Make sure you selected the "Create Resource?" checkbox.</p>
 
@@ -2301,30 +2301,30 @@ only if appropriate, such as FOSS - but not commercial software.
 
     <p>Create a new command step to use the created resource. In
     this example, we will pick a resource from the pool and just add
-    an ec-perl sleep to use it for 30 seconds.</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/consume_parameters.png" />
+    an ec-perl sleep to use it for 30 seconds.</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/consume_parameters.png" />
 
     <h4>Cleanup</h4>
 
     <p>Now that the resource has been used and is ready to be deleted,
     create a Cleanup step and fill in the requested
-    parameters.</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/cleanup_parameters.png" />
+    parameters.</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/cleanup_parameters.png" />
 
     <h4>PowerOff</h4>
 
     <p>Now that the resource has been deleted, create a PowerOff
-    step and fill in the requested parameters.</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/poweroff_parameters.png" />
+    step and fill in the requested parameters.</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweroff_parameters.png" />
 
     <h4>Results and outputs</h4>
 
     <p>Once the job finished, you can see the properties stored in
     'Results location'.<br />
-    <img alt="" src="../../plugins/@PLUGIN_KEY@/images/job.png" /></p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/results.png" />
+    <img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/job.png" /></p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/results.png" />
 
-    <p>PowerOn output:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/poweron_log.png" />
+    <p>PowerOn output:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweron_log.png" />
 
-    <p>Cleanup output:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/cleanup_log.png" />
+    <p>Cleanup output:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/cleanup_log.png" />
 
-    <p>PowerOff output:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/poweroff_log.png" />
+    <p>PowerOff output:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweroff_log.png" />
 
     <h1>Release Notes</h1>
     <h2>@PLUGIN_KEY@ 2.2.0</h2>
