@@ -96,6 +96,8 @@ use constant {
     DATACENTER      => 'Datacenter',
     VIRTUAL_MACHINE => 'VirtualMachine',
     RESOURCE_POOL   => 'ResourcePool',
+    FOLDER          => 'Folder',
+    VIRTUAL_APP     => 'VirtualApp',
 
     DATASTORE_ERROR => 'datastore_error',
     DISKSIZE_ERROR  => 'disksize_error',
@@ -2435,7 +2437,6 @@ sub rename_entity {
     $self->debug_msg(1, 'Renaming Entity \'' . $self->opts->{entity_old_name} . '\' to \'' . $self->opts->{entity_new_name} . '\'...');
     eval {
         my $entity_old_view = Vim::find_entity_view(view_type => $self->opts->{entity_type}, filter => { 'name' => $self->opts->{entity_old_name} } );
-
         if (!$entity_old_view) {
             $self->debug_msg(0, 'Entity \'' . $self->opts->{entity_old_name} . '\' not found');
             $self->opts->{exitcode} = ERROR;
@@ -2597,7 +2598,7 @@ sub display_esx_summary {
     my $message;
     $self->opts->{summary} = "";
     $self->logger(1, 'Displaying summary for Host: \'' . $self->opts->{host_name} . '\'...');
-    
+
     eval {
         my $host = Vim::find_entity_view(view_type => 'HostSystem', filter => { name => $self->opts->{host_name}});
         if (!$host) {
@@ -3082,6 +3083,83 @@ sub get_exact_vm {
     }
     return undef;
 }
+
+# More universal version of get_exact_vm function
+# Suggested usage:
+# 
+#     my $entity;
+#     eval {
+#         $entity = $self->get_exact_entity('VirtualMachine', '/Folder/Subfolder/vm_name');
+#         1;
+#     } or do {
+#         my $err = $@;
+#         if ($err =~ m/No entities found/) {
+#             ...
+#         }
+#         elsif ( $err =~ m/More than one entity found/) {
+#             ...
+#         }
+#         else {
+#             print $err;
+#             exit(1);
+#         }
+#     };
+
+sub get_exact_entity {
+    my ($self, $entity_type, $full_name) = @_;
+
+    croak 'No entity type' unless $entity_type;
+    croak 'No entity name' unless $full_name;
+
+    print "Looking for entity with exact path...\n"; # TODO need logger here and below
+    my $entity_path = split_vm_name($full_name);
+
+    my $entity_name = $entity_path->{vm_name};
+    my $entities = Vim::find_entity_views(
+        view_type => $entity_type,
+        filter => {
+            name => $entity_name
+        }
+    );
+    print "Found vms: " . scalar(@$entities) . "\n";
+    unless (scalar @$entities) {
+        croak "No entities found for $entity_type:$full_name";
+    }
+
+    # There is only one entity with the specified name - let it be so
+    if (scalar @$entities == 1 ) {
+        return $entities->[0];
+    }
+
+    unless( $entity_path->{vm_reverse_path} ) {
+        # The name is not fully qualified, and we found more than one entity with this name
+        croak "More than one entity found for $entity_type:$full_name";
+    }
+
+    my $expected_path = join '/', @{$entity_path->{vm_reverse_path}};
+    $expected_path = slash_it($expected_path);
+    print "Expected path: " . $expected_path . "\n";
+
+    # Now we are going to retrieve the full path of this entity
+    for my $entity (@$entities) {
+        my $folder = $entity->{parent};
+
+        # TODO remove this block, because build_folders_path is going to do the same anyway
+        $folder = Vim::get_view(mo_ref => $folder);
+        my $folder_paths = build_folders_path($folder, []);
+        my $scalar_folder_path = make_folders_path_scalar($folder_paths);
+
+        print "Scalar folder path: " . $scalar_folder_path . "\n";
+        # And compare it to one specified by user
+        if ($scalar_folder_path eq $expected_path) {
+            print "Desired VM found...\n";
+            return $entity;
+        }
+    }
+    croak "No entities found for $entity_type:$full_name";
+}
+
+
 #########################################
 #Arguments:
 #    host: host name
@@ -3344,7 +3422,7 @@ sub deviceManager {
         }
         else{
             print "Device configurations not required." . "\n";
-        } 
+        }
 
         if($args{memoryMB} && $args{numCPUs}) {
            print "Change CPU and Memory-Added in reconfiguring VM" . "\n";
@@ -3774,7 +3852,7 @@ sub revertToCurrentSnapshot {
       . "\n";
 
      my $hostname = Vim::get_view(mo_ref => $self->opts->{vm_view}->runtime->host)->name;
-   
+
      eval {
         $self->opts->{vm_view}->RevertToCurrentSnapshot();
         Util::trace(0, "\nOperation :: Revert To Current Snapshot For Virtual "
@@ -4403,7 +4481,9 @@ sub build_folders_path {
     my ($folder_view, $acc) = @_;
     push @$acc, {name => $folder_view->{name}, mo_ref => $folder_view->{mo_ref}};
     my $parent = $folder_view->{parent};
-    if (!$parent || $parent->{type} ne 'Folder') {
+
+    # Folders, Resource pools and apps can be nested
+    if (!$parent || $parent->{type} ne FOLDER && $parent->{type} ne RESOURCE_POOL && $parent->{type} ne VIRTUAL_APP ) {
         return $acc;
     }
     else {
