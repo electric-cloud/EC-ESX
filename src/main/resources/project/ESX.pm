@@ -1446,27 +1446,34 @@ sub shutdown {
 sub shutdown_vm {
     my ($self) = @_;
 
-    my $vm_view = Vim::find_entity_view(view_type => VIRTUAL_MACHINE,
-                                        filter    => { 'name' => $self->opts->{esx_vmname} });
-
-    if (!$vm_view) {
-        $self->debug_msg(0, 'Virtual machine \'' . $self->opts->{esx_vmname} . '\' not found');
-        $self->opts->{exitcode} = ERROR;
-        return;
-    }
-
     $self->debug_msg(1, 'Shutting down virtual machine \'' . $self->opts->{esx_vmname} . '\'...');
     eval {
+
+        my $vm_view = $self->get_exact_entity(VIRTUAL_MACHINE, $self->opts->{esx_vmname});
+
+        if (!$vm_view) {
+            $self->debug_msg(0, 'Virtual machine \'' . $self->opts->{esx_vmname} . '\' not found');
+            $self->opts->{exitcode} = ERROR;
+            return;
+        }
+
         $vm_view->ShutdownGuest();
         $self->debug_msg(0, 'Successfully shut down virtual machine \'' . $self->opts->{esx_vmname} . '\'');
     };
     if ($@) {
+        my $err = $@;
         if (ref($@) eq SOAP_FAULT) {
             $self->debug_msg(0, 'Error shutting down \'' . $self->opts->{esx_vmname} . '\': ');
 
             if (!$self->print_error(ref($@->detail))) {
                 $self->debug_msg(0, "VM '" . $self->opts->{esx_vmname} . "' can't be shut down \n" . $@ . EMPTY);
             }
+        }
+        elsif ($err =~ m/No entities found/) {
+            $self->debug_msg(0, "There is no virtual machine with the name " . $self->opts->{esx_vmname} . "\n");
+        }
+        elsif ($err =~ m/More than one entity found/ ) {
+            $self->debug_msg(0, "ERROR: there is more than one virtual machine with the name " . $self->opts->{esx_vmname} . "\n");
         }
         else {
             $self->debug_msg(0, "VM '" . $self->opts->{esx_vmname} . "' can't be shut down \n" . $@ . EMPTY);
