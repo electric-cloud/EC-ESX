@@ -114,4 +114,13 @@
         <required>0</required>
         <documentation>Import properties.</documentation>
     </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Result properties location:</label>
+        <property>esx_properties_location</property>
+        <required>0</required>
+        <documentation>Import properties.</documentation>
+        <value>/myJobStep</value>
+    </formElement>
+
 </editor>

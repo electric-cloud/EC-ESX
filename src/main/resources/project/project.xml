@@ -3066,6 +3066,16 @@
                                         </property>
                                     </propertySheet>
                                 </property>
+                                <property>
+                                    <propertyName>esx_properties_location</propertyName>
+                                    <propertySheet>
+                                        <property>
+                                            <propertyName>formType</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>standard</value>
+                                        </property>
+                                    </propertySheet>
+                                </property>
                                 
                             </propertySheet>
                         </property>
@@ -3167,6 +3177,13 @@
                 <formalParameterName>esx_guest_vm_hostname</formalParameterName>
                 <defaultValue></defaultValue>
                 <description>Guest vm hostname.</description>
+                <required>0</required>
+                <type>entry</type>
+            </formalParameter>
+            <formalParameter>
+                <formalParameterName>esx_properties_location</formalParameterName>
+                <defaultValue></defaultValue>
+                <description>Result properties location.</description>
                 <required>0</required>
                 <type>entry</type>
             </formalParameter>

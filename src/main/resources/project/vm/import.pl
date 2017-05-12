@@ -37,6 +37,7 @@ $opts->{esx_vm_memory} = q{$[esx_vm_memory]};
 $opts->{esx_vm_num_cpus} = q{$[esx_vm_num_cpus]};
 $opts->{esx_guest_vm_hostname} = q{$[esx_guest_vm_hostname]};
 $opts->{esx_properties} = q{$[esx_properties]};
+$opts->{esx_properties_location} = q{$[esx_properties_location]};
 
 $[/myProject/procedure_helpers/preamble]
 

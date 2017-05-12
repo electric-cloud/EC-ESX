@@ -38,6 +38,7 @@ use strict;
 use Carp;
 use Data::Dumper;
 use URI::Escape;
+use JSON;
 use ElectricCommander;
 use ElectricCommander::PropDB;
 use ElectricCommander::PropDB qw(/myProject/libs);
@@ -119,6 +120,7 @@ sub new {
     my $self = {
                  _cmdr => $cmdr,
                  _opts => $opts,
+                 properties_to_set => {},
                };
     bless $self, $class;
 }
@@ -1832,6 +1834,7 @@ sub get_vm_configuration {
 sub import {
     my ($self) = @_;
 
+    $self->{_vm_names} = [];
     if ($::gRunTestUseFakeOutput) {
 
         # Create and return fake output
@@ -1851,6 +1854,8 @@ sub import {
     $self->initialize();
     $self->debug_msg(0, '---------------------------------------------------------------------');
 
+    $self->login();
+
     if ($self->opts->{esx_number_of_vms} == DEFAULT_NUMBER_OF_VMS) {
         #$self->opts->{esx_ovf_file} = CURRENT_DIRECTORY . '/' . $self->opts->{esx_vmname} . '/' . $self->opts->{esx_vmname} . '.ovf';
         $self->import_vm(0);
@@ -1863,6 +1868,16 @@ sub import {
             $self->import_vm($vm_number);
         }
     }
+
+    my $vms = [];
+    for my $vm_name (@{$self->{_vm_names}}) {
+        print "vm name: $vm_name\n";
+        my $vm = $self->get_vm_net_info($vm_name);
+        if ($vm) {
+            push @$vms, $vm;
+        }
+    }
+    $self->{_cmdr}->setProperty($self->opts->{esx_properties_location} . '/vms', encode_json($vms));
 }
 
 ################################
@@ -1888,7 +1903,9 @@ sub import_vm {
     my $esx_server = $1;
 
     # fix params
-    $self->opts->{esx_vmname} = q|"| . $self->opts->{esx_vmname} . $suffix . q|"|;
+    $self->opts->{esx_vmname} = $self->opts->{esx_vmname} . $suffix;
+    push @{$self->{_vm_names}}, $self->opts->{esx_vmname};
+    $self->opts->{esx_vmname} = q|"| . $self->opts->{esx_vmname} . q|"|;
     $self->opts->{esx_datastore} = q|"| . $self->opts->{esx_datastore} . q|"|;
     $self->opts->{ovftool_path} = q|"| . $self->opts->{ovftool_path} . q|"|;
     # end of fix params
@@ -1899,15 +1916,6 @@ sub import_vm {
 
     if ($self->opts->{esx_properties}) {
         $command_params .= $self->create_properties_line('--prop:', $self->opts->{esx_properties});
-        # my @props = split(',', $self->opts->{esx_properties});
-        # for my $p (@props) {
-        #     $p =~ s/^\s+//gs;
-        #     $p =~ s/\s+$//gs;
-        #     if ($vm_number > 0) {
-        #         $p =~ s/###/$vm_number/gs;
-        #     }
-        #     $command_params .= " --prop:$p";
-        # }
     }
 
     if ($self->opts->{esx_vm_memory}) {
@@ -1929,12 +1937,16 @@ sub import_vm {
     }
 
     if ($self->opts->{esx_guest_vm_hostname}) {
+        my $hostname = '';
         if (scalar @$vm_id == 1) {
+            $hostname = $self->opts->{esx_guest_vm_hostname} . $suffix;
             $command_params .= " --computerName:" . $vm_id->[0] . '=' . $self->opts->{esx_guest_vm_hostname} . $suffix;
         }
         else {
+            $hostname = $self->opts->{esx_guest_vm_hostname};
             $command_params .= $self->create_properties_line('--computerName:', $self->opts->{esx_guest_vm_hostname});
         }
+        # $self->{properties_to_set}->{hostnames}->{$self->opts->{esx_vmname}} = $hostname;
     }
     if ($self->opts->{esx_vm_poweron}) {
         $command_params .= ' --powerOn ';
@@ -1988,6 +2000,41 @@ sub is_ipv4 {
     return 0;
 }
 
+sub get_vm_net_info {
+    my ($self, $vm_name) = @_;
+    my $vm_view;
+    for (1..12) {
+        $vm_view = Vim::find_entity_view(view_type => VIRTUAL_MACHINE, filter    => { 'name' => $vm_name});
+        if (!$vm_view) {
+            print "No vm. waiting for it...\n";
+            sleep 30;
+        }
+        elsif(!$vm_view->guest()->{guestId}) {
+            print "No guest id, waiting for it...\n";
+            sleep 30;
+        }
+        else {
+            last;
+        }
+    }
+    unless ($vm_view) {
+        return undef;
+    }
+    my $vm = {};
+    my $guest = $vm_view->guest();
+    $vm->{guest_id} = $guest->{guestId};
+    $vm->{hostname} = $guest->hostName();
+    $vm->{ip_address} = $guest->ipAddress();
+    $vm->{fqdn} = [];
+    my $ip_stack = $vm_view->guest()->ipStack();
+
+    for my $record (@$ip_stack) {
+        if ($record->{dnsConfig}->{domainName}) {
+            push @{$vm->{fqdn}}, $vm->{hostname} . '.' .$record->{dnsConfig}->{domainName};
+        }
+    }
+    return $vm;
+}
 ################################
 # export - Iterate and call export_vm
 #
