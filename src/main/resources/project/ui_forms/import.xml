@@ -74,4 +74,45 @@
         <required>0</required>
         <documentation>Timeout for the step execution in minutes. Blank means no timeout.</documentation>
     </formElement>
+
+    <formElement>
+        <type>entry</type>
+        <label>Memory size:</label>
+        <property>esx_vm_memory</property>
+        <required>0</required>
+        <documentation>Size of virtual machine's memory. Format: VMID=1024.</documentation>
+    </formElement>
+        
+    <formElement>
+        <type>entry</type>
+        <label>Number of CPUs:</label>
+        <property>esx_vm_num_cpus</property>
+        <required>0</required>
+        <documentation>Number of virtual processors in a virtual machine. Format: VMID=1.</documentation>
+    </formElement>
+        
+    <formElement>
+        <type>checkbox</type>
+        <label>Power On Vm?:</label>
+        <property>esx_vm_poweron</property>
+        <required>0</required>
+        <documentation>Flag to specify whether or not to power on the created virtual machine(s) (default is false).</documentation>
+        <checkedValue>1</checkedValue>
+        <uncheckedValue>0</uncheckedValue>
+        <initiallyChecked>0</initiallyChecked>
+    </formElement>
+    <formElement>
+        <type>textarea</type>
+        <label>Import properties:</label>
+        <property>esx_properties</property>
+        <required>0</required>
+        <documentation>Import properties.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Guest VM hostname:</label>
+        <property>esx_guest_vm_hostname</property>
+        <required>0</required>
+        <documentation>ESX guest vm hostname.</documentation>
+    </formElement>
 </editor>

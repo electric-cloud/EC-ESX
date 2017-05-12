@@ -37,6 +37,7 @@ use lib $ENV{COMMANDER_PLUGINS} . '/@PLUGIN_NAME@/agent/lib';
 use strict;
 use Carp;
 use Data::Dumper;
+use URI::Escape;
 use ElectricCommander;
 use ElectricCommander::PropDB;
 use ElectricCommander::PropDB qw(/myProject/libs);
@@ -1881,9 +1882,63 @@ sub import_vm {
     $self->debug_msg(1, 'Importing OVF package...');
     $self->opts->{esx_url} =~ m{https://(.*)};
     my $esx_server = $1;
-    my $command = $self->opts->{ovftool_path} . ' --noSSLVerify --datastore=' . $self->opts->{esx_datastore} . ' -n=' . $self->opts->{esx_vmname} . ' ' . $self->opts->{esx_source_directory} . ' vi://' . $self->opts->{esx_user} . ':' . $self->opts->{esx_pass} . '@' . $esx_server . '?ip=' . $self->opts->{esx_host};
+
+    # fix params
+    $self->opts->{esx_vmname} = q|"| . $self->opts->{esx_vmname} . q|"|;
+    $self->opts->{esx_datastore} = q|"| . $self->opts->{esx_datastore} . q|"|;
+    $self->opts->{ovftool_path} = q|"| . $self->opts->{ovftool_path} . q|"|;
+    # end of fix params
+    my $command_params = '';
+
+    if ($self->opts->{esx_properties}) {
+        my @props = split(',', $self->opts->{esx_properties});
+        for my $p (@props) {
+            $p =~ s/^\s+//gs;
+            $p =~ s/\s+$//gs;
+            $command_params .= " --prop:$p";
+        }
+    }
+
+    if ($self->opts->{esx_vm_memory}) {
+        $command_params .= ' --memorySize:' . $self->opts->{esx_vm_memory};
+    }
+
+    if ($self->opts->{esx_vm_num_cpus}) {
+        $command_params .= ' --numberOfCpus:' . $self->opts->{esx_vm_num_cpus};
+    }
+
+    if ($self->opts->{esx_vm_poweron}) {
+        $command_params .= ' --powerOn ';
+    }
+
+    my $host_type = 'dns?=';
+    if (is_ipv4($self->opts->{esx_host})) {
+        $host_type = '?ip=';
+    }
+
+
+    if ($self->opts->{esx_guest_vm_hostname}) {
+        $command_params .= " --computerName:" . $self->opts->{esx_guest_vm_hostname};
+    }
+    $self->opts->{esx_user} = uri_escape($self->opts->{esx_user});
+    $self->opts->{esx_pass} = uri_escape($self->opts->{esx_pass});
+    my $command = $self->opts->{ovftool_path} . $command_params . ' --noSSLVerify --datastore=' . $self->opts->{esx_datastore} . ' -n=' . $self->opts->{esx_vmname} . ' ' . $self->opts->{esx_source_directory} . ' "vi://' . $self->opts->{esx_user} . ':' . $self->opts->{esx_pass} . '@' . $esx_server . $host_type . $self->opts->{esx_host} . '"';
+
     $self->debug_msg(1, 'Executing command: ' . $command);
     system($command);
+}
+
+sub is_ipv4 {
+    my ($ip_address) = @_;
+
+    my $regexp = '^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.';
+    $regexp .= '([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.';
+    $regexp .= '([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.';
+    $regexp .= '([01]?\\d\\d?|2[0-4]\\d|25[0-5])$';
+    if ($ip_address =~ m/$regexp/s) {
+        return 1;
+    }
+    return 0;
 }
 
 ################################

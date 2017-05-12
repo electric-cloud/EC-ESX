@@ -31,6 +31,13 @@ $opts->{esx_source_directory} = q{$[esx_source_directory]};
 $opts->{esx_number_of_vms} = q{$[esx_number_of_vms]};
 $opts->{esx_timeout} = q{$[esx_timeout]};
 
+# new options
+$opts->{esx_vm_poweron} = q{$[esx_vm_poweron]};
+$opts->{esx_vm_memory} = q{$[esx_vm_memory]};
+$opts->{esx_vm_num_cpus} = q{$[esx_vm_num_cpus]};
+$opts->{esx_guest_vm_hostname} = q{$[esx_guest_vm_hostname]};
+$opts->{esx_properties} = q{$[esx_properties]};
+
 $[/myProject/procedure_helpers/preamble]
 
 $gt->import();
