@@ -1853,14 +1853,14 @@ sub import {
 
     if ($self->opts->{esx_number_of_vms} == DEFAULT_NUMBER_OF_VMS) {
         #$self->opts->{esx_ovf_file} = CURRENT_DIRECTORY . '/' . $self->opts->{esx_vmname} . '/' . $self->opts->{esx_vmname} . '.ovf';
-        $self->import_vm();
+        $self->import_vm(0);
     }
     else {
         my $vm_number;
         for (my $i = 0; $i < $self->opts->{esx_number_of_vms}; $i++) {
             $vm_number = $i + 1;
             #$self->opts->{esx_ovf_file} = CURRENT_DIRECTORY . '/' . $self->opts->{esx_vmname} . "_$vm_number/" . $self->opts->{esx_vmname} . "_$vm_number.ovf";
-            $self->import_vm();
+            $self->import_vm($vm_number);
         }
     }
 }
@@ -1876,37 +1876,66 @@ sub import {
 #
 ################################
 sub import_vm {
-    my ($self) = @_;
+    my ($self, $vm_number) = @_;
 
+    my $suffix = '';
+    if ($vm_number > 0) {
+        $suffix = "-$vm_number";
+    }
     # Call ovftool to import OVF package
     $self->debug_msg(1, 'Importing OVF package...');
     $self->opts->{esx_url} =~ m{https://(.*)};
     my $esx_server = $1;
 
     # fix params
-    $self->opts->{esx_vmname} = q|"| . $self->opts->{esx_vmname} . q|"|;
+    $self->opts->{esx_vmname} = q|"| . $self->opts->{esx_vmname} . $suffix . q|"|;
     $self->opts->{esx_datastore} = q|"| . $self->opts->{esx_datastore} . q|"|;
     $self->opts->{ovftool_path} = q|"| . $self->opts->{ovftool_path} . q|"|;
     # end of fix params
+
+    my $vm_id = $self->get_vmid($self->opts->{ovftool_path}, $self->opts->{esx_source_directory});
+
     my $command_params = '';
 
     if ($self->opts->{esx_properties}) {
-        my @props = split(',', $self->opts->{esx_properties});
-        for my $p (@props) {
-            $p =~ s/^\s+//gs;
-            $p =~ s/\s+$//gs;
-            $command_params .= " --prop:$p";
-        }
+        $command_params .= $self->create_properties_line('--prop:', $self->opts->{esx_properties});
+        # my @props = split(',', $self->opts->{esx_properties});
+        # for my $p (@props) {
+        #     $p =~ s/^\s+//gs;
+        #     $p =~ s/\s+$//gs;
+        #     if ($vm_number > 0) {
+        #         $p =~ s/###/$vm_number/gs;
+        #     }
+        #     $command_params .= " --prop:$p";
+        # }
     }
 
     if ($self->opts->{esx_vm_memory}) {
-        $command_params .= ' --memorySize:' . $self->opts->{esx_vm_memory};
+        if (scalar @$vm_id == 1) {
+            $command_params .= ' --memorySize:' . $vm_id->[0] . '=' . $self->opts->{esx_vm_memory};
+        }
+        else {
+            $command_params .= $self->create_properties_line('--memorySize:', $self->opts->{esx_vm_memory});
+        }
     }
 
     if ($self->opts->{esx_vm_num_cpus}) {
-        $command_params .= ' --numberOfCpus:' . $self->opts->{esx_vm_num_cpus};
+        if (scalar @$vm_id == 1) {
+            $command_params .= ' --numberOfCpus:' . $vm_id->[0] . '=' . $self->opts->{esx_vm_num_cpus};
+        }
+        else {
+            $command_params .= $self->create_properties_line('--numberOfCpus:', $self->opts->{esx_vm_num_cpus});
+        }
     }
 
+    if ($self->opts->{esx_guest_vm_hostname}) {
+        if (scalar @$vm_id == 1) {
+            $command_params .= " --computerName:" . $vm_id->[0] . '=' . $self->opts->{esx_guest_vm_hostname} . $suffix;
+        }
+        else {
+            $command_params .= $self->create_properties_line('--computerName:', $self->opts->{esx_guest_vm_hostname});
+        }
+    }
     if ($self->opts->{esx_vm_poweron}) {
         $command_params .= ' --powerOn ';
     }
@@ -1916,10 +1945,6 @@ sub import_vm {
         $host_type = '?ip=';
     }
 
-
-    if ($self->opts->{esx_guest_vm_hostname}) {
-        $command_params .= " --computerName:" . $self->opts->{esx_guest_vm_hostname};
-    }
     $self->opts->{esx_user} = uri_escape($self->opts->{esx_user});
     $self->opts->{esx_pass} = uri_escape($self->opts->{esx_pass});
     my $command = $self->opts->{ovftool_path} . $command_params . ' --noSSLVerify --datastore=' . $self->opts->{esx_datastore} . ' -n=' . $self->opts->{esx_vmname} . ' ' . $self->opts->{esx_source_directory} . ' "vi://' . $self->opts->{esx_user} . ':' . $self->opts->{esx_pass} . '@' . $esx_server . $host_type . $self->opts->{esx_host} . '"';
@@ -1927,6 +1952,28 @@ sub import_vm {
     $self->debug_msg(1, 'Executing command: ' . $command);
     system($command);
 }
+
+sub create_properties_line {
+    my ($self, $key, $values) = @_;
+
+    my $retval = ' ';
+    my @values = split(',', $values);
+    for my $val (@values) {
+        $val =~ s/^\s+//gs;
+        $val =~ s/\s+$//gs;
+        $retval .= $key . $val . ' ';
+    }
+
+    return $retval;
+}
+sub get_vmid {
+    my ($self, $ovftool, $ovf_path) = @_;
+
+    my $result = `$ovftool --machineOutput $ovf_path`;
+    my @match = $result =~ m/<vm\sid="(.*?)">/gs;
+    return \@match;
+}
+
 
 sub is_ipv4 {
     my ($ip_address) = @_;

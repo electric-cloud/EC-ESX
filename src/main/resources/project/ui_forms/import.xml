@@ -56,7 +56,7 @@
         <type>entry</type>
         <label>Source directory:</label>
         <property>esx_source_directory</property>
-        <documentation>Absoulte path to the directory where OVF packages are stored.</documentation>
+        <documentation>Absoulte path to the OVF or OVA file.</documentation>
         <required>1</required>
     </formElement>
     <formElement>
@@ -74,7 +74,13 @@
         <required>0</required>
         <documentation>Timeout for the step execution in minutes. Blank means no timeout.</documentation>
     </formElement>
-
+    <formElement>
+        <type>entry</type>
+        <label>Guest VM hostname:</label>
+        <property>esx_guest_vm_hostname</property>
+        <required>0</required>
+        <documentation>ESX guest vm hostname.</documentation>
+    </formElement>
     <formElement>
         <type>entry</type>
         <label>Memory size:</label>
@@ -107,12 +113,5 @@
         <property>esx_properties</property>
         <required>0</required>
         <documentation>Import properties.</documentation>
-    </formElement>
-    <formElement>
-        <type>entry</type>
-        <label>Guest VM hostname:</label>
-        <property>esx_guest_vm_hostname</property>
-        <required>0</required>
-        <documentation>ESX guest vm hostname.</documentation>
     </formElement>
 </editor>
