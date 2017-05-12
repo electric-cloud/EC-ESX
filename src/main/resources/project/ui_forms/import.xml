@@ -79,14 +79,14 @@
         <label>Guest VM hostname:</label>
         <property>esx_guest_vm_hostname</property>
         <required>0</required>
-        <documentation>ESX guest vm hostname.</documentation>
+        <documentation>ESX guest vm hostname.  If OVF package contains single VM, just a value. Othervise format: VMID1=hostname1, VMID2=hostname2.</documentation>
     </formElement>
     <formElement>
         <type>entry</type>
         <label>Memory size:</label>
         <property>esx_vm_memory</property>
         <required>0</required>
-        <documentation>Size of virtual machine's memory. Format: VMID=1024.</documentation>
+        <documentation>Size of virtual machine's memory. If OVF package contains single VM, just a value. Othervise format: VMID1=1024, VMID2=2048.</documentation>
     </formElement>
         
     <formElement>
@@ -94,7 +94,7 @@
         <label>Number of CPUs:</label>
         <property>esx_vm_num_cpus</property>
         <required>0</required>
-        <documentation>Number of virtual processors in a virtual machine. Format: VMID=1.</documentation>
+        <documentation>Number of virtual processors in a virtual machine. If OVF package contains single VM, just a value. Othervise format: VMID1=1, VMID2=2.</documentation>
     </formElement>
         
     <formElement>
