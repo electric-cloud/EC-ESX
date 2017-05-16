@@ -1854,8 +1854,6 @@ sub import {
     $self->initialize();
     $self->debug_msg(0, '---------------------------------------------------------------------');
 
-    $self->login();
-
     if ($self->opts->{esx_number_of_vms} == DEFAULT_NUMBER_OF_VMS) {
         #$self->opts->{esx_ovf_file} = CURRENT_DIRECTORY . '/' . $self->opts->{esx_vmname} . '/' . $self->opts->{esx_vmname} . '.ovf';
         $self->import_vm(0);
@@ -1869,6 +1867,7 @@ sub import {
         }
     }
 
+    $self->login();
     my $vms = [];
     for my $vm_name (@{$self->{_vm_names}}) {
         print "vm name: $vm_name\n";
@@ -1902,12 +1901,23 @@ sub import_vm {
     $self->opts->{esx_url} =~ m{https://(.*)};
     my $esx_server = $1;
 
+    my ($esx_vmname, $esx_datastore, $ovftool_path) = (
+        $self->opts->{esx_vmname},
+        $self->opts->{esx_datastore},
+        $self->opts->{ovftool_path}
+    );
     # fix params
-    $self->opts->{esx_vmname} = $self->opts->{esx_vmname} . $suffix;
-    push @{$self->{_vm_names}}, $self->opts->{esx_vmname};
-    $self->opts->{esx_vmname} = q|"| . $self->opts->{esx_vmname} . q|"|;
-    $self->opts->{esx_datastore} = q|"| . $self->opts->{esx_datastore} . q|"|;
-    $self->opts->{ovftool_path} = q|"| . $self->opts->{ovftool_path} . q|"|;
+    # $self->opts->{esx_vmname} = $self->opts->{esx_vmname} . $suffix;
+    # push @{$self->{_vm_names}}, $self->opts->{esx_vmname};
+    push @{$self->{_vm_names}}, $esx_vmname;
+    $esx_vmname .= $suffix;
+
+    $esx_vmname = quote_param($esx_vmname);
+    $ovftool_path = quote_param($ovftool_path);
+    $esx_datastore = quote_param($esx_datastore);
+    # $self->opts->{esx_vmname} = q|"| . $self->opts->{esx_vmname} . q|"|;
+    # $self->opts->{esx_datastore} = q|"| . $self->opts->{esx_datastore} . q|"|;
+    # $self->opts->{ovftool_path} = q|"| . $self->opts->{ovftool_path} . q|"|;
     # end of fix params
 
     my $vm_id = $self->get_vmid($self->opts->{ovftool_path}, $self->opts->{esx_source_directory});
@@ -1957,12 +1967,23 @@ sub import_vm {
         $host_type = '?ip=';
     }
 
-    $self->opts->{esx_user} = uri_escape($self->opts->{esx_user});
-    $self->opts->{esx_pass} = uri_escape($self->opts->{esx_pass});
-    my $command = $self->opts->{ovftool_path} . $command_params . ' --noSSLVerify --datastore=' . $self->opts->{esx_datastore} . ' -n=' . $self->opts->{esx_vmname} . ' ' . $self->opts->{esx_source_directory} . ' "vi://' . $self->opts->{esx_user} . ':' . $self->opts->{esx_pass} . '@' . $esx_server . $host_type . $self->opts->{esx_host} . '"';
+    my $esx_user = uri_escape($self->opts->{esx_user});
+    my $esx_pass = uri_escape($self->opts->{esx_pass});
+    # $self->opts->{esx_user} = 
+    # $self->opts->{esx_pass} = 
+    my $command = $ovftool_path . $command_params . ' --noSSLVerify --datastore=' . $esx_datastore . ' -n=' . $esx_vmname . ' ' . $self->opts->{esx_source_directory} . ' "vi://' . $esx_user . ':' . $esx_pass . '@' . $esx_server . $host_type . $self->opts->{esx_host} . '"';
 
     $self->debug_msg(1, 'Executing command: ' . $command);
     system($command);
+}
+
+sub quote_param {
+    my ($param) = @_;
+
+    # negative lookbehind
+    $param =~ s/(?<!\\)"/\\"/gs;
+    $param = qq|"$param"|;
+    return $param;
 }
 
 sub create_properties_line {

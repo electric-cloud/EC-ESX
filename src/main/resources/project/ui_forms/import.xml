@@ -54,9 +54,9 @@
     </formElement> 
     <formElement>
         <type>entry</type>
-        <label>Source directory:</label>
+        <label>OVF or OVA file path:</label>
         <property>esx_source_directory</property>
-        <documentation>Absoulte path to the OVF or OVA file.</documentation>
+        <documentation>Absolute path to the OVF or OVA file.</documentation>
         <required>1</required>
     </formElement>
     <formElement>
