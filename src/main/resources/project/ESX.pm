@@ -37,6 +37,8 @@ use lib $ENV{COMMANDER_PLUGINS} . '/@PLUGIN_NAME@/agent/lib';
 use strict;
 use Carp;
 use Data::Dumper;
+use URI::Escape;
+use JSON;
 use ElectricCommander;
 use ElectricCommander::PropDB;
 use ElectricCommander::PropDB qw(/myProject/libs);
@@ -118,6 +120,7 @@ sub new {
     my $self = {
                  _cmdr => $cmdr,
                  _opts => $opts,
+                 properties_to_set => {},
                };
     bless $self, $class;
 }
@@ -1831,6 +1834,7 @@ sub get_vm_configuration {
 sub import {
     my ($self) = @_;
 
+    $self->{_vm_names} = [];
     if ($::gRunTestUseFakeOutput) {
 
         # Create and return fake output
@@ -1852,16 +1856,27 @@ sub import {
 
     if ($self->opts->{esx_number_of_vms} == DEFAULT_NUMBER_OF_VMS) {
         #$self->opts->{esx_ovf_file} = CURRENT_DIRECTORY . '/' . $self->opts->{esx_vmname} . '/' . $self->opts->{esx_vmname} . '.ovf';
-        $self->import_vm();
+        $self->import_vm(0);
     }
     else {
         my $vm_number;
         for (my $i = 0; $i < $self->opts->{esx_number_of_vms}; $i++) {
             $vm_number = $i + 1;
             #$self->opts->{esx_ovf_file} = CURRENT_DIRECTORY . '/' . $self->opts->{esx_vmname} . "_$vm_number/" . $self->opts->{esx_vmname} . "_$vm_number.ovf";
-            $self->import_vm();
+            $self->import_vm($vm_number);
         }
     }
+
+    $self->login();
+    my $vms = [];
+    for my $vm_name (@{$self->{_vm_names}}) {
+        print "vm name: $vm_name\n";
+        my $vm = $self->get_vm_net_info($vm_name);
+        if ($vm) {
+            push @$vms, $vm;
+        }
+    }
+    $self->{_cmdr}->setProperty($self->opts->{esx_properties_location} . '/vms', encode_json($vms));
 }
 
 ################################
@@ -1875,17 +1890,174 @@ sub import {
 #
 ################################
 sub import_vm {
-    my ($self) = @_;
+    my ($self, $vm_number) = @_;
 
+    my $suffix = '';
+    if ($vm_number > 0) {
+        $suffix = "-$vm_number";
+    }
     # Call ovftool to import OVF package
     $self->debug_msg(1, 'Importing OVF package...');
     $self->opts->{esx_url} =~ m{https://(.*)};
     my $esx_server = $1;
-    my $command = $self->opts->{ovftool_path} . ' --noSSLVerify --datastore=' . $self->opts->{esx_datastore} . ' -n=' . $self->opts->{esx_vmname} . ' ' . $self->opts->{esx_source_directory} . ' vi://' . $self->opts->{esx_user} . ':' . $self->opts->{esx_pass} . '@' . $esx_server . '?ip=' . $self->opts->{esx_host};
+
+    my ($esx_vmname, $esx_datastore, $ovftool_path) = (
+        $self->opts->{esx_vmname},
+        $self->opts->{esx_datastore},
+        $self->opts->{ovftool_path}
+    );
+    # fix params
+    # $self->opts->{esx_vmname} = $self->opts->{esx_vmname} . $suffix;
+    # push @{$self->{_vm_names}}, $self->opts->{esx_vmname};
+
+    $esx_vmname .= $suffix;
+    my $raw_esx_vmname = $esx_vmname;
+
+    $esx_vmname = quote_param($esx_vmname);
+    $ovftool_path = quote_param($ovftool_path);
+    $esx_datastore = quote_param($esx_datastore);
+
+    my $vm_id = $self->get_vmid($self->opts->{ovftool_path}, $self->opts->{esx_source_directory});
+
+    my $command_params = '';
+
+    if ($self->opts->{esx_properties}) {
+        $command_params .= $self->create_properties_line('--prop:', $self->opts->{esx_properties});
+    }
+
+    if ($self->opts->{esx_vm_memory}) {
+        if (scalar @$vm_id == 1) {
+            $command_params .= ' --memorySize:' . $vm_id->[0] . '=' . $self->opts->{esx_vm_memory};
+        }
+        else {
+            $command_params .= $self->create_properties_line('--memorySize:', $self->opts->{esx_vm_memory});
+        }
+    }
+
+    if ($self->opts->{esx_vm_num_cpus}) {
+        if (scalar @$vm_id == 1) {
+            $command_params .= ' --numberOfCpus:' . $vm_id->[0] . '=' . $self->opts->{esx_vm_num_cpus};
+        }
+        else {
+            $command_params .= $self->create_properties_line('--numberOfCpus:', $self->opts->{esx_vm_num_cpus});
+        }
+    }
+
+    if ($self->opts->{esx_guest_vm_hostname}) {
+        my $hostname = '';
+        if (scalar @$vm_id == 1) {
+            $hostname = $self->opts->{esx_guest_vm_hostname} . $suffix;
+            $command_params .= " --computerName:" . $vm_id->[0] . '=' . $self->opts->{esx_guest_vm_hostname} . $suffix;
+        }
+        else {
+            $hostname = $self->opts->{esx_guest_vm_hostname};
+            $command_params .= $self->create_properties_line('--computerName:', $self->opts->{esx_guest_vm_hostname});
+        }
+        # $self->{properties_to_set}->{hostnames}->{$self->opts->{esx_vmname}} = $hostname;
+    }
+    if ($self->opts->{esx_vm_poweron}) {
+        $command_params .= ' --powerOn ';
+    }
+
+    my $host_type = 'dns?=';
+    if (is_ipv4($self->opts->{esx_host})) {
+        $host_type = '?ip=';
+    }
+
+    my $esx_user = uri_escape($self->opts->{esx_user});
+    my $esx_pass = uri_escape($self->opts->{esx_pass});
+    # $self->opts->{esx_user} = 
+    # $self->opts->{esx_pass} = 
+    my $command = $ovftool_path . $command_params . ' --noSSLVerify --datastore=' . $esx_datastore . ' -n=' . $esx_vmname . ' ' . $self->opts->{esx_source_directory} . ' "vi://' . $esx_user . ':' . $esx_pass . '@' . $esx_server . $host_type . $self->opts->{esx_host} . '"';
+
     $self->debug_msg(1, 'Executing command: ' . $command);
     system($command);
+    my $exit_value  = $? >> 8;
+    # exit code 0, vm has provosioned.
+    if (!$exit_value) {
+        push @{$self->{_vm_names}}, $raw_esx_vmname;
+    }
 }
 
+sub quote_param {
+    my ($param) = @_;
+
+    # negative lookbehind
+    $param =~ s/(?<!\\)"/\\"/gs;
+    $param = qq|"$param"|;
+    return $param;
+}
+
+sub create_properties_line {
+    my ($self, $key, $values) = @_;
+
+    my $retval = ' ';
+    my @values = split(',', $values);
+    for my $val (@values) {
+        $val =~ s/^\s+//gs;
+        $val =~ s/\s+$//gs;
+        $retval .= $key . $val . ' ';
+    }
+
+    return $retval;
+}
+sub get_vmid {
+    my ($self, $ovftool, $ovf_path) = @_;
+
+    my $result = `$ovftool --machineOutput $ovf_path`;
+    my @match = $result =~ m/<vm\sid="(.*?)">/gs;
+    return \@match;
+}
+
+
+sub is_ipv4 {
+    my ($ip_address) = @_;
+
+    my $regexp = '^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.';
+    $regexp .= '([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.';
+    $regexp .= '([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.';
+    $regexp .= '([01]?\\d\\d?|2[0-4]\\d|25[0-5])$';
+    if ($ip_address =~ m/$regexp/s) {
+        return 1;
+    }
+    return 0;
+}
+
+sub get_vm_net_info {
+    my ($self, $vm_name) = @_;
+    my $vm_view;
+    for (1..12) {
+        $vm_view = Vim::find_entity_view(view_type => VIRTUAL_MACHINE, filter    => { 'name' => $vm_name});
+        if (!$vm_view) {
+            print "No vm. waiting for it...\n";
+            sleep 30;
+        }
+        elsif(!$vm_view->guest()->{guestId}) {
+            print "No guest id, waiting for it...\n";
+            sleep 30;
+        }
+        else {
+            last;
+        }
+    }
+    unless ($vm_view) {
+        return undef;
+    }
+    my $vm = {};
+    my $guest = $vm_view->guest();
+    $vm->{guest_id} = $guest->{guestId};
+    $vm->{hostname} = $guest->hostName();
+    $vm->{ip_address} = $guest->ipAddress();
+    $vm->{fqdn} = [];
+    my $ip_stack = $vm_view->guest()->ipStack();
+
+    for my $record (@$ip_stack) {
+        if ($record->{dnsConfig}->{domainName}) {
+            push @{$vm->{fqdn}}, $vm->{hostname} . '.' .$record->{dnsConfig}->{domainName};
+        }
+    }
+    return $vm;
+}
 ################################
 # export - Iterate and call export_vm
 #

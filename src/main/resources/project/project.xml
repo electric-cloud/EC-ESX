@@ -3014,6 +3014,69 @@
                                         </property>
                                     </propertySheet>
                                 </property>
+
+                                <property>
+                                    <propertyName>esx_vm_memory</propertyName>
+                                    <propertySheet>
+                                        <property>
+                                            <propertyName>formType</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>standard</value>
+                                        </property>
+                                    </propertySheet>
+                                </property>
+                                <property>
+                                    <propertyName>esx_vm_num_cpus</propertyName>
+                                    <propertySheet>
+                                        <property>
+                                            <propertyName>formType</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>standard</value>
+                                        </property>
+                                    </propertySheet>
+                                </property>
+                                                                
+                                <property>
+                                    <propertyName>esx_vm_poweron</propertyName>
+                                    <propertySheet>
+                                        <property>
+                                            <propertyName>formType</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>standard</value>
+                                        </property>
+                                    </propertySheet>
+                                </property>
+                                <property>
+                                    <propertyName>esx_properties</propertyName>
+                                    <propertySheet>
+                                        <property>
+                                            <propertyName>formType</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>standard</value>
+                                        </property>
+                                    </propertySheet>
+                                </property>
+                                <property>
+                                    <propertyName>esx_guest_vm_hostname</propertyName>
+                                    <propertySheet>
+                                        <property>
+                                            <propertyName>formType</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>standard</value>
+                                        </property>
+                                    </propertySheet>
+                                </property>
+                                <property>
+                                    <propertyName>esx_properties_location</propertyName>
+                                    <propertySheet>
+                                        <property>
+                                            <propertyName>formType</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>standard</value>
+                                        </property>
+                                    </propertySheet>
+                                </property>
+                                
                             </propertySheet>
                         </property>
                     </propertySheet>
@@ -3078,6 +3141,49 @@
                 <formalParameterName>esx_timeout</formalParameterName>
                 <defaultValue></defaultValue>
                 <description>Timeout for the step execution in minutes. Blank means no timeout.</description>
+                <required>0</required>
+                <type>entry</type>
+            </formalParameter>
+
+            <formalParameter>
+                <formalParameterName>esx_vm_memory</formalParameterName>
+                <defaultValue></defaultValue>
+                <description>Memory in MB for VM.</description>
+                <required>0</required>
+                <type>entry</type>
+            </formalParameter>
+            <formalParameter>
+                <formalParameterName>esx_vm_num_cpus</formalParameterName>
+                <defaultValue></defaultValue>
+                <description>Number of CPUs for VM.</description>
+                <required>0</required>
+                <type>entry</type>
+            </formalParameter>
+            <formalParameter>
+                <formalParameterName>esx_vm_poweron</formalParameterName>
+                <defaultValue></defaultValue>
+                <description>Poweron vm?.</description>
+                <required>0</required>
+                <type>checkbox</type>
+            </formalParameter>
+            <formalParameter>
+                <formalParameterName>esx_properties</formalParameterName>
+                <defaultValue></defaultValue>
+                <description>Import properties.</description>
+                <required>0</required>
+                <type>textarea</type>
+            </formalParameter>
+            <formalParameter>
+                <formalParameterName>esx_guest_vm_hostname</formalParameterName>
+                <defaultValue></defaultValue>
+                <description>Guest vm hostname.</description>
+                <required>0</required>
+                <type>entry</type>
+            </formalParameter>
+            <formalParameter>
+                <formalParameterName>esx_properties_location</formalParameterName>
+                <defaultValue></defaultValue>
+                <description>Result properties location.</description>
                 <required>0</required>
                 <type>entry</type>
             </formalParameter>

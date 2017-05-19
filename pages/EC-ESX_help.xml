@@ -1,2486 +1,2318 @@
 <?xml version="1.0"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <meta name="generator" content="HTML Tidy for Windows (vers 25 March 2009), see www.w3.org" />
-  <meta content="text/html; charset=us-ascii" http-equiv="content-type" />
-
-  <title>ElectricFlow Plugin for ESX</title>
-  <link rel="stylesheet" href="../../plugins/@PLUGIN_KEY@/pluginhelp.css" type="text/css" media="screen" />
-</head>
-
-<body>
-  <div class="help">
-    <h1>VMware ESX</h1>
+    <head>
+        <meta name="generator" content="HTML Tidy for Windows (vers 25 March 2009), see www.w3.org" />
+        <meta content="text/html; charset=us-ascii" http-equiv="content-type" />
+
+        <title>ElectricFlow Plugin for ESX</title>
+        <link rel="stylesheet" href="../../plugins/@PLUGIN_KEY@/pluginhelp.css" type="text/css" media="screen" />
+    </head>
+
+    <body>
+        <div class="help">
+            <h1>VMware ESX</h1>
+            <p>Plugin Version @PLUGIN_VERSION@</p>
+            <hr style="margin-left: -10px; margin-top: 10px; height: 1px; width: 100%; color: #5981BD;" noshade="noshade" />
+            <p>Revised on May 19, 2017</p>
+            <h1>Contents</h1>
+            <ul>
+                <li><p><a href="#overview">Overview</a></p></li>
+                <li><p><a href="#setupconfig">Setting Up the Plugin Configuration</a></p></li>
+                <li><p><a href="#procedures">Plugin Procedures</a></p></li>
+                <ul>
+                    <li><a href="#Create">Create</a></li>
+                    <li><a href="#Clone">Clone</a></li>
+                    <li><a href="#Relocate">Relocate</a></li>
+                    <li><a href="#Cleanup">Cleanup</a></li>
+                    <li><a href="#Snapshot">Snapshot</a></li>
+                    <li><a href="#Revert">Revert</a></li>
+                    <li><a href="#PowerOn">PowerOn</a></li>
+                    <li><a href="#PowerOff">PowerOff</a></li>
+                    <li><a href="#Shutdown">Shutdown</a></li>
+                    <li><a href="#Suspend">Suspend</a></li>
+                    <li><a href="#CreateResourceFromVM">CreateResourceFromVM</a></li>
+                    <li><a href="#GetVMConfiguration">GetVMConfiguration</a></li>
+                    <li><a href="#Import">Import</a></li>
+                    <li><a href="#Export">Export</a></li>
+                    <li><a href="#RegisterVM">RegisterVM</a></li>
+                    <li><a href="#CloudManagerGrow">CloudManagerGrow</a></li>
+                    <li><a href="#CloudManagerShrink">CloudManagerShrink</a></li>
+                    <li><a href="#CloudManagerSync">CloudManagerSync</a></li>
+                    <li><a href="#CreateResourcePool">CreateResourcePool</a></li>
+                    <li><a href="#EditResourcePool">EditResourcePool</a></li>
+                    <li><a href="#ListEntity">ListEntity</a></li>
+                    <li><a href="#DeleteEntity">DeleteEntity</a></li>
+                    <li><a href="#CreateFolder">CreateFolder</a></li>
+                    <li><a href="#RenameEntity">RenameEntity</a></li>
+                    <li><a href="#MoveEntity">MoveEntity</a></li>
+                    <li><a href="#DisplayESXSummary">DisplayESXSummary</a></li>
+                    <li><a href="#ChangeCpuMemAllocation">ChangeCpuMemAllocation</a></li>
+                    <li><a href="#AddHardDisk">AddHardDisk</a></li>
+                    <li><a href="#AddCdDvdDrive">AddCdDvdDrive</a></li>
+                    <li><a href="#AddNetworkInterface">AddNetworkInterface</a></li>
+                    <li><a href="#EditCdDvdDrive">EditCdDvdDrive</a></li>
+                    <li><a href="#ListDevice">ListDevice</a></li>
+                    <li><a href="#RemoveDevice">RemoveDevice</a></li>
+                    <li><a href="#ListSnapshot">ListSnapshot</a></li>
+                    <li><a href="#RemoveSnapshot">RemoveSnapshot</a></li>
+                    <li><a href="#RevertToCurrentSnapshot">RevertToCurrentSnapshot</a></li>
+                </ul>
+                <li><p><a href="#example">Examples and Use Cases</a></p></li>
+                <li><p><a href="#rns">Release Notes</a></p></li>
+            </ul>
+            <!-- The tool description should answer these kinds of questions:
+                 What is the tool itself is used for in the development
+                 process? Who would use this tool? What is the general use-case or
+                 problem that this tool solves? Look at the tool's documentation or
+                 website(s) to get their own descriptions. Look at Wikipedia or other
+                 outside websites. If there is a Hudson plugin, read their
+                 documentation for ideas, examples, etc. It's OK to copy word-for-word
+                 only if appropriate, such as FOSS - but not commercial software.
+            -->
+            <h1 id="overview">Overview</h1>
+            <p>VMware ESX and VMware ESXi provide the foundation for
+            building and managing a reliable and dynamic IT
+            infrastructure.<br />
+            ESX Server is managed by the VMware Infrastructure Client. Its
+            centralized management platform is called Virtual Center. These
+            hypervisors abstract processor, memory, storage and networking
+            resources into multiple virtual machines that each can run an
+            unmodified operating system and applications.<br />
+            VMware ESXi is the latest hypervisor architecture from VMware.
+            The original ESX is being replaced by ESXi.</p>
+
+            <h2>ESX Links</h2>
+
+            <p>More information can be found <a href="http://www.vmware.com/products/vsphere/esxi-and-esx/index.html">
+            here</a>.</p>
+
+            <p>Information about the OVF tool can be found <a href="http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf">
+            here.</a></p>
+
+            <p>For some procedures you need to specify the Guest OS ID. Find these values <a href="http://www.vmware.com/support/developer/converter-sdk/conv50_apireference/vim.vm.GuestOsDescriptor.GuestOsIdentifier.html">
+            here</a>.</p>
+
+            <p>OVF manual is available <a href="http://www.vmware.com/support/developer/ovf/">here.</a></p>
+
+            <h2>ElectricFlow Integration to VMware ESX and ESXi</h2>
+
+            <p>EC-ESX integration uses modules from the VI Perl Toolkit, which
+            provides access to the ESX system. By using this toolkit, the
+            integration can connect to the ESX server to automate and
+            perform various operations providing a more generic interface
+            for managing virtual machines on ESX servers.</p>
 
-    <p>Plugin Version @PLUGIN_VERSION@</p>
-    <hr style="margin-left: -10px; margin-top: 10px; height: 1px; width: 100%; color: #5981BD;" noshade="noshade" />
-	
-	<p>Revised on April 1, 2016</p>
-    <!-- The tool description should answer these kinds of questions:
-What is the tool itself is used for in the development
-process? Who would use this tool? What is the general use-case or
-problem that this tool solves? Look at the tool's documentation or
-website(s) to get their own descriptions. Look at Wikipedia or other
-outside websites. If there is a Hudson plugin, read their
-documentation for ideas, examples, etc. It's OK to copy word-for-word
-only if appropriate, such as FOSS - but not commercial software.
--->
+            <p>The plugin interacts with ESX data using PERL to perform the
+            following tasks:</p>
 
-    <p>VMware ESX and VMware ESXi provide the foundation for
-    building and managing a reliable and dynamic IT
-    infrastructure.<br />
-    ESX Server is managed by the VMware Infrastructure Client. Its
-    centralized management platform is called Virtual Center. These
-    hypervisors abstract processor, memory, storage and networking
-    resources into multiple virtual machines that each can run an
-    unmodified operating system and applications.<br />
-    VMware ESXi is the latest hypervisor architecture from VMware.
-    The original ESX is being replaced by ESXi.</p>
+            <ul>
+                <li>Create configuration to hold connection information.</li>
 
-    <h2>ESX Links</h2>
+                <li>Query for virtual machine information.</li>
 
-    <p>More information can be found <a href="http://www.vmware.com/products/vsphere/esxi-and-esx/index.html">
-   here</a>.</p>
+                <li>Perform actions on virtual machines.</li>
 
-    <p>Information about the OVF tool can be found <a href="http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf">
-    here.</a></p>
+                <li>Import and export virtual machines.</li>
 
-    <p>For some procedures you need to specify the Guest OS ID. Find these values <a href="http://www.vmware.com/support/developer/converter-sdk/conv50_apireference/vim.vm.GuestOsDescriptor.GuestOsIdentifier.html">
-    here</a>.</p>
+                <li>Create ElectricFlow resources.</li>
+            </ul>
 
-    <p>OVF manual is available <a href="http://www.vmware.com/support/developer/ovf/">here.</a></p>
+            <p>This plugin provides the following procedures: Cleanup,
+            Clone, Create, CreateResourceFromVM, Export,
+            GetVMConfiguration, Import, PowerOn, PowerOff, RegisterVM,
+            Relocate, Revert, Shutdown, Snapshot, and Suspend.<br />
+            This plugin communicates with ESX by using the Perl module
+            VMware::VIRuntime, provided by VMware.</p>
 
-    <h2>ElectricFlow Integration to VMware ESX and ESXi</h2>
+            <h2>OVF Tool</h2>
 
-    <p>EC-ESX integration uses modules from the VI Perl Toolkit, which
-    provides access to the ESX system. By using this toolkit, the
-    integration can connect to the ESX server to automate and
-    perform various operations providing a more generic interface
-    for managing virtual machines on ESX servers.</p>
+            <p>The VMware OVF Tool is a command line utility that allows you to
+            import and export OVF packages.<br />
+            In order to execute Import and Export procedures using the ESX
+            plugin, the OVF Tool must be installed.</p>
 
-    <p>The plugin interacts with ESX data using PERL to perform the
-    following tasks:</p>
+            <p>You can download this utility from the <a href="http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf">
+            OVF Tool page</a>.<br />
+            You must have an account to download this tool. If you do not
+            have an account, you can create one for free.</p>
 
-    <ul>
-      <li>Create configuration to hold connection information.</li>
-
-      <li>Query for virtual machine information.</li>
-
-      <li>Perform actions on virtual machines.</li>
-
-      <li>Import and export virtual machines.</li>
-
-      <li>Create ElectricFlow resources.</li>
-    </ul>
-
-    <p>This plugin provides the following procedures: Cleanup,
-    Clone, Create, CreateResourceFromVM, Export,
-    GetVMConfiguration, Import, PowerOn, PowerOff, RegisterVM,
-    Relocate, Revert, Shutdown, Snapshot, and Suspend.<br />
-    This plugin communicates with ESX by using the Perl module
-    VMware::VIRuntime, provided by VMware.</p>
-
-    <h2>OVF Tool</h2>
-
-    <p>The VMware OVF Tool is a command line utility that allows you to
-    import and export OVF packages.<br />
-    In order to execute Import and Export procedures using the ESX
-    plugin, the OVF Tool must be installed.</p>
-
-    <p>You can download this utility from the <a href="http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf">
-    OVF Tool page</a>.<br />
-    You must have an account to download this tool. If you do not
-    have an account, you can create one for free.</p>
-
-    <p class="help">After downloading VMware OVF Tool, use the
-    corresponding install method for your operating system:</p>
-
-    <table border="0" class="help">
-      <tr>
-        <th>Operating System</th>
-
-        <th>Installation Method</th>
-      </tr>
-
-      <tr>
-        <td>Linux 32-bit</td>
-
-        <td>Run the shell script as ./VMware-OVF-Tool.sh</td>
-      </tr>
-
-      <tr>
-        <td>Linux 64-bit</td>
-
-        <td>Run the shell script as
-        ./VMware-OVF-Tool.x86_64.sh</td>
-      </tr>
-
-      <tr>
-        <td>Mac 64-bit</td>
-
-        <td></td>
-      </tr>
-
-      <tr>
-        <td>Windows 32-bit</td>
-
-        <td>Double-click the installer, VMware-OVF-Tool.exe</td>
-      </tr>
-
-      <tr>
-        <td>Windows 64-bit</td>
-
-        <td>Double-click the installer,
-        VMware-OVF-Tool.x86_64.exe</td>
-      </tr>
-    </table>
-
-    <h2>Integrated Version</h2>
-
-    <p>This plugin was developed and tested against ESX 3.5 and
-    ESXi 5.0.</p>
-
-    <h1>Plugin Procedures</h1>
-	<p>IMPORTANT: In the ElectricFlow UI, from the Home page, open the Main Menu, and click <b>Admin</b> &gt; <b>Plugins</b> to open the Plugin Manager.</p>
-    <p>IMPORTANT: For all parameter descriptions below, required
-    parameters are shown in <span class="required">bold
-    italics</span>.</p>
-
-    <div id="CreateConfiguration"><a name="CreateConfiguration" id="CreateConfiguration"></a>
-
-    <h3>Plugin Configuration</h3>
-
-    <p>Plugin configurations are sets of parameters that apply
-    across some or all of the plugin's procedures. They are
-    intended to reduce repetition of common values, create
-    predefined sets of parameters for end users, and to securely
-    store credentials where needed. Each configuration is given a
-    unique name that is entered in designated parameters on
-    procedures that use them.<br />
-    <br />
-    Plugin configurations are created by going to the ElectricFlow "Administration" tab, then to the "Plugins" sub-tab.
-    On the right side of the line for the EC-ESX plugin,
-    there is a "Configure" link which will open the Configuration
-    page.<br />
-    ESX does not allow network-style login like (DOMAIN\user).</p>
-    <!-- For all parameters, the parameter name should be *exactly* the same as it appears in the
-    Parameter Panel, and the first sentence(s) of the description should be
-    the same as the tooltip (if there is one). After that, the parameter
-    description can go into greater detail about the parameter including
-    valid value ranges and examples.
-    -->
+            <p class="help">After downloading VMware OVF Tool, use the
+            corresponding install method for your operating system:</p>
 
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
+            <table border="0" class="help">
+                <tr>
+                    <th>Operating System</th>
 
-          <th>Description</th>
-        </tr>
-      </thead>
+                    <th>Installation Method</th>
+                </tr>
 
-      <tbody>
-        <tr>
-          <td class="required">Configuration Name</td>
+                <tr>
+                    <td>Linux 32-bit</td>
 
-          <td>Provide a unique name for the configuration, keeping
-          in mind that you may need to create additional
-          configurations over time. (Required)</td>
-        </tr>
+                    <td>Run the shell script as ./VMware-OVF-Tool.sh</td>
+                </tr>
 
-        <tr>
-          <td class="required">ESX URL</td>
+                <tr>
+                    <td>Linux 64-bit</td>
 
-          <td>Provide the URL of the ESX server with the form: https://(ip_address|hostname). (Required)</td>
-        </tr>
+                    <td>Run the shell script as
+                    ./VMware-OVF-Tool.x86_64.sh</td>
+                </tr>
 
-        <tr>
-          <td class="required">Credential</td>
+                <tr>
+                    <td>Mac 64-bit</td>
 
-          <td>Provide the user name and password ElectricFlow uses to
-          communicate with the ESX server. (Required)</td>
-        </tr>
-        
-        <tr>
-          <td>Attempt Connection?</td>
+                    <td></td>
+                </tr>
 
-          <td>Attempt a connection to check credentials.</td>
-        </tr>
-        
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/configuration_panel.png" /></div>
+                <tr>
+                    <td>Windows 32-bit</td>
 
-    <div id="Create"><a name="Create" id="Create"></a>
+                    <td>Double-click the installer, VMware-OVF-Tool.exe</td>
+                </tr>
 
-    <h3>Create</h3>
+                <tr>
+                    <td>Windows 64-bit</td>
 
-    <p>Create virtual machines on the ESX server. Guest OS
-    installation must be performed by the user.</p>
+                    <td>Double-click the installer,
+                    VMware-OVF-Tool.x86_64.exe</td>
+                </tr>
+            </table>
 
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
+            <h2>Integrated Version</h2>
 
-          <th>Description</th>
-        </tr>
-      </thead>
+            <p>This plugin was developed and tested against ESX 3.5 and
+            ESXi 5.0.</p>
 
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
 
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
 
-        <tr>
-          <td class="required">VM Name</td>
+            <div id="CreateConfiguration"><a name="CreateConfiguration" id="CreateConfiguration"></a>
 
-          <td>Name of the virtual machine to be created.
-          (Required)</td>
-        </tr>
+            <h3 id="setupconfig">Plugin Configuration</h3>
 
-        <tr>
-          <td>Datastore</td>
+            <p>Plugin configurations are sets of parameters that apply
+            across some or all of the plugin's procedures. They are
+            intended to reduce repetition of common values, create
+            predefined sets of parameters for end users, and to securely
+            store credentials where needed. Each configuration is given a
+            unique name that is entered in designated parameters on
+            procedures that use them.<br />
+            <br />
+            Plugin configurations are created by going to the ElectricFlow "Administration" tab, then to the "Plugins" sub-tab.
+            On the right side of the line for the EC-ESX plugin,
+            there is a "Configure" link which will open the Configuration
+            page.<br />
+            ESX does not allow network-style login like (DOMAIN\user).</p>
+            <!-- For all parameters, the parameter name should be *exactly* the same as it appears in the
+                 Parameter Panel, and the first sentence(s) of the description should be
+                 the same as the tooltip (if there is one). After that, the parameter
+                 description can go into greater detail about the parameter including
+                 valid value ranges and examples.
+            -->
 
-          <td>Name of the datastore. Default: Any accessible
-          datastore with free space greater than the disk size
-          specified.</td>
-        </tr>
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
 
-        <tr>
-          <td class="required">Host</td>
+                        <th>Description</th>
+                    </tr>
+                </thead>
 
-          <td>Name of the host. (Required)</td>
-        </tr>
+                <tbody>
+                    <tr>
+                        <td class="required">Configuration Name</td>
 
-        <tr>
-          <td class="required">Datacenter</td>
+                        <td>Provide a unique name for the configuration, keeping
+                        in mind that you may need to create additional
+                        configurations over time. (Required)</td>
+                    </tr>
 
-          <td>Name of the datacenter. (Required)</td>
-        </tr>
+                    <tr>
+                        <td class="required">ESX URL</td>
 
-        <tr>
-          <td>Guest OS Id</td>
+                        <td>Provide the URL of the ESX server with the form: https://(ip_address|hostname). (Required)</td>
+                    </tr>
 
-          <td>Guest operating system identifier (default is
-          'winXPProGuest').</td>
-        </tr>
+                    <tr>
+                        <td class="required">Credential</td>
 
-        <tr>
-          <td>Disk size (in KB)</td>
+                        <td>Provide the user name and password ElectricFlow uses to
+                        communicate with the ESX server. (Required)</td>
+                    </tr>
+                    <tr>
+                        <td>Attempt Connection?</td>
 
-          <td>Capacity of the virtual disk in KB (default is
-          4096).</td>
-        </tr>
+                        <td>Attempt a connection to check credentials.</td>
+                    </tr>
+                </tbody>
+            </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/configuration_panel.png" /></div>
+            <h1 id="procedures">Plugin Procedures</h1>
+            <p>IMPORTANT: In the ElectricFlow UI, from the Home page, open the Main Menu, and click <b>Admin</b> &gt; <b>Plugins</b> to open the Plugin Manager.</p>
+            <p>IMPORTANT: For all parameter descriptions below, required
+            parameters are shown in <span class="required">bold
+            italics</span>.</p>
+            <div id="Create"><a name="Create" id="Create"></a>
 
-        <tr>
-          <td>Memory size</td>
+            <h3>Create</h3>
 
-          <td>Size of virtual machine's memory in MB (default is
-          256)</td>
-        </tr>
+            <p>Create virtual machines on the ESX server. Guest OS
+            installation must be performed by the user.</p>
 
-        <tr>
-          <td>Number of CPUs</td>
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
 
-          <td>Number of virtual processors in a virtual machine
-          (default is 1).</td>
-        </tr>
+                        <th>Description</th>
+                    </tr>
+                </thead>
 
-        <tr>
-          <td>Network Name</td>
+                <tbody>
+                    <tr>
+                        <td class="required">ESX Connection</td>
 
-          <td>Network name. Default: Any accessible network.</td>
-        </tr>
+                        <td>The name of the configuration which holds the
+                        connection information for the ESX server. (Required)</td>
+                    </tr>
 
-        <tr>
-          <td>Connect Network at Power On?</td>
+                    <tr>
+                        <td class="required">VM Name</td>
 
-          <td>Flag to specify whether or not to connect the device
-          when the virtual machine starts (default is false).</td>
-        </tr>
+                        <td>Name of the virtual machine to be created.
+                        (Required)</td>
+                    </tr>
 
-        <tr>
-          <td>Power On Vm?</td>
+                    <tr>
+                        <td>Datastore</td>
 
-          <td>Flag to specify whether or not to power on the
-          created virtual machine(s) (default is false).</td>
-        </tr>
+                        <td>Name of the datastore. Default: Any accessible
+                        datastore with free space greater than the disk size
+                        specified.</td>
+                    </tr>
 
-        <tr>
-          <td>Number of VMs</td>
+                    <tr>
+                        <td class="required">Host</td>
 
-          <td>Number of virtual machines to create (default is 1).
-          If the value is greater than 1, a suffix is added to VM
-          names. The suffix consists of an underscore and the VM
-          number ('_#').</td>
-        </tr>
+                        <td>Name of the host. (Required)</td>
+                    </tr>
 
-        <tr>
-          <td>JobStep Timeout</td>
+                    <tr>
+                        <td class="required">Datacenter</td>
 
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Create_panel.png" /></div>
+                        <td>Name of the datacenter. (Required)</td>
+                    </tr>
 
-    <div id="Clone"><a name="Clone" id="Clone"></a>
+                    <tr>
+                        <td>Guest OS Id</td>
 
-    <h3>Clone</h3>
+                        <td>Guest operating system identifier (default is
+                        'winXPProGuest').</td>
+                    </tr>
 
-    <p>Clone a virtual machine. Clone operation is only supported
-    and only works when connecting against vCenter Server and not
-    individual ESX(i) host.</p>
+                    <tr>
+                        <td>Disk size (in KB)</td>
 
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
+                        <td>Capacity of the virtual disk in KB (default is
+                        4096).</td>
+                    </tr>
 
-          <th>Description</th>
-        </tr>
-      </thead>
+                    <tr>
+                        <td>Memory size</td>
 
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
+                        <td>Size of virtual machine's memory in MB (default is
+                        256)</td>
+                    </tr>
 
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
+                    <tr>
+                        <td>Number of CPUs</td>
 
-        <tr>
-          <td class="required">VM Name</td>
+                        <td>Number of virtual processors in a virtual machine
+                        (default is 1).</td>
+                    </tr>
 
-          <td>Name of the virtual machine whose clone is to be
-          created. (Required)</td>
-        </tr>
+                    <tr>
+                        <td>Network Name</td>
 
-        <tr>
-          <td class="required">VM Clone Name</td>
+                        <td>Network name. Default: Any accessible network.</td>
+                    </tr>
 
-          <td>Name of the clone virtual machine which will be
-          created. (Required)</td>
-        </tr>
+                    <tr>
+                        <td>Connect Network at Power On?</td>
 
-        <tr>
-          <td class="required">Host for new VM</td>
+                        <td>Flag to specify whether or not to connect the device
+                        when the virtual machine starts (default is false).</td>
+                    </tr>
 
-          <td>Target host for the new virtual machine.
-          (Required)</td>
-        </tr>
+                    <tr>
+                        <td>Power On Vm?</td>
 
-        <tr>
-          <td>Datastore</td>
+                        <td>Flag to specify whether or not to power on the
+                        created virtual machine(s) (default is false).</td>
+                    </tr>
 
-          <td>Name of the datastore. Default: Datastore with the
-          most free space.</td>
-        </tr>
+                    <tr>
+                        <td>Number of VMs</td>
 
-        <tr>
-          <td>Number of Clones</td>
+                        <td>Number of virtual machines to create (default is 1).
+                        If the value is greater than 1, a suffix is added to VM
+                        names. The suffix consists of an underscore and the VM
+                        number ('_#').</td>
+                    </tr>
 
-          <td>Number of clones to create (default is 1). If the
-          value is greater than 1, a suffix is added to cloned VM
-          names. The suffix consists of an underscore and the clone
-          number ('_#').</td>
-        </tr>
+                    <tr>
+                        <td>JobStep Timeout</td>
 
-        <tr>
-          <td>JobStep Timeout</td>
+                        <td>Timeout for the step execution in minutes. Blank
+                        means no timeout.</td>
+                    </tr>
+                </tbody>
+            </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Create_panel.png" /></div>
 
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Clone_panel.png" /></div>
+            <div id="Clone"><a name="Clone" id="Clone"></a>
 
-    <div id="Relocate"><a name="Relocate" id="Relocate"></a>
+            <h3>Clone</h3>
 
-    <h3>Relocate</h3>
+            <p>Clone a virtual machine. Clone operation is only supported
+            and only works when connecting against vCenter Server and not
+            individual ESX(i) host.</p>
 
-    <p>Relocate a virtual machine to the specified destination
-    host. Relocate operation is only supported and only works when
-    connecting against vCenter Server and not individual ESX(i)
-    host.</p>
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
 
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
 
-          <th>Description</th>
-        </tr>
-      </thead>
+                <tbody>
+                    <tr>
+                        <td class="required">ESX Connection</td>
 
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
+                        <td>The name of the configuration which holds the
+                        connection information for the ESX server. (Required)</td>
+                    </tr>
 
-          <td>Provide the name of the configuration that contains
-          connection information for the ESX server.
-          (Required)</td>
-        </tr>
+                    <tr>
+                        <td class="required">VM Name</td>
 
-        <tr>
-          <td class="required">VM Name</td>
+                        <td>Name of the virtual machine whose clone is to be
+                        created. (Required)</td>
+                    </tr>
 
-          <td>Name of the virtual machine to be relocated.
-          (Required)</td>
-        </tr>
+                    <tr>
+                        <td class="required">VM Clone Name</td>
 
-        <tr>
-          <td>Datastore</td>
+                        <td>Name of the clone virtual machine which will be
+                        created. (Required)</td>
+                    </tr>
 
-          <td>Name of the datastore. Default: Datastore with the
-          most free space.</td>
-        </tr>
+                    <tr>
+                        <td class="required">Host for new VM</td>
 
-        <tr>
-          <td class="required">Destination Host</td>
+                        <td>Target host for the new virtual machine.
+                        (Required)</td>
+                    </tr>
 
-          <td>Target host for the virtual machine. (Required)</td>
-        </tr>
+                    <tr>
+                        <td>Datastore</td>
 
-        <tr>
-          <td>Number of VMs</td>
+                        <td>Name of the datastore. Default: Datastore with the
+                        most free space.</td>
+                    </tr>
 
-          <td>Number of virtual machines to relocate (default is
-          1). If the value is greater than 1, a suffix is added to
-          VM names. The suffix consists of an underscore and the VM
-          number ('_#').</td>
-        </tr>
+                    <tr>
+                        <td>Number of Clones</td>
 
-        <tr>
-          <td>JobStep Timeout</td>
+                        <td>Number of clones to create (default is 1). If the
+                        value is greater than 1, a suffix is added to cloned VM
+                        names. The suffix consists of an underscore and the clone
+                        number ('_#').</td>
+                    </tr>
 
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Relocate_panel.png" /></div>
+                    <tr>
+                        <td>JobStep Timeout</td>
 
-    <div id="Cleanup"><a name="Cleanup" id="Cleanup"></a>
+                        <td>Timeout for the step execution in minutes. Blank
+                        means no timeout.</td>
+                    </tr>
+                </tbody>
+            </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Clone_panel.png" /></div>
 
-    <h3>Cleanup</h3>
+            <div id="Relocate"><a name="Relocate" id="Relocate"></a>
 
-    <p>Deletes ElectricFlow resources and optionally destroys
-    the virtual machines on the ESX server.</p>
+            <h3>Relocate</h3>
 
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
+            <p>Relocate a virtual machine to the specified destination
+            host. Relocate operation is only supported and only works when
+            connecting against vCenter Server and not individual ESX(i)
+            host.</p>
 
-          <th>Description</th>
-        </tr>
-      </thead>
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
 
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
+                        <th>Description</th>
+                    </tr>
+                </thead>
 
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
+                <tbody>
+                    <tr>
+                        <td class="required">ESX Connection</td>
 
-        <tr>
-          <td class="required">VM Name</td>
+                        <td>Provide the name of the configuration that contains
+                        connection information for the ESX server.
+                        (Required)</td>
+                    </tr>
 
-          <td>Name of the virtual machine to clean up.
-          (Required)</td>
-        </tr>
+                    <tr>
+                        <td class="required">VM Name</td>
 
-        <tr>
-          <td>Number of VMs</td>
+                        <td>Name of the virtual machine to be relocated.
+                        (Required)</td>
+                    </tr>
 
-          <td>Number of virtual machines to clean up (default is 1).
-          If the value is greater than 1, a suffix is added to VM
-          names. The suffix consists of an underscore and the VM
-          number ('_#').</td>
-        </tr>
+                    <tr>
+                        <td>Datastore</td>
 
-        <tr>
-          <td>Delete VM?</td>
+                        <td>Name of the datastore. Default: Datastore with the
+                        most free space.</td>
+                    </tr>
 
-          <td>If checked, the virtual machine will be
-          destroyed.</td>
-        </tr>
+                    <tr>
+                        <td class="required">Destination Host</td>
 
-        <tr>
-          <td>JobStep Timeout</td>
+                        <td>Target host for the virtual machine. (Required)</td>
+                    </tr>
 
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Cleanup_panel.png" /></div>
+                    <tr>
+                        <td>Number of VMs</td>
 
-    <div id="Snapshot"><a name="Snapshot" id="Snapshot"></a>
+                        <td>Number of virtual machines to relocate (default is
+                        1). If the value is greater than 1, a suffix is added to
+                        VM names. The suffix consists of an underscore and the VM
+                        number ('_#').</td>
+                    </tr>
 
-    <h3>Snapshot</h3>
+                    <tr>
+                        <td>JobStep Timeout</td>
 
-    <p>Create a snapshot for the specified virtual machine.</p>
+                        <td>Timeout for the step execution in minutes. Blank
+                        means no timeout.</td>
+                    </tr>
+                </tbody>
+            </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Relocate_panel.png" /></div>
 
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
+            <div id="Cleanup"><a name="Cleanup" id="Cleanup"></a>
 
-          <th>Description</th>
-        </tr>
-      </thead>
+            <h3>Cleanup</h3>
 
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
+            <p>Deletes ElectricFlow resources and optionally destroys
+            the virtual machines on the ESX server.</p>
 
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
 
-        <tr>
-          <td class="required">VM Name</td>
+                        <th>Description</th>
+                    </tr>
+                </thead>
 
-          <td>Name of the virtual machine whose snapshot is to be
-          created. (Required)</td>
-        </tr>
+                <tbody>
+                    <tr>
+                        <td class="required">ESX Connection</td>
 
-        <tr>
-          <td class="required">Snapshot Name</td>
+                        <td>The name of the configuration which holds the
+                        connection information for the ESX server. (Required)</td>
+                    </tr>
 
-          <td>Name of the snapshot to be created. (Required)</td>
-        </tr>
+                    <tr>
+                        <td class="required">VM Name</td>
 
-        <tr>
-          <td>Number of VMs</td>
+                        <td>Name of the virtual machine to clean up.
+                        (Required)</td>
+                    </tr>
 
-          <td>Number of virtual machines to snapshot (default is
-          1). If the value is greater than 1, a suffix is added to
-          VM names. The suffix consists of an underscore and the VM
-          number ('_#').</td>
-        </tr>
+                    <tr>
+                        <td>Number of VMs</td>
 
-        <tr>
-          <td>JobStep Timeout</td>
+                        <td>Number of virtual machines to clean up (default is 1).
+                        If the value is greater than 1, a suffix is added to VM
+                        names. The suffix consists of an underscore and the VM
+                        number ('_#').</td>
+                    </tr>
 
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Snapshot_panel.png" /></div>
+                    <tr>
+                        <td>Delete VM?</td>
 
-    <div id="Revert"><a name="Revert" id="Revert"></a>
+                        <td>If checked, the virtual machine will be
+                        destroyed.</td>
+                    </tr>
 
-    <h3>Revert</h3>
+                    <tr>
+                        <td>JobStep Timeout</td>
 
-    <p>Revert a virtual machine to the specified snapshot.</p>
+                        <td>Timeout for the step execution in minutes. Blank
+                        means no timeout.</td>
+                    </tr>
+                </tbody>
+            </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Cleanup_panel.png" /></div>
 
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
+            <div id="Snapshot"><a name="Snapshot" id="Snapshot"></a>
 
-          <th>Description</th>
-        </tr>
-      </thead>
+            <h3>Snapshot</h3>
 
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
+            <p>Create a snapshot for the specified virtual machine.</p>
 
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
 
-        <tr>
-          <td class="required">VM Name</td>
+                        <th>Description</th>
+                    </tr>
+                </thead>
 
-          <td>Name of the source virtual machine. (Required)</td>
-        </tr>
+                <tbody>
+                    <tr>
+                        <td class="required">ESX Connection</td>
 
-        <tr>
-          <td class="required">Snapshot Name</td>
+                        <td>The name of the configuration which holds the
+                        connection information for the ESX server. (Required)</td>
+                    </tr>
 
-          <td>Name of snapshot to revert to. (Required)</td>
-        </tr>
+                    <tr>
+                        <td class="required">VM Name</td>
 
-        <tr>
-          <td>Power On?</td>
+                        <td>Name of the virtual machine whose snapshot is to be
+                        created. (Required)</td>
+                    </tr>
 
-          <td>If checked, power on the virtual machine after being
-          reverted.</td>
-        </tr>
+                    <tr>
+                        <td class="required">Snapshot Name</td>
 
-        <tr>
-          <td>Number of VMs</td>
+                        <td>Name of the snapshot to be created. (Required)</td>
+                    </tr>
 
-          <td>Number of virtual machines to revert (default is 1).
-          If the value is greater than 1, a suffix is added to VM
-          names. The suffix consists of an underscore and the VM
-          number ('_#').</td>
-        </tr>
+                    <tr>
+                        <td>Number of VMs</td>
 
-        <tr>
-          <td>JobStep Timeout</td>
+                        <td>Number of virtual machines to snapshot (default is
+                        1). If the value is greater than 1, a suffix is added to
+                        VM names. The suffix consists of an underscore and the VM
+                        number ('_#').</td>
+                    </tr>
 
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Revert_panel.png" /></div>
+                    <tr>
+                        <td>JobStep Timeout</td>
 
-    <div id="PowerOn"><a name="PowerOn" id="PowerOn"></a>
+                        <td>Timeout for the step execution in minutes. Blank
+                        means no timeout.</td>
+                    </tr>
+                </tbody>
+            </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Snapshot_panel.png" /></div>
 
-    <h3>PowerOn</h3>
+            <div id="Revert"><a name="Revert" id="Revert"></a>
 
-    <p>Power on the specified virtual machine and optionally
-    create an ElectricFlow resource for the virtual
-    machine.</p>
+            <h3>Revert</h3>
 
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
+            <p>Revert a virtual machine to the specified snapshot.</p>
 
-          <th>Description</th>
-        </tr>
-      </thead>
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
 
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
+                        <th>Description</th>
+                    </tr>
+                </thead>
 
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
+                <tbody>
+                    <tr>
+                        <td class="required">ESX Connection</td>
 
-        <tr>
-          <td class="required">VM Name</td>
+                        <td>The name of the configuration which holds the
+                        connection information for the ESX server. (Required)</td>
+                    </tr>
 
-          <td>Name of the virtual machine to power on.
-          (Required)</td>
-        </tr>
+                    <tr>
+                        <td class="required">VM Name</td>
 
-        <tr>
-          <td>Results location</td>
+                        <td>Name of the source virtual machine. (Required)</td>
+                    </tr>
 
-          <td>The ElectricFlow location to store properties
-          (default is '/myJob/ESX/vms').</td>
-        </tr>
+                    <tr>
+                        <td class="required">Snapshot Name</td>
 
-        <tr>
-          <td>Create Resource?</td>
+                        <td>Name of snapshot to revert to. (Required)</td>
+                    </tr>
 
-          <td>Flag to specify whether or not to create
-          ElectricFlow resources for the powered on virtual
-          machines (default is false).</td>
-        </tr>
+                    <tr>
+                        <td>Power On?</td>
 
-        <tr>
-          <td>Resource Pool(s)</td>
+                        <td>If checked, power on the virtual machine after being
+                        reverted.</td>
+                    </tr>
 
-          <td>The ElectricFlow resource pool names to be
-          associated with the created resources if created.</td>
-        </tr>
+                    <tr>
+                        <td>Number of VMs</td>
 
-        <tr>
-          <td>ElectricFlow Workspace</td>
+                        <td>Number of virtual machines to revert (default is 1).
+                        If the value is greater than 1, a suffix is added to VM
+                        names. The suffix consists of an underscore and the VM
+                        number ('_#').</td>
+                    </tr>
 
-          <td>The ElectricFlow workspace the resource should
-          use.</td>
-        </tr>
+                    <tr>
+                        <td>JobStep Timeout</td>
 
-        <tr>
-          <td>Number of VMs</td>
+                        <td>Timeout for the step execution in minutes. Blank
+                        means no timeout.</td>
+                    </tr>
+                </tbody>
+            </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Revert_panel.png" /></div>
 
-          <td>Number of virtual machines to power on (default is
-          1). If the value is greater than 1, a suffix is added to
-          VM names. The suffix consists of an underscore and the VM
-          number ('_#').</td>
-        </tr>
+            <div id="PowerOn"><a name="PowerOn" id="PowerOn"></a>
 
-        <tr>
-          <td>JobStep Timeout</td>
+            <h3>PowerOn</h3>
 
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/PowerOn_panel.png" /></div>
+            <p>Power on the specified virtual machine and optionally
+            create an ElectricFlow resource for the virtual
+            machine.</p>
 
-    <div id="PowerOff"><a name="PowerOff" id="PowerOff"></a>
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
 
-    <h3>PowerOff</h3>
+                        <th>Description</th>
+                    </tr>
+                </thead>
 
-    <p>Power off the specified virtual machine.</p>
+                <tbody>
+                    <tr>
+                        <td class="required">ESX Connection</td>
 
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
+                        <td>The name of the configuration which holds the
+                        connection information for the ESX server. (Required)</td>
+                    </tr>
 
-          <th>Description</th>
-        </tr>
-      </thead>
+                    <tr>
+                        <td class="required">VM Name</td>
 
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
+                        <td>Name of the virtual machine to power on.
+                        (Required)</td>
+                    </tr>
 
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
+                    <tr>
+                        <td>Results location</td>
 
-        <tr>
-          <td class="required">VM Name</td>
+                        <td>The ElectricFlow location to store properties
+                        (default is '/myJob/ESX/vms').</td>
+                    </tr>
 
-          <td>Name of the virtual machine to power off.
-          (Required)</td>
-        </tr>
+                    <tr>
+                        <td>Create Resource?</td>
 
-        <tr>
-          <td>Number of VMs</td>
+                        <td>Flag to specify whether or not to create
+                        ElectricFlow resources for the powered on virtual
+                        machines (default is false).</td>
+                    </tr>
 
-          <td>Number of virtual machines to power off (default is
-          1). If the value is greater than 1, a suffix is added to
-          VM names. The suffix consists of an underscore and the VM
-          number ('_#').</td>
-        </tr>
+                    <tr>
+                        <td>Resource Pool(s)</td>
 
-        <tr>
-          <td>JobStep Timeout</td>
+                        <td>The ElectricFlow resource pool names to be
+                        associated with the created resources if created.</td>
+                    </tr>
 
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/PowerOff_panel.png" /></div>
+                    <tr>
+                        <td>ElectricFlow Workspace</td>
 
-    <div id="Shutdown"><a name="Shutdown" id="Shutdown"></a>
+                        <td>The ElectricFlow workspace the resource should
+                        use.</td>
+                    </tr>
 
-    <h3>Shutdown</h3>
+                    <tr>
+                        <td>Number of VMs</td>
 
-    <p>Shut down the specified virtual machine.</p>
+                        <td>Number of virtual machines to power on (default is
+                        1). If the value is greater than 1, a suffix is added to
+                        VM names. The suffix consists of an underscore and the VM
+                        number ('_#').</td>
+                    </tr>
 
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
+                    <tr>
+                        <td>JobStep Timeout</td>
 
-          <th>Description</th>
-        </tr>
-      </thead>
+                        <td>Timeout for the step execution in minutes. Blank
+                        means no timeout.</td>
+                    </tr>
+                </tbody>
+            </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/PowerOn_panel.png" /></div>
 
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
+            <div id="PowerOff"><a name="PowerOff" id="PowerOff"></a>
 
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
+            <h3>PowerOff</h3>
 
-        <tr>
-          <td class="required">VM Name</td>
+            <p>Power off the specified virtual machine.</p>
 
-          <td>Name of the virtual machine to shut down.
-          (Required)</td>
-        </tr>
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
 
-        <tr>
-          <td>Number of VMs</td>
+                        <th>Description</th>
+                    </tr>
+                </thead>
 
-          <td>Number of virtual machines to shut down (default is
-          1). If the value is greater than 1, a suffix is added to
-          VM names. The suffix consists of an underscore and the VM
-          number ('_#').</td>
-        </tr>
+                <tbody>
+                    <tr>
+                        <td class="required">ESX Connection</td>
 
-        <tr>
-          <td>JobStep Timeout</td>
+                        <td>The name of the configuration which holds the
+                        connection information for the ESX server. (Required)</td>
+                    </tr>
 
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Shutdown_panel.png" /></div>
+                    <tr>
+                        <td class="required">VM Name</td>
 
-    <div id="Suspend"><a name="Suspend" id="Suspend"></a>
+                        <td>Name of the virtual machine to power off.
+                        (Required)</td>
+                    </tr>
 
-    <h3>Suspend</h3>
+                    <tr>
+                        <td>Number of VMs</td>
 
-    <p>Suspend the specified virtual machine.</p>
+                        <td>Number of virtual machines to power off (default is
+                        1). If the value is greater than 1, a suffix is added to
+                        VM names. The suffix consists of an underscore and the VM
+                        number ('_#').</td>
+                    </tr>
 
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
+                    <tr>
+                        <td>JobStep Timeout</td>
 
-          <th>Description</th>
-        </tr>
-      </thead>
+                        <td>Timeout for the step execution in minutes. Blank
+                        means no timeout.</td>
+                    </tr>
+                </tbody>
+            </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/PowerOff_panel.png" /></div>
 
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
+            <div id="Shutdown"><a name="Shutdown" id="Shutdown"></a>
 
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
+            <h3>Shutdown</h3>
 
-        <tr>
-          <td class="required">VM Name</td>
+            <p>Shut down the specified virtual machine.</p>
 
-          <td>Name of the virtual machine to suspend.
-          (Required)</td>
-        </tr>
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
 
-        <tr>
-          <td>Number of VMs</td>
+                        <th>Description</th>
+                    </tr>
+                </thead>
 
-          <td>Number of virtual machines to suspend (default is 1).
-          If the value is greater than 1, a suffix is added to VM
-          names. The suffix consists of an underscore and the VM
-          number ('_#').</td>
-        </tr>
+                <tbody>
+                    <tr>
+                        <td class="required">ESX Connection</td>
 
-        <tr>
-          <td>JobStep Timeout</td>
+                        <td>The name of the configuration which holds the
+                        connection information for the ESX server. (Required)</td>
+                    </tr>
 
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Suspend_panel.png" /></div>
+                    <tr>
+                        <td class="required">VM Name</td>
 
-    <div id="CreateResourceFromVM"><a name="CreateResourceFromVM" id="CreateResourceFromVM"></a>
+                        <td>Name of the virtual machine to shut down.
+                        (Required)</td>
+                    </tr>
 
-    <h3>CreateResourceFromVM</h3>
+                    <tr>
+                        <td>Number of VMs</td>
 
-    <p>Store information about a virtual machine and create
-    ElectricFlow resources. This procedure only works if the
-    guest has VMware tools installed on it.</p>
+                        <td>Number of virtual machines to shut down (default is
+                        1). If the value is greater than 1, a suffix is added to
+                        VM names. The suffix consists of an underscore and the VM
+                        number ('_#').</td>
+                    </tr>
 
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
+                    <tr>
+                        <td>JobStep Timeout</td>
 
-          <th>Description</th>
-        </tr>
-      </thead>
+                        <td>Timeout for the step execution in minutes. Blank
+                        means no timeout.</td>
+                    </tr>
+                </tbody>
+            </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Shutdown_panel.png" /></div>
 
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
+            <div id="Suspend"><a name="Suspend" id="Suspend"></a>
 
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
+            <h3>Suspend</h3>
 
-        <tr>
-          <td class="required">VM Name</td>
+            <p>Suspend the specified virtual machine.</p>
 
-          <td>Name of the virtual machine to get the information
-          from. (Required)</td>
-        </tr>
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
 
-        <tr>
-          <td>Number of VMs</td>
+                        <th>Description</th>
+                    </tr>
+                </thead>
 
-          <td>Number of virtual machines from which to get
-          information (default is 1). If the value is greater than
-          1, a suffix is added to VM names. The suffix consists of
-          an underscore and the VM number ('_#').</td>
-        </tr>
+                <tbody>
+                    <tr>
+                        <td class="required">ESX Connection</td>
 
-        <tr>
-          <td>Results location</td>
+                        <td>The name of the configuration which holds the
+                        connection information for the ESX server. (Required)</td>
+                    </tr>
 
-          <td>The ElectricFlow location to store properties
-          containing information about the virtual machines
-          (default is '/myJob/ESX/vms').</td>
-        </tr>
+                    <tr>
+                        <td class="required">VM Name</td>
 
-        <tr>
-          <td>Create Resource?</td>
+                        <td>Name of the virtual machine to suspend.
+                        (Required)</td>
+                    </tr>
 
-          <td>Flag to specify whether or not to create
-          ElectricFlow resources for the virtual machines
-          (default is false).</td>
-        </tr>
+                    <tr>
+                        <td>Number of VMs</td>
 
-        <tr>
-          <td>Resource Pool(s)</td>
+                        <td>Number of virtual machines to suspend (default is 1).
+                        If the value is greater than 1, a suffix is added to VM
+                        names. The suffix consists of an underscore and the VM
+                        number ('_#').</td>
+                    </tr>
 
-          <td>The ElectricFlow resource pool names to be
-          associated with the created resources if created.</td>
-        </tr>
+                    <tr>
+                        <td>JobStep Timeout</td>
 
-        <tr>
-          <td>ElectricFlow Workspace</td>
+                        <td>Timeout for the step execution in minutes. Blank
+                        means no timeout.</td>
+                    </tr>
+                </tbody>
+            </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Suspend_panel.png" /></div>
 
-          <td>The ElectricFlow workspace the resource should
-          use.</td>
-        </tr>
+            <div id="CreateResourceFromVM"><a name="CreateResourceFromVM" id="CreateResourceFromVM"></a>
 
-        <tr>
-          <td>JobStep Timeout</td>
+            <h3>CreateResourceFromVM</h3>
 
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CreateResourceFromVM_panel.png" /></div>
+            <p>Store information about a virtual machine and create
+            ElectricFlow resources. This procedure only works if the
+            guest has VMware tools installed on it.</p>
 
-    <div id="GetVMConfiguration"><a name="GetVMConfiguration" id="GetVMConfiguration"></a>
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
 
-    <h3>GetVMConfiguration</h3>
+                        <th>Description</th>
+                    </tr>
+                </thead>
 
-    <p>Get the IP address and hostname of a virtual machine and
-    store them in the specified location in ElectricFlow
-    properties. This procedure only works if the guest has VMware
-    tools installed on it.</p>
+                <tbody>
+                    <tr>
+                        <td class="required">ESX Connection</td>
 
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
+                        <td>The name of the configuration which holds the
+                        connection information for the ESX server. (Required)</td>
+                    </tr>
 
-          <th>Description</th>
-        </tr>
-      </thead>
+                    <tr>
+                        <td class="required">VM Name</td>
 
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
+                        <td>Name of the virtual machine to get the information
+                        from. (Required)</td>
+                    </tr>
 
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
+                    <tr>
+                        <td>Number of VMs</td>
 
-        <tr>
-          <td class="required">VM Name</td>
+                        <td>Number of virtual machines from which to get
+                        information (default is 1). If the value is greater than
+                        1, a suffix is added to VM names. The suffix consists of
+                        an underscore and the VM number ('_#').</td>
+                    </tr>
 
-          <td>Name of the virtual machine to get the information
-          from. (Required)</td>
-        </tr>
+                    <tr>
+                        <td>Results location</td>
 
-        <tr>
-          <td>Number of VMs</td>
+                        <td>The ElectricFlow location to store properties
+                        containing information about the virtual machines
+                        (default is '/myJob/ESX/vms').</td>
+                    </tr>
 
-          <td>Number of virtual machines from which to get
-          information (default is 1). If the value is greater than
-          1, a suffix is added to VM names. The suffix consists of
-          an underscore and the VM number ('_#').</td>
-        </tr>
+                    <tr>
+                        <td>Create Resource?</td>
 
-        <tr>
-          <td>Results location</td>
+                        <td>Flag to specify whether or not to create
+                        ElectricFlow resources for the virtual machines
+                        (default is false).</td>
+                    </tr>
 
-          <td>The ElectricFlow location to store properties
-          containing information about the virtual machines
-          (default is '/myJob/ESX/vms').</td>
-        </tr>
+                    <tr>
+                        <td>Resource Pool(s)</td>
 
-        <tr>
-          <td>JobStep Timeout</td>
+                        <td>The ElectricFlow resource pool names to be
+                        associated with the created resources if created.</td>
+                    </tr>
 
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/GetVMConfiguration_panel.png" /></div>
+                    <tr>
+                        <td>ElectricFlow Workspace</td>
 
-    <div id="Import"><a name="Import" id="Import"></a>
+                        <td>The ElectricFlow workspace the resource should
+                        use.</td>
+                    </tr>
 
-    <h3>Import</h3>
+                    <tr>
+                        <td>JobStep Timeout</td>
 
-    <p>Import an OVF package to the ESX server using VMware OVF
-    Tool (a command line utility that allows you to import and
-    export OVF packages). VMware OVF Tool must be installed in the
-    resource machine running this procedure.</p>
+                        <td>Timeout for the step execution in minutes. Blank
+                        means no timeout.</td>
+                    </tr>
+                </tbody>
+            </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CreateResourceFromVM_panel.png" /></div>
 
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
+            <div id="GetVMConfiguration"><a name="GetVMConfiguration" id="GetVMConfiguration"></a>
 
-          <th>Description</th>
-        </tr>
-      </thead>
+            <h3>GetVMConfiguration</h3>
 
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
+            <p>Get the IP address and hostname of a virtual machine and
+            store them in the specified location in ElectricFlow
+            properties. This procedure only works if the guest has VMware
+            tools installed on it.</p>
 
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
 
-        <tr>
-          <td class="required">Host</td>
+                        <th>Description</th>
+                    </tr>
+                </thead>
 
-          <td>Name of the host where virtual machines will be
-          imported. (Required)</td>
-        </tr>
+                <tbody>
+                    <tr>
+                        <td class="required">ESX Connection</td>
 
-        <tr>
-          <td class="required">Datastore</td>
+                        <td>The name of the configuration which holds the
+                        connection information for the ESX server. (Required)</td>
+                    </tr>
 
-          <td>Name of the datastore to be used. (Required)</td>
-        </tr>
+                    <tr>
+                        <td class="required">VM Name</td>
 
-        <tr>
-          <td class="required">VM Name</td>
+                        <td>Name of the virtual machine to get the information
+                        from. (Required)</td>
+                    </tr>
 
-          <td>Name of the virtual machine to import.
-          (Required)</td>
-        </tr>
+                    <tr>
+                        <td>Number of VMs</td>
 
-        <tr>
-          <td class="required">Source directory</td>
+                        <td>Number of virtual machines from which to get
+                        information (default is 1). If the value is greater than
+                        1, a suffix is added to VM names. The suffix consists of
+                        an underscore and the VM number ('_#').</td>
+                    </tr>
 
-          <td>Absolute path to the directory where OVF packages are
-          stored. (Required)</td>
-        </tr>
+                    <tr>
+                        <td>Results location</td>
 
-        <tr>
-          <td>Number of VMs</td>
+                        <td>The ElectricFlow location to store properties
+                        containing information about the virtual machines
+                        (default is '/myJob/ESX/vms').</td>
+                    </tr>
+
+                    <tr>
+                        <td>JobStep Timeout</td>
+
+                        <td>Timeout for the step execution in minutes. Blank
+                        means no timeout.</td>
+                    </tr>
+                </tbody>
+            </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/GetVMConfiguration_panel.png" /></div>
 
-          <td>Number of virtual machines to import (default is 1).
-          If the value is greater than 1, a suffix is added to VM
-          names. The suffix consists of an underscore and the VM
-          number ('_#').</td>
-        </tr>
+            <div id="Import"><a name="Import" id="Import"></a>
+
+            <h3>Import</h3>
 
-        <tr>
-          <td>JobStep Timeout</td>
+            <p>Import an OVF package to the ESX server using VMware OVF
+            Tool (a command line utility that allows you to import and
+            export OVF packages). VMware OVF Tool must be installed in the
+            resource machine running this procedure.</p>
+
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+
+                        <th>Description</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td class="required">ESX Connection</td>
+                        <td>The name of the configuration which holds the
+                        connection information for the ESX server.</td>
+                    </tr>
+                    <tr>
+                        <td class="required">Host</td>
+                        <td>IP address or hostname of the ESX host where virtual machines will be imported.</td>
+                    </tr>
+                    <tr>
+                        <td class="required">Datastore</td>
+                        <td>Name of the datastore to be used.</td>
+                    </tr>
+                    <tr>
+                        <td class="required">VM Name</td>
+                        <td>Name of the virtual machine to import.</td>
+                    </tr>
+                    <tr>
+                        <td class="required">OVF or OVA file path</td>
+                        <td>Absolute path to the OVF or OVA file.</td>
+                    </tr>
+                    <tr>
+                        <td>Number of VMs</td>
+                        <td>
+                            Number of virtual machines to import (default is 1).
+                            If the value is greater than 1, a suffix is added to VM
+                            names. The suffix consists of an hyphen and the VM
+                            number ('-#').
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>JobStep Timeout</td>
+                        <td>Timeout for the step execution in minutes. Blank
+                        means no timeout.</td>
+                    </tr>
+                    <tr>
+                        <td>Guest VM hostname</td>
+                        <td>
+                            ESX guest vm hostname.  If OVF package contains single VM, just a value. Othervise format: VMID1=hostname1, VMID2=hostname2.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Memory size</td>
+                        <td>
+                            Size of virtual machine's memory. If OVF package contains single VM, just a value. Othervise format: VMID1=1024, VMID2=2048.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Number of CPUs</td>
+                        <td>
+                            Number of virtual processors in a virtual machine. If OVF package contains single VM, just a value. Othervise format: VMID1=1, VMID2=2.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Power On Vm?</td>
+                        <td>
+                            Flag to specify whether or not to power on the created virtual machine(s) (default is false).
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>OVF properties.</td>
+                        <td>
+                            Comma separated list of OVF properties. To get properties for current OVF/OVA template ovftool command should be used. Example: hostname=ubuntu,user=ubuntu.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Result properties location.</td>
+                        <td>
+                            Information about imported VM will be stored in vms property within this path.
+                        </td>
+                    </tr>
+                </tbody>
+                </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Import_panel.png" /></div>
 
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Import_panel.png" /></div>
+                <div id="Export"><a name="Export" id="Export"></a>
 
-    <div id="Export"><a name="Export" id="Export"></a>
+                <h3>Export</h3>
 
-    <h3>Export</h3>
+                <p>The Export subprocedure exports a virtual machine to an OVF
+                package using the VMware OVF Tool (a command line utility that
+                allows you to import and export OVF packages). The VMware OVF Tool
+                must be installed in the resource machine running this
+                procedure.</p>
 
-    <p>The Export subprocedure exports a virtual machine to an OVF
-    package using the VMware OVF Tool (a command line utility that
-    allows you to import and export OVF packages). The VMware OVF Tool
-    must be installed in the resource machine running this
-    procedure.</p>
+                <table class="grid">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
 
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
 
-          <th>Description</th>
-        </tr>
-      </thead>
+                    <tbody>
+                        <tr>
+                            <td class="required">ESX Connection</td>
 
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
+                            <td>The name of the configuration which holds the
+                            connection information for the ESX server. (Required)</td>
+                        </tr>
 
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
+                        <tr>
+                            <td class="required">Host</td>
 
-        <tr>
-          <td class="required">Host</td>
+                            <td>Name of the host where the virtual machine is located.
+                            (Required)</td>
+                        </tr>
 
-          <td>Name of the host where the virtual machine is located.
-          (Required)</td>
-        </tr>
+                        <tr>
+                            <td class="required">Datacenter</td>
 
-        <tr>
-          <td class="required">Datacenter</td>
+                            <td>Name of the datacenter. (Required)</td>
+                        </tr>
 
-          <td>Name of the datacenter. (Required)</td>
-        </tr>
+                        <tr>
+                            <td class="required">Datastore</td>
 
-        <tr>
-          <td class="required">Datastore</td>
+                            <td>Name of the datastore. (Required)</td>
+                        </tr>
 
-          <td>Name of the datastore. (Required)</td>
-        </tr>
+                        <tr>
+                            <td class="required">VM Name</td>
 
-        <tr>
-          <td class="required">VM Name</td>
+                            <td>Name of the virtual machine to export.
+                            (Required)</td>
+                        </tr>
 
-          <td>Name of the virtual machine to export.
-          (Required)</td>
-        </tr>
+                        <tr>
+                            <td class="required">Target directory</td>
 
-        <tr>
-          <td class="required">Target directory</td>
+                            <td>Absolute path to the directory where virtual machines
+                            will be exported. (Required)</td>
+                        </tr>
 
-          <td>Absolute path to the directory where virtual machines
-          will be exported. (Required)</td>
-        </tr>
+                        <tr>
+                            <td>Number of VMs</td>
 
-        <tr>
-          <td>Number of VMs</td>
+                            <td>Number of virtual machines to export (default is 1).
+                            If the value is greater than 1, a suffix is added to VM
+                            names. The suffix consists of an underscore and the VM
+                            number ('_#').</td>
+                        </tr>
 
-          <td>Number of virtual machines to export (default is 1).
-          If the value is greater than 1, a suffix is added to VM
-          names. The suffix consists of an underscore and the VM
-          number ('_#').</td>
-        </tr>
+                        <tr>
+                            <td>JobStep Timeout</td>
 
-        <tr>
-          <td>JobStep Timeout</td>
+                            <td>Timeout for the step execution in minutes. Blank
+                            means no timeout.</td>
+                        </tr>
+                    </tbody>
+                </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Export_panel.png" /></div>
 
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Export_panel.png" /></div>
+                <div id="RegisterVM"><a name="RegisterVM" id="RegisterVM"></a>
 
-    <div id="RegisterVM"><a name="RegisterVM" id="RegisterVM"></a>
+                <h3>RegisterVM</h3>
 
-    <h3>RegisterVM</h3>
+                <p>Register an existing virtual machine with the ESX
+                server.</p>
 
-    <p>Register an existing virtual machine with the ESX
-    server.</p>
+                <table class="grid">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
 
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
 
-          <th>Description</th>
-        </tr>
-      </thead>
+                    <tbody>
+                        <tr>
+                            <td class="required">ESX Connection</td>
 
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
+                            <td>The name of the configuration which holds the
+                            connection information for the ESX server. (Required)</td>
+                        </tr>
 
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
+                        <tr>
+                            <td class="required">Host</td>
 
-        <tr>
-          <td class="required">Host</td>
+                            <td>Name of the host where the virtual machine will be
+                            registered. (Required)</td>
+                        </tr>
 
-          <td>Name of the host where the virtual machine will be
-          registered. (Required)</td>
-        </tr>
+                        <tr>
+                            <td class="required">Datacenter</td>
 
-        <tr>
-          <td class="required">Datacenter</td>
+                            <td>Name of the datacenter. (Required)</td>
+                        </tr>
 
-          <td>Name of the datacenter. (Required)</td>
-        </tr>
+                        <tr>
+                            <td class="required">Resource Pool</td>
 
-        <tr>
-          <td class="required">Resource Pool</td>
+                            <td>Name of the resource pool to register virtual
+                            machine. (Required)</td>
+                        </tr>
 
-          <td>Name of the resource pool to register virtual
-          machine. (Required)</td>
-        </tr>
+                        <tr>
+                            <td class="required">VMX path</td>
 
-        <tr>
-          <td class="required">VMX path</td>
+                            <td>Datastore path to the virtual machine configuration
+                            file (vmx). (Required)</td>
+                        </tr>
 
-          <td>Datastore path to the virtual machine configuration
-          file (vmx). (Required)</td>
-        </tr>
+                        <tr>
+                            <td class="required">VM Name</td>
 
-        <tr>
-          <td class="required">VM Name</td>
+                            <td>Name to be assigned to the virtual machine.
+                            (Required)</td>
+                        </tr>
 
-          <td>Name to be assigned to the virtual machine.
-          (Required)</td>
-        </tr>
+                        <tr>
+                            <td>JobStep Timeout</td>
 
-        <tr>
-          <td>JobStep Timeout</td>
+                            <td>Timeout for the step execution in minutes. Blank
+                            means no timeout.</td>
+                        </tr>
+                    </tbody>
+                </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/RegisterVM_panel.png" /></div>
 
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/RegisterVM_panel.png" /></div>
+                <div id="CloudManagerGrow"><a name="CloudManagerGrow" id="CloudManagerGrow"></a>
 
-    <div id="CloudManagerGrow"><a name="CloudManagerGrow" id="CloudManagerGrow"></a>
+                <h3>CloudManagerGrow</h3>
 
-    <h3>CloudManagerGrow</h3>
+                <p>This procedure allows the plugin to work with the CloudManager
+                plugin. It calls the PowerOn procedure and is intended to be run by
+                CloudManager.</p>
 
-    <p>This procedure allows the plugin to work with the CloudManager
-    plugin. It calls the PowerOn procedure and is intended to be run by
-    CloudManager.</p>
+                <table class="grid">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
 
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
 
-          <th>Description</th>
-        </tr>
-      </thead>
+                    <tbody>
+                        <tr>
+                            <td class="required">ESX Connection</td>
 
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
+                            <td>The name of the configuration which holds the
+                            connection information for the ESX server. (Required)</td>
+                        </tr>
 
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
+                        <tr>
+                            <td>VM Name pattern</td>
 
-        <tr>
-          <td>VM Name pattern</td>
+                            <td>Pattern used to find available machines on the
+                            server.</td>
+                        </tr>
 
-          <td>Pattern used to find available machines on the
-          server.</td>
-        </tr>
+                        <tr>
+                            <td>ElectricFlow Workspace</td>
 
-        <tr>
-          <td>ElectricFlow Workspace</td>
+                            <td>The ElectricFlow workspace the resource should
+                            use.</td>
+                        </tr>
 
-          <td>The ElectricFlow workspace the resource should
-          use.</td>
-        </tr>
+                        <tr>
+                            <td class="required">Number of Servers</td>
 
-        <tr>
-          <td class="required">Number of Servers</td>
+                            <td>Number of new servers to power on. (Required)</td>
+                        </tr>
 
-          <td>Number of new servers to power on. (Required)</td>
-        </tr>
+                        <tr>
+                            <td class="required">Resource Pool</td>
 
-        <tr>
-          <td class="required">Resource Pool</td>
+                            <td>Pool name for creating resources. (Required)</td>
+                        </tr>
+                    </tbody>
+                </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CloudManagerGrow_panel.png" /></div>
 
-          <td>Pool name for creating resources. (Required)</td>
-        </tr>
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CloudManagerGrow_panel.png" /></div>
+                <div id="CloudManagerShrink"><a name="CloudManagerShrink" id="CloudManagerShrink"></a>
 
-    <div id="CloudManagerShrink"><a name="CloudManagerShrink" id="CloudManagerShrink"></a>
+                <h3>CloudManagerShrink</h3>
 
-    <h3>CloudManagerShrink</h3>
+                <p>This procedure allows the plugin to work with the CloudManager
+                plugin. It calls the PowerOff procedure and is intended to be run
+                by CloudManager.</p>
 
-    <p>This procedure allows the plugin to work with the CloudManager
-    plugin. It calls the PowerOff procedure and is intended to be run
-    by CloudManager.</p>
+                <table class="grid">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
 
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
 
-          <th>Description</th>
-        </tr>
-      </thead>
+                    <tbody>
+                        <tr>
+                            <td class="required">ESX Connection</td>
 
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
+                            <td>The name of the configuration which holds the
+                            connection information for the ESX server. (Required)</td>
+                        </tr>
 
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
+                        <tr>
+                            <td class="required">List of Deployments</td>
 
-        <tr>
-          <td class="required">List of Deployments</td>
+                            <td>A list of deployments (previously created by
+                            CloudManagerGrow) to stop. (Required)</td>
+                        </tr>
+                    </tbody>
+                </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CloudManagerShrink_panel.png" /></div>
 
-          <td>A list of deployments (previously created by
-          CloudManagerGrow) to stop. (Required)</td>
-        </tr>
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CloudManagerShrink_panel.png" /></div>
+                <div id="CloudManagerSync"><a name="CloudManagerSync" id="CloudManagerSync"></a>
 
-    <div id="CloudManagerSync"><a name="CloudManagerSync" id="CloudManagerSync"></a>
+                <h3>CloudManagerSync</h3>
 
-    <h3>CloudManagerSync</h3>
+                <p>This procedure allows the plugin to work with CloudManager
+                plugin, it checks the vms state and is intended to be run
+                by CloudManager.</p>
 
-    <p>This procedure allows the plugin to work with CloudManager
-    plugin, it checks the vms state and is intended to be run
-    by CloudManager.</p>
+                <table class="grid">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
 
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
 
-          <th>Description</th>
-        </tr>
-      </thead>
+                    <tbody>
+                        <tr>
+                            <td class="required">ESX Connection</td>
 
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
+                            <td>The name of the configuration which holds the
+                            connection information for the ESX server. (Required)</td>
+                        </tr>
 
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
+                        <tr>
+                            <td class="required">List of Deployments</td>
 
-        <tr>
-          <td class="required">List of Deployments</td>
+                            <td>A list of deployments(previously created by
+                            CloudManagerGrow) to check. (Required)</td>
+                        </tr>
+                    </tbody>
+                </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CloudManagerShrink_panel.png" /></div>
+                <div id="CreateResourcePool"><a name="CreateResourcePool" id="CreateResourcePool"></a>
+                <h3>CreateResourcePool</h3>
 
-          <td>A list of deployments(previously created by
-          CloudManagerGrow) to check. (Required)</td>
-        </tr>
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CloudManagerShrink_panel.png" /></div>
-	
-    <div id="CreateResourcePool"><a name="CreateResourcePool" id="CreateResourcePool"></a>
-	
-    <h3>CreateResourcePool</h3>
+                <p>This procedure allows the plugin to create a new resource pool.</p>
 
-    <p>This procedure allows the plugin to create a new resource pool.</p>
+                <table class="grid">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
 
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
 
-          <th>Description</th>
-        </tr>
-      </thead>
+                    <tbody>
+                        <tr>
+                            <td class="required">ESX Connection</td>
 
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
+                            <td>The name of the configuration which holds the
+                            connection information for the ESX server. (Required)</td>
+                        </tr>
 
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
+                        <tr>
+                            <td class="required">Resourcepool Name</td>
 
-        <tr>
-          <td class="required">Resourcepool Name</td>
+                            <td>Name of the new ResourcePool to be created. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">Parent Resourcepool Name</td>
 
-          <td>Name of the new ResourcePool to be created. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">Parent Resourcepool Name</td>
+                            <td>Name of the parent ResourcePool. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">CPUShare</td>
 
-          <td>Name of the parent ResourcePool. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">CPUShare</td>
+                            <td>Shares define how much access you get to CPU resources. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">MemShare</td>
 
-          <td>Shares define how much access you get to CPU resources. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">MemShare</td>
+                            <td>Shares define how much access you get to Memory resource . (Required)</td>
+                        </tr>
+                        <tr>
+                            <td>JobStep Timeout</td>
 
-          <td>Shares define how much access you get to Memory resource . (Required)</td>
-        </tr>
-		
-        <tr>
-          <td>JobStep Timeout</td>
+                            <td>Timeout for the step execution in minutes. Blank
+                            means no timeout.</td>
+                        </tr>
+                    </tbody>
+                </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CreateResourcePool_panel.png" /></div>
+                <div id="EditResourcePool"><a name="EditResourcePool" id="EditResourcePool"></a>
+                <h3>EditResourcePool</h3>
 
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-		
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CreateResourcePool_panel.png" /></div>
-    
-    <div id="EditResourcePool"><a name="EditResourcePool" id="EditResourcePool"></a>
-	
-    <h3>EditResourcePool</h3>
+                <p>This procedure allows the plugin to edit an existing resource pool.</p>
 
-    <p>This procedure allows the plugin to edit an existing resource pool.</p>
+                <table class="grid">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
 
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
 
-          <th>Description</th>
-        </tr>
-      </thead>
+                    <tbody>
+                        <tr>
+                            <td class="required">ESX Connection</td>
 
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
+                            <td>The name of the configuration which holds the
+                            connection information for the ESX server. (Required)</td>
+                        </tr>
 
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
+                        <tr>
+                            <td class="required">New Resourcepool Name</td>
 
-        <tr>
-          <td class="required">New Resourcepool Name</td>
+                            <td>New Name of the ResourcePool to be edited. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">Existing Resourcepool Name</td>
+
+                            <td>Old Name of the ResourcePool. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">CPUShare</td>
 
-          <td>New Name of the ResourcePool to be edited. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">Existing Resourcepool Name</td>
+                            <td>Shares define how much access you get to CPU resources. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">MemShare</td>
 
-          <td>Old Name of the ResourcePool. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">CPUShare</td>
-
-          <td>Shares define how much access you get to CPU resources. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">MemShare</td>
-
-          <td>Shares define how much access you get to Memory resource . (Required)</td>
-        </tr>
-		
-        <tr>
-          <td>JobStep Timeout</td>
-
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-		
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/EditResourcePool_panel.png" /></div>
-	
-    <div id="ListEntity"><a name="ListEntity" id="ListEntity"></a>
-	
-    <h3>ListEntity</h3>
-
-    <p>This procedure allows the plugin to list the objects of a specified Entity.</p>
-
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
-
-          <th>Description</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
-
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
-
-         <tr>
-          <td class="required">Entity Type</td>
-
-          <td>The entity type to be listed (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem,
-		  ResourcePool, or VirtualMachine) present on the target VirtualCenter 
-		  Server or ESX Server system. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td>JobStep Timeout</td>
-
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-		
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/ListEntity_panel.png" /></div>
-	
-    <div id="DeleteEntity"><a name="DeleteEntity" id="DeleteEntity"></a>
-	
-    <h3>DeleteEntity</h3>
-
-    <p>This procedure allows the plugin to delete the specified object of an Entity.</p>
-
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
-
-          <th>Description</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
-
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
-
-         <tr>
-          <td class="required">Entity Type</td>
-
-          <td>The entity type to be listed (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem,
-		  ResourcePool, or VirtualMachine) present on the target VirtualCenter 
-		  Server or ESX Server system. (Required)</td>
-        </tr>
-		
-         <tr>
-          <td class="required">Entity Name</td>
-
-          <td>The name of the entity which is to be deleted. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td>JobStep Timeout</td>
-
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-		
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/DeleteEntity_panel.png" /></div>
-	
-    <div id="CreateFolder"><a name="CreateFolder" id="CreateFolder"></a>
-	
-    <h3>CreateFolder</h3>
-
-    <p>This procedure allows the plugin to create a new folder.</p>
-
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
-
-          <th>Description</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
-
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
-
-        <tr>
-          <td class="required">Parent Type (Folder/Datacenter)</td>
-
-          <td>The parent (data center or folder) in which folder is to be created. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">Parent Name (Folder/Datacenter Name)</td>
-
-          <td>The name of the parent in which folder is to be created. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">Folder Name</td>
-
-          <td>Name of the folder to be created. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td>JobStep Timeout</td>
-
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-		
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CreateFolder_panel.png" /></div>
-	
-    <div id="RenameEntity"><a name="RenameEntity" id="RenameEntity"></a>
-	
-    <h3>RenameEntity</h3>
-
-    <p>This procedure allows the plugin to rename the specified object of an entity.</p>
-
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
-
-          <th>Description</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
-
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
-
-        <tr>
-          <td class="required">Entity Type</td>
-
-          <td>The entity type to be renamed (ClusterComputeResource, Datacenter, Folder, ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">Entity Old Name</td>
-
-          <td>Old name of the entity which is to be renamed. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">Entity New Name</td>
-
-          <td>New name of the entity. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td>JobStep Timeout</td>
-
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-		
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/RenameEntity_panel.png" /></div>
-	
-    <div id="MoveEntity"><a name="MoveEntity" id="MoveEntity"></a>
-	
-    <h3>MoveEntity</h3>
-
-    <p>This procedure allows the plugin to move the specified object of an entity.</p>
-
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
-
-          <th>Description</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
-
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
-
-        <tr>
-          <td class="required">Entity Type (Folder/VM)</td>
-
-          <td>The parent (data center or VM) which need to be moved. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">Entity Name (Folder/VM Name)</td>
-
-          <td>The name of the Entity which need to be moved. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">Destination Folder Name</td>
-
-          <td>Name of the destination folder. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td>JobStep Timeout</td>
-
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-		
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/MoveEntity_panel.png" /></div>
-	
-    <div id="DisplayESXSummary"><a name="DisplayESXSummary" id="DisplayESXSummary"></a>
-	
-    <h3>DisplayESXSummary</h3>
-
-    <p>This procedure allows the plugin to Display the Summary of a specified host.</p>
-
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
-
-          <th>Description</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
-
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
-
-        <tr>
-          <td class="required">ESX Hostname</td>
-
-          <td>The name of the ESX Host whose summary is to be displayed. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">Show Live CPU/Memory Usage</td>
-
-          <td>Displays the live usage of CPU and Memory. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">Display Network Details</td>
-
-          <td>Displays the network details of the ESX host. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">Display Storage Details</td>
-
-          <td>Displays the storage details of the ESX host. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td>JobStep Timeout</td>
-
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-		
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/DisplayESXSummary_panel.png" /></div>
-	
-    <div id="ChangeCpuMemAllocation"><a name="ChangeCpuMemAllocation" id="ChangeCpuMemAllocation"></a>
-	
-    <h3>ChangeCpuMemAllocation</h3>
-
-    <p>Change Cpu/Memory allocation for a Virtual Machine.</p>
-
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
-
-          <th>Description</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
-
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
-
-        <tr>
-          <td class="required">Virtual Machine Name</td>
-
-          <td>The name of the VM for which CPU/Memory has to be changed.</td>
-        </tr>
-		
-        <tr>
-          <td class="required">Number of CPUs</td>
-
-          <td>Number of virtual processors in a virtual machine. </td>
-        </tr>
-		
-        <tr>
-          <td class="required">Memory</td>
-
-          <td>Size of a virtual machine's memory, in MB.</td>
-        </tr>
-	
-        <tr>
-          <td>JobStep Timeout</td>
-
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-		
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/ChangeCpuMemAllocation_panel.png" /></div>
-
-
-
-	<div id="AddHardDisk"><a name="	AddHardDisk" id="AddHardDisk"></a>
-	
-    <h3>AddHardDisk</h3>
-
-    <p>This procedure allows the plugin to Adding HardDisk for a VM.</p>
-
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
-
-          <th>Description</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
-
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
-
-        <tr>
-          <td class="required">Vm Name</td>
-
-          <td>The name of the Vm. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">HardDisk Size</td>
-
-          <td>The size of the HardDisk you want to add. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">Disk Provision(thick/thin)</td>
-
-          <td>Can only use at the time of create.You cannot change the provisioning once created.Thick virtual disk that supports clustering features such as Fault Tolerance.Space required for the virtual disk is allocated at creation time. In contrast to the flat format, the data remaining on the physical device is zeroed out when the virtual disk is created. It might take much longer to create disks in this format than to create other types of disks.Thin disk provisioning is using the format to save storage space. For the thin disk, you provision as much datastore space as the disk would require based on the value that you enter for the disk size. However, the thin disk starts small and at first, uses only as much datastore space as the disk needs for its initial operations. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">Controller Type(SCSI/IDE)</td>
-
-          <td>Currently we supports only SCSI.By default, two Integrated Drive Electronics (IDE) interfaces are presented to the virtual machine. The IDE interface (controller) is a standard way for storage devices (Floppy drives, hard drives and CD-ROM drives) to connect to the virtual machine.To access virtual disks, a virtual machine uses virtual SCSI controllers. These virtual controllers appear to a virtual machine as different types of controllers, including BusLogic Parallel, LSI Logic Parallel, LSI Logic SAS, and VMware Paravirtual. You can add a SCSI controller, change the SCSI controller type, and select bus sharing for a virtual machine.. (Required)</td>
-        </tr>
-		
-		<tr>
-         <td class="required">Storage Mode(Independent Persistent/Independent NonPersistent/Dependent)</td>
-
-         <td>Disks in persistent mode behave like conventional disks on your physical computer. All data written to a disk in persistent mode are written permanently to the disk.Changes to disks in nonpersistent mode are discarded when you power off or reset the virtual machine. With nonpersistent mode, you can restart the virtual machine with a virtual disk in the same state every time. Changes to the disk are written to and read from a redo log file that is deleted when you power off or reset. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td>JobStep Timeout</td>
-
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-		
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/AddHardDisk_panel.png" /></div>
-	
-	<div id="AddCdDvdDrive"><a name="AddCdDvdDrive" id="AddCdDvdDrive"></a>
-	
-    <h3>AddCdDvdDrive</h3>
-
-    <p>This procedure allows the plugin to add CD/DVD drive to VM..</p>
-
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
-
-          <th>Description</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
-
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
-
-        <tr>
-          <td class="required">Vm Name</td>
-
-          <td>The name of the Vm. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">ISO Image</td>
-
-          <td>The ISO Image Path. Will be used only for ISO Image Type.</td>
-        </tr>
-		
-        <tr>
-          <td class="required">Backing Type(PassThrough/AtApi/IsoImage)</td>
-
-          <td>Backing Type for the CD/DVD Drive. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">Controller Type(SATA/IDE)</td>
-
-          <td>Type of controller for the CD/DVD Drive.Required)</td>
-        </tr>
-		
-        <tr>
-          <td>JobStep Timeout</td>
-
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-		
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/AddCdDvdDrive_panel.png" /></div>
-	
-	<div id="AddNetworkInterface"><a name="AddNetworkInterface" id="AddNetworkInterface"></a>
-	
-    <h3>AddNetworkInterface</h3>
-
-    <p>This procedure allows the plugin to add  Network adapter .</p>
-
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
-
-          <th>Description</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
-
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
-
-        <tr>
-          <td class="required">Vm Name</td>
-
-          <td>The name of the Vm. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">Network</td>
-
-          <td>The network in which network interface to be added.</td>
-        </tr>
-
-        <tr>
-          <td>JobStep Timeout</td>
-
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-		
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/AddCdDvdDrive_panel.png" /></div>
-	
-	<div id="EditCdDvdDrive"><a name="EditCdDvdDrive" id="EditCdDvdDrive"></a>
-	
-    <h3>EditCdDvdDrive</h3>
-
-    <p>This procedure allows the plugin to edit already existing CD/DVD Drive on VM. .</p>
-
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
-
-          <th>Description</th>
-        </tr>
-      </thead>
-
-      <tbody>
-		<tr>
-          <td class="required">ESX Connection</td>
-
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
-		
-		<tr>
-          <td class="required">CD/DVD Drive Name</td>
-
-          <td>The name of the existing CD/DVD drive which need to be edited. (Required)</td>
-        </tr>
-		
-		<tr>
-          <td class="required">VM Name:</td>
-
-          <td>The name of the VM on which CD/DVD Drive is attached.(Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">ISO Image</td>
-
-          <td>The path of ISO Image. Will be used only for ISO Image Type.</td>
-        </tr>
-		
-        <tr>
-          <td class="required">Backing Type</td>
-
-          <td>The backing type of created CD/DVD Drive (Passthrough, AtApi, ISO Image)..</td>
-        </tr>
-		
-		<tr>
-          <td class="required">Controller Type</td>
-
-          <td>The type of controller for created CD/DVD Drive (SATA, IDE).</td>
-        </tr>
-		
-        <tr>
-          <td>JobStep Timeout</td>
-
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-		
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/EditCdDvdDrive_panel.png" /></div>
-	
-	<div id="ListDevice"><a name="ListDevice" id="ListDevice"></a>
-	
-    <h3>ListDevice</h3>
-
-    <p>List devices of specific type(CD/DVD drive, Hard disk, Network adapter).</p>
-
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
-
-          <th>Description</th>
-        </tr>
-      </thead>
-
-      <tbody>
-		<tr>
-          <td class="required">ESX Connection</td>
-
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
-		
-		<tr>
-          <td class="required">VM Name</td>
-
-          <td>The name of the VM on which device is attached. (Required)</td>
-        </tr>
-		
-		<tr>
-          <td class="required">Device Type</td>
-
-          <td>The device type to be listed (CD/DVD ROM, Hard disk, Network adapter).(Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">Device Name</td>
-
-          <td>The name of the device which is to be listed. If left blank all devices of above mentioned type will be listed.</td>
-        </tr>
-		
-        <tr>
-          <td>JobStep Timeout</td>
-
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-		
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/ListDevice_panel.png" /></div>
-
-	<div id="RemoveDevice"><a name="RemoveDevice" id="RemoveDevice"></a>
-	
-    <h3>RemoveDevice</h3>
-
-    <p>Remove devices of specific type.</p>
-
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
-
-          <th>Description</th>
-        </tr>
-      </thead>
-
-      <tbody>
-		<tr>
-          <td class="required">ESX Connection</td>
-
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
-		
-		<tr>
-          <td class="required">VM Name</td>
-
-          <td>The name of the VM on which device is attached. (Required)</td>
-        </tr>
-		
-		<tr>
-          <td class="required">Device Type</td>
-
-          <td>The device type to be listed (CD/DVD ROM, Hard disk, Network adapter).(Required)</td>
-        </tr>
-		
-        <tr>
-          <td class="required">Device Name</td>
-
-          <td>The name of the device which is to be listed. If left blank all devices of above mentioned type will be listed.</td>
-        </tr>
-		
-        <tr>
-          <td>JobStep Timeout</td>
-
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-		
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/RemoveDevice_panel.png" /></div>
-
-	<div id="ListSnapshot"><a name="ListSnapshot" id="ListSnapshot"></a>
-	
-    <h3>ListSnapshot</h3>
-
-    <p>List all snapshots inside a VM..</p>
-
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
-
-          <th>Description</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
-
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
-        
-		<tr>
-          <td class="required">VM Name</td>
-
-          <td>The name of the VM on which device is attached. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td>JobStep Timeout</td>
-
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-		
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/ListSnapshot_panel.png" /></div>
-	
-	<div id="RemoveSnapshot"><a name="RemoveSnapshot" id="RemoveSnapshot"></a>
-	
-    <h3>RemoveSnapshot</h3>
-
-    <p>Remove any particular snapshot or  all snapshots inside VM.</p>
-
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
-
-          <th>Description</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
-
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
-        
-		<tr>
-          <td class="required">VM Name</td>
-
-          <td>The name of the VM on which device is attached. (Required)</td>
-        </tr>	<tr>
-        
-		<td>Snapshot Name</td>
-
-          <td>Name of the snapshot you want to remove. If you want to remove all the snapshots provide 'all' in the textbox option. If you want to remove all snapshot with provided name, provide snapshot name and check 'All' checkbox.</td>
-        </tr>
-		<tr>
-		<td class="required">All</td>
-
-          <td>If you want to remove all the snapshots provide 'all' in the textbox option. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td>JobStep Timeout</td>
-
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-		
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/RemoveSnapshot_panel.png" /></div>
-	
-	<div id="RevertToCurrentSnapshot"><a name="RevertToCurrentSnapshot" id="RevertToCurrentSnapshot"></a>
-	
-    <h3>RevertToCurrentSnapshot</h3>
-
-    <p>Revert Back to current snapshot after running this procedure.</p>
-
-    <table class="grid">
-      <thead>
-        <tr>
-          <th>Parameter</th>
-
-          <th>Description</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td class="required">ESX Connection</td>
-
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
-        </tr>
-		
-        <tr>
-          <td>JobStep Timeout</td>
-
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
-        </tr>
-		
-      </tbody>
-    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/RevertToCurrentSnapshot_panel.png" /></div>
-	
-    <h1>Use Cases and Examples</h1>
-    <!-- This section is for examples and use cases, including screenshots of the new Parameter Panel with example values filled in.
-        Unfortunately, I can't tell you what exactly to put here, but it's OK to put what seems like too much! Include both parameter
-        values and output where appropriate. Use a separate 'h2' header for each example. Under the h2 header try to stay with the style
-        outline used above where possible.
-        -->
-
-    <h2>Use Case 1: PowerOn, Consume, and PowerOff Job</h2>
-
-    <p>One of the most common uses for this plugin is to power on
-    an existing virtual machine, then create an ElectricFlow
-    resource assigned to this VM, use the resource to run some
-    operations, and then power off the machine and delete the
-    resource. To accomplish these task you must:</p>
-
-    <ol>
-      <li>Create a Plugin Configuration.</li>
-
-      <li>Power on a VM in ESX.</li>
-
-      <li>Create a Resource for this VM.</li>
-
-      <li>Use the created resource.</li>
-
-      <li>Delete the resource.</li>
-
-      <li>Power off the VM.</li>
-    </ol>
-
-    <h4>Create a Plugin Configuration</h4>
-
-    <p>Plugin configurations are created by going to the ElectricFlow "Administration" tab, then to the "Plugins" sub-tab.
-    On the right side of the line for the ESX plugin, there is a
-    "Configure" link which will open the Configuration page.<br />
-    Create a new configuration by specifying the requested
-    parameters:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/create_config.png" />
-
-    <p>Once the configuration is created, you can see it listed in
-    "ESX Configurations", and now you are able to manage virtual
-    machines</p>
-
-    <h4>PowerOn</h4>
-
-    <p>Create a new PowerOn procedure and fill in the requested
-    parameters with real values from your ESX server:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweron_parameters.png" />
-
-    <p>Make sure you selected the "Create Resource?" checkbox.</p>
-
-    <h4>Consume</h4>
-
-    <p>Create a new command step to use the created resource. In
-    this example, we will pick a resource from the pool and just add
-    an ec-perl sleep to use it for 30 seconds.</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/consume_parameters.png" />
-
-    <h4>Cleanup</h4>
-
-    <p>Now that the resource has been used and is ready to be deleted,
-    create a Cleanup step and fill in the requested
-    parameters.</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/cleanup_parameters.png" />
-
-    <h4>PowerOff</h4>
-
-    <p>Now that the resource has been deleted, create a PowerOff
-    step and fill in the requested parameters.</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweroff_parameters.png" />
-
-    <h4>Results and outputs</h4>
-
-    <p>Once the job finished, you can see the properties stored in
-    'Results location'.<br />
-    <img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/job.png" /></p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/results.png" />
-
-    <p>PowerOn output:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweron_log.png" />
-
-    <p>Cleanup output:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/cleanup_log.png" />
-
-    <p>PowerOff output:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweroff_log.png" />
-
-    <h1>Release Notes</h1>
-    <h2>@PLUGIN_KEY@ 2.2.0</h2>
-
-    <ul>
-        <p>Added the following new procedures:</p>
-<li>AddCdDvdDrive</li> 					
-<li>AddHardDisk</li>				
-<li>AddNetworkInterface</li>
-<li>ChangeCpuMemAllocation</li>
-<li>CreateFolder</li>
-<li>CreateResourcepool</li>
-<li>DeleteEntity</li>
-<li>DisplayESXSummary</li>
-<li>EditCdDvdDrive</li>
-<li>EditResourcepool</li>
-<li>ListDevice</li>
-<li>ListEntity</li>
-<li>ListSnapshot</li>
-<li>MoveEntity</li>
-<li>RemoveDevice</li>
-<li>RemoveSnapshot</li>
-<li>RenameEntity</li>
-<li>RevertToCurrentSnapshot</li>
-
-		
-    </ul>
-
-    <h2>@PLUGIN_KEY@ 2.1.5</h2>
-    <ul>
-        <li>Fixed issue with configurations being cached for IE.</li>
-    </ul>
-    <h2>@PLUGIN_KEY@ 2.1.4</h2>
-
-    <ul>
-
-      <li>Renamed ElectricCommander to ElectricFlow.</li>
-
-    </ul>
-
-    <h2>@PLUGIN_KEY@ 2.1.3</h2>
-    <ul>
-      <li>Fixed manifest file.</li>
-    </ul>
-
-    <h2>@PLUGIN_KEY@ 2.1.2</h2>
-    <!-- Specific descriptions of additional or changed functionality,
-        new parameters, etc. The plugin version header of this section should
-        include the speciic build number if possible. Repeat this section for
-        each version.
-        -->
-
-    <ul>
-      <li>Documented the form for ESX URL in configurations.</li>
-      <li>Added a Step to test credentials.</li>
-      <li>Fixed Configuration Management.</li>
-    </ul>
-    
-    <h2>@PLUGIN_KEY@ 2.1.1</h2>
-    <ul>
-      <li>Procedure name(s) were changed in the step picker section.</li>
-    </ul> 
-    
-    <h2>@PLUGIN_KEY@ 2.1.0</h2>
-    <ul>
-      <li>Added CloudManagerSync procedure.</li>
-    </ul>      
-        
-    <h2>@PLUGIN_KEY@ 2.0.4</h2>
-
-    <ul>
-      <li>Fixed configuration description.</li>
-    </ul>
-
-    <h2>@PLUGIN_KEY@ 2.0.3</h2>
-
-    <ul>
-      <li>Fixed power on error.</li>
-    </ul>
-
-    <h2>@PLUGIN_KEY@ 2.0.2</h2>
-
-    <ul>
-      <li>Deleted CloudManagerGrow And CloudManagerShrink from
-      stepPicker.</li>
-
-      <li>Change Help page style.</li>
-    </ul>
-
-    <h2>@PLUGIN_KEY@ 2.0.1</h2>
-
-    <ul>
-      <li>Added Help link to each procedure.</li>
-
-      <li>Parameter Panel XML Cleanup.</li>
-    </ul>
-
-    <h2>@PLUGIN_KEY@ 2.0.0</h2>
-
-    <ul>
-      <li>Applied new Help page template.</li>
-
-      <li>Added detailed use case.</li>
-
-      <li>Added new XML parameter panel to all procedures.</li>
-
-      <li>Added support for EC-CloudManager.</li>
-
-      <li>Fixed cleanup procedure when resource does not
-      exist.</li>
-    </ul>
-
-    <h2>@PLUGIN_KEY@ 1.2.3</h2>
-
-    <ul>
-      <li>Changed EOL on VMware SDK files.</li>
-    </ul>
-
-    <h2>@PLUGIN_KEY@ 1.2.2</h2>
-
-    <ul>
-      <li>Included vSphere SDK for Perl in the plugin and removed
-      sdk_installation_path parameter from all procedures.</li>
-
-      <li>Removed CreateConfiguration and DeleteConfiguration
-      procedures from the wizard/procedure selection.</li>
-
-      <li>Updated Help page.</li>
-    </ul>
-
-    <h2>@PLUGIN_KEY@ 1.2.1</h2>
-
-    <ul>
-      <li>Updated Help page.</li>
-    </ul>
-
-    <h2>@PLUGIN_KEY@ 1.2.0</h2>
-
-    <ul>
-      <li>Modified the Cleanup and Create subprocedures.</li>
-
-      <li>Added the ability for all subprocedures to perform
-      operations for multiple virtual machines.</li>
-
-      <li>Added the timeout parameter to all steps.</li>
-
-      <li>Added these subprocedures: PowerOn, PowerOff, Shutdown,
-      Suspend, GetVMConfiguration, CreateResourceFromVM, Import,
-      Export, and RegisterVM.</li>
-    </ul>
-
-    <h2>@PLUGIN_KEY@ 1.1.0</h2>
-
-    <ul>
-      <li>Added the Snapshot subprocedure.</li>
-    </ul>
-  </div>
-</body>
-</html>
+                            <td>Shares define how much access you get to Memory resource . (Required)</td>
+                        </tr>
+                        <tr>
+                            <td>JobStep Timeout</td>
+
+                            <td>Timeout for the step execution in minutes. Blank
+                            means no timeout.</td>
+                        </tr>
+                    </tbody>
+                </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/EditResourcePool_panel.png" /></div>
+                <div id="ListEntity"><a name="ListEntity" id="ListEntity"></a>
+                <h3>ListEntity</h3>
+
+                <p>This procedure allows the plugin to list the objects of a specified Entity.</p>
+
+                <table class="grid">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td class="required">ESX Connection</td>
+
+                            <td>The name of the configuration which holds the
+                            connection information for the ESX server. (Required)</td>
+                        </tr>
+
+                        <tr>
+                            <td class="required">Entity Type</td>
+
+                            <td>The entity type to be listed (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem,
+                            ResourcePool, or VirtualMachine) present on the target VirtualCenter 
+                            Server or ESX Server system. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td>JobStep Timeout</td>
+
+                            <td>Timeout for the step execution in minutes. Blank
+                            means no timeout.</td>
+                        </tr>
+                    </tbody>
+                </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/ListEntity_panel.png" /></div>
+                <div id="DeleteEntity"><a name="DeleteEntity" id="DeleteEntity"></a>
+                <h3>DeleteEntity</h3>
+
+                <p>This procedure allows the plugin to delete the specified object of an Entity.</p>
+
+                <table class="grid">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td class="required">ESX Connection</td>
+
+                            <td>The name of the configuration which holds the
+                            connection information for the ESX server. (Required)</td>
+                        </tr>
+
+                        <tr>
+                            <td class="required">Entity Type</td>
+
+                            <td>The entity type to be listed (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem,
+                            ResourcePool, or VirtualMachine) present on the target VirtualCenter 
+                            Server or ESX Server system. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">Entity Name</td>
+
+                            <td>The name of the entity which is to be deleted. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td>JobStep Timeout</td>
+
+                            <td>Timeout for the step execution in minutes. Blank
+                            means no timeout.</td>
+                        </tr>
+                    </tbody>
+                </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/DeleteEntity_panel.png" /></div>
+                <div id="CreateFolder"><a name="CreateFolder" id="CreateFolder"></a>
+                <h3>CreateFolder</h3>
+
+                <p>This procedure allows the plugin to create a new folder.</p>
+
+                <table class="grid">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td class="required">ESX Connection</td>
+
+                            <td>The name of the configuration which holds the
+                            connection information for the ESX server. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">Parent Type (Folder/Datacenter)</td>
+                            <td>The parent (data center or folder) in which folder is to be created. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">Parent Name (Folder/Datacenter Name)</td>
+                            <td>The name of the parent in which folder is to be created. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">Folder Name</td>
+                            <td>Name of the folder to be created. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td>JobStep Timeout</td>
+
+                            <td>Timeout for the step execution in minutes. Blank
+                            means no timeout.</td>
+                        </tr>
+                    </tbody>
+                </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/CreateFolder_panel.png" /></div>
+                <div id="RenameEntity"><a name="RenameEntity" id="RenameEntity"></a>
+                <h3>RenameEntity</h3>
+
+                <p>This procedure allows the plugin to rename the specified object of an entity.</p>
+
+                <table class="grid">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td class="required">ESX Connection</td>
+
+                            <td>The name of the configuration which holds the
+                            connection information for the ESX server. (Required)</td>
+                        </tr>
+
+                        <tr>
+                            <td class="required">Entity Type</td>
+
+                            <td>The entity type to be renamed (ClusterComputeResource, Datacenter, Folder, ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">Entity Old Name</td>
+                            <td>Old name of the entity which is to be renamed. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">Entity New Name</td>
+
+                            <td>New name of the entity. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td>JobStep Timeout</td>
+
+                            <td>Timeout for the step execution in minutes. Blank
+                            means no timeout.</td>
+                        </tr>
+                    </tbody>
+                </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/RenameEntity_panel.png" /></div>
+                <div id="MoveEntity"><a name="MoveEntity" id="MoveEntity"></a>
+                <h3>MoveEntity</h3>
+                <p>This procedure allows the plugin to move the specified object of an entity.</p>
+                <table class="grid">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="required">ESX Connection</td>
+                            <td>The name of the configuration which holds the
+                            connection information for the ESX server. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">Entity Type (Folder/VM)</td>
+                            <td>The parent (data center or VM) which need to be moved. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">Entity Name (Folder/VM Name)</td>
+                            <td>The name of the Entity which need to be moved. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">Destination Folder Name</td>
+                            <td>Name of the destination folder. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td>JobStep Timeout</td>
+                            <td>Timeout for the step execution in minutes. Blank
+                            means no timeout.</td>
+                        </tr>
+                    </tbody>
+                </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/MoveEntity_panel.png" /></div>
+                <div id="DisplayESXSummary"><a name="DisplayESXSummary" id="DisplayESXSummary"></a>
+                <h3>DisplayESXSummary</h3>
+                <p>This procedure allows the plugin to Display the Summary of a specified host.</p>
+                <table class="grid">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="required">ESX Connection</td>
+                            <td>The name of the configuration which holds the
+                            connection information for the ESX server. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">ESX Hostname</td>
+                            <td>The name of the ESX Host whose summary is to be displayed. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">Show Live CPU/Memory Usage</td>
+                            <td>Displays the live usage of CPU and Memory. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">Display Network Details</td>
+                            <td>Displays the network details of the ESX host. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">Display Storage Details</td>
+                            <td>Displays the storage details of the ESX host. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td>JobStep Timeout</td>
+                            <td>Timeout for the step execution in minutes. Blank
+                            means no timeout.</td>
+                        </tr>
+                    </tbody>
+                </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/DisplayESXSummary_panel.png" /></div>
+                <div id="ChangeCpuMemAllocation"><a name="ChangeCpuMemAllocation" id="ChangeCpuMemAllocation"></a>
+                <h3>ChangeCpuMemAllocation</h3>
+                <p>Change Cpu/Memory allocation for a Virtual Machine.</p>
+                <table class="grid">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="required">ESX Connection</td>
+                            <td>The name of the configuration which holds the
+                            connection information for the ESX server. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">Virtual Machine Name</td>
+                            <td>The name of the VM for which CPU/Memory has to be changed.</td>
+                        </tr>
+                        <tr>
+                            <td class="required">Number of CPUs</td>
+                            <td>Number of virtual processors in a virtual machine. </td>
+                        </tr>
+                        <tr>
+                            <td class="required">Memory</td>
+                            <td>Size of a virtual machine's memory, in MB.</td>
+                        </tr>
+                        <tr>
+                            <td>JobStep Timeout</td>
+                            <td>Timeout for the step execution in minutes. Blank
+                            means no timeout.</td>
+                        </tr>
+                    </tbody>
+                </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/ChangeCpuMemAllocation_panel.png" /></div>
+                <div id="AddHardDisk"><a name="AddHardDisk" id="AddHardDisk"></a>
+                <h3>AddHardDisk</h3>
+                <p>This procedure allows the plugin to Adding HardDisk for a VM.</p>
+                <table class="grid">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="required">ESX Connection</td>
+                            <td>The name of the configuration which holds the
+                            connection information for the ESX server. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">Vm Name</td>
+                            <td>The name of the Vm. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">HardDisk Size</td>
+                            <td>The size of the HardDisk you want to add. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">Disk Provision(thick/thin)</td>
+                            <td>Can only use at the time of create.You cannot change the provisioning once created.Thick virtual disk that supports clustering features such as Fault Tolerance.Space required for the virtual disk is allocated at creation time. In contrast to the flat format, the data remaining on the physical device is zeroed out when the virtual disk is created. It might take much longer to create disks in this format than to create other types of disks.Thin disk provisioning is using the format to save storage space. For the thin disk, you provision as much datastore space as the disk would require based on the value that you enter for the disk size. However, the thin disk starts small and at first, uses only as much datastore space as the disk needs for its initial operations. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">Controller Type(SCSI/IDE)</td>
+                            <td>Currently we supports only SCSI.By default, two Integrated Drive Electronics (IDE) interfaces are presented to the virtual machine. The IDE interface (controller) is a standard way for storage devices (Floppy drives, hard drives and CD-ROM drives) to connect to the virtual machine.To access virtual disks, a virtual machine uses virtual SCSI controllers. These virtual controllers appear to a virtual machine as different types of controllers, including BusLogic Parallel, LSI Logic Parallel, LSI Logic SAS, and VMware Paravirtual. You can add a SCSI controller, change the SCSI controller type, and select bus sharing for a virtual machine.. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td class="required">Storage Mode(Independent Persistent/Independent NonPersistent/Dependent)</td>
+
+                            <td>Disks in persistent mode behave like conventional disks on your physical computer. All data written to a disk in persistent mode are written permanently to the disk.Changes to disks in nonpersistent mode are discarded when you power off or reset the virtual machine. With nonpersistent mode, you can restart the virtual machine with a virtual disk in the same state every time. Changes to the disk are written to and read from a redo log file that is deleted when you power off or reset. (Required)</td>
+                        </tr>
+                        <tr>
+                            <td>JobStep Timeout</td>
+                            <td>Timeout for the step execution in minutes. Blank
+                            means no timeout.</td>
+                        </tr>
+                    </tbody>
+                    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/AddHardDisk_panel.png" /></div>
+                    <div id="AddCdDvdDrive"><a name="AddCdDvdDrive" id="AddCdDvdDrive"></a>
+                    <h3>AddCdDvdDrive</h3>
+                    <p>This procedure allows the plugin to add CD/DVD drive to VM..</p>
+                    <table class="grid">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="required">ESX Connection</td>
+                                <td>The name of the configuration which holds the
+                                connection information for the ESX server. (Required)</td>
+                            </tr>
+                            <tr>
+                                <td class="required">Vm Name</td>
+                                <td>The name of the Vm. (Required)</td>
+                            </tr>
+                            <tr>
+                                <td class="required">ISO Image</td>
+                                <td>The ISO Image Path. Will be used only for ISO Image Type.</td>
+                            </tr>
+                            <tr>
+                                <td class="required">Backing Type(PassThrough/AtApi/IsoImage)</td>
+                                <td>Backing Type for the CD/DVD Drive. (Required)</td>
+                            </tr>
+                            <tr>
+                                <td class="required">Controller Type(SATA/IDE)</td>
+                                <td>Type of controller for the CD/DVD Drive.Required)</td>
+                            </tr>
+                            <tr>
+                                <td>JobStep Timeout</td>
+                                <td>Timeout for the step execution in minutes. Blank
+                                means no timeout.</td>
+                            </tr>
+                        </tbody>
+                    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/AddCdDvdDrive_panel.png" /></div>
+                    <div id="AddNetworkInterface"><a name="AddNetworkInterface" id="AddNetworkInterface"></a>
+                    <h3>AddNetworkInterface</h3>
+                    <p>This procedure allows the plugin to add  Network adapter .</p>
+                    <table class="grid">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="required">ESX Connection</td>
+                                <td>The name of the configuration which holds the
+                                connection information for the ESX server. (Required)</td>
+                            </tr>
+                            <tr>
+                                <td class="required">Vm Name</td>
+                                <td>The name of the Vm. (Required)</td>
+                            </tr>
+                            <tr>
+                                <td class="required">Network</td>
+                                <td>The network in which network interface to be added.</td>
+                            </tr>
+                            <tr>
+                                <td>JobStep Timeout</td>
+                                <td>Timeout for the step execution in minutes. Blank
+                                means no timeout.</td>
+                            </tr>
+                        </tbody>
+                    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/AddCdDvdDrive_panel.png" /></div>
+                    <div id="EditCdDvdDrive"><a name="EditCdDvdDrive" id="EditCdDvdDrive"></a>
+                    <h3>EditCdDvdDrive</h3>
+                    <p>This procedure allows the plugin to edit already existing CD/DVD Drive on VM. .</p>
+                    <table class="grid">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="required">ESX Connection</td>
+                                <td>The name of the configuration which holds the
+                                connection information for the ESX server. (Required)</td>
+                            </tr>
+                            <tr>
+                                <td class="required">CD/DVD Drive Name</td>
+                                <td>The name of the existing CD/DVD drive which need to be edited. (Required)</td>
+                            </tr>
+                            <tr>
+                                <td class="required">VM Name:</td>
+                                <td>The name of the VM on which CD/DVD Drive is attached.(Required)</td>
+                            </tr>
+                            <tr>
+                                <td class="required">ISO Image</td>
+                                <td>The path of ISO Image. Will be used only for ISO Image Type.</td>
+                            </tr>
+                            <tr>
+                                <td class="required">Backing Type</td>
+                                <td>The backing type of created CD/DVD Drive (Passthrough, AtApi, ISO Image)..</td>
+                            </tr>
+                            <tr>
+                                <td class="required">Controller Type</td>
+                                <td>The type of controller for created CD/DVD Drive (SATA, IDE).</td>
+                            </tr>
+                            <tr>
+                                <td>JobStep Timeout</td>
+                                <td>Timeout for the step execution in minutes. Blank
+                                means no timeout.</td>
+                            </tr>
+                        </tbody>
+                    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/EditCdDvdDrive_panel.png" /></div>
+                    <div id="ListDevice"><a name="ListDevice" id="ListDevice"></a>
+                    <h3>ListDevice</h3>
+                    <p>List devices of specific type(CD/DVD drive, Hard disk, Network adapter).</p>
+                    <table class="grid">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="required">ESX Connection</td>
+                                <td>The name of the configuration which holds the
+                                connection information for the ESX server. (Required)</td>
+                            </tr>
+                            <tr>
+                                <td class="required">VM Name</td>
+                                <td>The name of the VM on which device is attached. (Required)</td>
+                            </tr>
+                            <tr>
+                                <td class="required">Device Type</td>
+                                <td>The device type to be listed (CD/DVD ROM, Hard disk, Network adapter).(Required)</td>
+                            </tr>
+                            <tr>
+                                <td class="required">Device Name</td>
+                                <td>The name of the device which is to be listed. If left blank all devices of above mentioned type will be listed.</td>
+                            </tr>
+                            <tr>
+                                <td>JobStep Timeout</td>
+                                <td>Timeout for the step execution in minutes. Blank
+                                means no timeout.</td>
+                            </tr>
+                        </tbody>
+                    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/ListDevice_panel.png" /></div>
+                    <div id="RemoveDevice"><a name="RemoveDevice" id="RemoveDevice"></a>
+                    <h3>RemoveDevice</h3>
+                    <p>Remove devices of specific type.</p>
+                    <table class="grid">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="required">ESX Connection</td>
+                                <td>The name of the configuration which holds the
+                                connection information for the ESX server. (Required)</td>
+                            </tr>
+                            <tr>
+                                <td class="required">VM Name</td>
+                                <td>The name of the VM on which device is attached. (Required)</td>
+                            </tr>
+                            <tr>
+                                <td class="required">Device Type</td>
+                                <td>The device type to be listed (CD/DVD ROM, Hard disk, Network adapter).(Required)</td>
+                            </tr>
+                            <tr>
+                                <td class="required">Device Name</td>
+                                <td>The name of the device which is to be listed. If left blank all devices of above mentioned type will be listed.</td>
+                            </tr>
+                            <tr>
+                                <td>JobStep Timeout</td>
+                                <td>Timeout for the step execution in minutes. Blank
+                                means no timeout.</td>
+                            </tr>
+                        </tbody>
+                    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/RemoveDevice_panel.png" /></div>
+                    <div id="ListSnapshot"><a name="ListSnapshot" id="ListSnapshot"></a>
+                    <h3>ListSnapshot</h3>
+                    <p>List all snapshots inside a VM..</p>
+                    <table class="grid">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="required">ESX Connection</td>
+                                <td>The name of the configuration which holds the
+                                connection information for the ESX server. (Required)</td>
+                            </tr>
+                            <tr>
+                                <td class="required">VM Name</td>
+                                <td>The name of the VM on which device is attached. (Required)</td>
+                            </tr>
+                            <tr>
+                                <td>JobStep Timeout</td>
+                                <td>Timeout for the step execution in minutes. Blank
+                                means no timeout.</td>
+                            </tr>
+                        </tbody>
+                    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/ListSnapshot_panel.png" /></div>
+                    <div id="RemoveSnapshot"><a name="RemoveSnapshot" id="RemoveSnapshot"></a>
+                    <h3>RemoveSnapshot</h3>
+                    <p>Remove any particular snapshot or  all snapshots inside VM.</p>
+                    <table class="grid">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="required">ESX Connection</td>
+                                <td>The name of the configuration which holds the
+                                connection information for the ESX server. (Required)</td>
+                            </tr>
+                            <tr>
+                                <td class="required">VM Name</td>
+                                <td>The name of the VM on which device is attached. (Required)</td>
+                            </tr>
+                            <tr>
+                                <td>Snapshot Name</td>
+                                <td>Name of the snapshot you want to remove. If you want to remove all the snapshots provide 'all' in the textbox option. If you want to remove all snapshot with provided name, provide snapshot name and check 'All' checkbox.</td>
+                            </tr>
+                            <tr>
+                                <td class="required">All</td>
+                                <td>If you want to remove all the snapshots provide 'all' in the textbox option. (Required)</td>
+                            </tr>
+                            <tr>
+                                <td>JobStep Timeout</td>
+                                <td>Timeout for the step execution in minutes. Blank
+                                means no timeout.</td>
+                            </tr>
+                        </tbody>
+                    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/RemoveSnapshot_panel.png" /></div>
+                    <div id="RevertToCurrentSnapshot"><a name="RevertToCurrentSnapshot" id="RevertToCurrentSnapshot"></a>
+                    <h3>RevertToCurrentSnapshot</h3>
+                    <p>Revert Back to current snapshot after running this procedure.</p>
+                    <table class="grid">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="required">ESX Connection</td>
+                                <td>The name of the configuration which holds the
+                                connection information for the ESX server. (Required)</td>
+                            </tr>
+                            <tr>
+                                <td>JobStep Timeout</td>
+                                <td>Timeout for the step execution in minutes. Blank
+                                means no timeout.</td>
+                            </tr>
+                        </tbody>
+                    </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/RevertToCurrentSnapshot_panel.png" /></div>
+                    <h1 id="example">Use Cases and Examples</h1>
+                    <!-- This section is for examples and use cases, including screenshots of the new Parameter Panel with example values filled in.
+                         Unfortunately, I can't tell you what exactly to put here, but it's OK to put what seems like too much! Include both parameter
+                         values and output where appropriate. Use a separate 'h2' header for each example. Under the h2 header try to stay with the style
+                         outline used above where possible.
+                    -->
+
+                    <h2>Use Case 1: PowerOn, Consume, and PowerOff Job</h2>
+
+                    <p>One of the most common uses for this plugin is to power on
+                    an existing virtual machine, then create an ElectricFlow
+                    resource assigned to this VM, use the resource to run some
+                    operations, and then power off the machine and delete the
+                    resource. To accomplish these task you must:</p>
+
+                    <ol>
+                        <li>Create a Plugin Configuration.</li>
+
+                        <li>Power on a VM in ESX.</li>
+
+                        <li>Create a Resource for this VM.</li>
+
+                        <li>Use the created resource.</li>
+
+                        <li>Delete the resource.</li>
+
+                        <li>Power off the VM.</li>
+                    </ol>
+
+                    <h4>Create a Plugin Configuration</h4>
+
+                    <p>Plugin configurations are created by going to the ElectricFlow "Administration" tab, then to the "Plugins" sub-tab.
+                    On the right side of the line for the ESX plugin, there is a
+                    "Configure" link which will open the Configuration page.<br />
+                    Create a new configuration by specifying the requested
+                    parameters:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/create_config.png" />
+
+                    <p>Once the configuration is created, you can see it listed in
+                    "ESX Configurations", and now you are able to manage virtual
+                    machines</p>
+
+                    <h4>PowerOn</h4>
+
+                    <p>Create a new PowerOn procedure and fill in the requested
+                    parameters with real values from your ESX server:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweron_parameters.png" />
+
+                    <p>Make sure you selected the "Create Resource?" checkbox.</p>
+
+                    <h4>Consume</h4>
+
+                    <p>Create a new command step to use the created resource. In
+                    this example, we will pick a resource from the pool and just add
+                    an ec-perl sleep to use it for 30 seconds.</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/consume_parameters.png" />
+
+                    <h4>Cleanup</h4>
+
+                    <p>Now that the resource has been used and is ready to be deleted,
+                    create a Cleanup step and fill in the requested
+                    parameters.</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/cleanup_parameters.png" />
+
+                    <h4>PowerOff</h4>
+
+                    <p>Now that the resource has been deleted, create a PowerOff
+                    step and fill in the requested parameters.</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweroff_parameters.png" />
+
+                    <h4>Results and outputs</h4>
+
+                    <p>Once the job finished, you can see the properties stored in
+                    'Results location'.<br />
+                    <img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/job.png" /></p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/results.png" />
+
+                    <p>PowerOn output:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweron_log.png" />
+
+                    <p>Cleanup output:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/cleanup_log.png" />
+
+                    <p>PowerOff output:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweroff_log.png" />
+
+                    <h1 id="rns">Release Notes</h1>
+                    <h2>@PLUGIN_KEY@ 2.3.1</h2>
+                    <ul>
+                        <li>Import procedure has been improved.</li>
+                    </ul>
+                    <h2>@PLUGIN_KEY@ 2.2.0</h2>
+
+                    <ul>
+                        <p>Added the following new procedures:</p>
+                        <li>AddCdDvdDrive</li>
+                        <li>AddHardDisk</li>
+                        <li>AddNetworkInterface</li>
+                        <li>ChangeCpuMemAllocation</li>
+                        <li>CreateFolder</li>
+                        <li>CreateResourcepool</li>
+                        <li>DeleteEntity</li>
+                        <li>DisplayESXSummary</li>
+                        <li>EditCdDvdDrive</li>
+                        <li>EditResourcepool</li>
+                        <li>ListDevice</li>
+                        <li>ListEntity</li>
+                        <li>ListSnapshot</li>
+                        <li>MoveEntity</li>
+                        <li>RemoveDevice</li>
+                        <li>RemoveSnapshot</li>
+                        <li>RenameEntity</li>
+                        <li>RevertToCurrentSnapshot</li>
+                    </ul>
+
+                    <h2>@PLUGIN_KEY@ 2.1.5</h2>
+                    <ul>
+                        <li>Fixed issue with configurations being cached for IE.</li>
+                    </ul>
+                    <h2>@PLUGIN_KEY@ 2.1.4</h2>
+
+                    <ul>
+
+                        <li>Renamed ElectricCommander to ElectricFlow.</li>
+
+                    </ul>
+
+                    <h2>@PLUGIN_KEY@ 2.1.3</h2>
+                    <ul>
+                        <li>Fixed manifest file.</li>
+                    </ul>
+
+                    <h2>@PLUGIN_KEY@ 2.1.2</h2>
+                    <!-- Specific descriptions of additional or changed functionality,
+                         new parameters, etc. The plugin version header of this section should
+                         include the speciic build number if possible. Repeat this section for
+                         each version.
+                    -->
+
+                    <ul>
+                        <li>Documented the form for ESX URL in configurations.</li>
+                        <li>Added a Step to test credentials.</li>
+                        <li>Fixed Configuration Management.</li>
+                    </ul>
+                    <h2>@PLUGIN_KEY@ 2.1.1</h2>
+                    <ul>
+                        <li>Procedure name(s) were changed in the step picker section.</li>
+                    </ul>
+
+                    <h2>@PLUGIN_KEY@ 2.1.0</h2>
+                    <ul>
+                        <li>Added CloudManagerSync procedure.</li>
+                    </ul>
+                    <h2>@PLUGIN_KEY@ 2.0.4</h2>
+
+                    <ul>
+                        <li>Fixed configuration description.</li>
+                    </ul>
+
+                    <h2>@PLUGIN_KEY@ 2.0.3</h2>
+
+                    <ul>
+                        <li>Fixed power on error.</li>
+                    </ul>
+
+                    <h2>@PLUGIN_KEY@ 2.0.2</h2>
+
+                    <ul>
+                        <li>Deleted CloudManagerGrow And CloudManagerShrink from
+                        stepPicker.</li>
+
+                        <li>Change Help page style.</li>
+                    </ul>
+
+                    <h2>@PLUGIN_KEY@ 2.0.1</h2>
+
+                    <ul>
+                        <li>Added Help link to each procedure.</li>
+
+                        <li>Parameter Panel XML Cleanup.</li>
+                    </ul>
+
+                    <h2>@PLUGIN_KEY@ 2.0.0</h2>
+
+                    <ul>
+                        <li>Applied new Help page template.</li>
+
+                        <li>Added detailed use case.</li>
+
+                        <li>Added new XML parameter panel to all procedures.</li>
+
+                        <li>Added support for EC-CloudManager.</li>
+
+                        <li>Fixed cleanup procedure when resource does not
+                        exist.</li>
+                    </ul>
+
+                    <h2>@PLUGIN_KEY@ 1.2.3</h2>
+
+                    <ul>
+                        <li>Changed EOL on VMware SDK files.</li>
+                    </ul>
+
+                    <h2>@PLUGIN_KEY@ 1.2.2</h2>
+
+                    <ul>
+                        <li>Included vSphere SDK for Perl in the plugin and removed
+                        sdk_installation_path parameter from all procedures.</li>
+
+                        <li>Removed CreateConfiguration and DeleteConfiguration
+                        procedures from the wizard/procedure selection.</li>
+
+                        <li>Updated Help page.</li>
+                    </ul>
+
+                    <h2>@PLUGIN_KEY@ 1.2.1</h2>
+
+                    <ul>
+                        <li>Updated Help page.</li>
+                    </ul>
+
+                    <h2>@PLUGIN_KEY@ 1.2.0</h2>
+
+                    <ul>
+                        <li>Modified the Cleanup and Create subprocedures.</li>
+
+                        <li>Added the ability for all subprocedures to perform
+                        operations for multiple virtual machines.</li>
+
+                        <li>Added the timeout parameter to all steps.</li>
+
+                        <li>Added these subprocedures: PowerOn, PowerOff, Shutdown,
+                        Suspend, GetVMConfiguration, CreateResourceFromVM, Import,
+                        Export, and RegisterVM.</li>
+                    </ul>
+
+                    <h2>@PLUGIN_KEY@ 1.1.0</h2>
+
+                    <ul>
+                        <li>Added the Snapshot subprocedure.</li>
+                    </ul>
+                </div>
+            </body>
+        </html>

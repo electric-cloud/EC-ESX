@@ -54,9 +54,9 @@
     </formElement> 
     <formElement>
         <type>entry</type>
-        <label>Source directory:</label>
+        <label>OVF or OVA file path:</label>
         <property>esx_source_directory</property>
-        <documentation>Absoulte path to the directory where OVF packages are stored.</documentation>
+        <documentation>Absolute path to the OVF or OVA file.</documentation>
         <required>1</required>
     </formElement>
     <formElement>
@@ -74,4 +74,53 @@
         <required>0</required>
         <documentation>Timeout for the step execution in minutes. Blank means no timeout.</documentation>
     </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Guest VM hostname:</label>
+        <property>esx_guest_vm_hostname</property>
+        <required>0</required>
+        <documentation>ESX guest vm hostname.  If OVF package contains single VM, just a value. Othervise format: VMID1=hostname1, VMID2=hostname2.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Memory size:</label>
+        <property>esx_vm_memory</property>
+        <required>0</required>
+        <documentation>Size of virtual machine's memory. If OVF package contains single VM, just a value. Othervise format: VMID1=1024, VMID2=2048.</documentation>
+    </formElement>
+        
+    <formElement>
+        <type>entry</type>
+        <label>Number of CPUs:</label>
+        <property>esx_vm_num_cpus</property>
+        <required>0</required>
+        <documentation>Number of virtual processors in a virtual machine. If OVF package contains single VM, just a value. Othervise format: VMID1=1, VMID2=2.</documentation>
+    </formElement>
+        
+    <formElement>
+        <type>checkbox</type>
+        <label>Power On Vm?:</label>
+        <property>esx_vm_poweron</property>
+        <required>0</required>
+        <documentation>Flag to specify whether or not to power on the created virtual machine(s) (default is false).</documentation>
+        <checkedValue>1</checkedValue>
+        <uncheckedValue>0</uncheckedValue>
+        <initiallyChecked>0</initiallyChecked>
+    </formElement>
+    <formElement>
+        <type>textarea</type>
+        <label>OVF properties:</label>
+        <property>esx_properties</property>
+        <required>0</required>
+        <documentation>Comma separated list of OVF properties. To get properties for current OVF/OVA template ovftool command should be used. Example: hostname=ubuntu,user=ubuntu.</documentation>
+    </formElement>
+    <formElement>
+        <type>entry</type>
+        <label>Result properties location:</label>
+        <property>esx_properties_location</property>
+        <required>0</required>
+        <documentation>Information about imported VM will be stored in vms property within this path.</documentation>
+        <value>/myJobStep</value>
+    </formElement>
+
 </editor>
