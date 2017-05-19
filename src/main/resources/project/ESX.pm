@@ -1909,16 +1909,13 @@ sub import_vm {
     # fix params
     # $self->opts->{esx_vmname} = $self->opts->{esx_vmname} . $suffix;
     # push @{$self->{_vm_names}}, $self->opts->{esx_vmname};
-    push @{$self->{_vm_names}}, $esx_vmname;
+
     $esx_vmname .= $suffix;
+    my $raw_esx_vmname = $esx_vmname;
 
     $esx_vmname = quote_param($esx_vmname);
     $ovftool_path = quote_param($ovftool_path);
     $esx_datastore = quote_param($esx_datastore);
-    # $self->opts->{esx_vmname} = q|"| . $self->opts->{esx_vmname} . q|"|;
-    # $self->opts->{esx_datastore} = q|"| . $self->opts->{esx_datastore} . q|"|;
-    # $self->opts->{ovftool_path} = q|"| . $self->opts->{ovftool_path} . q|"|;
-    # end of fix params
 
     my $vm_id = $self->get_vmid($self->opts->{ovftool_path}, $self->opts->{esx_source_directory});
 
@@ -1975,6 +1972,11 @@ sub import_vm {
 
     $self->debug_msg(1, 'Executing command: ' . $command);
     system($command);
+    my $exit_value  = $? >> 8;
+    # exit code 0, vm has provosioned.
+    if (!$exit_value) {
+        push @{$self->{_vm_names}}, $raw_esx_vmname;
+    }
 }
 
 sub quote_param {

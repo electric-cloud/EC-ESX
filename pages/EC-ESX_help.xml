@@ -12,11 +12,56 @@
 <body>
   <div class="help">
     <h1>VMware ESX</h1>
-
     <p>Plugin Version @PLUGIN_VERSION@</p>
     <hr style="margin-left: -10px; margin-top: 10px; height: 1px; width: 100%; color: #5981BD;" noshade="noshade" />
 	
-	<p>Revised on April 1, 2016</p>
+	<p>Revised on May 19, 2017</p>
+    <h1>Contents</h1>
+    <ul>
+        <li><p><a href="#overview">Overview</a></p></li>
+        <li><p><a href="#setupconfig">Setting Up the Plugin Configuration</a></p></li>
+        <li><p><a href="#procedures">Plugin Procedures</a></p></li>
+        <ul>
+            <li><a href="#Create">Create</a></li>
+            <li><a href="#Clone">Clone</a></li>
+            <li><a href="#Relocate">Relocate</a></li>
+            <li><a href="#Cleanup">Cleanup</a></li>
+            <li><a href="#Snapshot">Snapshot</a></li>
+            <li><a href="#Revert">Revert</a></li>
+            <li><a href="#PowerOn">PowerOn</a></li>
+            <li><a href="#PowerOff">PowerOff</a></li>
+            <li><a href="#Shutdown">Shutdown</a></li>
+            <li><a href="#Suspend">Suspend</a></li>
+            <li><a href="#CreateResourceFromVM">CreateResourceFromVM</a></li>
+            <li><a href="#GetVMConfiguration">GetVMConfiguration</a></li>
+            <li><a href="#Import">Import</a></li>
+            <li><a href="#Export">Export</a></li>
+            <li><a href="#RegisterVM">RegisterVM</a></li>
+            <li><a href="#CloudManagerGrow">CloudManagerGrow</a></li>
+            <li><a href="#CloudManagerShrink">CloudManagerShrink</a></li>
+            <li><a href="#CloudManagerSync">CloudManagerSync</a></li>
+            <li><a href="#CreateResourcePool">CreateResourcePool</a></li>
+            <li><a href="#EditResourcePool">EditResourcePool</a></li>
+            <li><a href="#ListEntity">ListEntity</a></li>
+            <li><a href="#DeleteEntity">DeleteEntity</a></li>
+            <li><a href="#CreateFolder">CreateFolder</a></li>
+            <li><a href="#RenameEntity">RenameEntity</a></li>
+            <li><a href="#MoveEntity">MoveEntity</a></li>
+            <li><a href="#DisplayESXSummary">DisplayESXSummary</a></li>
+            <li><a href="#ChangeCpuMemAllocation">ChangeCpuMemAllocation</a></li>
+            <li><a href="#AddHardDisk">AddHardDisk</a></li>
+            <li><a href="#AddCdDvdDrive">AddCdDvdDrive</a></li>
+            <li><a href="#AddNetworkInterface">AddNetworkInterface</a></li>
+            <li><a href="#EditCdDvdDrive">EditCdDvdDrive</a></li>
+            <li><a href="#ListDevice">ListDevice</a></li>
+            <li><a href="#RemoveDevice">RemoveDevice</a></li>
+            <li><a href="#ListSnapshot">ListSnapshot</a></li>
+            <li><a href="#RemoveSnapshot">RemoveSnapshot</a></li>
+            <li><a href="#RevertToCurrentSnapshot">RevertToCurrentSnapshot</a></li>
+        </ul>
+        <li><p><a href="#example">Examples and Use Cases</a></p></li>
+        <li><p><a href="#rns">Release Notes</a></p></li>
+    </ul>
     <!-- The tool description should answer these kinds of questions:
 What is the tool itself is used for in the development
 process? Who would use this tool? What is the general use-case or
@@ -26,7 +71,7 @@ outside websites. If there is a Hudson plugin, read their
 documentation for ideas, examples, etc. It's OK to copy word-for-word
 only if appropriate, such as FOSS - but not commercial software.
 -->
-
+    <h1 id="overview">Overview</h1>
     <p>VMware ESX and VMware ESXi provide the foundation for
     building and managing a reliable and dynamic IT
     infrastructure.<br />
@@ -141,15 +186,11 @@ only if appropriate, such as FOSS - but not commercial software.
     <p>This plugin was developed and tested against ESX 3.5 and
     ESXi 5.0.</p>
 
-    <h1>Plugin Procedures</h1>
-	<p>IMPORTANT: In the ElectricFlow UI, from the Home page, open the Main Menu, and click <b>Admin</b> &gt; <b>Plugins</b> to open the Plugin Manager.</p>
-    <p>IMPORTANT: For all parameter descriptions below, required
-    parameters are shown in <span class="required">bold
-    italics</span>.</p>
+
 
     <div id="CreateConfiguration"><a name="CreateConfiguration" id="CreateConfiguration"></a>
 
-    <h3>Plugin Configuration</h3>
+    <h3 id="setupconfig">Plugin Configuration</h3>
 
     <p>Plugin configurations are sets of parameters that apply
     across some or all of the plugin's procedures. They are
@@ -210,7 +251,11 @@ only if appropriate, such as FOSS - but not commercial software.
         
       </tbody>
     </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/configuration_panel.png" /></div>
-
+    <h1 id="procedures">Plugin Procedures</h1>
+	<p>IMPORTANT: In the ElectricFlow UI, from the Home page, open the Main Menu, and click <b>Admin</b> &gt; <b>Plugins</b> to open the Plugin Manager.</p>
+    <p>IMPORTANT: For all parameter descriptions below, required
+    parameters are shown in <span class="required">bold
+    italics</span>.</p>
     <div id="Create"><a name="Create" id="Create"></a>
 
     <h3>Create</h3>
@@ -1016,53 +1061,75 @@ only if appropriate, such as FOSS - but not commercial software.
 
       <tbody>
         <tr>
-          <td class="required">ESX Connection</td>
-
-          <td>The name of the configuration which holds the
-          connection information for the ESX server. (Required)</td>
+            <td class="required">ESX Connection</td>
+            <td>The name of the configuration which holds the
+            connection information for the ESX server.</td>
         </tr>
-
         <tr>
-          <td class="required">Host</td>
-
-          <td>Name of the host where virtual machines will be
-          imported. (Required)</td>
+            <td class="required">Host</td>
+            <td>IP address or hostname of the ESX host where virtual machines will be imported.</td>
         </tr>
-
         <tr>
-          <td class="required">Datastore</td>
-
-          <td>Name of the datastore to be used. (Required)</td>
+            <td class="required">Datastore</td>
+            <td>Name of the datastore to be used.</td>
         </tr>
-
         <tr>
-          <td class="required">VM Name</td>
-
-          <td>Name of the virtual machine to import.
-          (Required)</td>
+            <td class="required">VM Name</td>
+            <td>Name of the virtual machine to import.</td>
         </tr>
-
         <tr>
-          <td class="required">Source directory</td>
-
-          <td>Absolute path to the directory where OVF packages are
-          stored. (Required)</td>
+            <td class="required">OVF or OVA file path</td>
+            <td>Absolute path to the OVF or OVA file.</td>
         </tr>
-
         <tr>
-          <td>Number of VMs</td>
-
-          <td>Number of virtual machines to import (default is 1).
-          If the value is greater than 1, a suffix is added to VM
-          names. The suffix consists of an underscore and the VM
-          number ('_#').</td>
+            <td>Number of VMs</td>
+            <td>
+                Number of virtual machines to import (default is 1).
+                If the value is greater than 1, a suffix is added to VM
+                names. The suffix consists of an hyphen and the VM
+                number ('-#').
+            </td>
         </tr>
-
         <tr>
-          <td>JobStep Timeout</td>
-
-          <td>Timeout for the step execution in minutes. Blank
-          means no timeout.</td>
+            <td>JobStep Timeout</td>
+            <td>Timeout for the step execution in minutes. Blank
+            means no timeout.</td>
+        </tr>
+        <tr>
+            <td>Guest VM hostname</td>
+            <td>
+                ESX guest vm hostname.  If OVF package contains single VM, just a value. Othervise format: VMID1=hostname1, VMID2=hostname2.
+            </td>
+        </tr>
+        <tr>
+            <td>Memory size</td>
+            <td>
+                Size of virtual machine's memory. If OVF package contains single VM, just a value. Othervise format: VMID1=1024, VMID2=2048.
+            </td>
+        </tr>
+        <tr>
+            <td>Number of CPUs</td>
+            <td>
+                Number of virtual processors in a virtual machine. If OVF package contains single VM, just a value. Othervise format: VMID1=1, VMID2=2.
+            </td>
+        </tr>
+        <tr>
+            <td>Power On Vm?</td>
+            <td>
+                Flag to specify whether or not to power on the created virtual machine(s) (default is false).
+            </td>
+        </tr>
+        <tr>
+            <td>OVF properties.</td>
+            <td>
+                Comma separated list of OVF properties. To get properties for current OVF/OVA template ovftool command should be used. Example: hostname=ubuntu,user=ubuntu.
+            </td>
+        </tr>
+        <tr>
+            <td>Result properties location.</td>
+            <td>
+                Information about imported VM will be stored in vms property within this path.
+            </td>
         </tr>
       </tbody>
     </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/Import_panel.png" /></div>
@@ -1798,7 +1865,7 @@ only if appropriate, such as FOSS - but not commercial software.
 
 
 
-	<div id="AddHardDisk"><a name="	AddHardDisk" id="AddHardDisk"></a>
+	<div id="AddHardDisk"><a name="AddHardDisk" id="AddHardDisk"></a>
 	
     <h3>AddHardDisk</h3>
 
@@ -2249,7 +2316,7 @@ only if appropriate, such as FOSS - but not commercial software.
       </tbody>
     </table><img alt="" src="../../plugins/@PLUGIN_KEY@/images/parameters/RevertToCurrentSnapshot_panel.png" /></div>
 	
-    <h1>Use Cases and Examples</h1>
+    <h1 id="example">Use Cases and Examples</h1>
     <!-- This section is for examples and use cases, including screenshots of the new Parameter Panel with example values filled in.
         Unfortunately, I can't tell you what exactly to put here, but it's OK to put what seems like too much! Include both parameter
         values and output where appropriate. Use a separate 'h2' header for each example. Under the h2 header try to stay with the style
@@ -2326,31 +2393,33 @@ only if appropriate, such as FOSS - but not commercial software.
 
     <p>PowerOff output:</p><img alt="" src="../../plugins/@PLUGIN_KEY@/images/use_cases/Case_1/poweroff_log.png" />
 
-    <h1>Release Notes</h1>
+    <h1 id="rns">Release Notes</h1>
+    <h2>@PLUGIN_KEY@ 2.3.1</h2>
+    <ul>
+        <li>Import procedure has been improved.</li>
+    </ul>
     <h2>@PLUGIN_KEY@ 2.2.0</h2>
 
     <ul>
         <p>Added the following new procedures:</p>
-<li>AddCdDvdDrive</li> 					
-<li>AddHardDisk</li>				
-<li>AddNetworkInterface</li>
-<li>ChangeCpuMemAllocation</li>
-<li>CreateFolder</li>
-<li>CreateResourcepool</li>
-<li>DeleteEntity</li>
-<li>DisplayESXSummary</li>
-<li>EditCdDvdDrive</li>
-<li>EditResourcepool</li>
-<li>ListDevice</li>
-<li>ListEntity</li>
-<li>ListSnapshot</li>
-<li>MoveEntity</li>
-<li>RemoveDevice</li>
-<li>RemoveSnapshot</li>
-<li>RenameEntity</li>
-<li>RevertToCurrentSnapshot</li>
-
-		
+        <li>AddCdDvdDrive</li> 					
+        <li>AddHardDisk</li>				
+        <li>AddNetworkInterface</li>
+        <li>ChangeCpuMemAllocation</li>
+        <li>CreateFolder</li>
+        <li>CreateResourcepool</li>
+        <li>DeleteEntity</li>
+        <li>DisplayESXSummary</li>
+        <li>EditCdDvdDrive</li>
+        <li>EditResourcepool</li>
+        <li>ListDevice</li>
+        <li>ListEntity</li>
+        <li>ListSnapshot</li>
+        <li>MoveEntity</li>
+        <li>RemoveDevice</li>
+        <li>RemoveSnapshot</li>
+        <li>RenameEntity</li>
+        <li>RevertToCurrentSnapshot</li>
     </ul>
 
     <h2>@PLUGIN_KEY@ 2.1.5</h2>

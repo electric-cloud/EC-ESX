@@ -109,17 +109,17 @@
     </formElement>
     <formElement>
         <type>textarea</type>
-        <label>Import properties:</label>
+        <label>OVF properties:</label>
         <property>esx_properties</property>
         <required>0</required>
-        <documentation>Import properties.</documentation>
+        <documentation>Comma separated list of OVF properties. To get properties for current OVF/OVA template ovftool command should be used. Example: hostname=ubuntu,user=ubuntu.</documentation>
     </formElement>
     <formElement>
         <type>entry</type>
         <label>Result properties location:</label>
         <property>esx_properties_location</property>
         <required>0</required>
-        <documentation>Import properties.</documentation>
+        <documentation>Information about imported VM will be stored in vms property within this path.</documentation>
         <value>/myJobStep</value>
     </formElement>
 
