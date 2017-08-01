@@ -1959,7 +1959,7 @@ sub import_vm {
         $command_params .= ' --powerOn ';
     }
 
-    my $host_type = 'dns?=';
+    my $host_type = '?dns=';
     if (is_ipv4($self->opts->{esx_host})) {
         $host_type = '?ip=';
     }
