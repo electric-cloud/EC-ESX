@@ -1,0 +1,1 @@
+This procedure allows the plugin to list the objects of a specified Entity.

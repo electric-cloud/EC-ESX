@@ -1,0 +1,1 @@
+This procedure allows the plugin to move the specified object of an entity.

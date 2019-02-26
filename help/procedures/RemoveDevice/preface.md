@@ -1,0 +1,1 @@
+Remove devices of specific type.

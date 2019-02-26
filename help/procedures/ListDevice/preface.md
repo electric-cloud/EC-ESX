@@ -1,0 +1,1 @@
+List devices of specific type(CD/DVD drive, Hard disk, Network adapter).

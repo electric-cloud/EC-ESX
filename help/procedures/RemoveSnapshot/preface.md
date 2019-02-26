@@ -1,0 +1,1 @@
+Remove any particular snapshot or  all snapshots inside VM.

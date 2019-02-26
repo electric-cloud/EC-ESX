@@ -1,0 +1,1 @@
+This procedure allows the plugin to rename the specified object of an entity.

@@ -1,0 +1,1 @@
+Revert a virtual machine to the specified snapshot.

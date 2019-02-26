@@ -1,0 +1,1 @@
+List all snapshots inside a VM..

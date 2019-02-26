@@ -234,6 +234,10 @@
     <xpath>//procedure[procedureName=&quot;CloudManagerGrow&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
   </file>
   <file>
+    <path>ui_forms/cloudmanagersync.xml</path>
+    <xpath>//procedure[procedureName=&quot;CloudManagerSync&quot;]/propertySheet/property[propertyName=&quot;ec_parameterForm&quot;]/value</xpath>
+  </file>
+  <file>
     <path>vm/step.grow.pl</path>
     <xpath>//step[stepName=&quot;grow&quot;]/command</xpath>
   </file>

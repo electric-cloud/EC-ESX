@@ -1,0 +1,74 @@
+2.3.3:
+  - The plugin documentation has been updated.
+2.3.2:
+  - The plugin icon has been updated.
+2.3.1:
+  - Import procedure has been improved.
+2.2.0:
+  - |
+      Added the following new procedures:
+          <ul>
+            <li>AddCdDvdDrive</li>
+            <li>AddHardDisk</li>
+            <li>AddNetworkInterface</li>
+            <li>ChangeCpuMemAllocation</li>
+            <li>CreateFolder</li>
+            <li>CreateResourcepool</li>
+            <li>DeleteEntity</li>
+            <li>DisplayESXSummary</li>
+            <li>EditCdDvdDrive</li>
+            <li>EditResourcepool</li>
+            <li>ListDevice</li>
+            <li>ListEntity</li>
+            <li>ListSnapshot</li>
+            <li>MoveEntity</li>
+            <li>RemoveDevice</li>
+            <li>RemoveSnapshot</li>
+            <li>RenameEntity</li>
+            <li>RevertToCurrentSnapshot</li>
+        </ul>
+2.1.5:
+  - Fixed issue with configurations being cached for IE.
+2.1.4:
+  - Renamed ElectricCommander to ElectricFlow.
+2.1.3:
+  - Fixed manifest file.
+2.1.2:
+  - Documented the form for ESX URL in configurations.
+  - Added a Step to test credentials.
+  - Fixed Configuration Management.
+2.1.1:
+  - Procedure name(s) were changed in the step picker section.
+2.1.0:
+  - Added CloudManagerSync procedure.
+2.0.4:
+  - Fixed configuration description.
+2.0.3:
+  - Fixed power on error.
+2.0.2:
+  - Deleted CloudManagerGrow And CloudManagerShrink from stepPicker.
+  - Change Help page style.
+2.0.1:
+  - Added Help link to each procedure.
+  - Parameter Panel XML Cleanup.
+2.0.0:
+  - Applied new Help page template.
+  - Added detailed use case.
+  - Added new XML parameter panel to all procedures.
+  - Added support for EC-CloudManager.
+  - Fixed cleanup procedure when resource does not exist.
+1.2.3:
+  - Changed EOL on VMware SDK files.
+1.2.2:
+  - Included vSphere SDK for Perl in the plugin and removed sdk_installation_path parameter from all procedures
+  - Removed CreateConfiguration and DeleteConfiguration procedures from the wizard/procedure selection.
+  - Updated Help page.
+1.2.1:
+  - Updated Help page.
+1.2.0:
+  - Modified the Cleanup and Create subprocedures.
+  - Added the ability for all subprocedures to perform operations for multiple virtual machines.
+  - Added the timeout parameter to all steps.
+  - Added these subprocedures: PowerOn, PowerOff, Shutdown, Suspend, GetVMConfiguration, CreateResourceFromVM, Import, Export, and RegisterVM.
+1.1.0:
+  - Added the Snapshot subprocedure.
