@@ -1,0 +1,1 @@
+This procedure allows the plugin to edit an existing resource pool.

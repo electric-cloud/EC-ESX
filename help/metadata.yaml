@@ -1,0 +1,41 @@
+proceduresOrder:
+  - Create
+  - Clone
+  - Create
+  - Clone
+  - Relocate
+  - Cleanup
+  - Snapshot
+  - Revert
+  - PowerOn
+  - PowerOff
+  - Shutdown
+  - Suspend
+  - CreateResourceFromVM
+  - GetVMConfiguration
+  - Import
+  - Export
+  - RegisterVM
+  - CloudManagerGrow
+  - CloudManagerShrink
+  - CloudManagerSync
+  - CreateResourcePool
+  - EditResourcePool
+  - ListEntity
+  - DeleteEntity
+  - CreateFolder
+  - RenameEntity
+  - MoveEntity
+  - DisplayESXSummary
+  - ChangeCpuMemAllocation
+  - AddHardDisk
+  - AddCdDvdDrive
+  - AddNetworkInterface
+  - EditCdDvdDrive
+  - ListDevice
+  - RemoveDevice
+  - ListSnapshot
+  - RemoveSnapshot
+  - RevertToCurrentSnapshot
+
+omitDescription: true

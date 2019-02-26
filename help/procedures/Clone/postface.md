@@ -1,0 +1,1 @@
+![](../../plugins/@PLUGIN_KEY@/images/parameters/Clone_panel.png)

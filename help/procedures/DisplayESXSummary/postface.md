@@ -1,0 +1,1 @@
+![](../../plugins/@PLUGIN_KEY@/images/parameters/DisplayESXSummary_panel.png)

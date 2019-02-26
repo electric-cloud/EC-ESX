@@ -1,0 +1,1 @@
+![](../../plugins/@PLUGIN_KEY@/images/parameters/CloudManagerShrink_panel.png)

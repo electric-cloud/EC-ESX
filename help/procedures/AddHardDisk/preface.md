@@ -1,0 +1,1 @@
+This procedure allows the plugin to Adding HardDisk for a VM.

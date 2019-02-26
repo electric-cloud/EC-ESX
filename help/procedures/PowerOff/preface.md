@@ -1,0 +1,1 @@
+Power off the specified virtual machine.

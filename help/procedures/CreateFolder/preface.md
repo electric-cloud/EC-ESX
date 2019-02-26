@@ -1,0 +1,1 @@
+This procedure allows the plugin to create a new folder.

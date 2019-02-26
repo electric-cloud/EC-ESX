@@ -1,0 +1,1 @@
+This procedure allows the plugin to Display the Summary of a specified host.

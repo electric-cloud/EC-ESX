@@ -1,0 +1,1 @@
+Suspend the specified virtual machine.

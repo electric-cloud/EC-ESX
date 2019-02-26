@@ -1,0 +1,1 @@
+This procedure allows the plugin to add CD/DVD drive to VM..

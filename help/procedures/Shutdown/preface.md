@@ -1,0 +1,1 @@
+Shut down the specified virtual machine.
