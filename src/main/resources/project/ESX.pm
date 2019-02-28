@@ -31,7 +31,7 @@ package ESX;
 # -------------------------------------------------------------------------
 # Includes
 # -------------------------------------------------------------------------
-use lib $ENV{COMMANDER_PLUGINS} . '/@PLUGIN_NAME@/agent/lib';
+use lib $ENV{COMMANDER_PLUGINS} . '/EC-ESX-2.3.2.41/agent/lib';
 
 #use warnings;
 use strict;
@@ -705,13 +705,6 @@ sub clone_vm {
                                                         pool      => $comp_res_view->resourcePool
                                                        );
 
-    # Create CloneSpec corresponding to the RelocateSpec
-    my $clone_spec = VirtualMachineCloneSpec->new(
-                                                  powerOn  => 0,
-                                                  template => 0,
-                                                  location => $relocate_spec
-                                                 );
-
     my $clone_name;
     my $vm_number;
     for (my $i = 0; $i < $self->opts->{esx_number_of_clones}; $i++) {
@@ -727,6 +720,8 @@ sub clone_vm {
         $self->debug_msg(1, 'Cloning virtual machine \'' . $vm_name . '\' to \'' . $clone_name . '\'...');
 
         eval {
+
+            my $clone_spec = create_cloneSpec($relocate_spec, $clone_name);
 
             # Clone source vm
             $vm_view->CloneVM(
@@ -778,6 +773,68 @@ sub clone_vm {
         }
     }
 }
+
+sub create_cloneSpec {
+  my $relocate_spec = shift;
+  my $vm_name = shift;
+
+  # These values can be user provided or pulled from Custom Spec
+  my $domain = 'electric-cloud.com';
+  my $ip = '127.0.0.1';
+  my $netmask = '255.255.248.0';
+  my $gateway = '10.1.216.0';
+  my $dns = [ '192.168.8.13' ];
+
+  # Guest OS Configuration
+  my $CustomizationGlobalIPSettings;
+  my $custName = CustomizationFixedName->new( name => $vm_name);
+  my $custDomain = $domain;
+
+  $CustomizationGlobalIPSettings = CustomizationGlobalIPSettings->new();
+
+  # Linux
+  my $CustomizationIdentitySettings = CustomizationLinuxPrep->new(
+     'hostName' => $custName,
+     'domain' => $custDomain
+     );
+
+  my $CustIp = CustomizationFixedIp->new(
+    'ipAddress' => $ip
+  );
+
+  my $CustomizationIPSettings = CustomizationIPSettings->new(
+    'ip' => $CustIp,
+    'subnetMask' => $netmask,
+    'dnsServerList' => $dns,
+    'gateway' => [ $gateway ],
+    'dnsDomain' => $domain,
+  );
+
+  my $CustomizationAdapterMapping = CustomizationAdapterMapping->new(
+     'adapter' => $CustomizationIPSettings
+  );
+
+  ########################################
+  # TODO: Add Windows Customizaton Spec
+  ########################################
+
+  my $CustomizationSpec = CustomizationSpec->new(
+    'globalIPSettings' => $CustomizationGlobalIPSettings,
+    'identity' => $CustomizationIdentitySettings,
+    'nicSettingMap' => [ $CustomizationAdapterMapping ]
+  );
+
+
+  # Create CloneSpec corresponding to the RelocateSpec
+  my $clone_spec = VirtualMachineCloneSpec->new(
+                                                powerOn  => 0,
+                                                template => 0,
+                                                location => $relocate_spec,
+                                                customization => $CustomizationSpec
+                                               );
+  return $clone_spec;
+}
+
 
 ################################
 # cleanup - Connect, call cleanup_vm, and disconnect from ESX server
@@ -1966,8 +2023,8 @@ sub import_vm {
 
     my $esx_user = uri_escape($self->opts->{esx_user});
     my $esx_pass = uri_escape($self->opts->{esx_pass});
-    # $self->opts->{esx_user} = 
-    # $self->opts->{esx_pass} = 
+    # $self->opts->{esx_user} =
+    # $self->opts->{esx_pass} =
     my $command = $ovftool_path . $command_params . ' --noSSLVerify --datastore=' . $esx_datastore . ' -n=' . $esx_vmname . ' ' . $self->opts->{esx_source_directory} . ' "vi://' . $esx_user . ':' . $esx_pass . '@' . $esx_server . $host_type . $self->opts->{esx_host} . '"';
 
     $self->debug_msg(1, 'Executing command: ' . $command);
@@ -2396,7 +2453,7 @@ sub list_entity {
 # createFolder - Connect, call create_folder, and disconnect from ESX server
 #
 # Arguments:
-#   Hash(connection_config, folder_name, parent_type) 
+#   Hash(connection_config, folder_name, parent_type)
 #
 # Returns:
 #   none
@@ -2751,7 +2808,7 @@ sub summary {
 sub logger{
     my ($self, $debugLevel, $message) = @_;
     $self->debug_msg($debugLevel, $message);
-    $self->opts->{summary} .= $message . "\n"; 
+    $self->opts->{summary} .= $message . "\n";
 }
 
 ################################
@@ -2769,7 +2826,7 @@ sub display_esx_summary {
     my $message;
     $self->opts->{summary} = "";
     $self->logger(1, 'Displaying summary for Host: \'' . $self->opts->{host_name} . '\'...');
-    
+
     eval {
         my $host = Vim::find_entity_view(view_type => 'HostSystem', filter => { name => $self->opts->{host_name}});
         if (!$host) {
@@ -3004,7 +3061,7 @@ sub listSnapshot {
     $self->logout();
 }
 ################################
-# listSnapshot - Listing snapshots of Vm of  name $opts->{esx_vmname} 
+# listSnapshot - Listing snapshots of Vm of  name $opts->{esx_vmname}
 #
 # Arguments:
 #   Hash(connection_config,esx_vmname)
@@ -3516,7 +3573,7 @@ sub deviceManager {
         }
         else{
             print "Device configurations not required." . "\n";
-        } 
+        }
 
         if($args{memoryMB} && $args{numCPUs}) {
            print "Change CPU and Memory-Added in reconfiguring VM" . "\n";
@@ -3946,7 +4003,7 @@ sub revertToCurrentSnapshot {
       . "\n";
 
      my $hostname = Vim::get_view(mo_ref => $self->opts->{vm_view}->runtime->host)->name;
-   
+
      eval {
         $self->opts->{vm_view}->RevertToCurrentSnapshot();
         Util::trace(0, "\nOperation :: Revert To Current Snapshot For Virtual "
@@ -4397,7 +4454,7 @@ sub debug_msg {
 use constant STORAGE_MULTIPLIER => 1073741824;  # 1024*1024*1024 (to convert to GB)
 
 ###############################
-# display_esx_general_info 
+# display_esx_general_info
 #
 # Arguments: host_view
 #
@@ -4437,7 +4494,7 @@ sub display_esx_general_info {
 }
 
 ###############################
-# display_esx_resource_info 
+# display_esx_resource_info
 #
 # Arguments: host_view
 #
@@ -4455,7 +4512,7 @@ sub display_esx_resource_info {
 }
 
 ###############################
-# display_esx_network_info 
+# display_esx_network_info
 #
 # Arguments: host_view
 #
@@ -4498,7 +4555,7 @@ sub display_esx_network_info {
 }
 
 ###############################
-# display_esx_storage_info 
+# display_esx_storage_info
 #
 # Arguments: host_view
 #
