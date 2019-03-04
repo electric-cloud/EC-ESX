@@ -28,6 +28,8 @@ $opts->{esx_vmname_destination} = q{$[esx_vmname_destination]};
 $opts->{esx_vmhost_destination} = q{$[esx_vmhost_destination]};
 $opts->{esx_datastore} = q{$[esx_datastore]};
 $opts->{esx_number_of_clones} = q{$[esx_number_of_clones]};
+$opts->{esx_apply_customization} = q{$[esx_apply_customization]};
+$opts->{esx_customization_spec} = q{$[esx_customization_spec]};
 
 $[/myProject/procedure_helpers/preamble]
 

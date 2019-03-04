@@ -765,6 +765,11 @@
             <projectName>@PLUGIN_KEY@-@PLUGIN_VERSION@</projectName>
             <propertySheet>
                 <property>
+                    <propertyName>ec_formXmlCompliant</propertyName>
+                    <expandable>0</expandable>
+                    <value>true</value>
+                </property>
+                <property>
                     <propertyName>ec_customEditorData</propertyName>
                     <propertySheet>
                         <property>
@@ -812,6 +817,26 @@
                                 </property>
                                 <property>
                                     <propertyName>esx_datastore</propertyName>
+                                    <propertySheet>
+                                        <property>
+                                            <propertyName>formType</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>standard</value>
+                                        </property>
+                                    </propertySheet>
+                                </property>
+                                <property>
+                                    <propertyName>esx_customization_spec</propertyName>
+                                    <propertySheet>
+                                        <property>
+                                            <propertyName>formType</propertyName>
+                                            <expandable>1</expandable>
+                                            <value>standard</value>
+                                        </property>
+                                    </propertySheet>
+                                </property>
+                                <property>
+                                    <propertyName>esx_apply_customization</propertyName>
                                     <propertySheet>
                                         <property>
                                             <propertyName>formType</propertyName>
@@ -885,6 +910,20 @@
                 <description>Name of the datastore.</description>
                 <required>1</required>
                 <type>entry</type>
+            </formalParameter>
+            <formalParameter>
+                <formalParameterName>esx_apply_customization</formalParameterName>
+                <defaultValue>0</defaultValue>
+                <description>Check the box if you want to supply the Customization Spec XML</description>
+                <required>0</required>
+                <type>checkbox</type>
+            </formalParameter>
+            <formalParameter>
+                <formalParameterName>esx_customization_spec</formalParameterName>
+                <defaultValue/>
+                <description>VMWare compliant customization spec to apply to the cloned machine. See the plugin's documentation for an example.</description>
+                <required>0</required>
+                <type>textarea</type>
             </formalParameter>
             <formalParameter>
                 <formalParameterName>esx_number_of_clones</formalParameterName>

@@ -53,12 +53,35 @@
         <documentation>Name of the datastore.</documentation>
     </formElement>
     <formElement>
+        <type>checkbox</type>
+        <label>Apply Customization?</label>
+        <property>esx_apply_customization</property>
+        <required>0</required>
+        <documentation>Check the box if you want to supply the Customization Spec XML</documentation>
+        <checkedValue>1</checkedValue>
+        <uncheckedValue>0</uncheckedValue>
+        <initiallyChecked>0</initiallyChecked>
+        <value>0</value>
+    </formElement>
+    <formElement>
+        <type>textarea</type>
+        <label>Customization Spec:</label>
+        <property>esx_customization_spec</property>
+        <required>0</required>
+        <documentation>VMWare compliant customization spec to apply to the cloned machine. See the plugin's documentation for an example.</documentation>
+        <value/>
+        <dependsOn>esx_apply_customization</dependsOn>
+        <condition>${esx_apply_customization} == '1'</condition>
+    </formElement>
+    <formElement>
         <type>entry</type>
         <label>Number of Clones:</label>
         <property>esx_number_of_clones</property>
         <required>0</required>
         <documentation>Number of clones to create (default is 1). If the value is greater than 1, a suffix is added to cloned VM names. The suffix consists of an underscore and the clone number ('_#').</documentation>
         <value>1</value>
+        <dependsOn>esx_apply_customization</dependsOn>
+        <condition>${esx_apply_customization} == '0'</condition>
     </formElement>
     <formElement>
         <type>entry</type>

@@ -705,13 +705,6 @@ sub clone_vm {
                                                         pool      => $comp_res_view->resourcePool
                                                        );
 
-    # Create CloneSpec corresponding to the RelocateSpec
-    my $clone_spec = VirtualMachineCloneSpec->new(
-                                                  powerOn  => 0,
-                                                  template => 0,
-                                                  location => $relocate_spec
-                                                 );
-
     my $clone_name;
     my $vm_number;
     for (my $i = 0; $i < $self->opts->{esx_number_of_clones}; $i++) {
@@ -726,8 +719,8 @@ sub clone_vm {
 
         $self->debug_msg(1, 'Cloning virtual machine \'' . $vm_name . '\' to \'' . $clone_name . '\'...');
 
+        my $clone_spec = $self->create_clone_spec($relocate_spec, $clone_name);
         eval {
-
             # Clone source vm
             $vm_view->CloneVM(
                               folder => $vm_view->parent,
@@ -737,6 +730,7 @@ sub clone_vm {
 
             $self->debug_msg(1, 'Clone \'' . $clone_name . '\' of virtual machine' . ' \'' . $vm_name . '\' successfully created');
         };
+
 
         if ($@) {
             if (ref($@) eq SOAP_FAULT) {
@@ -778,6 +772,186 @@ sub clone_vm {
         }
     }
 }
+
+sub create_clone_spec {
+    my ($self, $relocate_spec, $vm_name) = @_;
+
+    my $CustomizationSpec;
+    if ($self->opts()->{esx_apply_customization} && !$self->opts()->{esx_customization_spec}){
+        $self->debug_msg(1,
+            'You have checked the "Apply Customization Spec but not provided the value. Skipping Customization spec."'
+        );
+    }
+    elsif ($self->opts()->{esx_apply_customization}){
+        # Will get values from the Customization Spec
+        my $spec;
+        eval {
+          $spec = $self->parse_custom_specification($self->opts()->{esx_customization_spec});
+          1;
+        } or do {
+            my $err = 'Failed to parse the Customization Spec XML. ' . $@ . "\n";
+            $self->debug_msg(1, $err);
+            print $err;
+            $self->opts->{exitcode} = ERROR;
+            exit 1;
+        };
+
+        my $adapter_mapping;
+        if ($spec->{IP0}){
+            my %ip_opts = ();
+            if ($spec->{IP0} eq 'dhcp'){
+                %ip_opts = (
+                    ip => CustomizationDhcpIpGenerator->new()
+                );
+            }
+            else {
+
+                %ip_opts = (
+                    'ip'            => CustomizationFixedIp->new('ipAddress' => $spec->{IP0}),
+                    'subnetMask'    => $spec->{IP0Subnet},
+                    'gateway'       => [ $spec->{IP0Gateway} ],
+
+                    # Windows specific, can be missing
+                    %{$spec->{IP0dnsDomain} ? { dnsDomain => $spec->{IP0dnsDomain} } : {}},
+                    %{$spec->{IP0primaryWINS} ? { primaryWINS => $spec->{IP0primaryWINS} } : {}},
+                    %{$spec->{IP0secondaryWINS} ? { secondaryWINS => $spec->{IP0secondaryWINS} } : {}}
+                );
+
+                if ($spec->{IP0dnsServers}){
+                    # This one should be an array
+                    $ip_opts{dnsServerList} = [split(':', $spec->{IP0dnsServers})]
+                }
+            }
+
+            $adapter_mapping = CustomizationAdapterMapping->new(
+                'adapter' => CustomizationIPSettings->new( %ip_opts )
+            );
+        }
+
+        my $CustomizationIdentitySettings;
+        if ($spec->{'Cust-Type'} eq 'lin'){
+            my $custom_hostname = $spec->{'Virtual-Machine-Name'} || $vm_name;
+
+            $CustomizationIdentitySettings = CustomizationLinuxPrep->new(
+                'hostName' => CustomizationFixedName->new(name => $custom_hostname),
+                %{$spec->{'Domain'} ? { 'domain' => $spec->{'Domain'} } : {}}
+            );
+        }
+        elsif ($spec->{'Cust-Type'} eq 'win'){
+
+          # For now I don't found the object to wrap the values
+            $self->debug_msg(1, "Custom tags for the Windows are not supported at 2.4.0. Skipping");
+
+          # <Auto-Logon>1</Auto-Logon>
+          # <Timezone>140</Timezone>
+          # <Domain-User-Name>Administrator</Domain-User-Name>
+          # <Domain-User-Password>secret</Domain-User-Password>
+          # <Full-Name>VMware</Full-Name>
+          # <AutoMode>perServer</AutoMode>
+          # <AutoUsers>5</AutoUsers>
+          # <Orgnization-Name>VMware</Orgnization-Name>
+          # <ProductId>XXXX-XXXX-XXXX-XXXX-XXXX</ProductId>
+        }
+
+        my %customization_opts = (
+            'globalIPSettings' => CustomizationGlobalIPSettings->new(),
+        );
+
+        if ($CustomizationIdentitySettings){
+            $customization_opts{identity} = $CustomizationIdentitySettings;
+        }
+        if ($adapter_mapping){
+            $customization_opts{nicSettingMap} = [ $adapter_mapping ];
+        }
+
+        $CustomizationSpec = CustomizationSpec->new(%customization_opts);
+    }
+
+    # Create CloneSpec corresponding to the RelocateSpec
+    my %clone_spec = (
+        powerOn       => 0,
+        template      => 0,
+        location      => $relocate_spec
+    );
+    if ($CustomizationSpec){
+        $clone_spec{customization} = $CustomizationSpec;
+    }
+
+    return VirtualMachineCloneSpec->new(%clone_spec);
+}
+
+sub parse_custom_specification {
+    my ( $self, $xml_string ) = @_;
+
+    my $xpath;
+    eval {
+        $xpath = XML::XPath->new(xml => $xml_string);
+        1;
+    } or do {
+        $self->debug_msg(-1, "XML parse error:"  .  $@);
+        die "Failed to parse XML for the 'Customization Spec'. Refer to the plugin documentation for the format.";
+    };
+
+    # Get first <Specification> Later this can be enhanced for several specifications
+    my $spec = $xpath->findnodes('//Specification/Customization-Spec/*');
+
+    if (!$spec->size()){
+        die "Don't found the nodes for Customization-Spec.  Refer to the plugin documentation for the format\n";
+    }
+
+    my %customization = ();
+    my @generic_values = qw/Cust-Type Domain Virtual-Machine-Name IP0/;
+    read_values_into(\%customization, $spec, @generic_values);
+
+    if (!$customization{'Cust-Type'}){
+        die "Customization should contain 'Cust-Type' tag\n";
+    }
+    if ($customization{'Cust-Type'} eq 'lin'){
+        my @options = qw/Linux-Timezone UTC-Clock/;
+        read_values_into(\%customization, $spec, @options);
+    }
+    elsif ($customization{'Cust-Type'} eq 'win'){
+        my @options = qw/Auto-Logon Timezone Domain-User-Name Domain-User-Password
+            Full-Name AutoMode AutoUsers Orgnization-Name ProductId/;
+        read_values_into(\%customization, $spec, @options);
+    }
+    else{
+        die "<Cust-Type> should contain 'lin' or 'win'\n";
+    }
+
+    # Read the IP parameters
+    if ($customization{'IP0'} && $customization{'IP0'} ne 'dhcp'){
+        my @ip_options = qw(
+            IP0Gateway IP0dnsServers IP0Subnet IP0dnsDomain IP0primaryWINS IP0secondaryWINS
+        );
+        read_values_into(\%customization, $spec, @ip_options);
+    }
+
+    return \%customization;
+}
+
+sub get_value_for {
+    my ($tag, $nodelist) = @_;
+
+    for my $node ($nodelist->get_nodelist()){
+        if ( $node->getName() eq $tag){
+            return $node->string_value();
+        }
+    }
+
+    return undef;
+}
+
+sub read_values_into {
+    my ($hash, $nodelist, @tag_names) = @_;
+    for my $name (@tag_names){
+        if (my $value = get_value_for($name, $nodelist)){
+            $hash->{$name} = $value;
+        }
+    }
+    return $hash;
+}
+
 
 ################################
 # cleanup - Connect, call cleanup_vm, and disconnect from ESX server
@@ -4611,3 +4785,5 @@ sub in_array {
     }
     return 0;
 }
+
+1;
