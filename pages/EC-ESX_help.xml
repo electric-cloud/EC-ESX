@@ -426,11 +426,34 @@ installation must be performed by the user.</p>
         <h2>Clone</h2>
         
         
-        
             <p>Clone a virtual machine. Clone operation is only supported
 and only works when connecting against vCenter Server and not
 individual ESX(i) host.</p>
+        
+        <p>You can apply the Customization-Spec XML to modify the cloned Linux VM with VMWare Tools installed.</p>
+        <p>Example of the Specification XML:</p>
+        <pre>&#x3C;?xml version=&#x22;1.0&#x22;?&#x3E;
+&#x3C;Specification&#x3E;
+  &#x3C;Customization-Spec&#x3E;
+    &#x3C;Cust-Type&#x3E;lin&#x3C;/Cust-Type&#x3E;
 
+    &#x3C;Virtual-Machine-Name&#x3E;machine-clone-2&#x3C;/Virtual-Machine-Name&#x3E;
+    &#x3C;Linux-Timezone&#x3E;America/Chicago&#x3C;/Linux-Timezone&#x3E;
+    &#x3C;UTC-Clock&#x3E;1&#x3C;/UTC-Clock&#x3E;
+    &#x3C;Domain&#x3E;example.com&#x3C;/Domain&#x3E;
+
+    &#x3C;IP0&#x3E;10.1.217.122&#x3C;/IP0&#x3E;
+    &#x3C;IP0Gateway&#x3E;10.1.217.1&#x3C;/IP0Gateway&#x3E;
+    &#x3C;IP0dnsServers&#x3E;10.1.217.1:10.1.217.2&#x3C;/IP0dnsServers&#x3E;
+    &#x3C;IP0Subnet&#x3E;255.255.255.0&#x3C;/IP0Subnet&#x3E;
+    &#x3C;IP0dnsDomain&#x3E;example.com&#x3C;/IP0dnsDomain&#x3E;
+
+  &#x3C;/Customization-Spec&#x3E;
+&#x3C;/Specification&#x3E;
+        </pre>
+        
+        <p>To change IP settings to be DHCP, set 'IP0' to 'dhcp' and remove all other 'IP0xxxx' tags.</p>
+        <p><b>Notice:</b> The cloned VM hostname will be taken from the 'Virtual-Machine-Name' value or 'VM Clone1 Name' parameter.</p>
         
         <h3>Clone Parameters</h3>
         <table class="grid">
@@ -465,6 +488,16 @@ individual ESX(i) host.</p>
             <tr>
                 <td class="required">Datastore</td>
                 <td>Name of the datastore.</td>
+            </tr>
+    
+            <tr>
+                <td >Apply Customization?</td>
+                <td>Check the box if you want to supply the Customization Spec XML.</td>
+            </tr>
+            
+            <tr>
+                <td >Customization Spec</td>
+                <td>VMWare compliant customization spec to apply to the cloned machine.</td>
             </tr>
             
             <tr>
@@ -2550,6 +2583,13 @@ step and fill in the requested parameters.</p><img alt="" src="../../plugins/@PL
     
 
     <h1 id="releaseNotes">Release Notes</h1>
+    
+    <h3>@PLUGIN_KEY@ 2.4.0</h3>
+    <ul>
+        
+        <li>The Clone procedure was improved. Now guest OS customizations can be applied after the clone.</li>
+        
+    </ul>
     
     <h3>@PLUGIN_KEY@ 2.3.3</h3>
     <ul>
