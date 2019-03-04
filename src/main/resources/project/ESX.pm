@@ -834,6 +834,8 @@ sub create_clone_spec {
 
             $CustomizationIdentitySettings = CustomizationLinuxPrep->new(
                 'hostName' => CustomizationFixedName->new(name => $custom_hostname),
+                %{$spec->{'UTC-Clock'} ? { 'hwClockUTC' => $spec->{'UTC-Clock'} } : {}},
+                %{$spec->{'Linux-Timezone'} ? { 'Linux-Timezone' => $spec->{'Linux-Timezone'} } : {}},
                 %{$spec->{'Domain'} ? { 'domain' => $spec->{'Domain'} } : {}}
             );
         }
