@@ -36,17 +36,17 @@ use constant {
 my $ec = new ElectricCommander();
 $ec->abortOnError(0);
 
-my $credName = "$[/myJob/config]";
+my $credName = '$[/myJob/config]';
 
 my $xpath    = $ec->getFullCredential("credential");
 my $errors   = $ec->checkAllErrors($xpath);
 my $username = $xpath->findvalue("//userName");
 my $password = $xpath->findvalue("//password");
 
-my $projName = "$[/myProject/projectName]";
+my $projName = '$[/myProject/projectName]';
 print "Attempting connection with server\n";
 
-my $esx_url = "$[esx_url]";
+my $esx_url = '$[esx_url]';
 
 # Connect
 eval { my $vim = Vim::login(service_url => $esx_url, user_name => $username, password => $password); };
