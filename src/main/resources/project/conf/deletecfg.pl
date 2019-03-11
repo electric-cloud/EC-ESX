@@ -41,7 +41,7 @@ my $ec = new ElectricCommander();
 $ec->abortOnError(0);
 
 my $opts;
-$opts->{config} = "$[config]";
+$opts->{config} = '$[config]';
 
 if (!defined $opts->{config} || "$opts->{config}" eq "" ) {
     print "config parameter must exist and be non-blank\n";
