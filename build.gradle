@@ -27,7 +27,7 @@ repositories {
 
 group = "com.electriccloud"
 description = "Plugins : EC-ESX"
-version = "2.3.4"
+version = "2.3.5"
 
 apply plugin: 'flow-gradle-plugin'
 
