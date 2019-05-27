@@ -1896,28 +1896,28 @@
             <formalParameter>
                 <formalParameterName>esx_properties_location</formalParameterName>
                 <defaultValue></defaultValue>
-                <description>The ElectricCommander location to store properties (default is '/myJob/ESX/vms').</description>
+                <description>The CloudBees Flow location to store properties (default is '/myJob/ESX/vms').</description>
                 <required>0</required>
                 <type>entry</type>
             </formalParameter>
             <formalParameter>
                 <formalParameterName>esx_create_resources</formalParameterName>
                 <defaultValue></defaultValue>
-                <description>Flag to specify whether or not to create ElectricCommander resources for the powered on virtual machines (default is false).</description>
+                <description>Flag to specify whether or not to create CloudBees Flow resources for the powered on virtual machines (default is false).</description>
                 <required>0</required>
                 <type>checkbox</type>
             </formalParameter>
             <formalParameter>
                 <formalParameterName>esx_pools</formalParameterName>
                 <defaultValue></defaultValue>
-                <description>The ElectricCommander resource pool names to be associated with the created resources if created.</description>
+                <description>The CloudBees Flow resource pool names to be associated with the created resources if created.</description>
                 <required>0</required>
                 <type>entry</type>
             </formalParameter>
             <formalParameter>
                 <formalParameterName>esx_workspace</formalParameterName>
                 <defaultValue></defaultValue>
-                <description>The ElectricCommander workspace the created resources should use.</description>
+                <description>The CloudBees Flow workspace the created resources should use.</description>
                 <required>0</required>
                 <type>entry</type>
             </formalParameter>
@@ -2500,7 +2500,7 @@
         </procedure>
         <procedure>
             <procedureName>CreateResourceFromVM</procedureName>
-            <description>Store information about a virtual machine and create ElectricCommander resources</description>
+            <description>Store information about a virtual machine and create CloudBees Flow resources</description>
             <jobNameTemplate>esx-createresource-$[jobId]</jobNameTemplate>
             <resourceName></resourceName>
             <workspaceName></workspaceName>
@@ -2642,28 +2642,28 @@
             <formalParameter>
                 <formalParameterName>esx_properties_location</formalParameterName>
                 <defaultValue></defaultValue>
-                <description>The ElectricCommander location to store properties containing information about the virtual machines (default is '/myJob/ESX/vms').</description>
+                <description>The CloudBees Flow location to store properties containing information about the virtual machines (default is '/myJob/ESX/vms').</description>
                 <required>0</required>
                 <type>entry</type>
             </formalParameter>
             <formalParameter>
                 <formalParameterName>esx_create_resources</formalParameterName>
                 <defaultValue></defaultValue>
-                <description>Flag to specify whether or not to create ElectricCommander resources for the virtual machines (default is false).</description>
+                <description>Flag to specify whether or not to create CloudBees Flow resources for the virtual machines (default is false).</description>
                 <required>0</required>
                 <type>checkbox</type>
             </formalParameter>
             <formalParameter>
                 <formalParameterName>esx_pools</formalParameterName>
                 <defaultValue></defaultValue>
-                <description>The ElectricCommander resource pool names to be associated with the created resources if created.</description>
+                <description>The CloudBees Flow resource pool names to be associated with the created resources if created.</description>
                 <required>0</required>
                 <type>entry</type>
             </formalParameter>
             <formalParameter>
                 <formalParameterName>esx_workspace</formalParameterName>
                 <defaultValue></defaultValue>
-                <description>The ElectricCommander workspace the created resources should use.</description>
+                <description>The CloudBees Flow workspace the created resources should use.</description>
                 <required>0</required>
                 <type>entry</type>
             </formalParameter>
@@ -2715,7 +2715,7 @@
                 <broadcast>0</broadcast>
                 <command></command>
                 <condition></condition>
-                <description>Store information about a virtual machine and create ElectricCommander resources</description>
+                <description>Store information about a virtual machine and create CloudBees Flow resources</description>
                 <errorHandling>failProcedure</errorHandling>
                 <exclusive>0</exclusive>
                 <logFileName></logFileName>
@@ -2844,7 +2844,7 @@
             <formalParameter>
                 <formalParameterName>esx_properties_location</formalParameterName>
                 <defaultValue></defaultValue>
-                <description>The ElectricCommander location to store properties containing information about the virtual machines (default is '/myJob/ESX/vms').</description>
+                <description>The CloudBees Flow location to store properties containing information about the virtual machines (default is '/myJob/ESX/vms').</description>
                 <required>0</required>
                 <type>entry</type>
             </formalParameter>
@@ -3910,7 +3910,7 @@
             <formalParameter>
                 <formalParameterName>esx_workspace</formalParameterName>
                 <defaultValue/>
-                <description>The ElectricCommander workspace the resource should use.</description>
+                <description>The CloudBees Flow workspace the resource should use.</description>
                 <required>0</required>
                 <type>entry</type>
             </formalParameter>           

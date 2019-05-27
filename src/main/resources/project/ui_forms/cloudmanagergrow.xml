@@ -36,7 +36,7 @@
         <label>Commander Workspace:</label>
         <property>esx_workspace</property>
         <required>0</required>
-        <documentation>The ElectricCommander workspace the resource should use.</documentation>
+        <documentation>The CloudBees Flow workspace the resource should use.</documentation>
     </formElement>
     <formElement>
         <type>entry</type>
