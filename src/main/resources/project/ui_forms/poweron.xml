@@ -36,14 +36,14 @@
         <label>Results location:</label>
         <property>esx_properties_location</property>
         <required>0</required>
-        <documentation>The ElectricCommander location to store properties (default is '/myJob/ESX/vms').</documentation>
+        <documentation>The CloudBees Flow location to store properties (default is '/myJob/ESX/vms').</documentation>
     </formElement>
     <formElement>
         <type>checkbox</type>
         <label>Create Resource?:</label>
         <property>esx_create_resources</property>
         <required>0</required>
-        <documentation>Flag to specify whether or not to create ElectricCommander resources for the powered on virtual machines (default is false).</documentation>
+        <documentation>Flag to specify whether or not to create CloudBees Flow resources for the powered on virtual machines (default is false).</documentation>
         <checkedValue>1</checkedValue>
         <uncheckedValue>0</uncheckedValue>
         <initiallyChecked>0</initiallyChecked>
@@ -53,14 +53,14 @@
         <label>Resource Pool(s):</label>
         <property>esx_pools</property>
         <required>0</required>
-        <documentation>The ElectricCommander resource pool names to be associated with the created resources if created.</documentation>
+        <documentation>The CloudBees Flow resource pool names to be associated with the created resources if created.</documentation>
     </formElement>
     <formElement>
         <type>entry</type>
         <label>Commander Workspace:</label>
         <property>esx_workspace</property>
         <required>0</required>
-        <documentation>The ElectricCommander workspace the resource should use.</documentation>
+        <documentation>The CloudBees Flow workspace the resource should use.</documentation>
     </formElement>  
     <formElement>
         <type>entry</type>
