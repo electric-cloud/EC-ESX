@@ -14,7 +14,7 @@
     <h1>@PLUGIN_KEY@</h1>
     <p>Plugin version @PLUGIN_VERSION@</p>
     
-    <p>Revised on May 23, 2019</p>
+    <p>Revised on May 27, 2019</p>
     
     <hr style="margin-left: -10px; margin-top: 10px; height: 1px; width: 100%; color: #5981BD;" noshade="noshade"/>
     <h1>Contents</h1>
@@ -760,22 +760,22 @@ machine.</p>
             
             <tr>
                 <td >Results location</td>
-                <td>The ElectricCommander location to store properties (default is '/myJob/ESX/vms').</td>
+                <td>The CloudBees Flow location to store properties (default is '/myJob/ESX/vms').</td>
             </tr>
             
             <tr>
                 <td >Create Resource?</td>
-                <td>Flag to specify whether or not to create ElectricCommander resources for the powered on virtual machines (default is false).</td>
+                <td>Flag to specify whether or not to create CloudBees Flow resources for the powered on virtual machines (default is false).</td>
             </tr>
             
             <tr>
                 <td >Resource Pool(s)</td>
-                <td>The ElectricCommander resource pool names to be associated with the created resources if created.</td>
+                <td>The CloudBees Flow resource pool names to be associated with the created resources if created.</td>
             </tr>
             
             <tr>
                 <td >Commander Workspace</td>
-                <td>The ElectricCommander workspace the resource should use.</td>
+                <td>The CloudBees Flow workspace the resource should use.</td>
             </tr>
             
             <tr>
@@ -991,22 +991,22 @@ guest has VMware tools installed on it.</p>
             
             <tr>
                 <td >Results location</td>
-                <td>The ElectricCommander location to store properties containing information about the virtual machines (default is '/myJob/ESX/vms').</td>
+                <td>The CloudBees Flow location to store properties containing information about the virtual machines (default is '/myJob/ESX/vms').</td>
             </tr>
             
             <tr>
                 <td >Create Resource?</td>
-                <td>Flag to specify whether or not to create ElectricCommander resources for the virtual machines (default is false).</td>
+                <td>Flag to specify whether or not to create CloudBees Flow resources for the virtual machines (default is false).</td>
             </tr>
             
             <tr>
                 <td >Resource Pool(s)</td>
-                <td>The ElectricCommander resource pool names to be associated with the created resources if created.</td>
+                <td>The CloudBees Flow resource pool names to be associated with the created resources if created.</td>
             </tr>
             
             <tr>
                 <td >Commander Workspace</td>
-                <td>The ElectricCommander workspace the resource should use.</td>
+                <td>The CloudBees Flow workspace the resource should use.</td>
             </tr>
             
             <tr>
@@ -1065,7 +1065,7 @@ tools installed on it.</p>
             
             <tr>
                 <td >Results location</td>
-                <td>The ElectricCommander location to store properties containing information about the virtual machines (default is '/myJob/ESX/vms').</td>
+                <td>The CloudBees Flow location to store properties containing information about the virtual machines (default is '/myJob/ESX/vms').</td>
             </tr>
             
             <tr>
@@ -1369,7 +1369,7 @@ CloudManager.</p>
             
             <tr>
                 <td >Commander Workspace</td>
-                <td>The ElectricCommander workspace the resource should use.</td>
+                <td>The CloudBees Flow workspace the resource should use.</td>
             </tr>
             
             <tr>
@@ -2552,7 +2552,7 @@ step and fill in the requested parameters.</p><img alt="" src="../../plugins/@PL
     <h1 id="releaseNotes">Release Notes</h1>
 
     <h3 id="2.3.5">@PLUGIN_KEY@ 2.3.5</h3>
-    <p>Renaming from "Electric Cloud" to "CloudBees"</p>
+    <p>Renaming from "CloudBees" to "CloudBees"</p>
 
     
     <h3>@PLUGIN_KEY@ 2.3.4</h3>
@@ -2621,7 +2621,7 @@ step and fill in the requested parameters.</p><img alt="" src="../../plugins/@PL
     <h3>@PLUGIN_KEY@ 2.1.4</h3>
     <ul>
         
-        <li>Renamed ElectricCommander to ElectricFlow.</li>
+        <li>Renamed CloudBees Flow to CloudBees Flow.</li>
         
     </ul>
     
