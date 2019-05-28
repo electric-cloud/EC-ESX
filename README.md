@@ -1,7 +1,7 @@
 EC-ESX
 ============
 
-The ElectricFlow ESX integration
+The CloudBees Flow ESX integration
 
 ## Compile ##
 

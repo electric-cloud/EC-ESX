@@ -1,7 +1,7 @@
 ## Use Case 1: PowerOn, Consume, and PowerOff Job
 
 One of the most common uses for this plugin is to power on
-an existing virtual machine, then create an ElectricFlow
+an existing virtual machine, then create an CloudBees Flow
 resource assigned to this VM, use the resource to run some
 operations, and then power off the machine and delete the
 resource. To accomplish these task you must:
@@ -15,7 +15,7 @@ resource. To accomplish these task you must:
 
 ### Create a Plugin Configuration
 
-<p>Plugin configurations are created by going to the ElectricFlow "Administration" tab, then to the "Plugins" sub-tab.
+<p>Plugin configurations are created by going to the CloudBees Flow "Administration" tab, then to the "Plugins" sub-tab.
 On the right side of the line for the ESX plugin, there is a
 "Configure" link which will open the Configuration page.<br />
 Create a new configuration by specifying the requested
