@@ -25,7 +25,7 @@ here</a>.</p>
 
 <p>OVF manual is available <a href="http://www.vmware.com/support/developer/ovf/">here.</a></p>
 
-<h2>CloudBees Flow Integration to VMware ESX and ESXi</h2>
+<h2>CloudBees CD Integration to VMware ESX and ESXi</h2>
 
 <p>EC-ESX integration uses modules from the VI Perl Toolkit, which
 provides access to the ESX system. By using this toolkit, the
@@ -45,7 +45,7 @@ following tasks:</p>
 
     <li>Import and export virtual machines.</li>
 
-    <li>Create CloudBees Flow resources.</li>
+    <li>Create CloudBees CD resources.</li>
 </ul>
 
 <p>This plugin provides the following procedures: Cleanup,

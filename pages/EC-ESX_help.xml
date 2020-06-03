@@ -187,7 +187,7 @@ here.</a></p>
 <p>For some procedures you need to specify the Guest OS ID. Find these values <a href="http://www.vmware.com/support/developer/converter-sdk/conv50_apireference/vim.vm.GuestOsDescriptor.GuestOsIdentifier.html">
 here</a>.</p>
 <p>OVF manual is available <a href="http://www.vmware.com/support/developer/ovf/">here.</a></p>
-<h2>CloudBees Flow Integration to VMware ESX and ESXi</h2>
+<h2>CloudBees CD Integration to VMware ESX and ESXi</h2>
 <p>EC-ESX integration uses modules from the VI Perl Toolkit, which
 provides access to the ESX system. By using this toolkit, the
 integration can connect to the ESX server to automate and
@@ -203,7 +203,7 @@ following tasks:</p>
 
 &lt;li&gt;Import and export virtual machines.&lt;/li&gt;
 
-&lt;li&gt;Create CloudBees Flow resources.&lt;/li&gt;
+&lt;li&gt;Create CloudBees CD resources.&lt;/li&gt;
 </code></pre>
 </ul>
 <p>This plugin provides the following procedures: Cleanup,
@@ -650,7 +650,7 @@ host.</p>
         
         
         
-            <p>Deletes CloudBees Flow resources and optionally destroys
+            <p>Deletes CloudBees CD resources and optionally destroys
 the virtual machines on the ESX server.</p>
 
         
@@ -866,7 +866,7 @@ the virtual machines on the ESX server.</p>
         
         
             <p>Power on the specified virtual machine and optionally
-create an CloudBees Flow resource for the virtual
+create an CloudBees CD resource for the virtual
 machine.</p>
 
         
@@ -897,28 +897,28 @@ machine.</p>
             <tr>
                 
                 <td >Results location</td>
-                <td>The CloudBees Flow location to store properties (default is '/myJob/ESX/vms').</td>
+                <td>The CloudBees CD location to store properties (default is '/myJob/ESX/vms').</td>
                 
             </tr>
             
             <tr>
                 
                 <td >Create Resource?</td>
-                <td>Flag to specify whether or not to create CloudBees Flow resources for the powered on virtual machines (default is false).</td>
+                <td>Flag to specify whether or not to create CloudBees CD resources for the powered on virtual machines (default is false).</td>
                 
             </tr>
             
             <tr>
                 
                 <td >Resource Pool(s)</td>
-                <td>The CloudBees Flow resource pool names to be associated with the created resources if created.</td>
+                <td>The CloudBees CD resource pool names to be associated with the created resources if created.</td>
                 
             </tr>
             
             <tr>
                 
                 <td >Commander Workspace</td>
-                <td>The CloudBees Flow workspace the resource should use.</td>
+                <td>The CloudBees CD workspace the resource should use.</td>
                 
             </tr>
             
@@ -1144,7 +1144,7 @@ machine.</p>
         
         
             <p>Store information about a virtual machine and create
-CloudBees Flow resources. This procedure only works if the
+CloudBees CD resources. This procedure only works if the
 guest has VMware tools installed on it.</p>
 
         
@@ -1182,28 +1182,28 @@ guest has VMware tools installed on it.</p>
             <tr>
                 
                 <td >Results location</td>
-                <td>The CloudBees Flow location to store properties containing information about the virtual machines (default is '/myJob/ESX/vms').</td>
+                <td>The CloudBees CD location to store properties containing information about the virtual machines (default is '/myJob/ESX/vms').</td>
                 
             </tr>
             
             <tr>
                 
                 <td >Create Resource?</td>
-                <td>Flag to specify whether or not to create CloudBees Flow resources for the virtual machines (default is false).</td>
+                <td>Flag to specify whether or not to create CloudBees CD resources for the virtual machines (default is false).</td>
                 
             </tr>
             
             <tr>
                 
                 <td >Resource Pool(s)</td>
-                <td>The CloudBees Flow resource pool names to be associated with the created resources if created.</td>
+                <td>The CloudBees CD resource pool names to be associated with the created resources if created.</td>
                 
             </tr>
             
             <tr>
                 
                 <td >Commander Workspace</td>
-                <td>The CloudBees Flow workspace the resource should use.</td>
+                <td>The CloudBees CD workspace the resource should use.</td>
                 
             </tr>
             
@@ -1236,7 +1236,7 @@ guest has VMware tools installed on it.</p>
         
         
             <p>Get the IP address and hostname of a virtual machine and
-store them in the specified location in CloudBees Flow
+store them in the specified location in CloudBees CD
 properties. This procedure only works if the guest has VMware
 tools installed on it.</p>
 
@@ -1275,7 +1275,7 @@ tools installed on it.</p>
             <tr>
                 
                 <td >Results location</td>
-                <td>The CloudBees Flow location to store properties containing information about the virtual machines (default is '/myJob/ESX/vms').</td>
+                <td>The CloudBees CD location to store properties containing information about the virtual machines (default is '/myJob/ESX/vms').</td>
                 
             </tr>
             
@@ -1659,7 +1659,7 @@ CloudManager.</p>
             <tr>
                 
                 <td >Commander Workspace</td>
-                <td>The CloudBees Flow workspace the resource should use.</td>
+                <td>The CloudBees CD workspace the resource should use.</td>
                 
             </tr>
             
@@ -3050,7 +3050,7 @@ by CloudManager.</p>
     <div id="UseCase1PowerOnConsumeandPowerOffJob">
         <h2>Use Case 1: PowerOn, Consume, and PowerOff Job</h2>
 <p>One of the most common uses for this plugin is to power on
-an existing virtual machine, then create an CloudBees Flow
+an existing virtual machine, then create an CloudBees CD
 resource assigned to this VM, use the resource to run some
 operations, and then power off the machine and delete the
 resource. To accomplish these task you must:</p>
@@ -3063,7 +3063,7 @@ resource. To accomplish these task you must:</p>
 <li>Power off the VM.</li>
 </ol>
 <h3>Create a Plugin Configuration</h3>
-<p>Plugin configurations are created by going to the CloudBees Flow "Administration" tab, then to the "Plugins" sub-tab.
+<p>Plugin configurations are created by going to the CloudBees CD "Administration" tab, then to the "Plugins" sub-tab.
 On the right side of the line for the ESX plugin, there is a
 "Configure" link which will open the Configuration page.<br />
 Create a new configuration by specifying the requested
@@ -3103,6 +3103,13 @@ step and fill in the requested parameters.</p><img alt="" src="../../plugins/@PL
     
 
     <h1 id="releaseNotes">Release Notes</h1>
+    
+    <h3>@PLUGIN_KEY@ 2.3.6</h3>
+    <ul>
+        
+        <li>Renaming from "CloudBees Flow" to "CloudBees CD"</li>
+        
+    </ul>
     
     <h3>@PLUGIN_KEY@ 2.3.5</h3>
     <ul>
