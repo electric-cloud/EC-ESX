@@ -45,7 +45,7 @@ my %create = (
 my %createresourcefromvm = (
 							label       => "ESX - Create Resource From Virtual Machine",
 							procedure   => "CreateResourceFromVM",
-							description => "Store information about a virtual machine and create ElectricCommander resources",
+							description => "Store information about a virtual machine and create CloudBees CD resources",
 							category    => "Resource Management"
 						   );
 

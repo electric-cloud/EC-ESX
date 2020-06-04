@@ -1,3 +1,9 @@
+2.3.6:
+  - Renaming from "CloudBees Flow" to "CloudBees CD"
+2.3.5:
+  - Renaming from "Electric Cloud" to "CloudBees"
+2.3.4:
+  - Configurations can be created by users with "@" sign in a name.
 2.3.3:
   - The plugin documentation has been updated.
 2.3.2:

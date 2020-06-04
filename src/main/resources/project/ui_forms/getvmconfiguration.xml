@@ -44,7 +44,7 @@
         <label>Results location:</label>
         <property>esx_properties_location</property>
         <required>0</required>
-        <documentation>The CloudBees Flow location to store properties containing information about the virtual machines (default is '/myJob/ESX/vms').</documentation>
+        <documentation>The CloudBees CD location to store properties containing information about the virtual machines (default is '/myJob/ESX/vms').</documentation>
     </formElement>
     <formElement>
         <type>entry</type>

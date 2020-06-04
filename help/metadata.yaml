@@ -19,8 +19,6 @@ proceduresOrder:
   - CloudManagerGrow
   - CloudManagerShrink
   - CloudManagerSync
-  - CreateResourcePool
-  - EditResourcePool
   - ListEntity
   - DeleteEntity
   - CreateFolder
@@ -37,5 +35,7 @@ proceduresOrder:
   - ListSnapshot
   - RemoveSnapshot
   - RevertToCurrentSnapshot
+  - CreateResourcepool
+  - EditResourcepool
 
 omitDescription: true
