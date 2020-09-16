@@ -1,0 +1,1005 @@
+Plugin version @PLUGIN_VERSION@
+
+Revised on June 03, 2020
+
+
+== Overview
+
+VMware ESX and VMware ESXi provide the foundation for building and managing a reliable and dynamic IT infrastructure.
+
+ESX Server is managed by the VMware Infrastructure Client. Its centralized management platform is called Virtual Center. These hypervisors abstract processor, memory, storage and networking resources into multiple virtual machines that each can run an unmodified operating system and applications.
+
+VMware ESXi is the latest hypervisor architecture from VMware. The original ESX is being replaced by ESXi.
+
+== ESX links
+
+More information can be found http://www.vmware.com/products/vsphere/esxi-and-esx/index.html[here].
+
+Information about the OVF tool can be found http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf[here.]
+
+For some procedures you need to specify the Guest OS ID. Find these values http://www.vmware.com/support/developer/converter-sdk/conv50_apireference/vim.vm.GuestOsDescriptor.GuestOsIdentifier.html[here].
+
+OVF manual is available http://www.vmware.com/support/developer/ovf/[here.]
+
+== {CD} integration to vmware ESX and esxi
+
+EC-ESX integration uses modules from the VI Perl Toolkit, which provides access to the ESX system. By using this toolkit, the integration can connect to the ESX server to automate and perform various operations providing a more generic interface for managing virtual machines on ESX servers.
+
+The plugin interacts with ESX data using PERL to perform the following tasks:
+
+* Create configuration to hold connection information.
+
+This plugin provides the following procedures: Cleanup, Clone, Create, CreateResourceFromVM, Export, GetVMConfiguration, Import, PowerOn, PowerOff, RegisterVM, Relocate, Revert, Shutdown, Snapshot, and Suspend.
+
+This plugin communicates with ESX by using the Perl module VMware::VIRuntime, provided by VMware.
+
+== OVF tool
+
+The VMware OVF Tool is a command line utility that allows you to import and export OVF packages.
+
+In order to execute Import and Export procedures using the ESX plugin, the OVF Tool must be installed.
+
+You can download this utility from the http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf[OVF Tool page].
+
+You must have an account to download this tool. If you do not have an account, you can create one for free.
+
+After downloading VMware OVF Tool, use the corresponding install method for your operating system:
+
+[cols=",",options="header",]
+|===
+|Operating System |Installation Method
+|Linux 32-bit |Run the shell script as ./VMware-OVF-Tool.sh
+|Linux 64-bit |Run the shell script as ./VMware-OVF-Tool.x86_64.sh
+|Mac 64-bit |
+|Windows 32-bit |Double-click the installer, VMware-OVF-Tool.exe
+|Windows 64-bit |Double-click the installer, VMware-OVF-Tool.x86_64.exe
+|===
+
+== Integrated version
+
+This plugin was developed and tested against ESX 3.5 and ESXi 5.0.
+
+[[CreateConfiguration]]
+
+
+== Plugin configurations
+
+Plugin configurations are sets of parameters that apply across some or all of the plugin procedures. They reduce repetition of common values, create predefined parameter sets for end users, and securely store credentials where needed. Each configuration is given a unique name that is entered in designated parameters on procedures that use them.
+
+
+== Creating plugin configurations
+
+To create plugin configurations in {CD}, do these steps:
+
+Go to *Administration* > *Plugins* to open the Plugin Manager.
+
+Find the @PLUGIN_NAME@ row.
+
+Click *Configure* to open the Configurations page.
+
+Click *Create Configuration* as per the description of parameters below.
+
+== Configuration procedure parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|Configuration Name |Provide a unique name for the configuration, keeping in mind that you may need to create additional configurations over time.
+|ESX Url |Provide the URL of the ESX server with the form: ++https://(ip_address\|hostname)++.
+|Host Name |Name/IP of the host present on ESX Server.
+|Login as |ESX username/password.
+|Attempt Connection? |Attempt a connection to check credentials.
+|===
+
+[[procedures]]
+== Plugin procedures
+
+[[Create]]
+=== Create
+
+Create virtual machines on the ESX server. Guest OS installation must be performed by the user.
+
+=== Create parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|VM Name |Name of the virtual machine to be created.
+|Datastore |Name of the datastore.
+|Host |Name of the host.
+|Datacenter |Name of the datacenter.
+|Guest OS Id |Guest operating system identifier (default is 'winXPProGuest').
+|Disk size (in KB) |Capacity of the virtual disk in KB (default is 4096).
+|Memory size |Size of virtual machine's memory in MB (default is 256)
+|Number of CPUs |Number of virtual processors in a virtual machine (default is 1).
+|Network Name |Network name. Default: Any accessible network.
+|Connect Network at Power On? |Flag to specify whether or not to connect the device when the virtual machine starts (default is false).
+|Power On Vm? |Flag to specify whether or not to power on the created virtual machine(s) (default is false).
+|Number of VMs |Number of virtual machines to create (default is 1). If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/create_panel.png[image]
+
+[[Clone]]
+=== Clone
+
+Clone a virtual machine. Clone operation is only supported and only works when connecting against vCenter Server and not individual ESX(i) host.
+
+=== Clone parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|VM Name |Name of the virtual machine whose clone is to be created.
+|VM Clone Name |Name of the clone virtual machine which will be created.
+|Host for new VM |Target host for the new virtual machine.
+|Datastore |Name of the datastore.
+|Number of Clones |Number of clones to create (default is 1). If the value is greater than 1, a suffix is added to cloned VM names. The suffix consists of an underscore and the clone number ('_#').
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/clone_panel.png[image]
+
+[[Relocate]]
+=== Relocate
+
+Relocate a virtual machine to the specified destination host. Relocate operation is only supported and only works when connecting against vCenter Server and not individual ESX(i) host.
+
+=== Relocate parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|VM Name |Name of the virtual machine to be relocated.
+|Datastore |Name of the datastore. Default: Datastore with the most free space.
+|Destination Host |Target host for the virtual machine.
+|Number of VMs |Number of virtual machines to relocate (default is 1). If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/relocate_panel.png[image]
+
+[[Cleanup]]
+=== Cleanup
+
+Deletes {CD} resources and optionally destroys the virtual machines on the ESX server.
+
+=== Cleanup parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|VM Name |Name of the virtual machine to cleanup.
+|Number of VMs |Number of virtual machines to cleanup (default is 1). If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').
+|Delete VM? |If checked, the virtual machine will be destroyed.
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/cleanup_panel.png[image]
+
+[[Snapshot]]
+=== Snapshot
+
+Create a snapshot for the specified virtual machine.
+
+=== Snapshot parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|VM Name |Name of the virtual machine whose snapshot is to be created.
+|Snapshot Name |Name of the snapshot to be created.
+|Number of VMs |Number of virtual machines to snapshot (default is 1). If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/snapshot_panel.png[image]
+
+[[Revert]]
+=== Revert
+
+Revert a virtual machine to the specified snapshot.
+
+=== Revert parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|VM Name |Name of the source virtual machine.
+|Snapshot Name |Name of snapshot to revert to.
+|Power On? |If checked, Power on the virtual machine after being reverted.
+|Number of VMs |Number of virtual machines to revert (default is 1). If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/revert_panel.png[image]
+
+[[PowerOn]]
+=== PowerOn
+
+Power on the specified virtual machine and optionally create an {CD} resource for the virtual machine.
+
+=== PowerOn Parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|VM Name |Name of the virtual machine to power on.
+|Results location |The {CD} location to store properties (default is '/myJob/ESX/vms').
+|Create Resource? |Flag to specify whether or not to create {CD} resources for the powered on virtual machines (default is false).
+|Resource Pool(s) |The {CD} resource pool names to be associated with the created resources if created.
+|Commander Workspace |The {CD} workspace the resource should use.
+|Number of VMs |Number of virtual machines to power on (default is 1). If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/poweron_panel.png[image]
+
+[[PowerOff]]
+=== PowerOff
+
+Power off the specified virtual machine.
+
+=== PowerOff parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|VM Name |Name of the virtual machine to power off.
+|Number of VMs |Number of virtual machines to power off (default is 1). If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/poweroff_panel.png[image]
+
+[[Shutdown]]
+=== Shutdown
+
+Shut down the specified virtual machine.
+
+=== Shutdown parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|VM Name |Name of the virtual machine to shut down.
+|Number of VMs |Number of virtual machines to shut down (default is 1). If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/shutdown_panel.png[image]
+
+[[Suspend]]
+=== Suspend
+
+Suspend the specified virtual machine.
+
+=== Suspend parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|VM Name |Name of the virtual machine to suspend.
+|Number of VMs |Number of virtual machines to suspend (default is 1). If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/suspend_panel.png[image]
+
+[[CreateResourceFromVM]]
+=== CreateResourceFromVM
+
+Store information about a virtual machine and create {CD} resources. This procedure only works if the guest has VMware tools installed on it.
+
+=== CreateResourceFromVM parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|VM Name |Name of the virtual machine to get the information from.
+|Number of VMs |Number of virtual machines from which to get information (default is 1). If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').
+|Results location |The {CD} location to store properties containing information about the virtual machines (default is '/myJob/ESX/vms').
+|Create Resource? |Flag to specify whether or not to create {CD} resources for the virtual machines (default is false).
+|Resource Pool(s) |The {CD} resource pool names to be associated with the created resources if created.
+|Commander Workspace |The {CD} workspace the resource should use.
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/createresourcefromvm_panel.png[image]
+
+[[GetVMConfiguration]]
+=== GetVMConfiguration
+
+Get the IP address and hostname of a virtual machine and store them in the specified location in {CD} properties. This procedure only works if the guest has VMware tools installed on it.
+
+=== GetVMConfiguration parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|VM Name |Name of the virtual machine to get the information from.
+|Number of VMs |Number of virtual machines from which to get information (default is 1). If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').
+|Results location |The {CD} location to store properties containing information about the virtual machines (default is '/myJob/ESX/vms').
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/getvmconfiguration_panel.png[image]
+
+[[Import]]
+=== Import
+
+Import an OVF package to the ESX server using VMware OVF Tool (a command line utility that allows you to import and export OVF packages). VMware OVF Tool must be installed in the resource machine running this procedure.
+
+=== Import parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|OVF Tool Path |Path of the ovf tool.
+|Host |Name of the host where virtual machines will be imported.
+|Datastore |Name of the datastore to be used.
+|VM Name |Name of the virtual machine to import.
+|OVF or OVA file path |Absolute path to the OVF or OVA file.
+|Number of VMs |Number of virtual machines to import (default is 1). If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|Guest VM hostname |ESX guest vm hostname. If OVF package contains single VM, just a value. Othervise format: VMID1=hostname1, VMID2=hostname2.
+|Memory size |Size of virtual machine's memory. If OVF package contains single VM, just a value. Othervise format: VMID1=1024, VMID2=2048.
+|Number of CPUs |Number of virtual processors in a virtual machine. If OVF package contains single VM, just a value. Othervise format: VMID1=1, VMID2=2.
+|Power On Vm? |Flag to specify whether or not to power on the created virtual machine(s) (default is false).
+|OVF properties |Comma separated list of OVF properties. To get properties for current OVF/OVA template ovftool command should be used. Example: hostname=ubuntu,user=ubuntu.
+|Result properties location |Information about imported VM will be stored in vms property within this path.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/import_panel.png[image]
+
+[[Export]]
+=== Export
+
+The Export subprocedure exports a virtual machine to an OVF package using the VMware OVF Tool (a command line utility that allows you to import and export OVF packages). The VMware OVF Tool must be installed in the resource machine running this procedure.
+
+=== Export parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|OVF Tool Path |Path of the ovf tool.
+|Host |Name of the host where virtual machine is located.
+|Datacenter |Name of the datacenter.
+|Datastore |Name of the datastore.
+|VM Name |Name of the virtual machine to export.
+|Target directory |Absoulte path to the directory where virtual machines will be exported.
+|Number of VMs |Number of virtual machines to export (default is 1). If the value is greater than 1, a suffix is added to VM names. The suffix consists of an underscore and the VM number ('_#').
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/export_panel.png[image]
+
+[[RegisterVM]]
+=== RegisterVM
+
+Register an existing virtual machine with the ESX server.
+
+=== RegisterVM parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|Host |Name of the host where virtual machine will be registered.
+|Datacenter |Name of the datacenter.
+|Resource Pool |Name of the resource pool to register virtual machine.
+|VMX path |Datastore path to the virtual machine configuration file (vmx).
+|VM Name |Name to be assigned to the virtual machine.
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/registervm_panel.png[image]
+
+[[CloudManagerGrow]]
+=== CloudManagerGrow
+
+This procedure allows the plugin to work with the CloudManager plugin. It calls the PowerOn procedure and is intended to be run by CloudManager.
+
+=== CloudManagerGrow parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|VM Name pattern |Pattern used to find available machines on the server.
+|Commander Workspace |The {CD} workspace the resource should use.
+|Number of Servers |Number of new servers
+|Resources Pool |Pool name for creating resources.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/cloudmanagergrow_panel.png[image]
+
+[[CloudManagerShrink]]
+=== CloudManagerShrink
+
+This procedure allows the plugin to work with the CloudManager plugin. It calls the PowerOff procedure and is intended to be run by CloudManager.
+
+=== CloudManagerShrink parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|List of Deployments |A list of deployments to stop.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/cloudmanagershrink_panel.png[image]
+
+[[CloudManagerSync]]
+=== CloudManagerSync
+
+This procedure allows the plugin to work with CloudManager plugin, it checks the vms state and is intended to be run by CloudManager.
+
+=== CloudManagerSync parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|deployments |A list of deployments to check
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/cloudmanagershrink_panel.png[image]
+
+[[ListEntity]]
+=== ListEntity
+
+This procedure allows the plugin to list the objects of a specified Entity.
+
+=== ListEntity parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|Entity Type |The entity type to be listed (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem, ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/listentity_panel.png[image]
+
+[[DeleteEntity]]
+=== DeleteEntity
+
+This procedure allows the plugin to delete the specified object of an Entity.
+
+=== DeleteEntity parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|Entity Type |The entity type to be listed (ClusterComputeResource, ComputeResource, Datacenter, Folder, HostSystem, ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.
+|Entity Name |The name of the entity which is to be deleted.
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/deleteentity_panel.png[image]
+
+[[CreateFolder]]
+=== CreateFolder
+
+This procedure allows the plugin to create a new folder.
+
+=== CreateFolder parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|Parent Type (Folder/Datacenter) |The parent (data center or folder) in which folder is to be created.
+|Parent Name (Folder/Datacenter Name) |The name of the parent in which folder is to be created.
+|Folder Name |Name of the folder to be created.
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/createfolder_panel.png[image]
+
+[[RenameEntity]]
+=== RenameEntity
+
+This procedure allows the plugin to rename the specified object of an entity.
+
+=== RenameEntity parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|Entity Type |The entity type to be renamed (ClusterComputeResource, Datacenter, Folder, ResourcePool, or VirtualMachine) present on the target VirtualCenter Server or ESX Server system.
+|Entity Old Name |Old name of the entity which is to be renamed.
+|Entity New Name |New name of the entity which is to be renamed.
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/renameentity_panel.png[image]
+
+[[MoveEntity]]
+=== MoveEntity
+
+This procedure allows the plugin to move the specified object of an entity.
+
+=== MoveEntity parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|Entity Type (Folder/VM) |The parent (data center or VM) which need to be moved.
+|Entity Name (Folder/VM Name) |The name of the Entity which need to be moved.
+|Destination Folder Name |Name of the destination folder.
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/moveentity_panel.png[image]
+
+[[DisplayESXSummary]]
+=== DisplayESXSummary
+
+This procedure allows the plugin to Display the Summary of a specified host.
+
+=== DisplayESXSummary parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|ESX Host Name |The name of the ESX Host whose summary is to be displayed.
+|Show Live CPU/Memory Usage |Displays the live usage of CPU and Memory.
+|Display Network Details |Displays the network details of the ESX host.
+|Display Storage Details |Displays the storage details of the ESX host.
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/displayesxsummary_panel.png[image]
+
+[[ChangeCpuMemAllocation]]
+=== ChangeCpuMemAllocation
+
+Change Cpu/Memory allocation for a Virtual Machine.
+
+=== ChangeCpuMemAllocation parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|Virtual Machine Name |The name of the VM for which CPU/Memory has to be changed.
+|Number of CPUs |Number of virtual processors in a virtual machine.
+|Memory |Size of a virtual machine's memory, in MB.
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/changecpumemallocation_panel.png[image]
+
+[[AddHardDisk]]
+=== AddHardDisk
+
+This procedure allows the plugin to add HardDisk for a VM.
+
+=== AddHardDisk parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|Vm Name |The name of the VM.
+|HardDisk Size |The size of the HardDisk.
+|Disk Provisioning (thick/thin) |Can only use at the time of create.You cannot change the provisioning once created.Thick virtual disk that supports clustering features such as Fault Tolerance.Space required for the virtual disk is allocated at creation time. In contrast to the flat format, the data remaining on the physical device is zeroed out when the virtual disk is created. It might take much longer to create disks in this format than to create other types of disks.Thin disk provisioning is using the format to save storage space. For the thin disk, you provision as much datastore space as the disk would require based on the value that you enter for the disk size. However, the thin disk starts small and at first, uses only as much datastore space as the disk needs for its initial operations.
+|Controller Type(SCSI/IDE) |By default, two Integrated Drive Electronics (IDE) interfaces are presented to the virtual machine. The IDE interface (controller) is a standard way for storage devices (Floppy drives, hard drives and CD-ROM drives) to connect to the virtual machine.To access virtual disks, a virtual machine uses virtual SCSI controllers. These virtual controllers appear to a virtual machine as different types of controllers, including BusLogic Parallel, LSI Logic Parallel, LSI Logic SAS, and VMware Paravirtual. You can add a SCSI controller, change the SCSI controller type, and select bus sharing for a virtual machine.
+|Storage Mode |Disks in persistent mode behave like conventional disks on your physical computer. All data written to a disk in persistent mode are written permanently to the disk.Changes to disks in nonpersistent mode are discarded when you power off or reset the virtual machine. With nonpersistent mode, you can restart the virtual machine with a virtual disk in the same state every time. Changes to the disk are written to and read from a redo log file that is deleted when you power off or reset.
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/addharddisk_panel.png[image]
+
+[[AddCdDvdDrive]]
+=== AddCdDvdDrive
+
+This procedure allows the plugin to add CD/DVD drive to VM..
+
+=== AddCdDvdDrive parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|VM Name |The name of the VM on which CD/DVD Drive is attached.
+|ISO Image |The path of ISO Image. Will be used only for ISO Image Type.
+|Backing Type |The backing type of created CD/DVD Drive (Passthrough, AtApi, ISO Image).
+|Controller Type |The type of controller for created CD/DVD Drive (SATA, IDE).
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/addcddvddrive_panel.png[image]
+
+[[AddNetworkInterface]]
+=== AddNetworkInterface
+
+This procedure allows the plugin to add Network adapter .
+
+=== AddNetworkInterface parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|VM Name |The name of the VM on which created Network Interface is attached.
+|Network |The name of the network(switch) on which created Network Interface is attached.
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/addcddvddrive_panel.png[image]
+
+[[EditCdDvdDrive]]
+=== EditCdDvdDrive
+
+This procedure allows the plugin to edit already existing CD/DVD Drive on VM. .
+
+=== EditCdDvdDrive parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|CD/DVD Drive Name |The name of the CD/DVD Drive which need to be edited.
+|VM Name |The name of the VM on which CD/DVD Drive is attached.
+|ISO Image |The path of ISO Image. Will be used only for ISO Image Type.
+|Backing Type |The backing type of created CD/DVD Drive (Passthrough, AtApi, ISO Image).
+|Controller Type |The type of controller for created CD/DVD Drive (SATA, IDE).
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/editcddvddrive_panel.png[image]
+
+[[ListDevice]]
+=== ListDevice
+
+List devices of specific type(CD/DVD drive, Hard disk, Network adapter).
+
+=== ListDevice parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|VM Name |The name of the VM on which device is attached.
+|Device Type |The device type to be listed (CD/DVD ROM, Hard disk, Network adapter).
+|Device Name |The name of the device which is to be listed. If left blank all devices of above mentioned type will be listed.
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/listdevice_panel.png[image]
+
+[[RemoveDevice]]
+=== RemoveDevice
+
+Remove devices of specific type.
+
+=== RemoveDevice parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|VM Name |The name of the VM on which device is attached.
+|Device Type |The device type to be removed (CD/DVD ROM, Hard disk, Network adapter).
+|Device Name |The name of the device which is to be removed. If left blank all devices of above mentioned type will be removed.
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/removedevice_panel.png[image]
+
+[[ListSnapshot]]
+=== ListSnapshot
+
+List all snapshots inside a VM..
+
+=== ListSnapshot parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|VM Name |Name of the virtual machine where you want to see the snapshots.
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/listsnapshot_panel.png[image]
+
+[[RemoveSnapshot]]
+=== RemoveSnapshot
+
+Remove any particular snapshot or all snapshots inside VM.
+
+=== RemoveSnapshot parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|VM Name |Name of the virtual machine where you want to see the snapshots.
+|Snapshot Name |Name of the snapshot you want to remove.If you want to remove all the snapshots provide 'all' in the textbox option.
+|All |Operate on all items. Currently only makes sense with the 'sign', 'clean', 'list', and 'fingerprint' actions.
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/removesnapshot_panel.png[image]
+
+[[RevertToCurrentSnapshot]]
+=== RevertToCurrentSnapshot
+
+Added the following new procedures:
+
+=== RevertToCurrentSnapshot parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|VM Name |Name of the virtual machine where you want to see the snapshots.
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/use_cases/case-1/poweroff_log.png[image]
+
+[[CreateResourcepool]]
+=== CreateResourcePool
+
+This procedure allows the plugin to create a new resource pool.
+
+=== CreateResourcePool parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|Resourcepool Name |Name of the Resource Pool to be created.
+|Parent Resourcepool Name |Name of the Parent Resource Pool in which new Resource Pool is to be created.
+|CpuShare |Shares define how much access you get to a resource.
+|MemShare |Shares define how much access you get to a resource.
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/createresourcepool_panel.png[image]
+
+[[EditResourcepool]]
+=== EditResourcepool
+
+This procedure allows the plugin to edit an existing resource pool.
+
+=== EditResourcepool parameters
+
+[cols=",",options="header",]
+|===
+|Parameter |Description
+|ESX Connection |The name of the configuration which holds the connection information for ESX server.
+|New Resourcepool Name |Changed name of the ResourcePool.
+|Existing Resourcepool Name |Name of the existing ResourcePool which need to be edited.
+|CpuShare |Shares define how much access you get to a resource ..
+|MemShare |Shares define how much access you get to a resource ..
+|JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
+|===
+
+image::cloudbees-common::cd-plugins/ec-esx/parameters/editresourcepool_panel.png[image]
+
+[[usecases]]
+== Use cases
+
+[[UseCase1PowerOnConsumeandPowerOffJob]]
+=== Use case 1: PowerOn, consume, and PowerOff job
+
+One of the most common uses for this plugin is to power on an existing virtual machine, then create an {CD} resource assigned to this VM, use the resource to run some operations, and then power off the machine and delete the resource. To accomplish these task you must:
+
+. Create a Plugin Configuration.
+. Power on a VM in ESX.
+. Create a Resource for this VM.
+. Use the created resource.
+. Delete the resource.
+. Power off the VM.
+
+==== Create a plugin configuration
+
+Plugin configurations are created by going to the {CD} "Administration" tab, then to the "Plugins" sub-tab. On the right side of the line for the ESX plugin, there is a "Configure" link which will open the Configuration page.
+
+Create a new configuration by specifying the requested parameters:
+
+image::cloudbees-common::cd-plugins/ec-esx/use_cases/case-1/create_config.png[image]
+
+Once the configuration is created, you can see it listed in "ESX Configurations", and now you are able to manage virtual machines
+
+==== PowerOn
+
+Create a new PowerOn procedure and fill in the requested parameters with real values from your ESX server:
+
+image::cloudbees-common::cd-plugins/ec-esx/use_cases/case-1/poweron_parameters.png[image]
+
+Make sure you selected the "Create Resource?" checkbox.
+
+==== Consume
+
+Create a new command step to use the created resource. In this example, we will pick a resource from the pool and just add an ec-perl sleep to use it for 30 seconds.
+
+image::cloudbees-common::cd-plugins/ec-esx/use_cases/case-1/consume_parameters.png[image]
+
+==== Cleanup
+
+Now that the resource has been used and is ready to be deleted, create a Cleanup step and fill in the requested parameters.
+
+image::cloudbees-common::cd-plugins/ec-esx/use_cases/case-1/cleanup_parameters.png[image]
+
+==== PowerOff
+
+Now that the resource has been deleted, create a PowerOff step and fill in the requested parameters.
+
+image::cloudbees-common::cd-plugins/ec-esx/use_cases/case-1/poweroff_parameters.png[image]
+
+==== Results and outputs
+
+Once the job finished, you can see the properties stored in 'Results location'.
+
+image::cloudbees-common::cd-plugins/ec-esx/use_cases/case-1/job.png[image]
+
+image::cloudbees-common::cd-plugins/ec-esx/use_cases/case-1/results.png[image]
+
+PowerOn output:
+
+image::cloudbees-common::cd-plugins/ec-esx/use_cases/case-1/poweron_log.png[image]
+
+Cleanup output:
+
+image::cloudbees-common::cd-plugins/ec-esx/use_cases/case-1/cleanup_log.png[image]
+
+PowerOff output:
+
+image::cloudbees-common::cd-plugins/ec-esx/use_cases/case-1/poweroff_log.png[image]
+
+[[releaseNotes]]
+== Release notes
+
+=== EC-ESX 2.3.7
+
+* The documentation has been migrated to the main site.
+
+=== EC-ESX 2.3.6
+
+* Renaming from "CloudBees Flow" to "{CD}"
+
+=== EC-ESX 2.3.5
+
+* Renaming from "Electric Cloud" to "CloudBees"
+
+=== EC-ESX 2.3.4
+
+* Configurations can be created by users with "@" sign in a name.
+
+=== EC-ESX 2.3.3
+
+* The plugin documentation has been updated.
+
+=== EC-ESX 2.3.2
+
+* The plugin icon has been updated.
+
+=== EC-ESX 2.3.1
+
+* Import procedure has been improved.
+
+=== EC-ESX 2.2.0
+
+* Added the following new procedures:
+** AddCdDvdDrive
+** AddHardDisk
+** AddNetworkInterface
+** ChangeCpuMemAllocation
+** CreateFolder
+** CreateResourcepool
+** DeleteEntity
+** DisplayESXSummary
+** EditCdDvdDrive
+** EditResourcepool
+** ListDevice
+** ListEntity
+** ListSnapshot
+** MoveEntity
+** RemoveDevice
+** RemoveSnapshot
+** RenameEntity
+** RevertToCurrentSnapshot
+
+=== EC-ESX 2.1.5
+
+* Fixed issue with configurations being cached for IE.
+
+=== EC-ESX 2.1.4
+
+* Renamed ElectricCommander to ElectricFlow.
+
+=== EC-ESX 2.1.3
+
+* Fixed manifest file.
+
+=== EC-ESX 2.1.2
+
+* Documented the form for ESX URL in configurations.
+* Added a Step to test credentials.
+* Fixed Configuration Management.
+
+=== EC-ESX 2.1.1
+
+* Procedure name(s) were changed in the step picker section.
+
+=== EC-ESX 2.1.0
+
+* Added CloudManagerSync procedure.
+
+=== EC-ESX 2.0.4
+
+* Fixed configuration description.
+
+=== EC-ESX 2.0.3
+
+* Fixed power on error.
+
+=== EC-ESX 2.0.2
+
+* Deleted CloudManagerGrow And CloudManagerShrink from stepPicker.
+* Change Help page style.
+
+=== EC-ESX 2.0.1
+
+* Added Help link to each procedure.
+* Parameter Panel XML Cleanup.
+
+=== EC-ESX 2.0.0
+
+* Applied new Help page template.
+* Added detailed use case.
+* Added new XML parameter panel to all procedures.
+* Added support for EC-CloudManager.
+* Fixed cleanup procedure when resource does not exist.
+
+=== EC-ESX 1.2.3
+
+* Changed EOL on VMware SDK files.
+
+=== EC-ESX 1.2.2
+
+* Included vSphere SDK for Perl in the plugin and removed sdk_installation_path parameter from all procedures
+* Removed CreateConfiguration and DeleteConfiguration procedures from the wizard/procedure selection.
+* Updated Help page.
+
+=== EC-ESX 1.2.1
+
+* Updated Help page.
+
+=== EC-ESX 1.2.0
+
+* Modified the Cleanup and Create subprocedures.
+* Added the ability for all subprocedures to perform operations for multiple virtual machines.
+* Added the timeout parameter to all steps.
+* Added these subprocedures:PowerOn, PowerOff, Shutdown, Suspend, GetVMConfiguration, CreateResourceFromVM, Import, Export, and RegisterVM.
+
+=== EC-ESX 1.1.0
+
+* Added the Snapshot subprocedure.
