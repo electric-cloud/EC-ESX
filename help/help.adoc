@@ -761,7 +761,7 @@ Added the following new procedures:
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/use_cases/case-1/poweroff_log.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/poweroff_log.png[image]
 
 [[CreateResourcepool]]
 === CreateResourcePool
@@ -824,7 +824,7 @@ Plugin configurations are created by going to the {CD} "Administration" tab, the
 
 Create a new configuration by specifying the requested parameters:
 
-image::cloudbees-common::cd-plugins/ec-esx/use_cases/case-1/create_config.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/create_config.png[image]
 
 Once the configuration is created, you can see it listed in "ESX Configurations", and now you are able to manage virtual machines
 
@@ -832,7 +832,7 @@ Once the configuration is created, you can see it listed in "ESX Configurations"
 
 Create a new PowerOn procedure and fill in the requested parameters with real values from your ESX server:
 
-image::cloudbees-common::cd-plugins/ec-esx/use_cases/case-1/poweron_parameters.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/poweron_parameters.png[image]
 
 Make sure you selected the "Create Resource?" checkbox.
 
@@ -840,39 +840,39 @@ Make sure you selected the "Create Resource?" checkbox.
 
 Create a new command step to use the created resource. In this example, we will pick a resource from the pool and just add an ec-perl sleep to use it for 30 seconds.
 
-image::cloudbees-common::cd-plugins/ec-esx/use_cases/case-1/consume_parameters.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/consume_parameters.png[image]
 
 ==== Cleanup
 
 Now that the resource has been used and is ready to be deleted, create a Cleanup step and fill in the requested parameters.
 
-image::cloudbees-common::cd-plugins/ec-esx/use_cases/case-1/cleanup_parameters.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/cleanup_parameters.png[image]
 
 ==== PowerOff
 
 Now that the resource has been deleted, create a PowerOff step and fill in the requested parameters.
 
-image::cloudbees-common::cd-plugins/ec-esx/use_cases/case-1/poweroff_parameters.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/poweroff_parameters.png[image]
 
 ==== Results and outputs
 
 Once the job finished, you can see the properties stored in 'Results location'.
 
-image::cloudbees-common::cd-plugins/ec-esx/use_cases/case-1/job.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/job.png[image]
 
-image::cloudbees-common::cd-plugins/ec-esx/use_cases/case-1/results.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/results.png[image]
 
 PowerOn output:
 
-image::cloudbees-common::cd-plugins/ec-esx/use_cases/case-1/poweron_log.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/poweron_log.png[image]
 
 Cleanup output:
 
-image::cloudbees-common::cd-plugins/ec-esx/use_cases/case-1/cleanup_log.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/cleanup_log.png[image]
 
 PowerOff output:
 
-image::cloudbees-common::cd-plugins/ec-esx/use_cases/case-1/poweroff_log.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/poweroff_log.png[image]
 
 [[releaseNotes]]
 == Release notes
