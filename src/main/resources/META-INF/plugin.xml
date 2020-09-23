@@ -33,4 +33,5 @@
             <javascript>war/ecplugins.esx.ConfigurationManagement/ecplugins.esx.ConfigurationManagement.nocache.js</javascript>
         </component>
     </components>
+<hasAdoc>true</hasAdoc>
 </plugin>
