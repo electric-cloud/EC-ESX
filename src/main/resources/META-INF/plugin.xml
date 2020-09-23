@@ -34,9 +34,6 @@
         </component>
     </components>
 <hasAdoc>true</hasAdoc>
-    
-        
-
 
 <detailedDescription>VMware ESX and VMware ESXi provide the foundation for building and managing a reliable and dynamic IT infrastructure. ESX server is managed by the VMware Infrastructure client. Its centralized management platform is called Virtual Center. These hypervisors abstract processor, memory, storage and networking resources into multiple virtual machines that each can run an unmodified operating system and applications.
 
