@@ -1,6 +1,25 @@
 Plugin version @PLUGIN_VERSION@
+
 Revised on June 03, 2020
 
+
+== Overview
+
+VMware ESX and VMware ESXi provide the foundation for building and managing a reliable and dynamic IT infrastructure.
+
+ESX Server is managed by the VMware Infrastructure Client. Its centralized management platform is called Virtual Center. These hypervisors abstract processor, memory, storage and networking resources into multiple virtual machines that each can run an unmodified operating system and applications.
+
+VMware ESXi is the latest hypervisor architecture from VMware. The original ESX is being replaced by ESXi.
+
+== ESX links
+
+More information can be found http://www.vmware.com/products/vsphere/esxi-and-esx/index.html[here].
+
+Information about the OVF tool can be found http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf[here.]
+
+For some procedures you need to specify the Guest OS ID. Find these values http://www.vmware.com/support/developer/converter-sdk/conv50_apireference/vim.vm.GuestOsDescriptor.GuestOsIdentifier.html[here].
+
+OVF manual is available http://www.vmware.com/support/developer/ovf/[here.]
 
 == {CD} integration to vmware ESX and esxi
 
@@ -20,8 +39,7 @@ The VMware OVF Tool is a command line utility that allows you to import and expo
 
 In order to execute Import and Export procedures using the ESX plugin, the OVF Tool must be installed.
 
-* You can download this utility from the \http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf.
-* OVF manual is available \http://www.vmware.com/support/developer/ovf.
+You can download this utility from the http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf[OVF Tool page].
 
 You must have an account to download this tool. If you do not have an account, you can create one for free.
 
@@ -76,8 +94,6 @@ Click *Create Configuration* as per the description of parameters below.
 [[procedures]]
 == Plugin procedures
 
-For some procedures you need to specify the Guest OS ID. Find these values \http://www.vmware.com/support/developer/converter-sdk/conv50_apireference/vim.vm.GuestOsDescriptor.GuestOsIdentifier.html.
-
 [[Create]]
 === Create
 
@@ -104,7 +120,7 @@ Create virtual machines on the ESX server. Guest OS installation must be perform
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/create-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/create_panel.png[image]
 
 [[Clone]]
 === Clone
@@ -125,7 +141,7 @@ Clone a virtual machine. Clone operation is only supported and only works when c
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/clone-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/clone_panel.png[image]
 
 [[Relocate]]
 === Relocate
@@ -145,7 +161,7 @@ Relocate a virtual machine to the specified destination host. Relocate operation
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/relocate-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/relocate_panel.png[image]
 
 [[Cleanup]]
 === Cleanup
@@ -164,7 +180,7 @@ Deletes {CD} resources and optionally destroys the virtual machines on the ESX s
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/cleanup-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/cleanup_panel.png[image]
 
 [[Snapshot]]
 === Snapshot
@@ -183,7 +199,7 @@ Create a snapshot for the specified virtual machine.
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/snapshot-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/snapshot_panel.png[image]
 
 [[Revert]]
 === Revert
@@ -203,7 +219,7 @@ Revert a virtual machine to the specified snapshot.
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/revert-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/revert_panel.png[image]
 
 [[PowerOn]]
 === PowerOn
@@ -225,7 +241,7 @@ Power on the specified virtual machine and optionally create an {CD} resource fo
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/poweron-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/poweron_panel.png[image]
 
 [[PowerOff]]
 === PowerOff
@@ -243,7 +259,7 @@ Power off the specified virtual machine.
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/poweroff-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/poweroff_panel.png[image]
 
 [[Shutdown]]
 === Shutdown
@@ -261,7 +277,7 @@ Shut down the specified virtual machine.
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/shutdown-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/shutdown_panel.png[image]
 
 [[Suspend]]
 === Suspend
@@ -279,7 +295,7 @@ Suspend the specified virtual machine.
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/suspend-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/suspend_panel.png[image]
 
 [[CreateResourceFromVM]]
 === CreateResourceFromVM
@@ -301,7 +317,7 @@ Store information about a virtual machine and create {CD} resources. This proced
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/createresourcefromvm-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/createresourcefromvm_panel.png[image]
 
 [[GetVMConfiguration]]
 === GetVMConfiguration
@@ -320,7 +336,7 @@ Get the IP address and hostname of a virtual machine and store them in the speci
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/getvmconfiguration-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/getvmconfiguration_panel.png[image]
 
 [[Import]]
 === Import
@@ -348,7 +364,7 @@ Import an OVF package to the ESX server using VMware OVF Tool (a command line ut
 |Result properties location |Information about imported VM will be stored in vms property within this path.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/import-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/import_panel.png[image]
 
 [[Export]]
 === Export
@@ -371,7 +387,7 @@ The Export subprocedure exports a virtual machine to an OVF package using the VM
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/export-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/export_panel.png[image]
 
 [[RegisterVM]]
 === RegisterVM
@@ -392,7 +408,7 @@ Register an existing virtual machine with the ESX server.
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/registervm-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/registervm_panel.png[image]
 
 [[CloudManagerGrow]]
 === CloudManagerGrow
@@ -411,7 +427,7 @@ This procedure allows the plugin to work with the CloudManager plugin. It calls 
 |Resources Pool |Pool name for creating resources.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/cloudmanagergrow-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/cloudmanagergrow_panel.png[image]
 
 [[CloudManagerShrink]]
 === CloudManagerShrink
@@ -427,7 +443,7 @@ This procedure allows the plugin to work with the CloudManager plugin. It calls 
 |List of Deployments |A list of deployments to stop.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/cloudmanagershrink-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/cloudmanagershrink_panel.png[image]
 
 [[CloudManagerSync]]
 === CloudManagerSync
@@ -443,7 +459,7 @@ This procedure allows the plugin to work with CloudManager plugin, it checks the
 |deployments |A list of deployments to check
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/cloudmanagershrink-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/cloudmanagershrink_panel.png[image]
 
 [[ListEntity]]
 === ListEntity
@@ -460,7 +476,7 @@ This procedure allows the plugin to list the objects of a specified Entity.
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/listentity-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/listentity_panel.png[image]
 
 [[DeleteEntity]]
 === DeleteEntity
@@ -478,7 +494,7 @@ This procedure allows the plugin to delete the specified object of an Entity.
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/deleteentity-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/deleteentity_panel.png[image]
 
 [[CreateFolder]]
 === CreateFolder
@@ -497,7 +513,7 @@ This procedure allows the plugin to create a new folder.
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/createfolder-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/createfolder_panel.png[image]
 
 [[RenameEntity]]
 === RenameEntity
@@ -516,7 +532,7 @@ This procedure allows the plugin to rename the specified object of an entity.
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/renameentity-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/renameentity_panel.png[image]
 
 [[MoveEntity]]
 === MoveEntity
@@ -535,7 +551,7 @@ This procedure allows the plugin to move the specified object of an entity.
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/moveentity-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/moveentity_panel.png[image]
 
 [[DisplayESXSummary]]
 === DisplayESXSummary
@@ -555,7 +571,7 @@ This procedure allows the plugin to Display the Summary of a specified host.
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/displayesxsummary-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/displayesxsummary_panel.png[image]
 
 [[ChangeCpuMemAllocation]]
 === ChangeCpuMemAllocation
@@ -574,7 +590,7 @@ Change Cpu/Memory allocation for a Virtual Machine.
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/changecpumemallocation-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/changecpumemallocation_panel.png[image]
 
 [[AddHardDisk]]
 === AddHardDisk
@@ -595,7 +611,7 @@ This procedure allows the plugin to add HardDisk for a VM.
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/addharddisk-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/addharddisk_panel.png[image]
 
 [[AddCdDvdDrive]]
 === AddCdDvdDrive
@@ -615,7 +631,7 @@ This procedure allows the plugin to add CD/DVD drive to VM..
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/addcddvddrive-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/addcddvddrive_panel.png[image]
 
 [[AddNetworkInterface]]
 === AddNetworkInterface
@@ -633,7 +649,7 @@ This procedure allows the plugin to add Network adapter .
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/addcddvddrive-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/addcddvddrive_panel.png[image]
 
 [[EditCdDvdDrive]]
 === EditCdDvdDrive
@@ -654,7 +670,7 @@ This procedure allows the plugin to edit already existing CD/DVD Drive on VM. .
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/editcddvddrive-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/editcddvddrive_panel.png[image]
 
 [[ListDevice]]
 === ListDevice
@@ -673,7 +689,7 @@ List devices of specific type(CD/DVD drive, Hard disk, Network adapter).
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/listdevice-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/listdevice_panel.png[image]
 
 [[RemoveDevice]]
 === RemoveDevice
@@ -692,7 +708,7 @@ Remove devices of specific type.
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/removedevice-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/removedevice_panel.png[image]
 
 [[ListSnapshot]]
 === ListSnapshot
@@ -709,7 +725,7 @@ List all snapshots inside a VM..
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/listsnapshot-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/listsnapshot_panel.png[image]
 
 [[RemoveSnapshot]]
 === RemoveSnapshot
@@ -728,7 +744,7 @@ Remove any particular snapshot or all snapshots inside VM.
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/removesnapshot-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/removesnapshot_panel.png[image]
 
 [[RevertToCurrentSnapshot]]
 === RevertToCurrentSnapshot
@@ -745,7 +761,7 @@ Added the following new procedures:
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/poweroff-log.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/poweroff_log.png[image]
 
 [[CreateResourcepool]]
 === CreateResourcePool
@@ -765,7 +781,7 @@ This procedure allows the plugin to create a new resource pool.
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/createresourcepool-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/createresourcepool_panel.png[image]
 
 [[EditResourcepool]]
 === EditResourcepool
@@ -785,7 +801,7 @@ This procedure allows the plugin to edit an existing resource pool.
 |JobStep Timeout |Timeout for the step execution in minutes. Blank means no timeout.
 |===
 
-image::cloudbees-common::cd-plugins/ec-esx/parameters/editresourcepool-panel.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/parameters/editresourcepool_panel.png[image]
 
 [[usecases]]
 == Use cases
@@ -808,7 +824,7 @@ Plugin configurations are created by going to the {CD} "Administration" tab, the
 
 Create a new configuration by specifying the requested parameters:
 
-image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/create-config.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/create_config.png[image]
 
 Once the configuration is created, you can see it listed in "ESX Configurations", and now you are able to manage virtual machines
 
@@ -816,7 +832,7 @@ Once the configuration is created, you can see it listed in "ESX Configurations"
 
 Create a new PowerOn procedure and fill in the requested parameters with real values from your ESX server:
 
-image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/poweron-parameters.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/poweron_parameters.png[image]
 
 Make sure you selected the "Create Resource?" checkbox.
 
@@ -824,19 +840,19 @@ Make sure you selected the "Create Resource?" checkbox.
 
 Create a new command step to use the created resource. In this example, we will pick a resource from the pool and just add an ec-perl sleep to use it for 30 seconds.
 
-image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/consume-parameters.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/consume_parameters.png[image]
 
 ==== Cleanup
 
 Now that the resource has been used and is ready to be deleted, create a Cleanup step and fill in the requested parameters.
 
-image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/cleanup-parameters.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/cleanup_parameters.png[image]
 
 ==== PowerOff
 
 Now that the resource has been deleted, create a PowerOff step and fill in the requested parameters.
 
-image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/poweroff-parameters.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/poweroff_parameters.png[image]
 
 ==== Results and outputs
 
@@ -848,15 +864,15 @@ image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/results.png[image]
 
 PowerOn output:
 
-image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/poweron-log.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/poweron_log.png[image]
 
 Cleanup output:
 
-image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/cleanup-log.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/cleanup_log.png[image]
 
 PowerOff output:
 
-image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/poweroff-log.png[image]
+image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/poweroff_log.png[image]
 
 [[releaseNotes]]
 == Release notes
