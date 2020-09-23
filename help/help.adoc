@@ -2,37 +2,6 @@ Plugin version @PLUGIN_VERSION@
 
 Revised on June 03, 2020
 
-
-== Overview
-
-VMware ESX and VMware ESXi provide the foundation for building and managing a reliable and dynamic IT infrastructure.
-
-ESX Server is managed by the VMware Infrastructure Client. Its centralized management platform is called Virtual Center. These hypervisors abstract processor, memory, storage and networking resources into multiple virtual machines that each can run an unmodified operating system and applications.
-
-VMware ESXi is the latest hypervisor architecture from VMware. The original ESX is being replaced by ESXi.
-
-== ESX links
-
-More information can be found http://www.vmware.com/products/vsphere/esxi-and-esx/index.html[here].
-
-Information about the OVF tool can be found http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf[here.]
-
-For some procedures you need to specify the Guest OS ID. Find these values http://www.vmware.com/support/developer/converter-sdk/conv50_apireference/vim.vm.GuestOsDescriptor.GuestOsIdentifier.html[here].
-
-OVF manual is available http://www.vmware.com/support/developer/ovf/[here.]
-
-== {CD} integration to vmware ESX and esxi
-
-EC-ESX integration uses modules from the VI Perl Toolkit, which provides access to the ESX system. By using this toolkit, the integration can connect to the ESX server to automate and perform various operations providing a more generic interface for managing virtual machines on ESX servers.
-
-The plugin interacts with ESX data using PERL to perform the following tasks:
-
-* Create configuration to hold connection information.
-
-This plugin provides the following procedures: Cleanup, Clone, Create, CreateResourceFromVM, Export, GetVMConfiguration, Import, PowerOn, PowerOff, RegisterVM, Relocate, Revert, Shutdown, Snapshot, and Suspend.
-
-This plugin communicates with ESX by using the Perl module VMware::VIRuntime, provided by VMware.
-
 == OVF tool
 
 The VMware OVF Tool is a command line utility that allows you to import and export OVF packages.
@@ -40,6 +9,8 @@ The VMware OVF Tool is a command line utility that allows you to import and expo
 In order to execute Import and Export procedures using the ESX plugin, the OVF Tool must be installed.
 
 You can download this utility from the http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf[OVF Tool page].
+
+OVF manual is available http://www.vmware.com/support/developer/ovf/[here.]
 
 You must have an account to download this tool. If you do not have an account, you can create one for free.
 
@@ -93,6 +64,8 @@ Click *Create Configuration* as per the description of parameters below.
 
 [[procedures]]
 == Plugin procedures
+
+NOTE: For some procedures you need to specify the Guest OS ID. Find these values http://www.vmware.com/support/developer/converter-sdk/conv50_apireference/vim.vm.GuestOsDescriptor.GuestOsIdentifier.html[here].
 
 [[Create]]
 === Create
@@ -883,11 +856,11 @@ image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/poweroff_log.png[ima
 
 === EC-ESX 2.3.6
 
-* Renaming from "CloudBees Flow" to "{CD}"
+* Renaming  to "{CD}"
 
 === EC-ESX 2.3.5
 
-* Renaming from "Electric Cloud" to "CloudBees"
+* Renaming  to "CloudBees"
 
 === EC-ESX 2.3.4
 
