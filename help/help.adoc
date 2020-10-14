@@ -10,8 +10,6 @@ In order to execute Import and Export procedures using the ESX plugin, the OVF T
 
 You can download this utility from the http://communities.vmware.com/community/vmtn/vsphere/automationtools/ovf[OVF Tool page].
 
-OVF manual is available http://www.vmware.com/support/developer/ovf/[here.]
-
 You must have an account to download this tool. If you do not have an account, you can create one for free.
 
 After downloading VMware OVF Tool, use the corresponding install method for your operating system:
@@ -42,9 +40,9 @@ Plugin configurations are sets of parameters that apply across some or all of th
 
 To create plugin configurations in {CD}, do these steps:
 
-Go to *Administration* > *Plugins* to open the Plugin Manager.
+Go to menu:Administration[Plugins] to open the Plugin Manager.
 
-Find the EC-ESX-@PLUGIN_VERSION@ row.
+Find the EC-ESX-2.3.7.2020092301 row.
 
 Click *Configure* to open the Configurations page.
 
@@ -64,8 +62,6 @@ Click *Create Configuration* as per the description of parameters below.
 
 [[procedures]]
 == Plugin procedures
-
-NOTE: For some procedures you need to specify the Guest OS ID. Find these values http://www.vmware.com/support/developer/converter-sdk/conv50_apireference/vim.vm.GuestOsDescriptor.GuestOsIdentifier.html[here].
 
 [[Create]]
 === Create
@@ -856,11 +852,11 @@ image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/poweroff_log.png[ima
 
 === EC-ESX 2.3.6
 
-* Renaming  to "{CD}"
+* Renaming to "{CD}"
 
 === EC-ESX 2.3.5
 
-* Renaming  to "CloudBees"
+* Renaming to "CloudBees"
 
 === EC-ESX 2.3.4
 
@@ -976,3 +972,4 @@ image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/poweroff_log.png[ima
 === EC-ESX 1.1.0
 
 * Added the Snapshot subprocedure.
+
