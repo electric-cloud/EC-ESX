@@ -2,6 +2,8 @@ Plugin version @PLUGIN_VERSION@
 
 Revised on June 03, 2020
 
+
+
 == OVF tool
 
 The VMware OVF Tool is a command line utility that allows you to import and export OVF packages.
@@ -40,7 +42,7 @@ Plugin configurations are sets of parameters that apply across some or all of th
 
 To create plugin configurations in {CD}, do these steps:
 
-Go to menu:Administration[Plugins] to open the Plugin Manager.
+Go to *Administration* > *Plugins* to open the Plugin Manager.
 
 Find the EC-ESX-@PLUGIN_VERSION@ row.
 
@@ -852,11 +854,11 @@ image::cloudbees-common::cd-plugins/ec-esx/use-cases/case-1/poweroff_log.png[ima
 
 === EC-ESX 2.3.6
 
-* Renaming to "{CD}"
+* Renaming from "CloudBees Flow" to "{CD}"
 
 === EC-ESX 2.3.5
 
-* Renaming to "CloudBees"
+* Renaming from "Electric Cloud" to "CloudBees"
 
 === EC-ESX 2.3.4
 
