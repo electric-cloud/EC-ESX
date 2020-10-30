@@ -98,6 +98,8 @@ use constant {
     DATACENTER      => 'Datacenter',
     VIRTUAL_MACHINE => 'VirtualMachine',
     RESOURCE_POOL   => 'ResourcePool',
+    FOLDER          => 'Folder',
+    VIRTUAL_APP     => 'VirtualApp',
 
     DATASTORE_ERROR => 'datastore_error',
     DISKSIZE_ERROR  => 'disksize_error',
@@ -2442,8 +2444,10 @@ sub createFolder {
 sub create_folder {
     my ($self) = @_;
     $self->debug_msg(1, 'Creating Folder \'' . $self->opts->{folder_name} . '\'...');
+    my $parent_type = $self->opts->{parent_type};
+    my $parent_name = $self->opts->{parent_name};
     eval {
-        my $parent_view = Vim::find_entity_view(view_type => $self->opts->{parent_type}, filter => { name => $self->opts->{parent_name}});
+        my $parent_view = $self->get_exact_entity($parent_type, $parent_name);
         if (!$parent_view) {
             $self->debug_msg(0, 'Parent Entity \'' . $self->opts->{parent_name} . '\' not found');
             $self->opts->{exitcode} = ERROR;
@@ -2463,12 +2467,20 @@ sub create_folder {
         $self->debug_msg(0, 'Successfully Created Folder \'' . $self->opts->{folder_name} . '\'');
     };
     if ($@) {
+        my $err = $@;
         if (ref($@) eq SOAP_FAULT) {
             $self->debug_msg(0, 'Error creating folder \'' . $self->opts->{folder_name} . '\': ');
 
             if (!$self->print_error(ref($@->detail))) {
                 $self->debug_msg(0, "Folder '" . $self->opts->{folder_name} . "' can't be created \n" . $@ . EMPTY);
             }
+        }
+        elsif ($err =~ m/No entities found/) {
+            $self->debug_msg(0, "Folder View out of Parent Entity $parent_name not found\n");
+        }
+        elsif ($err =~ m/More than one entity found/ ) {
+            # Asking user to specify fully qualified name of the entity
+            $self->debug_msg(0, "ERROR: there is more than one parent view with the name $parent_name\n");
         }
         else {
             $self->debug_msg(0, "Folder '" . $self->opts->{folder_name} . "' can't be created \n" . $@ . EMPTY);
@@ -2528,9 +2540,10 @@ sub delete {
 sub delete_entity {
     my ($self) = @_;
     $self->debug_msg(1, 'Deleting Entity \'' . $self->opts->{entity_name} . '\'...');
+    my $entity_type = $self->opts->{entity_type};
+    my $entity_name = $self->opts->{entity_name};
     eval {
-        my $entity_view = Vim::find_entity_view(view_type => $self->opts->{entity_type}, filter => { 'name' => $self->opts->{entity_name} } );
-
+        my $entity_view = $self->get_exact_entity($entity_type, $entity_name);
         if (!$entity_view) {
             $self->debug_msg(0, 'Entity \'' . $self->opts->{entity_name} . '\' not found');
             $self->opts->{exitcode} = ERROR;
@@ -2540,12 +2553,20 @@ sub delete_entity {
         $self->debug_msg(0, 'Successfully Deleted Entity \'' . $self->opts->{entity_name} . '\'');
     };
     if ($@) {
+        my $err = $@;
         if (ref($@) eq SOAP_FAULT) {
             $self->debug_msg(0, 'Error deleting entity \'' . $self->opts->{entity_name} . '\': ');
 
             if (!$self->print_error(ref($@->detail))) {
                 $self->debug_msg(0, "Entity '" . $self->opts->{entity_name} . "' can't be deleted \n" . $@ . EMPTY);
             }
+        }
+        elsif ($err =~ m/No entities found/) {
+            $self->debug_msg(0, "There is no entity with the name $entity_name and type $entity_type\n");
+        }
+        elsif ($err =~ m/More than one entity found/ ) {
+            # Asking user to specify fully qualified name of the entity
+            $self->debug_msg(0, "ERROR: there is more than one entity with the name $entity_name and type $entity_type\n");
         }
         else {
             $self->debug_msg(0, "Entity '" . $self->opts->{entity_name} . "' can't be deleted \n" . $@ . EMPTY);
@@ -2605,9 +2626,11 @@ sub rename {
 sub rename_entity {
     my ($self) = @_;
     $self->debug_msg(1, 'Renaming Entity \'' . $self->opts->{entity_old_name} . '\' to \'' . $self->opts->{entity_new_name} . '\'...');
+    my $old_entity_type = $self->opts->{entity_type};
+    my $old_entity_name = $self->opts->{entity_old_name};
     eval {
-        my $entity_old_view = Vim::find_entity_view(view_type => $self->opts->{entity_type}, filter => { 'name' => $self->opts->{entity_old_name} } );
-
+        my $entity_old_view = $self->get_exact_entity($old_entity_type, $old_entity_name);
+        # TODO new function should not return undef under normal circumstances, so the next block is going to be removed
         if (!$entity_old_view) {
             $self->debug_msg(0, 'Entity \'' . $self->opts->{entity_old_name} . '\' not found');
             $self->opts->{exitcode} = ERROR;
@@ -2617,12 +2640,20 @@ sub rename_entity {
         $self->debug_msg(0, 'Successfully renamed Entity \'' . $self->opts->{entity_old_name} . '\'');
     };
     if ($@) {
+        my $err = $@;
         if (ref($@) eq SOAP_FAULT) {
             $self->debug_msg(0, 'Error renaming entity \'' . $self->opts->{entity_old_name} . '\': ');
 
             if (!$self->print_error(ref($@->detail))) {
                 $self->debug_msg(0, "Entity '" . $self->opts->{entity_old_name} . "' can't be renamed \n" . $@ . EMPTY);
             }
+        }
+        elsif ($err =~ m/No entities found/) {
+            $self->debug_msg(0, "There is no entity with the name $old_entity_name and type $old_entity_type\n");
+        }
+        elsif ($err =~ m/More than one entity found/ ) {
+            # Asking user to specify fully qualified name of the entity
+            $self->debug_msg(0, "ERROR: there is more than one entity with the name $old_entity_name and type $old_entity_type\n");
         }
         else {
             $self->debug_msg(0, "Entity '" . $self->opts->{entity_old_name} . "' can't be renamed \n" . $@ . EMPTY);
@@ -2769,7 +2800,7 @@ sub display_esx_summary {
     my $message;
     $self->opts->{summary} = "";
     $self->logger(1, 'Displaying summary for Host: \'' . $self->opts->{host_name} . '\'...');
-    
+
     eval {
         my $host = Vim::find_entity_view(view_type => 'HostSystem', filter => { name => $self->opts->{host_name}});
         if (!$host) {
@@ -3254,6 +3285,91 @@ sub get_exact_vm {
     }
     return undef;
 }
+
+# More universal version of get_exact_vm function
+# Suggested usage:
+#
+#     my $entity;
+#     eval {
+#         $entity = $self->get_exact_entity('VirtualMachine', '/Folder/Subfolder/vm_name');
+#         1;
+#     } or do {
+#         my $err = $@;
+#         if ($err =~ m/No entities found/) {
+#             ...
+#         }
+#         elsif ( $err =~ m/More than one entity found/) {
+#             ...
+#         }
+#         else {
+#             print $err;
+#             exit(1);
+#         }
+#     };
+# Fully qualified name can look like 
+#
+#     /Folder
+#     //Folder - the same as above
+#     /Folder/another_folder
+#     /Folder/vm
+#     unique_object_name -- if there is only one entity in the inventory with the specified name
+
+sub get_exact_entity {
+    my ($self, $entity_type, $full_name, %filter ) = @_;
+
+    croak 'No entity type' unless $entity_type;
+    croak 'No entity name' unless $full_name;
+
+    print "Looking for entity with exact path...\n"; # TODO need logger here and below
+    my $entity_path = split_entity_name($full_name);
+
+   my $entity_name = $entity_path->{entity_name};
+    my $entities = Vim::find_entity_views(
+        view_type => $entity_type,
+        filter => {
+            %filter,
+            name => $entity_name,
+        }
+    );
+    print "Found entities: " . scalar(@$entities) . "\n";
+    unless (scalar @$entities) {
+        croak "No entities found for $entity_type:$full_name";
+    }
+
+    # There is only one entity with the specified name - let it be so
+    if (scalar @$entities == 1 ) {
+        return $entities->[0];
+    }
+
+    unless( $entity_path->{entity_reverse_path} ) {
+        # The name is not fully qualified, and we found more than one entity with this name
+        croak "More than one entity found for $entity_type:$full_name";
+    }
+
+    my $expected_path = join '/', @{$entity_path->{entity_reverse_path}};
+    $expected_path = slash_it($expected_path);
+    print "Expected path: " . $expected_path . "\n";
+
+    # Now we are going to retrieve the full path of this entity
+    for my $entity (@$entities) {
+        my $folder = $entity->{parent};
+
+        # TODO remove this block, because build_folders_path is going to do the same anyway
+        $folder = Vim::get_view(mo_ref => $folder);
+        my $folder_paths = build_folders_path($folder, []);
+        my $scalar_folder_path = make_folders_path_scalar($folder_paths);
+
+        print "Scalar folder path: " . $scalar_folder_path . "\n";
+        # And compare it to one specified by user
+        if ($scalar_folder_path eq $expected_path) {
+            print "Desired entity found...\n";
+            return $entity;
+        }
+    }
+    croak "No entities found for $entity_type:$full_name";
+}
+
+
 #########################################
 #Arguments:
 #    host: host name
@@ -3516,7 +3632,7 @@ sub deviceManager {
         }
         else{
             print "Device configurations not required." . "\n";
-        } 
+        }
 
         if($args{memoryMB} && $args{numCPUs}) {
            print "Change CPU and Memory-Added in reconfiguring VM" . "\n";
@@ -3946,7 +4062,7 @@ sub revertToCurrentSnapshot {
       . "\n";
 
      my $hostname = Vim::get_view(mo_ref => $self->opts->{vm_view}->runtime->host)->name;
-   
+
      eval {
         $self->opts->{vm_view}->RevertToCurrentSnapshot();
         Util::trace(0, "\nOperation :: Revert To Current Snapshot For Virtual "
@@ -4575,13 +4691,38 @@ sub build_folders_path {
     my ($folder_view, $acc) = @_;
     push @$acc, {name => $folder_view->{name}, mo_ref => $folder_view->{mo_ref}};
     my $parent = $folder_view->{parent};
-    if (!$parent || $parent->{type} ne 'Folder') {
+
+    # Folders, Resource pools and apps can be nested
+    # Parenthesis below are needed for better reading only
+    if (!$parent || 
+        ( $parent->{type} ne FOLDER && $parent->{type} ne RESOURCE_POOL && $parent->{type} ne VIRTUAL_APP ) ) {
         return $acc;
     }
     else {
         my $t = Vim::get_view(mo_ref => $parent);
         build_folders_path($t, $acc);
     }
+}
+
+# More universal version of split_vm_name, also can accept path like /Folder or //Folder (both are similar, only first slash has meaning)
+sub split_entity_name {
+    my ($path) = @_;
+
+    my @parts = split '/' => $path;
+    my $root = shift @parts; # root element can be empty string, for path like /folder_name
+    @parts = grep { $_ } @parts;
+    unshift @parts => $root;
+
+    my $entity_name = pop @parts;
+    my $retval = { entity_name => $entity_name };
+    unless( scalar @parts ) {
+        return $retval;
+    }
+
+    my @reverse_path = reverse @parts;
+    $retval->{entity_reverse_path} = \@reverse_path;
+    $retval->{entity_path} = \@parts;
+    return $retval;
 }
 
 sub split_vm_name {
@@ -4594,7 +4735,7 @@ sub split_vm_name {
         vm_reverse_path => '',
     };
 
-    if (scalar @path > 1) {
+    if (scalar @path >= 1) {
         my @reverse_path = reverse @path;
         $retval->{vm_path} = \@path;
         $retval->{vm_reverse_path} = \@reverse_path;
